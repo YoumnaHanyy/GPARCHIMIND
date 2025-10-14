@@ -1,0 +1,17 @@
+ {
+        "functional": [
+            "UserAuthentication",
+            "CodeSubmissionforReview",
+            "InlineCommentingandDiscussion",
+            "ApprovalandMergingofCode"
+        ],
+        "non_functional": [
+            "PerformanceRequirements",
+            "ScalabilityRequirements",
+            "SecurityRequirements",
+            "UsabilityRequirements",
+            "AvailabilityRequirements",
+            "MaintainabilityRequirements",
+            "ComplianceRequirements"
+        ]
+    }

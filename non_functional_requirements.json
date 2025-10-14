@@ -1,0 +1,22 @@
+[
+  {
+    "title": "Low Latency",
+    "description": "The system shall analyze gestures/clicks and reflect the corresponding actions on the projected interface with very low latency."
+  },
+  {
+    "title": "Reliability",
+    "description": "The system shall minimize false clicks, false face detection, and false hand gesture errors during use."
+  },
+  {
+    "title": "Usability",
+    "description": "The system shall provide an easy-to-use simple interface for end users."
+  },
+  {
+    "title": "Compatibility with Hardware",
+    "description": "The software is compatible with common and most projectors and cameras."
+  },
+  {
+    "title": "Performance",
+    "description": "The system shall analyze gestures/clicks and reflect the corresponding actions on the projected interface with very low latency, in addition to analyzing faces."
+  }
+]
