@@ -1,58 +1,61 @@
 {
   "functional": [
     {
-      "title": "User Authentication",
-      "description": "The system shall allow new users to create accounts by providing a valid email address and password. The system shall ensure that the email address is unique and that the passwords match. The system shall save the credentials to the database."
+      "title": "System Functions",
+      "description": "Moreover, system functionalities are as follows: submitting the CV, viewing and editing the CV, answering screening questions, and getting a rating for the submitted CV.",
+      "source": null
     },
     {
-      "title": "Gesture Recognition",
-      "description": "The system shall recognize hand gestures within the camera scope and reflect the corresponding actions on the projected interface. The system shall be able to recognize default gestures for clicking, volume control, and cursor movement."
-    },
-    {
-      "title": "Face Recognition",
-      "description": "The system shall recognize users' faces and switch between their customized hand gestures. The system shall only respond to the registered user whose face is recognized."
-    },
-    {
-      "title": "Customize Gesture Actions",
-      "description": "The system shall allow users to customize the actions for specific gestures through a drop-down menu. The system shall save the customized gestures and use them for later interaction."
-    },
-    {
-      "title": "Sign up",
-      "description": "The user shall be able to sign up for an account by providing a valid email address and password. The system shall ensure that the email address is unique and that the passwords match. The system shall save the credentials to the database."
-    },
-    {
-      "title": "Gesture Commands",
-      "description": "The user shall be able to give commands to the system using hand gestures. The system shall recognize the gestures and reflect the corresponding actions on the projected interface."
-    },
-    {
-      "title": "Face Detection",
-      "description": "The system shall detect users' faces and switch between their customized hand gestures. The system shall only respond to the registered user whose face is recognized."
-    },
-    {
-      "title": "Customize Gesture Actions",
-      "description": "The user shall be able to customize the actions for specific gestures through a drop-down menu. The system shall save the customized gestures and use them for later interaction."
+      "title": "Detailed Functional Specification",
+      "description": "The system uses the Python library for parsing the CV and extracting key information such as skills and years of experience, which are then compared to the job requirements provided by the recruiter.",
+      "source": null
     }
   ],
   "non_functional": [
     {
-      "title": "Low Latency",
-      "description": "The system shall analyze gestures/clicks and reflect the corresponding actions on the projected interface with very low latency."
+      "title": "Performance:",
+      "description": "The system must provide a fast and efficient parsing process, with a response time of less than 2 seconds for a typical CV.",
+      "source": null
     },
     {
-      "title": "Reliability",
-      "description": "The system shall minimize false clicks, false face detection, and false hand gesture errors during use."
+      "title": "Reliability:",
+      "description": "The system shall be designed to be highly reliable, with a uptime of at least 99.9% and a mean time between failures (MTBF) of at least 1000 hours.",
+      "source": null
     },
     {
-      "title": "Usability",
-      "description": "The system shall provide an easy-to-use simple interface for end users."
+      "title": "Security:",
+      "description": "The system must ensure the confidentiality, integrity, and availability of user data, and must comply with all relevant data protection regulations.",
+      "source": null
     },
     {
-      "title": "Compatibility with Hardware",
-      "description": "The software is compatible with common and most projectors and cameras."
+      "title": "Privacy:",
+      "description": "The system shall respect user privacy and must not collect or store any personal data without explicit user consent.",
+      "source": null
     },
     {
-      "title": "Performance",
-      "description": "The system shall analyze gestures/clicks and reflect the corresponding actions on the projected interface with very low latency, in addition to analyzing faces."
+      "title": "Scalability:",
+      "description": "The system should be designed to scale horizontally, with the ability to handle a large number of concurrent users and a high volume of CVs.",
+      "source": null
+    },
+    {
+      "title": "Usability:",
+      "description": "The system must be user-friendly and easy to navigate, with clear and concise instructions and feedback.",
+      "source": null
+    },
+    {
+      "title": "Maintainability:",
+      "description": "The system should be designed to be easily maintainable, with clear and modular code and a robust testing framework.",
+      "source": null
+    },
+    {
+      "title": "Compatibility:",
+      "description": "The system must be compatible with a wide range of browsers and devices, and must work seamlessly with the HR module from Odoo ERP software.",
+      "source": null
+    },
+    {
+      "title": "Integration:",
+      "description": "The system should be designed to integrate seamlessly with other systems and tools, such as ChatGPT and the HR module from Odoo ERP software.",
+      "source": null
     }
   ]
 }
