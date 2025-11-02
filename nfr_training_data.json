@@ -1,0 +1,1466 @@
+{
+    "Performance": [
+        {
+            "text": "The system must provide a fast and efficient parsing process, under 2 seconds.",
+            "label": "High"
+        },
+        {
+            "text": "CV parsing speed must be optimized to under 2 seconds.",
+            "label": "High"
+        },
+        {
+            "text": "System should respond in less than 1 second.",
+            "label": "High"
+        },
+        {
+            "text": "System performance can vary under load.",
+            "label": "Variable"
+        },
+        {
+            "text": "Performance is not critical for this system.",
+            "label": "Low"
+        },
+        {
+            "text": "System should respond in less than 1 second.",
+            "label": "High"
+        },
+        {
+            "text": "System performance can vary under load.",
+            "label": "Variable"
+        },
+        {
+            "text": "Performance is not critical for this system.",
+            "label": "Low"
+        },
+        {
+            "text": "System should process 1000 transactions per second.",
+            "label": "High"
+        },
+        {
+            "text": "The application must load the dashboard in under 2 seconds.",
+            "label": "High"
+        },
+        {
+            "text": "The response time for any API call should not exceed 500 milliseconds.",
+            "label": "High"
+        },
+        {
+            "text": "The system must support 10,000 concurrent users without degradation.",
+            "label": "High"
+        },
+        {
+            "text": "Reports should be generated within 3 seconds after user request.",
+            "label": "High"
+        },
+        {
+            "text": "System performance must remain stable under heavy traffic conditions.",
+            "label": "High"
+        },
+        {
+            "text": "Database queries should execute in less than 200ms.",
+            "label": "High"
+        },
+        {
+            "text": "The server must maintain uptime of 99.9% with minimal latency.",
+            "label": "High"
+        },
+        {
+            "text": "Performance is not a primary concern for this application.",
+            "label": "Low"
+        },
+        {
+            "text": "System may take up to 30 seconds to complete background tasks.",
+            "label": "Low"
+        },
+        {
+            "text": "Response time under load may exceed 10 seconds.",
+            "label": "Low"
+        },
+        {
+            "text": "Batch processing may take several minutes to complete.",
+            "label": "Low"
+        },
+        {
+            "text": "System is expected to run on a single-user mode with minimal performance requirements.",
+            "label": "Low"
+        },
+        {
+            "text": "Delays in data retrieval are acceptable for this prototype version.",
+            "label": "Low"
+        },
+        {
+            "text": "System should respond in less than 1 second.",
+            "label": "High"
+        },
+        {
+            "text": "System performance can vary under load.",
+            "label": "Variable"
+        },
+        {
+            "text": "Performance is not critical for this system.",
+            "label": "Low"
+        },
+        {
+            "text": "System should process 1000 transactions per second.",
+            "label": "High"
+        },
+        {
+            "text": "The application must load the dashboard in under 2 seconds.",
+            "label": "High"
+        },
+        {
+            "text": "The response time for any API call should not exceed 500 milliseconds.",
+            "label": "High"
+        },
+        {
+            "text": "The system must support 10,000 concurrent users without degradation.",
+            "label": "High"
+        },
+        {
+            "text": "Reports should be generated within 3 seconds after user request.",
+            "label": "High"
+        },
+        {
+            "text": "System performance must remain stable under heavy traffic conditions.",
+            "label": "High"
+        },
+        {
+            "text": "Database queries should execute in less than 200ms.",
+            "label": "High"
+        },
+        {
+            "text": "The server must maintain uptime of 99.9% with minimal latency.",
+            "label": "High"
+        },
+        {
+            "text": "Performance is not a primary concern for this application.",
+            "label": "Low"
+        },
+        {
+            "text": "System may take up to 30 seconds to complete background tasks.",
+            "label": "Low"
+        },
+        {
+            "text": "Response time under load may exceed 10 seconds.",
+            "label": "Low"
+        },
+        {
+            "text": "Batch processing may take several minutes to complete.",
+            "label": "Low"
+        },
+        {
+            "text": "System is expected to run on a single-user mode with minimal performance requirements.",
+            "label": "Low"
+        },
+        {
+            "text": "Delays in data retrieval are acceptable for this prototype version.",
+            "label": "Low"
+        },
+        {
+            "text": "The system must be highly responsive and efficient.",
+            "label": "High"
+        },
+        {
+            "text": "Application speed is a top priority.",
+            "label": "High"
+        },
+        {
+            "text": "System should perform operations instantly.",
+            "label": "High"
+        },
+        {
+            "text": "Users should experience no lag while using the system.",
+            "label": "High"
+        },
+        {
+            "text": "Performance must be optimized for quick user interaction.",
+            "label": "High"
+        },
+        {
+            "text": "System should respond in less than 1 second.",
+            "label": "High"
+        },
+        {
+            "text": "System performance can vary under load.",
+            "label": "Variable"
+        },
+        {
+            "text": "Performance is not critical for this system.",
+            "label": "Low"
+        },
+        {
+            "text": "System should process 1000 transactions per second.",
+            "label": "High"
+        },
+        {
+            "text": "The application must load the dashboard in under 2 seconds.",
+            "label": "High"
+        },
+        {
+            "text": "The response time for any API call should not exceed 500 milliseconds.",
+            "label": "High"
+        },
+        {
+            "text": "The system must support 10,000 concurrent users without degradation.",
+            "label": "High"
+        },
+        {
+            "text": "Reports should be generated within 3 seconds after user request.",
+            "label": "High"
+        },
+        {
+            "text": "System performance must remain stable under heavy traffic conditions.",
+            "label": "High"
+        },
+        {
+            "text": "Database queries should execute in less than 200ms.",
+            "label": "High"
+        },
+        {
+            "text": "The server must maintain uptime of 99.9% with minimal latency.",
+            "label": "High"
+        },
+        {
+            "text": "Performance is not a primary concern for this application.",
+            "label": "Low"
+        },
+        {
+            "text": "System may take up to 30 seconds to complete background tasks.",
+            "label": "Low"
+        },
+        {
+            "text": "Response time under load may exceed 10 seconds.",
+            "label": "Low"
+        },
+        {
+            "text": "Batch processing may take several minutes to complete.",
+            "label": "Low"
+        },
+        {
+            "text": "System is expected to run on a single-user mode with minimal performance requirements.",
+            "label": "Low"
+        },
+        {
+            "text": "Delays in data retrieval are acceptable for this prototype version.",
+            "label": "Low"
+        },
+        {
+            "text": "The system must be highly responsive and efficient.",
+            "label": "High"
+        },
+        {
+            "text": "Application speed is a top priority.",
+            "label": "High"
+        },
+        {
+            "text": "System should perform operations instantly.",
+            "label": "High"
+        },
+        {
+            "text": "Users should experience no lag while using the system.",
+            "label": "High"
+        },
+        {
+            "text": "Performance must be optimized for quick user interaction.",
+            "label": "High"
+        },
+        {
+            "text": "System performance may vary depending on network speed.",
+            "label": "Variable"
+        },
+        {
+            "text": "Response time might fluctuate during peak hours.",
+            "label": "Variable"
+        },
+        {
+            "text": "Performance depends on the size of the data being processed.",
+            "label": "Variable"
+        },
+        {
+            "text": "Application speed may differ across hardware configurations.",
+            "label": "Variable"
+        },
+        {
+            "text": "System performance can vary under heavy load.",
+            "label": "Variable"
+        },
+        {
+            "text": "The system might slow down when multiple background jobs are running.",
+            "label": "Variable"
+        },
+        {
+            "text": "Performance may depend on available system resources.",
+            "label": "Variable"
+        },
+        {
+            "text": "Response times may differ based on concurrent user activity.",
+            "label": "Variable"
+        },
+        {
+            "text": "System speed may vary when accessing remote servers.",
+            "label": "Variable"
+        },
+        {
+            "text": "Performance is not critical for this system.",
+            "label": "Low"
+        },
+        {
+            "text": "The system can take up to 30 seconds to complete operations.",
+            "label": "Low"
+        },
+        {
+            "text": "Delays in processing are acceptable for background tasks.",
+            "label": "Low"
+        },
+        {
+            "text": "Response time under load may exceed 10 seconds.",
+            "label": "Low"
+        },
+        {
+            "text": "Batch jobs may take several minutes to complete.",
+            "label": "Low"
+        },
+        {
+            "text": "System performance may degrade during high traffic, which is acceptable.",
+            "label": "Low"
+        },
+        {
+            "text": "Fast response time is not a key requirement.",
+            "label": "Low"
+        },
+        {
+            "text": "System may take noticeable time to start up.",
+            "label": "Low"
+        },
+        {
+            "text": "Performance tuning will be addressed in future releases.",
+            "label": "Low"
+        },
+        {
+            "text": "Minor delays are acceptable for non-critical processes.",
+            "label": "Low"
+        },
+        {
+            "text": "The prototype version may have reduced performance.",
+            "label": "Low"
+        }
+    ],
+    "Security": [
+        {
+            "text": "System must use strong encryption and authentication.",
+            "label": "High"
+        },
+        {
+            "text": "Basic password protection is sufficient.",
+            "label": "Low"
+        },
+        {
+            "text": "System must use strong encryption and authentication.",
+            "label": "High"
+        },
+        {
+            "text": "Basic password protection is sufficient.",
+            "label": "Low"
+        },
+        {
+            "text": "System must use strong encryption and authentication.",
+            "label": "High"
+        },
+        {
+            "text": "Basic password protection is sufficient.",
+            "label": "Low"
+        },
+        {
+            "text": "All user data must be encrypted in transit and at rest.",
+            "label": "High"
+        },
+        {
+            "text": "The system must implement multi-factor authentication for all users.",
+            "label": "High"
+        },
+        {
+            "text": "Sensitive information must be protected using strong encryption standards.",
+            "label": "High"
+        },
+        {
+            "text": "Access to the system should be role-based and audited regularly.",
+            "label": "High"
+        },
+        {
+            "text": "The application must comply with GDPR and ISO 27001 standards.",
+            "label": "High"
+        },
+        {
+            "text": "Only authorized personnel can access confidential data.",
+            "label": "High"
+        },
+        {
+            "text": "System must detect and prevent unauthorized access attempts.",
+            "label": "High"
+        },
+        {
+            "text": "Passwords must be stored using strong hashing algorithms like bcrypt.",
+            "label": "High"
+        },
+        {
+            "text": "The system should include intrusion detection and prevention mechanisms.",
+            "label": "High"
+        },
+        {
+            "text": "Security patches must be applied immediately after release.",
+            "label": "High"
+        },
+        {
+            "text": "All API endpoints must use HTTPS and JWT-based authentication.",
+            "label": "High"
+        },
+        {
+            "text": "The system must support automatic logout after inactivity.",
+            "label": "High"
+        },
+        {
+            "text": "Regular penetration testing must be performed.",
+            "label": "High"
+        },
+        {
+            "text": "The application must implement end-to-end encryption for user communication.",
+            "label": "High"
+        },
+        {
+            "text": "Security level may vary depending on user role.",
+            "label": "Variable"
+        },
+        {
+            "text": "The system uses HTTPS but not all data is encrypted at rest.",
+            "label": "Variable"
+        },
+        {
+            "text": "Authentication is required for critical features only.",
+            "label": "Variable"
+        },
+        {
+            "text": "Security updates are applied periodically.",
+            "label": "Variable"
+        },
+        {
+            "text": "Data encryption is optional based on user preferences.",
+            "label": "Variable"
+        },
+        {
+            "text": "Some components rely on third-party security mechanisms.",
+            "label": "Variable"
+        },
+        {
+            "text": "Access control policies depend on deployment configuration.",
+            "label": "Variable"
+        },
+        {
+            "text": "The system enforces strong passwords but lacks two-factor authentication.",
+            "label": "Variable"
+        },
+        {
+            "text": "Audit logs are maintained for admin users only.",
+            "label": "Variable"
+        },
+        {
+            "text": "Security is ensured for production environments but limited in testing.",
+            "label": "Variable"
+        },
+        {
+            "text": "Network security depends on external firewall configuration.",
+            "label": "Variable"
+        },
+        {
+            "text": "Encryption is used for selected data fields only.",
+            "label": "Variable"
+        },
+        {
+            "text": "The system does not require user authentication.",
+            "label": "Low"
+        },
+        {
+            "text": "Data encryption is not mandatory.",
+            "label": "Low"
+        },
+        {
+            "text": "Security is not a critical concern for this prototype.",
+            "label": "Low"
+        },
+        {
+            "text": "Users can access the system without login.",
+            "label": "Low"
+        },
+        {
+            "text": "The system does not implement access control.",
+            "label": "Low"
+        },
+        {
+            "text": "No encryption is applied to stored data.",
+            "label": "Low"
+        },
+        {
+            "text": "Public access is allowed to all system information.",
+            "label": "Low"
+        },
+        {
+            "text": "Security patches can be applied manually when needed.",
+            "label": "Low"
+        },
+        {
+            "text": "Authentication and authorization are not enforced.",
+            "label": "Low"
+        },
+        {
+            "text": "System logs are not protected or audited.",
+            "label": "Low"
+        },
+        {
+            "text": "Communication between services is not secured.",
+            "label": "Low"
+        },
+        {
+            "text": "The system relies on users to manage their own security settings.",
+            "label": "Low"
+        },
+        {
+            "text": "Security validation is optional during deployment.",
+            "label": "Low"
+        }
+    ],
+    "Maintainability": [
+        {
+            "text": "System architecture should be modular to simplify updates.",
+            "label": "High"
+        },
+        {
+            "text": "Code should be well-documented and follow standard naming conventions.",
+            "label": "High"
+        },
+        {
+            "text": "The system must allow easy modification of existing features.",
+            "label": "High"
+        },
+        {
+            "text": "Developers should be able to add new modules with minimal code changes.",
+            "label": "High"
+        },
+        {
+            "text": "Application should support plug-and-play components for future extensions.",
+            "label": "High"
+        },
+        {
+            "text": "All modules must be independent and loosely coupled.",
+            "label": "High"
+        },
+        {
+            "text": "The system should allow configuration changes without code modification.",
+            "label": "High"
+        },
+        {
+            "text": "Maintenance tasks should require minimal downtime.",
+            "label": "High"
+        },
+        {
+            "text": "The system must support automated testing and deployment.",
+            "label": "High"
+        },
+        {
+            "text": "All code changes should be traceable through version control.",
+            "label": "High"
+        },
+        {
+            "text": "Documentation and design diagrams must be regularly updated.",
+            "label": "High"
+        },
+        {
+            "text": "System must enable quick bug fixes with minimal impact on other components.",
+            "label": "High"
+        },
+        {
+            "text": "The architecture should allow future technology upgrades easily.",
+            "label": "High"
+        },
+        {
+            "text": "Maintenance effort may vary depending on system complexity.",
+            "label": "Variable"
+        },
+        {
+            "text": "The ease of maintenance depends on the developer's experience.",
+            "label": "Variable"
+        },
+        {
+            "text": "Code maintainability may differ across modules.",
+            "label": "Variable"
+        },
+        {
+            "text": "Some components are easier to update than others.",
+            "label": "Variable"
+        },
+        {
+            "text": "System maintainability can vary based on documentation quality.",
+            "label": "Variable"
+        },
+        {
+            "text": "Maintenance time may depend on the size of the data being processed.",
+            "label": "Variable"
+        },
+        {
+            "text": "Maintainability might be affected by third-party dependencies.",
+            "label": "Variable"
+        },
+        {
+            "text": "System maintainability may differ between releases.",
+            "label": "Variable"
+        },
+        {
+            "text": "Maintenance effort can fluctuate with changes in system load.",
+            "label": "Variable"
+        },
+        {
+            "text": "System modifications require significant developer effort.",
+            "label": "Low"
+        },
+        {
+            "text": "The codebase is complex and hard to understand.",
+            "label": "Low"
+        },
+        {
+            "text": "Making changes in one module often breaks other components.",
+            "label": "Low"
+        },
+        {
+            "text": "The system lacks sufficient documentation for maintenance.",
+            "label": "Low"
+        },
+        {
+            "text": "Adding new features requires rewriting large parts of the code.",
+            "label": "Low"
+        },
+        {
+            "text": "The application structure is tightly coupled and not modular.",
+            "label": "Low"
+        },
+        {
+            "text": "Maintenance tasks often cause long downtime periods.",
+            "label": "Low"
+        },
+        {
+            "text": "Bug fixing requires deep knowledge of the entire system.",
+            "label": "Low"
+        },
+        {
+            "text": "Updating system configurations requires manual code edits.",
+            "label": "Low"
+        },
+        {
+            "text": "Refactoring the system is difficult due to poor design.",
+            "label": "Low"
+        },
+        {
+            "text": "The system is not easily adaptable to new requirements.",
+            "label": "Low"
+        }
+    ],
+    "Scalability": [
+        {
+            "text": "The system must support an increasing number of users without performance degradation.",
+            "label": "High"
+        },
+        {
+            "text": "The architecture should allow horizontal scaling across multiple servers.",
+            "label": "High"
+        },
+        {
+            "text": "Application should handle growth from 1,000 to 100,000 users seamlessly.",
+            "label": "High"
+        },
+        {
+            "text": "System must be designed to handle large volumes of data efficiently.",
+            "label": "High"
+        },
+        {
+            "text": "The infrastructure should support cloud-based auto-scaling.",
+            "label": "High"
+        },
+        {
+            "text": "The system must scale dynamically with workload changes.",
+            "label": "High"
+        },
+        {
+            "text": "Adding new servers should not require system downtime.",
+            "label": "High"
+        },
+        {
+            "text": "Database architecture must support partitioning and replication for scalability.",
+            "label": "High"
+        },
+        {
+            "text": "The system should maintain stable performance as the number of users doubles.",
+            "label": "High"
+        },
+        {
+            "text": "The design should support future expansion of services and features.",
+            "label": "High"
+        },
+        {
+            "text": "Application components should be stateless to support scaling.",
+            "label": "High"
+        },
+        {
+            "text": "System must handle increased data processing with minimal latency.",
+            "label": "High"
+        },
+        {
+            "text": "The platform must efficiently scale to accommodate spikes in traffic.",
+            "label": "High"
+        },
+        {
+            "text": "System scalability may depend on the hardware configuration.",
+            "label": "Variable"
+        },
+        {
+            "text": "Performance might vary as the number of users increases.",
+            "label": "Variable"
+        },
+        {
+            "text": "Scalability may be limited by third-party service constraints.",
+            "label": "Variable"
+        },
+        {
+            "text": "System can scale up to a certain number of concurrent users.",
+            "label": "Variable"
+        },
+        {
+            "text": "Application scalability depends on available network bandwidth.",
+            "label": "Variable"
+        },
+        {
+            "text": "The system scales efficiently under moderate but not heavy load.",
+            "label": "Variable"
+        },
+        {
+            "text": "Database scalability depends on query optimization.",
+            "label": "Variable"
+        },
+        {
+            "text": "System performance may fluctuate during peak usage.",
+            "label": "Variable"
+        },
+        {
+            "text": "The platform supports scaling but may require manual configuration.",
+            "label": "Variable"
+        },
+        {
+            "text": "System scalability may depend on the hardware configuration.",
+            "label": "Variable"
+        },
+        {
+            "text": "Performance might vary as the number of users increases.",
+            "label": "Variable"
+        },
+        {
+            "text": "Scalability may be limited by third-party service constraints.",
+            "label": "Variable"
+        },
+        {
+            "text": "System can scale up to a certain number of concurrent users.",
+            "label": "Variable"
+        },
+        {
+            "text": "Application scalability depends on available network bandwidth.",
+            "label": "Variable"
+        },
+        {
+            "text": "The system scales efficiently under moderate but not heavy load.",
+            "label": "Variable"
+        },
+        {
+            "text": "Database scalability depends on query optimization.",
+            "label": "Variable"
+        },
+        {
+            "text": "System performance may fluctuate during peak usage.",
+            "label": "Variable"
+        },
+        {
+            "text": "The platform supports scaling but may require manual configuration.",
+            "label": "Variable"
+        },
+        {
+            "text": "The system cannot handle a significant increase in users.",
+            "label": "Low"
+        },
+        {
+            "text": "Scaling the system requires major code changes.",
+            "label": "Low"
+        },
+        {
+            "text": "The system performance drops significantly as data size grows.",
+            "label": "Low"
+        },
+        {
+            "text": "Application does not support adding servers dynamically.",
+            "label": "Low"
+        },
+        {
+            "text": "System is designed for a fixed number of users only.",
+            "label": "Low"
+        },
+        {
+            "text": "Scalability is not a priority for this release.",
+            "label": "Low"
+        },
+        {
+            "text": "The database cannot handle large-scale data expansion.",
+            "label": "Low"
+        },
+        {
+            "text": "The system is not optimized for distributed environments.",
+            "label": "Low"
+        },
+        {
+            "text": "Increasing load causes long response times and system failures.",
+            "label": "Low"
+        },
+        {
+            "text": "Adding new components requires system downtime.",
+            "label": "Low"
+        },
+        {
+            "text": "The application struggles to handle concurrent requests.",
+            "label": "Low"
+        }
+    ],
+    "Availability": [
+        {
+            "text": "The system must be available 99.99% of the time.",
+            "label": "High"
+        },
+        {
+            "text": "System should ensure continuous operation with minimal downtime.",
+            "label": "High"
+        },
+        {
+            "text": "The application must remain operational 24/7.",
+            "label": "High"
+        },
+        {
+            "text": "High availability architecture must be implemented to avoid single points of failure.",
+            "label": "High"
+        },
+        {
+            "text": "System components should support automatic failover.",
+            "label": "High"
+        },
+        {
+            "text": "Downtime for maintenance should not exceed 5 minutes per month.",
+            "label": "High"
+        },
+        {
+            "text": "The system should recover automatically from hardware or network failures.",
+            "label": "High"
+        },
+        {
+            "text": "The platform must guarantee uninterrupted service during peak hours.",
+            "label": "High"
+        },
+        {
+            "text": "A backup server must be ready to take over immediately in case of failure.",
+            "label": "High"
+        },
+        {
+            "text": "Critical services should be replicated across multiple data centers.",
+            "label": "High"
+        },
+        {
+            "text": "Scheduled maintenance should not affect system availability.",
+            "label": "High"
+        },
+        {
+            "text": "The system should provide real-time monitoring and automatic recovery.",
+            "label": "High"
+        },
+        {
+            "text": "The infrastructure must support 24x7 uptime for global users.",
+            "label": "High"
+        },
+        {
+            "text": "System availability may depend on server load.",
+            "label": "Variable"
+        },
+        {
+            "text": "Availability can vary during maintenance windows.",
+            "label": "Variable"
+        },
+        {
+            "text": "The system may experience short downtimes during updates.",
+            "label": "Variable"
+        },
+        {
+            "text": "Availability depends on internet connectivity.",
+            "label": "Variable"
+        },
+        {
+            "text": "System uptime may fluctuate under heavy usage.",
+            "label": "Variable"
+        },
+        {
+            "text": "The platform provides high availability under normal conditions.",
+            "label": "Variable"
+        },
+        {
+            "text": "Some services may be temporarily unavailable during upgrades.",
+            "label": "Variable"
+        },
+        {
+            "text": "Availability may differ between primary and secondary regions.",
+            "label": "Variable"
+        },
+        {
+            "text": "The system may have reduced uptime during scheduled deployments.",
+            "label": "Variable"
+        },
+        {
+            "text": "Availability depends on external service reliability.",
+            "label": "Variable"
+        },
+        {
+            "text": "System is not required to be available 24/7.",
+            "label": "Low"
+        },
+        {
+            "text": "The application can have downtime of several hours per week.",
+            "label": "Low"
+        },
+        {
+            "text": "Temporary unavailability is acceptable during maintenance.",
+            "label": "Low"
+        },
+        {
+            "text": "The system may be offline during non-business hours.",
+            "label": "Low"
+        },
+        {
+            "text": "No redundancy or failover mechanisms are required.",
+            "label": "Low"
+        },
+        {
+            "text": "Availability is not critical for internal tools.",
+            "label": "Low"
+        },
+        {
+            "text": "System recovery after crash may take several hours.",
+            "label": "Low"
+        },
+        {
+            "text": "Downtime during updates is acceptable.",
+            "label": "Low"
+        },
+        {
+            "text": "Service interruptions are tolerable for non-critical operations.",
+            "label": "Low"
+        },
+        {
+            "text": "System uptime of 90% is sufficient.",
+            "label": "Low"
+        },
+        {
+            "text": "The prototype version may be offline intermittently.",
+            "label": "Low"
+        },
+        {
+            "text": "Manual restart is required after a system failure.",
+            "label": "Low"
+        }
+    ],
+    "Usability": [
+        {
+            "text": "The system interface must be intuitive and easy to navigate.",
+            "label": "High"
+        },
+        {
+            "text": "Users should be able to complete key tasks with minimal training.",
+            "label": "High"
+        },
+        {
+            "text": "The application must provide clear feedback after every user action.",
+            "label": "High"
+        },
+        {
+            "text": "All UI elements should be consistent and accessible.",
+            "label": "High"
+        },
+        {
+            "text": "The system must support accessibility standards (WCAG 2.1).",
+            "label": "High"
+        },
+        {
+            "text": "Help and documentation should be available for all major functions.",
+            "label": "High"
+        },
+        {
+            "text": "The system must allow users to undo actions easily.",
+            "label": "High"
+        },
+        {
+            "text": "Interfaces should have clear labels, icons, and tooltips.",
+            "label": "High"
+        },
+        {
+            "text": "Error messages must be descriptive and guide the user to a solution.",
+            "label": "High"
+        },
+        {
+            "text": "The system should support keyboard shortcuts for frequent operations.",
+            "label": "High"
+        },
+        {
+            "text": "User onboarding should be smooth with guided tutorials.",
+            "label": "High"
+        },
+        {
+            "text": "The interface must be responsive and mobile-friendly.",
+            "label": "High"
+        },
+        {
+            "text": "The layout must maintain clarity and simplicity across all screens.",
+            "label": "High"
+        },
+        {
+            "text": "User actions should require minimal clicks to achieve goals.",
+            "label": "High"
+        },
+        {
+            "text": "Some features require moderate user training.",
+            "label": "Variable"
+        },
+        {
+            "text": "The interface is user-friendly but lacks advanced accessibility features.",
+            "label": "Variable"
+        },
+        {
+            "text": "Certain functions may be difficult for first-time users.",
+            "label": "Variable"
+        },
+        {
+            "text": "Usability may vary depending on screen size or resolution.",
+            "label": "Variable"
+        },
+        {
+            "text": "Help documentation is available but not detailed.",
+            "label": "Variable"
+        },
+        {
+            "text": "Some feedback messages may be unclear.",
+            "label": "Variable"
+        },
+        {
+            "text": "Navigation structure is mostly intuitive but could be improved.",
+            "label": "Variable"
+        },
+        {
+            "text": "System provides partial support for keyboard accessibility.",
+            "label": "Variable"
+        },
+        {
+            "text": "Some screens are easy to use while others require technical knowledge.",
+            "label": "Variable"
+        },
+        {
+            "text": "UI consistency is maintained in most but not all sections.",
+            "label": "Variable"
+        },
+        {
+            "text": "System usability depends on user experience level.",
+            "label": "Variable"
+        },
+        {
+            "text": "Certain workflows take multiple steps to complete.",
+            "label": "Variable"
+        },
+        {
+            "text": "User assistance features are available but limited.",
+            "label": "Variable"
+        },
+        {
+            "text": "The system interface is difficult to understand for new users.",
+            "label": "Low"
+        },
+        {
+            "text": "Users require extensive training to use the system effectively.",
+            "label": "Low"
+        },
+        {
+            "text": "Error messages are vague and unhelpful.",
+            "label": "Low"
+        },
+        {
+            "text": "The application lacks proper navigation menus.",
+            "label": "Low"
+        },
+        {
+            "text": "There is no online help or user documentation.",
+            "label": "Low"
+        },
+        {
+            "text": "Interface layout is inconsistent and confusing.",
+            "label": "Low"
+        },
+        {
+            "text": "User feedback is not displayed after actions.",
+            "label": "Low"
+        },
+        {
+            "text": "The system does not follow standard UI conventions.",
+            "label": "Low"
+        },
+        {
+            "text": "Users must perform many steps for simple tasks.",
+            "label": "Low"
+        },
+        {
+            "text": "The design is not responsive or mobile-friendly.",
+            "label": "Low"
+        },
+        {
+            "text": "Accessibility for disabled users is not considered.",
+            "label": "Low"
+        },
+        {
+            "text": "The interface contains too much clutter and unclear icons.",
+            "label": "Low"
+        },
+        {
+            "text": "No undo or redo functionality is provided.",
+            "label": "Low"
+        },
+        {
+            "text": "Users report frustration and confusion during normal operations.",
+            "label": "Low"
+        }
+    ],
+    "Portability": [
+        {
+            "text": "The system must run seamlessly on Windows, macOS, and Linux.",
+            "label": "High"
+        },
+        {
+            "text": "The application should support both web and mobile platforms.",
+            "label": "High"
+        },
+        {
+            "text": "The software must be easily deployable across multiple cloud providers.",
+            "label": "High"
+        },
+        {
+            "text": "All modules should be platform-independent.",
+            "label": "High"
+        },
+        {
+            "text": "The system must use cross-platform frameworks such as Java or .NET Core.",
+            "label": "High"
+        },
+        {
+            "text": "The software must support containerized deployment using Docker.",
+            "label": "High"
+        },
+        {
+            "text": "The system should operate efficiently across different hardware configurations.",
+            "label": "High"
+        },
+        {
+            "text": "The application must run smoothly on all major browsers.",
+            "label": "High"
+        },
+        {
+            "text": "No OS-specific dependencies should exist.",
+            "label": "High"
+        },
+        {
+            "text": "The codebase should follow standards to enable cross-platform builds.",
+            "label": "High"
+        },
+        {
+            "text": "System configuration files must be independent of platform-specific paths.",
+            "label": "High"
+        },
+        {
+            "text": "The application must support cloud and on-premise environments equally.",
+            "label": "High"
+        },
+        {
+            "text": "The system should use platform-agnostic APIs.",
+            "label": "High"
+        },
+        {
+            "text": "The system can be adapted to other platforms with minor changes.",
+            "label": "Variable"
+        },
+        {
+            "text": "Some modules are portable while others are OS-dependent.",
+            "label": "Variable"
+        },
+        {
+            "text": "The software supports Windows and Linux but not macOS.",
+            "label": "Variable"
+        },
+        {
+            "text": "Mobile compatibility is limited to Android devices.",
+            "label": "Variable"
+        },
+        {
+            "text": "The system can be deployed on cloud environments with some configuration effort.",
+            "label": "Variable"
+        },
+        {
+            "text": "The application runs best on one operating system but can work on others with performance issues.",
+            "label": "Variable"
+        },
+        {
+            "text": "Database layer is portable but UI components depend on platform libraries.",
+            "label": "Variable"
+        },
+        {
+            "text": "Most scripts are portable except installation scripts.",
+            "label": "Variable"
+        },
+        {
+            "text": "The system supports limited cross-browser functionality.",
+            "label": "Variable"
+        },
+        {
+            "text": "The application can be compiled for multiple platforms with manual setup.",
+            "label": "Variable"
+        },
+        {
+            "text": "Deployment process may vary across environments.",
+            "label": "Variable"
+        },
+        {
+            "text": "Some dependencies restrict full portability.",
+            "label": "Variable"
+        },
+        {
+            "text": "The system supports virtualization but not containerization.",
+            "label": "Variable"
+        },
+        {
+            "text": "The system is designed to run only on Windows.",
+            "label": "Low"
+        },
+        {
+            "text": "The application relies on platform-specific APIs.",
+            "label": "Low"
+        },
+        {
+            "text": "No consideration was given for cross-platform deployment.",
+            "label": "Low"
+        },
+        {
+            "text": "The software cannot be easily moved to another operating system.",
+            "label": "Low"
+        },
+        {
+            "text": "System configuration is hardcoded for a single environment.",
+            "label": "Low"
+        },
+        {
+            "text": "The application depends on Windows Registry for configuration.",
+            "label": "Low"
+        },
+        {
+            "text": "No cloud support is planned for the current version.",
+            "label": "Low"
+        },
+        {
+            "text": "The software requires proprietary hardware to operate.",
+            "label": "Low"
+        },
+        {
+            "text": "Source code includes OS-specific paths and commands.",
+            "label": "Low"
+        },
+        {
+            "text": "The system cannot run on mobile or web platforms.",
+            "label": "Low"
+        },
+        {
+            "text": "Dependencies are not available outside the target platform.",
+            "label": "Low"
+        },
+        {
+            "text": "The system must be recompiled entirely for another OS.",
+            "label": "Low"
+        },
+        {
+            "text": "Migration to another environment would require a full redesign.",
+            "label": "Low"
+        }
+    ],
+    "Operability": [
+        {
+            "text": "The system must provide real-time monitoring and alerting features.",
+            "label": "High"
+        },
+        {
+            "text": "Administrators should be able to start, stop, and restart services easily.",
+            "label": "High"
+        },
+        {
+            "text": "System logs must be automatically collected and analyzed.",
+            "label": "High"
+        },
+        {
+            "text": "The application must include a dashboard for operational metrics.",
+            "label": "High"
+        },
+        {
+            "text": "Automatic recovery should occur after system failure.",
+            "label": "High"
+        },
+        {
+            "text": "The system must notify operators immediately of any service outage.",
+            "label": "High"
+        },
+        {
+            "text": "All operational processes should be automated using scripts or tools.",
+            "label": "High"
+        },
+        {
+            "text": "The application must support remote monitoring and control.",
+            "label": "High"
+        },
+        {
+            "text": "Operators should be able to easily perform configuration changes without downtime.",
+            "label": "High"
+        },
+        {
+            "text": "The system must support detailed health checks and uptime reporting.",
+            "label": "High"
+        },
+        {
+            "text": "The application must include diagnostic tools for troubleshooting.",
+            "label": "High"
+        },
+        {
+            "text": "System components should restart automatically after unexpected termination.",
+            "label": "High"
+        },
+        {
+            "text": "The platform should integrate with centralized logging and alert systems.",
+            "label": "High"
+        },
+        {
+            "text": "Maintenance operations should require minimal manual intervention.",
+            "label": "High"
+        },
+        {
+            "text": "Some system operations require manual monitoring.",
+            "label": "Variable"
+        },
+        {
+            "text": "Basic alerting is available but not automated.",
+            "label": "Variable"
+        },
+        {
+            "text": "The system can recover from minor failures with limited automation.",
+            "label": "Variable"
+        },
+        {
+            "text": "Operators can manage the system, but advanced tools are limited.",
+            "label": "Variable"
+        },
+        {
+            "text": "Monitoring is available for critical components only.",
+            "label": "Variable"
+        },
+        {
+            "text": "Manual intervention is required for certain configuration updates.",
+            "label": "Variable"
+        },
+        {
+            "text": "The system provides limited logs for troubleshooting.",
+            "label": "Variable"
+        },
+        {
+            "text": "Health checks are implemented but not comprehensive.",
+            "label": "Variable"
+        },
+        {
+            "text": "Some maintenance tasks can be automated, others are manual.",
+            "label": "Variable"
+        },
+        {
+            "text": "Operational performance depends on operator expertise.",
+            "label": "Variable"
+        },
+        {
+            "text": "Alerts are sent by email but not integrated into a monitoring tool.",
+            "label": "Variable"
+        },
+        {
+            "text": "Restarting the system requires manual steps.",
+            "label": "Variable"
+        },
+        {
+            "text": "The application partially supports remote management.",
+            "label": "Variable"
+        },
+        {
+            "text": "The system requires manual restart after every failure.",
+            "label": "Low"
+        },
+        {
+            "text": "No monitoring tools are available for system performance.",
+            "label": "Low"
+        },
+        {
+            "text": "System health must be checked manually by administrators.",
+            "label": "Low"
+        },
+        {
+            "text": "No logging or alerting mechanisms are implemented.",
+            "label": "Low"
+        },
+        {
+            "text": "Operators need to perform complex steps for simple maintenance tasks.",
+            "label": "Low"
+        },
+        {
+            "text": "The system cannot recover automatically after a crash.",
+            "label": "Low"
+        },
+        {
+            "text": "No remote access is available for operators.",
+            "label": "Low"
+        },
+        {
+            "text": "Maintenance requires system downtime.",
+            "label": "Low"
+        },
+        {
+            "text": "System status cannot be viewed in real-time.",
+            "label": "Low"
+        },
+        {
+            "text": "No diagnostic tools are provided for debugging issues.",
+            "label": "Low"
+        },
+        {
+            "text": "Error logs must be manually retrieved from the server.",
+            "label": "Low"
+        },
+        {
+            "text": "The system does not notify operators of failures.",
+            "label": "Low"
+        },
+        {
+            "text": "Configuration changes require redeployment.",
+            "label": "Low"
+        },
+        {
+            "text": "System operations depend heavily on manual scripts.",
+            "label": "Low"
+        }
+    ]
+}

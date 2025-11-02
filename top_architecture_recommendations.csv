@@ -1,0 +1,6 @@
+Architecture Style,PE,SC,MN,A,SE,US,PO,O,References,Unnamed: 10,avg_diff
+Monolithic,3,1,1,2,2,2,1,2,https://beei.org/index.php/EEI/article/viewFile/4081/3185 ,https://www.sciencedirect.com/science/article/pii/S187705091503183X ,
+Layered (N-Tier),2,1,3,2,3,3,2,3,,,
+Client server,2,2,2,2,2,3,2,2,,,
+Microservices,2,3,3,3,2,2,3,1,,,
+Service Oriented (SOA),2,3,3,3,2,2,3,2,,,
