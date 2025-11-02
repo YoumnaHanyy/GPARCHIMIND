@@ -1,4 +1,5 @@
 {
+    "model_accuracy": 0.8164556962025317,
     "nfr_predictions": [
         {
             "title": "Performance",
@@ -8,7 +9,7 @@
         {
             "title": "Reliability",
             "description": "The system shall be designed to be highly reliable, with a uptime of at least 99.9% and a mean time between failures (MTBF) of at least 1000 hours.",
-            "predicted_level": "⚠️ Not in trained categories"
+            "predicted_level": "High"
         },
         {
             "title": "Security",
@@ -18,12 +19,12 @@
         {
             "title": "Privacy",
             "description": "The system shall respect user privacy and must not collect or store any personal data without explicit user consent.",
-            "predicted_level": "⚠️ Not in trained categories"
+            "predicted_level": "High"
         },
         {
             "title": "Scalability",
             "description": "The system should be designed to scale horizontally, with the ability to handle a large number of concurrent users and a high volume of CVs.",
-            "predicted_level": "Variable"
+            "predicted_level": "High"
         },
         {
             "title": "Usability",
@@ -38,33 +39,33 @@
         {
             "title": "Compatibility",
             "description": "The system must be compatible with a wide range of browsers and devices, and must work seamlessly with the HR module from Odoo ERP software.",
-            "predicted_level": "⚠️ Not in trained categories"
+            "predicted_level": "High"
         },
         {
             "title": "Integration",
             "description": "The system should be designed to integrate seamlessly with other systems and tools, such as ChatGPT and the HR module from Odoo ERP software.",
-            "predicted_level": "⚠️ Not in trained categories"
+            "predicted_level": "High"
         }
     ],
     "best_architecture_matches": [
         [
+            "Event-Driven/ Messaging",
+            0.5
+        ],
+        [
+            "REST/ resource-oriented",
+            0.5
+        ],
+        [
             "Hexagonal (ports& adapters)",
-            0.25
+            0.5
+        ],
+        [
+            "Serverless/FaaS",
+            0.5
         ],
         [
             "Layered (N-Tier)",
-            0.5
-        ],
-        [
-            "Client server",
-            0.5
-        ],
-        [
-            "Monolithic",
-            0.75
-        ],
-        [
-            "Event-Driven/ Messaging",
             0.75
         ]
     ]
