@@ -1,0 +1,164 @@
+Architecture,Type,Level
+Monolithic,PE,High
+Layered (N-Tier),PE,Medium
+Client server,PE,Medium
+Microservices,PE,Medium
+Service Oriented (SOA),PE,Medium
+Event-Driven/ Messaging,PE,High
+Microkernal (plug-in),PE,Low
+Component Based,PE,Medium
+Pipe and- Filter,PE,Medium
+Broker (middleware),PE,Medium
+Peer to Peer (P2P),PE,Medium
+BlackBoard (Shared-Space),PE,Low
+MVC (model-view-controller),PE,Medium
+Space Based ,PE,Medium
+REST/ resource-oriented,PE,Medium
+Hexagonal (ports& adapters),PE,Medium
+Serverless/FaaS,PE,High
+Event-Bus/Event Broker,PE,Medium
+Monolithic,SC,Low
+Layered (N-Tier),SC,Low
+Client server,SC,Medium
+Microservices,SC,High
+Service Oriented (SOA),SC,High
+Event-Driven/ Messaging,SC,High
+Microkernal (plug-in),SC,Medium
+Component Based,SC,Medium
+Pipe and- Filter,SC,Medium
+Broker (middleware),SC,High
+Peer to Peer (P2P),SC,High
+BlackBoard (Shared-Space),SC,Low
+MVC (model-view-controller),SC,Low
+Space Based ,SC,High
+REST/ resource-oriented,SC,High
+Hexagonal (ports& adapters),SC,L
+Serverless/FaaS,SC,High
+Event-Bus/Event Broker,SC,High
+Monolithic,MN,Low
+Layered (N-Tier),MN,High
+Client server,MN,Medium
+Microservices,MN,High
+Service Oriented (SOA),MN,High
+Event-Driven/ Messaging,MN,High
+Microkernal (plug-in),MN,High
+Component Based,MN,High
+Pipe and- Filter,MN,Medium
+Broker (middleware),MN,Medium
+Peer to Peer (P2P),MN,Low
+BlackBoard (Shared-Space),MN,Low
+MVC (model-view-controller),MN,High
+Space Based ,MN,Medium
+REST/ resource-oriented,MN,High
+Hexagonal (ports& adapters),MN,High
+Serverless/FaaS,MN,High
+Event-Bus/Event Broker,MN,High
+Monolithic,A,Medium
+Layered (N-Tier),A,Medium
+Client server,A,Medium
+Microservices,A,High
+Service Oriented (SOA),A,High
+Event-Driven/ Messaging,A,High
+Microkernal (plug-in),A,Medium
+Component Based,A,High
+Pipe and- Filter,A,Low
+Broker (middleware),A,High
+Peer to Peer (P2P),A,High
+BlackBoard (Shared-Space),A,Low
+MVC (model-view-controller),A,Medium
+Space Based ,A,High
+REST/ resource-oriented,A,Medium
+Hexagonal (ports& adapters),A,Medium
+Serverless/FaaS,A,High
+Event-Bus/Event Broker,A,High
+Monolithic,SE,Medium
+Layered (N-Tier),SE,High
+Client server,SE,Medium
+Microservices,SE,Medium
+Service Oriented (SOA),SE,Medium
+Event-Driven/ Messaging,SE,Medium
+Microkernal (plug-in),SE,Medium
+Component Based,SE,Medium
+Pipe and- Filter,SE,Low
+Broker (middleware),SE,Medium
+Peer to Peer (P2P),SE,Low
+BlackBoard (Shared-Space),SE,Low
+MVC (model-view-controller),SE,Medium
+Space Based ,SE,Low
+REST/ resource-oriented,SE,Medium
+Hexagonal (ports& adapters),SE,High
+Serverless/FaaS,SE,Medium
+Event-Bus/Event Broker,SE,Medium
+Monolithic,US,Medium
+Layered (N-Tier),US,Medium
+Client server,US,High
+Microservices,US,Medium
+Service Oriented (SOA),US,Medium
+Event-Driven/ Messaging,US,Medium
+Microkernal (plug-in),US,Medium
+Component Based,US,Medium
+Pipe and- Filter,US,Low
+Broker (middleware),US,Low
+Peer to Peer (P2P),US,Low
+BlackBoard (Shared-Space),US,Low
+MVC (model-view-controller),US,High
+Space Based ,US,Low
+REST/ resource-oriented,US,High
+Hexagonal (ports& adapters),US,High
+Serverless/FaaS,US,Medium
+Event-Bus/Event Broker,US,Medium
+Monolithic,PO,Low
+Layered (N-Tier),PO,Medium
+Client server,PO,Medium
+Microservices,PO,High
+Service Oriented (SOA),PO,High
+Event-Driven/ Messaging,PO,Medium
+Microkernal (plug-in),PO,High
+Component Based,PO,High
+Pipe and- Filter,PO,Medium
+Broker (middleware),PO,Medium
+Peer to Peer (P2P),PO,Low
+BlackBoard (Shared-Space),PO,Low
+MVC (model-view-controller),PO,Medium
+Space Based ,PO,Medium
+REST/ resource-oriented,PO,High
+Hexagonal (ports& adapters),PO,High
+Serverless/FaaS,PO,High
+Event-Bus/Event Broker,PO,Medium
+Monolithic,O,Medium
+Layered (N-Tier),O,High
+Client server,O,Medium
+Microservices,O,Low
+Service Oriented (SOA),O,Medium
+Event-Driven/ Messaging,O,Medium
+Microkernal (plug-in),O,High
+Component Based,O,High
+Pipe and- Filter,O,Medium
+Broker (middleware),O,Medium
+Peer to Peer (P2P),O,Low
+BlackBoard (Shared-Space),O,Low
+MVC (model-view-controller),O,High
+Space Based ,O,Medium
+REST/ resource-oriented,O,Medium
+Hexagonal (ports& adapters),O,High
+Serverless/FaaS,O,Low
+Event-Bus/Event Broker,O,Medium
+,,
+,,
+,,
+,,
+,,
+,,
+,,
+,,
+,,
+,,
+,,
+,,
+,,
+,,
+,,
+,,
+,,
+,,
+,,

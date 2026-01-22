@@ -1,0 +1,793 @@
+category,text,label
+Performance,"The system must provide a fast and efficient parsing process, under 2 seconds.",1
+Performance,CV parsing speed must be optimized to under 2 seconds.,1
+Performance,System should respond in less than 1 second.,1
+Performance,System performance can vary under load.,1
+Performance,Performance is not critical for this system.,0
+Performance,System should respond in less than 1 second.,1
+Performance,System performance can vary under load.,1
+Performance,Performance is not critical for this system.,0
+Performance,System should process 1000 transactions per second.,1
+Performance,The application must load the dashboard in under 2 seconds.,1
+Performance,The response time for any API call should not exceed 500 milliseconds.,1
+Performance,"The system must support 10,000 concurrent users without degradation.",1
+Performance,Reports should be generated within 3 seconds after user request.,1
+Performance,System performance must remain stable under heavy traffic conditions.,1
+Performance,Database queries should execute in less than 200ms.,1
+Performance,The server must maintain uptime of 99.9% with minimal latency.,1
+Performance,Performance is not a primary concern for this application.,0
+Performance,System may take up to 30 seconds to complete background tasks.,0
+Performance,Response time under load may exceed 10 seconds.,0
+Performance,Batch processing may take several minutes to complete.,0
+Performance,System is expected to run on a single-user mode with minimal performance requirements.,0
+Performance,Delays in data retrieval are acceptable for this prototype version.,0
+Performance,System should respond in less than 1 second.,1
+Performance,System performance can vary under load.,1
+Performance,Performance is not critical for this system.,0
+Performance,System should process 1000 transactions per second.,1
+Performance,The application must load the dashboard in under 2 seconds.,1
+Performance,The response time for any API call should not exceed 500 milliseconds.,1
+Performance,"The system must support 10,000 concurrent users without degradation.",1
+Performance,Reports should be generated within 3 seconds after user request.,1
+Performance,System performance must remain stable under heavy traffic conditions.,1
+Performance,Database queries should execute in less than 200ms.,1
+Performance,The server must maintain uptime of 99.9% with minimal latency.,1
+Performance,Performance is not a primary concern for this application.,0
+Performance,System may take up to 30 seconds to complete background tasks.,0
+Performance,Response time under load may exceed 10 seconds.,0
+Performance,Batch processing may take several minutes to complete.,0
+Performance,System is expected to run on a single-user mode with minimal performance requirements.,0
+Performance,Delays in data retrieval are acceptable for this prototype version.,0
+Performance,The system must be highly responsive and efficient.,1
+Performance,Application speed is a top priority.,1
+Performance,System should perform operations instantly.,1
+Performance,Users should experience no lag while using the system.,1
+Performance,Performance must be optimized for quick user interaction.,1
+Performance,System should respond in less than 1 second.,1
+Performance,System performance can vary under load.,1
+Performance,Performance is not critical for this system.,0
+Performance,System should process 1000 transactions per second.,1
+Performance,The application must load the dashboard in under 2 seconds.,1
+Performance,The response time for any API call should not exceed 500 milliseconds.,1
+Performance,"The system must support 10,000 concurrent users without degradation.",1
+Performance,Reports should be generated within 3 seconds after user request.,1
+Performance,System performance must remain stable under heavy traffic conditions.,1
+Performance,Database queries should execute in less than 200ms.,1
+Performance,The server must maintain uptime of 99.9% with minimal latency.,1
+Performance,Performance is not a primary concern for this application.,0
+Performance,System may take up to 30 seconds to complete background tasks.,0
+Performance,Response time under load may exceed 10 seconds.,0
+Performance,Batch processing may take several minutes to complete.,0
+Performance,System is expected to run on a single-user mode with minimal performance requirements.,0
+Performance,Delays in data retrieval are acceptable for this prototype version.,0
+Performance,The system must be highly responsive and efficient.,1
+Performance,Application speed is a top priority.,1
+Performance,System should perform operations instantly.,1
+Performance,Users should experience no lag while using the system.,1
+Performance,Performance must be optimized for quick user interaction.,1
+Performance,System performance may vary depending on network speed.,1
+Performance,Response time might fluctuate during peak hours.,1
+Performance,Performance depends on the size of the data being processed.,1
+Performance,Application speed may differ across hardware configurations.,1
+Performance,System performance can vary under heavy load.,1
+Performance,The system might slow down when multiple background jobs are running.,1
+Performance,Performance may depend on available system resources.,1
+Performance,Response times may differ based on concurrent user activity.,1
+Performance,System speed may vary when accessing remote servers.,1
+Performance,Performance is not critical for this system.,0
+Performance,The system can take up to 30 seconds to complete operations.,0
+Performance,Delays in processing are acceptable for background tasks.,0
+Performance,Response time under load may exceed 10 seconds.,0
+Performance,Batch jobs may take several minutes to complete.,0
+Performance,"System performance may degrade during high traffic, which is acceptable.",0
+Performance,Fast response time is not a key requirement.,0
+Performance,System may take noticeable time to start up.,0
+Performance,Performance tuning will be addressed in future releases.,0
+Performance,The system can generate reports within 50 seconds.,0
+Performance,Minor delays are acceptable for non-critical processes.,0
+Performance,The prototype version may have reduced performance.,0
+Performance,The system must respond in less than 1 second for all user actions.,1
+Performance,API calls should return results within 500 milliseconds.,1
+Performance,Dashboard should load in under 2 seconds even under peak load.,1
+Performance,Database queries must execute within 100ms.,1
+Performance,"System should handle at least 10,000 concurrent requests per minute.",1
+Performance,The parsing module should process a CV in less than 2 seconds.,1
+Performance,The application should have minimal latency under heavy usage.,1
+Performance,Users must experience instant feedback when performing actions.,1
+Performance,The system shall process 1000 transactions per second.,1
+Performance,Performance optimization is critical to meet user expectations.,1
+Performance,System must remain responsive during high network traffic.,1
+Performance,Processing time for any operation must not exceed 1 second.,1
+Performance,Application must run smoothly even with large datasets.,1
+Performance,The server should maintain a latency below 100 ms.,1
+Performance,The API should scale efficiently without performance degradation.,1
+Performance,Real-time analytics must be delivered within 2 seconds.,1
+Performance,Performance should not degrade as concurrent users increase.,1
+Performance,Application startup time should be less than 3 seconds.,1
+Performance,System must provide a consistent response time of under 2 seconds.,1
+Performance,The user interface must react instantly to user input.,1
+Performance,System performance may depend on data size and hardware resources.,1
+Performance,Response time may vary depending on concurrent users.,1
+Performance,Performance can fluctuate based on network conditions.,1
+Performance,The application may slow down during peak hours.,1
+Performance,Processing time may increase with complex data.,1
+Performance,System performance might change with heavy background tasks.,1
+Performance,Performance depends on system configuration and environment.,1
+Performance,The system may temporarily degrade under high load.,1
+Performance,Response time varies depending on server workload.,1
+Performance,Processing speed may differ across user devices.,1
+Performance,The system might slow down when multiple background jobs are running.,1
+Performance,System throughput may decrease when handling large files.,1
+Performance,Performance may vary depending on database size.,1
+Performance,Application speed depends on available memory and CPU.,1
+Performance,Response time might fluctuate when using external APIs.,1
+Performance,System latency may vary based on connection quality.,1
+Performance,Performance depends on concurrent read/write operations.,1
+Performance,The system may show slower response during maintenance.,1
+Performance,Performance might be reduced on mobile devices.,1
+Performance,Throughput may change depending on server load.,1
+Performance,Performance is not a primary concern for this prototype.,0
+Performance,Delays in response are acceptable for background processes.,0
+Performance,Batch processing may take several minutes to complete.,0
+Performance,System may take up to 30 seconds to start.,0
+Performance,Response time exceeding 10 seconds is acceptable for this phase.,0
+Performance,The application can tolerate delays during data import.,0
+Performance,Speed optimization is not required for the current version.,0
+Performance,Minor lag is acceptable during peak usage.,0
+Performance,The system may take noticeable time to complete operations.,0
+Performance,Performance tuning will be addressed in future updates.,0
+Performance,Prototype version may have reduced speed and responsiveness.,0
+Performance,System may take several seconds to load reports.,0
+Performance,Long response times are acceptable for non-critical modules.,0
+Performance,Application speed is not a key requirement.,0
+Performance,Data refresh delays are tolerable for testing environment.,0
+Performance,Performance degradation is acceptable under heavy computation.,0
+Performance,System may perform slower under heavy data processing.,0
+Performance,Execution delays are permissible for scheduled jobs.,0
+Performance,Background jobs can run for several minutes without issue.,0
+Performance,User interaction speed is not critical for internal tools.,0
+Security,System must use strong encryption and authentication.,1
+Security,"The system shall display a warning to the user after 30 minutes of inactivity, but no automatic logout or session termination is enforced.",0
+Security,"The system shall require users to create passwords with at least 8 characters, including uppercase, lowercase, and numeric digits. Passwords must be stored using basic hashing, but no multi-factor authentication is required.",0
+Security,Basic password protection is sufficient.,0
+Security,System must use strong encryption and authentication.,1
+Security,Basic password protection is sufficient.,0
+Security,System must use strong encryption and authentication.,1
+Security,Basic password protection is sufficient.,0
+Security,All user data must be encrypted in transit and at rest.,1
+Security,The system must implement multi-factor authentication for all users.,1
+Security,Sensitive information must be protected using strong encryption standards.,1
+Security,Access to the system should be role-based and audited regularly.,1
+Security,The application must comply with GDPR and ISO 27001 standards.,1
+Security,Only authorized personnel can access confidential data.,1
+Security,System must detect and prevent unauthorized access attempts.,1
+Security,Passwords must be stored using strong hashing algorithms like bcrypt.,1
+Security,The system should include intrusion detection and prevention mechanisms.,1
+Security,Security patches must be applied immediately after release.,1
+Security,All API endpoints must use HTTPS and JWT-based authentication.,1
+Security,The system must support automatic logout after inactivity.,1
+Security,Regular penetration testing must be performed.,1
+Security,The application must implement end-to-end encryption for user communication.,1
+Security,Security level may vary depending on user role.,1
+Security,The system uses HTTPS but not all data is encrypted at rest.,1
+Security,Authentication is required for critical features only.,1
+Security,Security updates are applied periodically.,1
+Security,Data encryption is optional based on user preferences.,1
+Security,Some components rely on third-party security mechanisms.,1
+Security,Access control policies depend on deployment configuration.,1
+Security,The system enforces strong passwords but lacks two-factor authentication.,1
+Security,Audit logs are maintained for admin users only.,1
+Security,Security is ensured for production environments but limited in testing.,1
+Security,Network security depends on external firewall configuration.,1
+Security,Encryption is used for selected data fields only.,1
+Security,The system does not require user authentication.,0
+Security,Data encryption is not mandatory.,0
+Security,Security is not a critical concern for this prototype.,0
+Security,Users can access the system without login.,0
+Security,The system does not implement access control.,0
+Security,No encryption is applied to stored data.,0
+Security,Public access is allowed to all system information.,0
+Security,Security patches can be applied manually when needed.,0
+Security,Authentication and authorization are not enforced.,0
+Security,System logs are not protected or audited.,0
+Security,Communication between services is not secured.,0
+Security,The system relies on users to manage their own security settings.,0
+Security,Security validation is optional during deployment.,0
+Security,System must automatically lock accounts after multiple failed login attempts.,1
+Security,Sensitive user data such as passwords and tokens must never be logged.,1
+Security,All database connections must use secure SSL/TLS encryption.,1
+Security,The system must sanitize all user inputs to prevent SQL injection.,1
+Security,Security configuration must be reviewed and approved before deployment.,1
+Security,Access logs must be encrypted and retained for 90 days.,1
+Security,Session management must prevent reuse of expired tokens.,1
+Security,Cross-site scripting and CSRF attacks must be prevented using appropriate headers.,1
+Security,System should block IPs after suspicious activity is detected.,1
+Security,Application must validate SSL certificates of external services.,1
+Security,The platform must include continuous monitoring for security breaches.,1
+Security,"All credentials must be stored securely using environment variables, not hardcoded.",1
+Security,The system must enforce password complexity requirements.,1
+Security,All API keys must be rotated periodically for enhanced security.,1
+Security,Administrators must receive alerts when unauthorized access attempts occur.,1
+Security,Security incidents must be logged and reported automatically.,1
+Security,Users must reauthenticate before performing critical actions.,1
+Security,The application must not expose stack traces or sensitive errors to end-users.,1
+Security,Data backup files must be encrypted before storage.,1
+Security,Access to encryption keys must be restricted to authorized administrators only.,1
+Security,Two-factor authentication is required for admin accounts but optional for users.,1
+Security,System may log non-sensitive user actions without encryption.,1
+Security,Security audit frequency depends on customer contract level.,1
+Security,The system may allow weaker encryption for backward compatibility.,1
+Security,"Some modules use secure authentication, while legacy ones do not.",1
+Security,Security controls differ between cloud and on-premise deployments.,1
+Security,Encryption is enabled only for paid plans.,1
+Security,Security configuration may vary by tenant in multi-tenant systems.,1
+Security,Only critical APIs require token-based authentication.,1
+Security,System allows temporary password sharing for support purposes.,1
+Security,Security scans are performed quarterly instead of monthly.,1
+Security,External dependencies may not always follow latest security practices.,1
+Security,Firewall rules are applied inconsistently across regions.,1
+Security,Encryption keys are shared between development and staging environments.,1
+Security,System does not include any authentication mechanism.,0
+Security,User passwords can be stored in plain text.,0
+Security,The prototype has no active security checks.,0
+Security,Users are allowed to use weak passwords such as '1234'.,0
+Security,The system allows access over HTTP instead of HTTPS.,0
+Security,No restrictions are placed on failed login attempts.,0
+Security,Sensitive API keys are visible in the frontend code.,0
+Security,There are no monitoring or alerting mechanisms for security incidents.,0
+Security,Encryption is completely disabled for development builds.,0
+Security,Access control policies are not implemented.,0
+Security,Security updates are applied manually and infrequently.,0
+Security,No input validation is performed on form data.,0
+Security,Cross-site scripting protection is not enabled.,0
+Security,User sessions never expire automatically.,0
+Security,No data masking is used for sensitive fields like credit cards.,0
+Security,System does not verify identity for password reset requests.,0
+Security,Security awareness training is not conducted for staff.,0
+Security,The application accepts self-signed certificates without validation.,0
+Security,Log files may contain sensitive information without protection.,0
+Maintainability,System architecture should be modular to simplify updates.,0
+Maintainability,Code should be well-documented and follow standard naming conventions.,1
+Maintainability,The system must allow easy modification of existing features.,1
+Maintainability,Developers should be able to add new modules with minimal code changes.,1
+Maintainability,Application should support plug-and-play components for future extensions.,1
+Maintainability,All modules must be independent and loosely coupled.,1
+Maintainability,The system should allow configuration changes without code modification.,1
+Maintainability,Maintenance tasks should require minimal downtime.,1
+Maintainability,The system must support automated testing and deployment.,1
+Maintainability,All code changes should be traceable through version control.,1
+Maintainability,Documentation and design diagrams must be regularly updated.,1
+Maintainability,System must enable quick bug fixes with minimal impact on other components.,1
+Maintainability,The architecture should allow future technology upgrades easily.,1
+Maintainability,Maintenance effort may vary depending on system complexity.,1
+Maintainability,The ease of maintenance depends on the developer's experience.,1
+Maintainability,Code maintainability may differ across modules.,1
+Maintainability,Some components are easier to update than others.,1
+Maintainability,System maintainability can vary based on documentation quality.,1
+Maintainability,Maintenance time may depend on the size of the data being processed.,1
+Maintainability,Maintainability might be affected by third-party dependencies.,1
+Maintainability,System maintainability may differ between releases.,1
+Maintainability,Maintenance effort can fluctuate with changes in system load.,1
+Maintainability,System modifications require significant developer effort.,0
+Maintainability,The codebase is complex and hard to understand.,0
+Maintainability,Making changes in one module often breaks other components.,0
+Maintainability,The system lacks sufficient documentation for maintenance.,0
+Maintainability,Adding new features requires rewriting large parts of the code.,0
+Maintainability,The application structure is tightly coupled and not modular.,0
+Maintainability,Maintenance tasks often cause long downtime periods.,0
+Maintainability,Bug fixing requires deep knowledge of the entire system.,0
+Maintainability,Updating system configurations requires manual code edits.,0
+Maintainability,Refactoring the system is difficult due to poor design.,0
+Maintainability,The system is not easily adaptable to new requirements.,0
+Maintainability,System should provide a modular microservices architecture to simplify maintenance.,1
+Maintainability,Each service should have a clear API boundary for independent updates.,1
+Maintainability,System should use dependency injection to improve maintainability.,1
+Maintainability,Automated CI/CD pipelines must ensure consistent build and release processes.,1
+Maintainability,The application should support configuration through environment variables.,1
+Maintainability,Code reviews are mandatory for every change to maintain quality.,1
+Maintainability,The codebase should follow clean architecture principles for easier maintenance.,1
+Maintainability,System logs and metrics should assist in identifying maintenance issues quickly.,1
+Maintainability,Every module should include unit and integration tests for safe refactoring.,1
+Maintainability,System should allow rolling updates with zero downtime.,1
+Maintainability,Maintenance scripts must be automated and version-controlled.,1
+Maintainability,Architecture must separate business logic from presentation for flexibility.,1
+Maintainability,The system must provide developer-friendly error reporting.,1
+Maintainability,Documentation should be automatically generated from the source code.,1
+Maintainability,System configuration must be externalized to avoid code changes during updates.,1
+Maintainability,The system should support modular versioning for independent updates.,1
+Maintainability,The platform must use containerization for maintainable deployments.,1
+Maintainability,"System should use design patterns that encourage maintainable code (e.g., MVC, Repository).",1
+Maintainability,The source control must track all code changes with commit history.,1
+Maintainability,Error logs should include sufficient context for debugging issues efficiently.,1
+Maintainability,Maintainability depends on the frequency of updates and release cycles.,1
+Maintainability,Some legacy modules require more effort to maintain than modern ones.,1
+Maintainability,Refactoring cost may differ depending on the module complexity.,1
+Maintainability,"Ease of maintenance varies between environments (test, staging, production).",1
+Maintainability,System updates might occasionally require downtime during peak hours.,1
+Maintainability,Maintenance depends on the level of technical debt accumulated over time.,1
+Maintainability,Documentation quality varies across teams and modules.,1
+Maintainability,The maintainability score may change after system expansion.,1
+Maintainability,Code complexity increases slightly with new feature additions.,1
+Maintainability,Ease of bug fixing depends on how well the logging is implemented.,1
+Maintainability,Automated tests cover most but not all of the codebase.,1
+Maintainability,Maintainability is moderate due to partial modularity.,1
+Maintainability,The system is partially refactorable but lacks a clear layer separation.,1
+Maintainability,Some configuration files still require manual editing during maintenance.,1
+Maintainability,The maintainability depends on the responsiveness of the support team.,1
+Maintainability,The ease of making changes varies depending on the deployment environment.,1
+Maintainability,"The system lacks any form of automated testing, making changes risky.",0
+Maintainability,"Codebase uses hard-coded values, reducing maintainability.",0
+Maintainability,There is no modular separation; everything is in a single code file.,0
+Maintainability,Developers find it difficult to locate specific functionality in the code.,0
+Maintainability,No version control system is used to track changes.,0
+Maintainability,The system requires full redeployment for minor updates.,0
+Maintainability,"Documentation is missing or outdated, making maintenance difficult.",0
+Maintainability,Error handling is inconsistent across modules.,0
+Maintainability,There is heavy code duplication throughout the project.,0
+Maintainability,Refactoring the system introduces frequent regressions.,0
+Maintainability,"No clear architecture is followed, leading to maintenance chaos.",0
+Maintainability,All configuration is embedded directly into source code.,0
+Maintainability,"The code lacks comments, making it hard for new developers to contribute.",0
+Maintainability,System maintenance requires full system restart each time.,0
+Maintainability,Third-party libraries are outdated and hard to upgrade.,0
+Maintainability,There is no separation between logic and presentation layers.,0
+Maintainability,Developers must manually test the system after every update.,0
+Maintainability,Maintenance depends entirely on one developer's knowledge.,0
+Maintainability,The architecture is too rigid to allow any structural changes.,0
+Maintainability,Legacy code prevents easy adaptation to new frameworks.,0
+Scalability,The system must support an increasing number of users without performance degradation.,1
+Scalability,The architecture should allow horizontal scaling across multiple servers.,1
+Scalability,"Application should handle growth from 1,000 to 100,000 users seamlessly.",1
+Scalability,System must be designed to handle large volumes of data efficiently.,1
+Scalability,The infrastructure should support cloud-based auto-scaling.,1
+Scalability,The system must scale dynamically with workload changes.,1
+Scalability,Adding new servers should not require system downtime.,1
+Scalability,Database architecture must support partitioning and replication for scalability.,1
+Scalability,The system should maintain stable performance as the number of users doubles.,1
+Scalability,The design should support future expansion of services and features.,1
+Scalability,Application components should be stateless to support scaling.,1
+Scalability,System must handle increased data processing with minimal latency.,1
+Scalability,The platform must efficiently scale to accommodate spikes in traffic.,1
+Scalability,System scalability may depend on the hardware configuration.,1
+Scalability,Performance might vary as the number of users increases.,1
+Scalability,Scalability may be limited by third-party service constraints.,1
+Scalability,System can scale up to a certain number of concurrent users.,1
+Scalability,Application scalability depends on available network bandwidth.,1
+Scalability,The system scales efficiently under moderate but not heavy load.,1
+Scalability,Database scalability depends on query optimization.,1
+Scalability,System performance may fluctuate during peak usage.,1
+Scalability,The platform supports scaling but may require manual configuration.,1
+Scalability,System scalability may depend on the hardware configuration.,1
+Scalability,Performance might vary as the number of users increases.,1
+Scalability,Scalability may be limited by third-party service constraints.,1
+Scalability,System can scale up to a certain number of concurrent users.,1
+Scalability,Application scalability depends on available network bandwidth.,1
+Scalability,The system scales efficiently under moderate but not heavy load.,1
+Scalability,Database scalability depends on query optimization.,1
+Scalability,System performance may fluctuate during peak usage.,1
+Scalability,The platform supports scaling but may require manual configuration.,1
+Scalability,The system cannot handle a significant increase in users.,0
+Scalability,Scaling the system requires major code changes.,0
+Scalability,The system performance drops significantly as data size grows.,0
+Scalability,Application does not support adding servers dynamically.,0
+Scalability,System is designed for a fixed number of users only.,0
+Scalability,Scalability is not a priority for this release.,0
+Scalability,The database cannot handle large-scale data expansion.,0
+Scalability,The system is not optimized for distributed environments.,0
+Scalability,Increasing load causes long response times and system failures.,0
+Scalability,Adding new components requires system downtime.,0
+Scalability,The application struggles to handle concurrent requests.,0
+Scalability,System must support both vertical and horizontal scaling strategies.,1
+Scalability,Architecture should allow deployment on distributed clusters.,1
+Scalability,The platform must utilize load balancers to distribute traffic evenly.,1
+Scalability,Application must automatically scale out when CPU utilization exceeds 80%.,1
+Scalability,System must support multi-region deployment for global scalability.,1
+Scalability,The infrastructure should enable container-based scaling using Kubernetes or Docker Swarm.,1
+Scalability,Scalability testing must confirm the system can support a tenfold user increase.,1
+Scalability,Caching layers must be implemented to enhance scalability under load.,1
+Scalability,System should scale compute and storage independently.,1
+Scalability,The architecture should be service-oriented to enable scaling of individual components.,1
+Scalability,Cloud infrastructure must allow on-demand provisioning of new instances.,1
+Scalability,System should utilize asynchronous processing for scalable background jobs.,1
+Scalability,Application must maintain consistent response time under scaling conditions.,1
+Scalability,System must maintain high throughput even as concurrent sessions increase.,1
+Scalability,Each service should be deployable independently to improve scalability.,1
+Scalability,System must support event-driven scaling using message queues.,1
+Scalability,Infrastructure must monitor and adjust resources automatically based on usage trends.,1
+Scalability,System must handle burst traffic during peak hours without performance loss.,1
+Scalability,Architecture should allow modular scaling of storage and compute resources.,1
+Scalability,System should support sharding to distribute large datasets efficiently.,1
+Scalability,The system can scale efficiently under predictable workloads but struggles with sudden spikes.,1
+Scalability,Some modules scale better than others due to design differences.,1
+Scalability,System scalability depends on available server resources.,1
+Scalability,Application scales up effectively but not down automatically.,1
+Scalability,"The database supports horizontal scaling, but the API layer does not.",1
+Scalability,System can handle scaling but requires manual load balancing.,1
+Scalability,Scalability performance varies with the type of workload processed.,1
+Scalability,The architecture partially supports scaling but has bottlenecks in I/O operations.,1
+Scalability,System can scale effectively during business hours but not overnight jobs.,1
+Scalability,Some components require redeployment to achieve scaling.,1
+Scalability,Scalability depends on network latency between distributed nodes.,1
+Scalability,The system supports scaling under moderate traffic only.,1
+Scalability,Scalability performance changes based on caching strategy.,1
+Scalability,Auto-scaling is available but with delayed response time.,1
+Scalability,The system can handle limited concurrent connections efficiently.,1
+Scalability,Scalability behavior depends on the cloud provider’s configuration.,1
+Scalability,System scaling might affect database replication delays.,1
+Scalability,The scalability level differs between backend and frontend systems.,1
+Scalability,Application shows good scalability under read-heavy but not write-heavy workloads.,1
+Scalability,Scalability results vary based on memory optimization efficiency.,1
+Scalability,System is monolithic and cannot be scaled horizontally.,0
+Scalability,Adding new nodes requires manual reconfiguration of the system.,0
+Scalability,Application crashes when user count exceeds design limits.,0
+Scalability,Database architecture does not support sharding or replication.,0
+Scalability,System scaling requires full redeployment and downtime.,0
+Scalability,There is no load balancing strategy in place.,0
+Scalability,System performance deteriorates rapidly with data growth.,0
+Scalability,No support for distributed or clustered environments.,0
+Scalability,Auto-scaling is disabled and must be handled manually.,0
+Scalability,System cannot scale storage independently from compute.,0
+Scalability,Infrastructure lacks monitoring tools for scalability management.,0
+Scalability,Application relies on hard-coded limits for user sessions.,0
+Scalability,The system has no mechanism for scaling background jobs.,0
+Scalability,Application servers fail under moderate concurrency.,0
+Scalability,Scaling the system requires rewriting the entire codebase.,0
+Scalability,"System lacks caching, causing scalability issues under load.",0
+Scalability,Database becomes a bottleneck as the number of users increases.,0
+Scalability,The platform cannot support distributed transaction processing.,0
+Scalability,Scaling the system introduces inconsistent data states.,0
+Scalability,System design prevents cloud-native scalability features from working properly.,0
+Availability,The system must be available 99.99% of the time.,1
+Availability,The system does not need to be available 24/7 and can tolerate planned outages for maintenance.,0
+Availability,System should ensure continuous operation with minimal downtime.,1
+Availability,The application must remain operational 24/7.,1
+Availability,High availability architecture must be implemented to avoid single points of failure.,1
+Availability,System components should support automatic failover.,1
+Availability,Downtime for maintenance should not exceed 5 minutes per month.,1
+Availability,The system should recover automatically from hardware or network failures.,1
+Availability,The platform must guarantee uninterrupted service during peak hours.,1
+Availability,A backup server must be ready to take over immediately in case of failure.,1
+Availability,Critical services should be replicated across multiple data centers.,1
+Availability,Scheduled maintenance should not affect system availability.,1
+Availability,The system should provide real-time monitoring and automatic recovery.,1
+Availability,The infrastructure must support 24x7 uptime for global users.,1
+Availability,System availability may depend on server load.,1
+Availability,Availability can vary during maintenance windows.,1
+Availability,The system may experience short downtimes during updates.,1
+Availability,Availability depends on internet connectivity.,1
+Availability,System uptime may fluctuate under heavy usage.,1
+Availability,The platform provides high availability under normal conditions.,1
+Availability,Some services may be temporarily unavailable during upgrades.,1
+Availability,Availability may differ between primary and secondary regions.,1
+Availability,The system may have reduced uptime during scheduled deployments.,1
+Availability,Availability depends on external service reliability.,1
+Availability,System is not required to be available 24/7.,0
+Availability,The application can have downtime of several hours per week.,0
+Availability,Temporary unavailability is acceptable during maintenance.,0
+Availability,The system may be offline during non-business hours.,0
+Availability,No redundancy or failover mechanisms are required.,0
+Availability,Availability is not critical for internal tools.,0
+Availability,System recovery after crash may take several hours.,0
+Availability,Downtime during updates is acceptable.,0
+Availability,Service interruptions are tolerable for non-critical operations.,0
+Availability,System uptime of 90% is sufficient.,0
+Availability,The prototype version may be offline intermittently.,0
+Availability,Manual restart is required after a system failure.,0
+Availability,The system must achieve an uptime of 99.999% annually.,1
+Availability,Automatic health checks should detect and restart failed services instantly.,1
+Availability,Redundant network connections must be implemented to ensure constant availability.,1
+Availability,The application should handle node failures without user impact.,1
+Availability,Failover mechanisms must switch traffic within 30 seconds of a failure.,1
+Availability,A distributed architecture should be used to guarantee fault tolerance.,1
+Availability,Service-level agreements must guarantee near-zero downtime.,1
+Availability,The infrastructure must automatically balance loads between servers for high availability.,1
+Availability,Critical APIs must be hosted in multiple availability zones.,1
+Availability,System must auto-recover from software crashes or unexpected shutdowns.,1
+Availability,System monitoring should alert administrators of potential downtime immediately.,1
+Availability,Application state should be preserved during failover to secondary systems.,1
+Availability,Scheduled system updates must occur without service interruption.,1
+Availability,Database replication must ensure zero data loss in case of node failure.,1
+Availability,System recovery time objective (RTO) must not exceed 1 minute.,1
+Availability,System must maintain high availability even during regional outages.,1
+Availability,Application should employ clustering for redundancy and load balancing.,1
+Availability,High-availability setup must be verified through continuous testing.,1
+Availability,Backup instances should automatically synchronize with the active system.,1
+Availability,Availability monitoring dashboards must update every 30 seconds.,1
+Availability,System may experience degraded performance during backup operations.,1
+Availability,Availability can depend on database synchronization speed.,1
+Availability,Some modules may be temporarily unavailable during scaling operations.,1
+Availability,Availability depends on third-party API uptime.,1
+Availability,The system might require brief restarts after configuration changes.,1
+Availability,Some non-critical features may be disabled during maintenance.,1
+Availability,System uptime fluctuates based on cloud provider maintenance schedules.,1
+Availability,Availability depends on network latency between data centers.,1
+Availability,Partial outages may occur during system updates.,1
+Availability,Failover speed may vary depending on system load.,1
+Availability,Certain services might experience reduced uptime compared to core modules.,1
+Availability,Availability monitoring tools might not cover all services equally.,1
+Availability,Redundant servers may not always be synchronized in real time.,1
+Availability,The system may take longer to recover under high load.,1
+Availability,Automatic recovery may not be enabled for all environments.,1
+Availability,System updates might cause intermittent service disruptions.,1
+Availability,Availability varies with the hosting provider’s reliability.,1
+Availability,"Maintenance schedules differ between regions, affecting uptime slightly.",1
+Availability,Service degradation is acceptable under heavy data processing loads.,1
+Availability,System restarts may be required to restore full availability after patches.,1
+Availability,System does not have redundancy or backup servers.,0
+Availability,Availability is not guaranteed during weekends or holidays.,0
+Availability,System recovery can take up to several days after failure.,0
+Availability,Manual intervention is needed after every system crash.,0
+Availability,The platform can be taken offline for maintenance without notice.,0
+Availability,There are no mechanisms for automatic failover.,0
+Availability,The system can remain unavailable for hours after an update.,0
+Availability,No backup or disaster recovery plan is implemented.,0
+Availability,Uptime of 80% is considered acceptable for this system.,0
+Availability,The system lacks monitoring for detecting downtime.,0
+Availability,Failures require complete system restarts to recover.,0
+Availability,The infrastructure does not support load balancing.,0
+Availability,Single points of failure exist in the current system design.,0
+Availability,The system may be unavailable during data migrations.,0
+Availability,No SLA is defined for system uptime.,0
+Availability,System availability is not monitored or reported.,0
+Availability,There are no backup servers to handle downtime.,0
+Availability,The application relies on manual recovery after hardware failure.,0
+Availability,System does not support hot-swappable components.,0
+Availability,Downtime during version upgrades is not minimized or controlled.,0
+Usability,The system interface must be intuitive and easy to navigate.,1
+Usability,Users should be able to complete key tasks with minimal training.,1
+Usability,The application must provide clear feedback after every user action.,1
+Usability,All UI elements should be consistent and accessible.,1
+Usability,The system must support accessibility standards (WCAG 2.1).,1
+Usability,Help and documentation should be available for all major functions.,1
+Usability,The system must allow users to undo actions easily.,1
+Usability,"Interfaces should have clear labels, icons, and tooltips.",1
+Usability,Error messages must be descriptive and guide the user to a solution.,1
+Usability,The system should support keyboard shortcuts for frequent operations.,1
+Usability,User onboarding should be smooth with guided tutorials.,1
+Usability,The interface must be responsive and mobile-friendly.,1
+Usability,The layout must maintain clarity and simplicity across all screens.,1
+Usability,User actions should require minimal clicks to achieve goals.,1
+Usability,Some features require moderate user training.,1
+Usability,The interface is user-friendly but lacks advanced accessibility features.,1
+Usability,Certain functions may be difficult for first-time users.,1
+Usability,Usability may vary depending on screen size or resolution.,1
+Usability,Help documentation is available but not detailed.,1
+Usability,Some feedback messages may be unclear.,1
+Usability,Navigation structure is mostly intuitive but could be improved.,1
+Usability,System provides partial support for keyboard accessibility.,1
+Usability,Some screens are easy to use while others require technical knowledge.,1
+Usability,UI consistency is maintained in most but not all sections.,1
+Usability,System usability depends on user experience level.,1
+Usability,Certain workflows take multiple steps to complete.,1
+Usability,User assistance features are available but limited.,1
+Usability,The system interface is difficult to understand for new users.,0
+Usability,Users require extensive training to use the system effectively.,0
+Usability,Error messages are vague and unhelpful.,0
+Usability,The application lacks proper navigation menus.,0
+Usability,There is no online help or user documentation.,0
+Usability,Interface layout is inconsistent and confusing.,0
+Usability,User feedback is not displayed after actions.,0
+Usability,The system does not follow standard UI conventions.,0
+Usability,Users must perform many steps for simple tasks.,0
+Usability,The design is not responsive or mobile-friendly.,0
+Usability,Accessibility for disabled users is not considered.,0
+Usability,The interface contains too much clutter and unclear icons.,0
+Usability,No undo or redo functionality is provided.,0
+Usability,Users report frustration and confusion during normal operations.,0
+Usability,The system interface must be intuitive and easy to navigate.,1
+Usability,Users should be able to complete key tasks with minimal training.,1
+Usability,The application must provide clear feedback after every user action.,1
+Usability,All UI elements should be consistent and accessible.,1
+Usability,The system must support accessibility standards (WCAG 2.1).,1
+Usability,Help and documentation should be available for all major functions.,1
+Usability,The system must allow users to undo actions easily.,1
+Usability,"Interfaces should have clear labels, icons, and tooltips.",1
+Usability,Error messages must be descriptive and guide the user to a solution.,1
+Usability,The system should support keyboard shortcuts for frequent operations.,1
+Usability,User onboarding should be smooth with guided tutorials.,1
+Usability,The interface must be responsive and mobile-friendly.,1
+Usability,The layout must maintain clarity and simplicity across all screens.,1
+Usability,User actions should require minimal clicks to achieve goals.,1
+Usability,Interface animations should be smooth without lag.,1
+Usability,System should provide tooltips and contextual help on demand.,1
+Usability,Feedback should be immediate for all interactive elements.,1
+Usability,All forms must have inline validation to prevent errors.,1
+Usability,Some features require moderate user training.,1
+Usability,The interface is user-friendly but lacks advanced accessibility features.,1
+Usability,Certain functions may be difficult for first-time users.,1
+Usability,Usability may vary depending on screen size or resolution.,1
+Usability,Help documentation is available but not detailed.,1
+Usability,Some feedback messages may be unclear.,1
+Usability,Navigation structure is mostly intuitive but could be improved.,1
+Usability,System provides partial support for keyboard accessibility.,1
+Usability,Some screens are easy to use while others require technical knowledge.,1
+Usability,UI consistency is maintained in most but not all sections.,1
+Usability,System usability depends on user experience level.,1
+Usability,Certain workflows take multiple steps to complete.,1
+Usability,User assistance features are available but limited.,1
+Usability,The system interface is difficult to understand for new users.,0
+Usability,Users require extensive training to use the system effectively.,0
+Usability,Error messages are vague and unhelpful.,0
+Usability,The application lacks proper navigation menus.,0
+Usability,There is no online help or user documentation.,0
+Usability,Interface layout is inconsistent and confusing.,0
+Usability,User feedback is not displayed after actions.,0
+Usability,The system does not follow standard UI conventions.,0
+Usability,Users must perform many steps for simple tasks.,0
+Usability,The design is not responsive or mobile-friendly.,0
+Usability,Accessibility for disabled users is not considered.,0
+Usability,The interface contains too much clutter and unclear icons.,0
+Usability,No undo or redo functionality is provided.,0
+Usability,Users report frustration and confusion during normal operations.,0
+Usability,Interface lacks support for multiple languages.,0
+Usability,Important user notifications are not visible.,0
+Portability,"The system must run seamlessly on Windows, macOS, and Linux.",1
+Portability,The application should support both web and mobile platforms.,1
+Portability,The software must be easily deployable across multiple cloud providers.,1
+Portability,All modules should be platform-independent.,1
+Portability,The system must use cross-platform frameworks such as Java or .NET Core.,1
+Portability,The software must support containerized deployment using Docker.,1
+Portability,The system should operate efficiently across different hardware configurations.,1
+Portability,The application must run smoothly on all major browsers.,1
+Portability,No OS-specific dependencies should exist.,1
+Portability,The codebase should follow standards to enable cross-platform builds.,1
+Portability,System configuration files must be independent of platform-specific paths.,1
+Portability,The application must support cloud and on-premise environments equally.,1
+Portability,The system should use platform-agnostic APIs.,1
+Portability,The system can be adapted to other platforms with minor changes.,1
+Portability,Some modules are portable while others are OS-dependent.,1
+Portability,The software supports Windows and Linux but not macOS.,1
+Portability,Mobile compatibility is limited to Android devices.,1
+Portability,The system can be deployed on cloud environments with some configuration effort.,1
+Portability,The application runs best on one operating system but can work on others with performance issues.,1
+Portability,Database layer is portable but UI components depend on platform libraries.,1
+Portability,Most scripts are portable except installation scripts.,1
+Portability,The system supports limited cross-browser functionality.,1
+Portability,The application can be compiled for multiple platforms with manual setup.,1
+Portability,Deployment process may vary across environments.,1
+Portability,Some dependencies restrict full portability.,1
+Portability,The system supports virtualization but not containerization.,1
+Portability,The system is designed to run only on Windows.,0
+Portability,The application relies on platform-specific APIs.,0
+Portability,No consideration was given for cross-platform deployment.,0
+Portability,The software cannot be easily moved to another operating system.,0
+Portability,System configuration is hardcoded for a single environment.,0
+Portability,The application depends on Windows Registry for configuration.,0
+Portability,No cloud support is planned for the current version.,0
+Portability,The software requires proprietary hardware to operate.,0
+Portability,Source code includes OS-specific paths and commands.,0
+Portability,The system cannot run on mobile or web platforms.,0
+Portability,Dependencies are not available outside the target platform.,0
+Portability,The system must be recompiled entirely for another OS.,0
+Portability,Migration to another environment would require a full redesign.,0
+Portability,"The system must run seamlessly on Windows, macOS, and Linux.",1
+Portability,The application should support both web and mobile platforms.,1
+Portability,The software must be easily deployable across multiple cloud providers.,1
+Portability,All modules should be platform-independent.,1
+Portability,The system must use cross-platform frameworks such as Java or .NET Core.,1
+Portability,The software must support containerized deployment using Docker.,1
+Portability,The system should operate efficiently across different hardware configurations.,1
+Portability,The application must run smoothly on all major browsers.,1
+Portability,No OS-specific dependencies should exist.,1
+Portability,The codebase should follow standards to enable cross-platform builds.,1
+Portability,System configuration files must be independent of platform-specific paths.,1
+Portability,The application must support cloud and on-premise environments equally.,1
+Portability,The system should use platform-agnostic APIs.,1
+Portability,System components should not rely on specific hardware features.,1
+Portability,Deployment scripts should work on multiple OS without changes.,1
+Portability,The system must allow portable updates without affecting existing environments.,1
+Portability,System logs and configuration files should be easily transferable.,1
+Portability,The system can be adapted to other platforms with minor changes.,1
+Portability,Some modules are portable while others are OS-dependent.,1
+Portability,The software supports Windows and Linux but not macOS.,1
+Portability,Mobile compatibility is limited to Android devices.,1
+Portability,The system can be deployed on cloud environments with some configuration effort.,1
+Portability,The application runs best on one operating system but can work on others with performance issues.,1
+Portability,Database layer is portable but UI components depend on platform libraries.,1
+Portability,Most scripts are portable except installation scripts.,1
+Portability,The system supports limited cross-browser functionality.,1
+Portability,The application can be compiled for multiple platforms with manual setup.,1
+Portability,Deployment process may vary across environments.,1
+Portability,Some dependencies restrict full portability.,1
+Portability,The system supports virtualization but not containerization.,1
+Portability,System configuration is hardcoded for a single environment.,0
+Portability,The system is designed to run only on Windows.,0
+Portability,The application relies on platform-specific APIs.,0
+Portability,No consideration was given for cross-platform deployment.,0
+Portability,The software cannot be easily moved to another operating system.,0
+Portability,Application fails on unsupported platforms.,0
+Portability,Deployment requires manual changes for each OS.,0
+Portability,System cannot run in containerized environments.,0
+Portability,Migration to another environment would require a full redesign.,0
+Portability,Source code includes OS-specific paths and commands.,0
+Portability,Dependencies are not available outside the target platform.,0
+Portability,The system cannot run on mobile or web platforms.,0
+Operability,The system must provide real-time monitoring and alerting features.,1
+Operability,"Administrators should be able to start, stop, and restart services easily.",1
+Operability,System logs must be automatically collected and analyzed.,1
+Operability,The application must include a dashboard for operational metrics.,1
+Operability,Automatic recovery should occur after system failure.,1
+Operability,The system must notify operators immediately of any service outage.,1
+Operability,All operational processes should be automated using scripts or tools.,1
+Operability,The application must support remote monitoring and control.,1
+Operability,Operators should be able to easily perform configuration changes without downtime.,1
+Operability,The system must support detailed health checks and uptime reporting.,1
+Operability,The application must include diagnostic tools for troubleshooting.,1
+Operability,System components should restart automatically after unexpected termination.,1
+Operability,The platform should integrate with centralized logging and alert systems.,1
+Operability,Maintenance operations should require minimal manual intervention.,1
+Operability,Some system operations require manual monitoring.,1
+Operability,Basic alerting is available but not automated.,1
+Operability,The system can recover from minor failures with limited automation.,1
+Operability,"Operators can manage the system, but advanced tools are limited.",1
+Operability,Monitoring is available for critical components only.,1
+Operability,Manual intervention is required for certain configuration updates.,1
+Operability,The system provides limited logs for troubleshooting.,1
+Operability,Health checks are implemented but not comprehensive.,1
+Operability,"Some maintenance tasks can be automated, others are manual.",1
+Operability,Operational performance depends on operator expertise.,1
+Operability,Alerts are sent by email but not integrated into a monitoring tool.,1
+Operability,Restarting the system requires manual steps.,1
+Operability,The application partially supports remote management.,1
+Operability,The system requires manual restart after every failure.,0
+Operability,No monitoring tools are available for system performance.,0
+Operability,System health must be checked manually by administrators.,0
+Operability,No logging or alerting mechanisms are implemented.,0
+Operability,Operators need to perform complex steps for simple maintenance tasks.,0
+Operability,The system cannot recover automatically after a crash.,0
+Operability,No remote access is available for operators.,0
+Operability,Maintenance requires system downtime.,0
+Operability,System status cannot be viewed in real-time.,0
+Operability,No diagnostic tools are provided for debugging issues.,0
+Operability,Error logs must be manually retrieved from the server.,0
+Operability,The system does not notify operators of failures.,0
+Operability,Configuration changes require redeployment.,0
+Operability,System operations depend heavily on manual scripts.,0
+Operability,The system must provide real-time monitoring and alerting features.,1
+Operability,"Administrators should be able to start, stop, and restart services easily.",1
+Operability,System logs must be automatically collected and analyzed.,1
+Operability,The application must include a dashboard for operational metrics.,1
+Operability,Automatic recovery should occur after system failure.,1
+Operability,The system must notify operators immediately of any service outage.,1
+Operability,All operational processes should be automated using scripts or tools.,1
+Operability,The application must support remote monitoring and control.,1
+Operability,Operators should be able to easily perform configuration changes without downtime.,1
+Operability,The system must support detailed health checks and uptime reporting.,1
+Operability,The application must include diagnostic tools for troubleshooting.,1
+Operability,System components should restart automatically after unexpected termination.,1
+Operability,The platform should integrate with centralized logging and alert systems.,1
+Operability,Maintenance operations should require minimal manual intervention.,1
+Operability,System operations should remain stable under high load.,1
+Operability,Operational metrics should be accessible via APIs.,1
+Operability,The system should self-diagnose potential issues proactively.,1
+Operability,Some system operations require manual monitoring.,1
+Operability,Basic alerting is available but not automated.,1
+Operability,The system can recover from minor failures with limited automation.,1
+Operability,"Operators can manage the system, but advanced tools are limited.",1
+Operability,Monitoring is available for critical components only.,1
+Operability,Manual intervention is required for certain configuration updates.,1
+Operability,The system provides limited logs for troubleshooting.,1
+Operability,Health checks are implemented but not comprehensive.,1
+Operability,"Some maintenance tasks can be automated, others are manual.",1
+Operability,Operational performance depends on operator expertise.,1
+Operability,Alerts are sent by email but not integrated into a monitoring tool.,1
+Operability,Restarting the system requires manual steps.,1
+Operability,The application partially supports remote management.,1
+Operability,The system requires manual restart after every failure.,0
+Operability,No monitoring tools are available for system performance.,0
+Operability,System health must be checked manually by administrators.,0
+Operability,No logging or alerting mechanisms are implemented.,0
+Operability,Operators need to perform complex steps for simple maintenance tasks.,0
+Operability,The system cannot recover automatically after a crash.,0
+Operability,No remote access is available for operators.,0
+Operability,Maintenance requires system downtime.,0
+Operability,System status cannot be viewed in real-time.,0
+Operability,No diagnostic tools are provided for debugging issues.,0
+Operability,Error logs must be manually retrieved from the server.,0
+Operability,The system does not notify operators of failures.,0
+Operability,Configuration changes require redeployment.,0
+Operability,System operations depend heavily on manual scripts.,0
+Operability,The system cannot operate during network outages.,0
+Operability,Operators cannot perform remote updates or fixes.,0
+Operability,Critical failures require full system reboot manually.,0
+Operability,No automated recovery or backup procedures are available.,0

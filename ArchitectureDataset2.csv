@@ -1,0 +1,145 @@
+Architecture,Type,Level,LevelNorm
+Monolithic,PE,3,1.0
+Layered (N-Tier),PE,2,0.5
+Client server,PE,2,0.5
+Microservices,PE,2,0.5
+Service Oriented (SOA),PE,2,0.5
+Event-Driven/ Messaging,PE,3,1.0
+Microkernal (plug-in),PE,1,0.0
+Component Based,PE,2,0.5
+Pipe and- Filter,PE,2,0.5
+Broker (middleware),PE,2,0.5
+Peer to Peer (P2P),PE,2,0.5
+BlackBoard (Shared-Space),PE,1,0.0
+MVC (model-view-controller),PE,2,0.5
+Space Based ,PE,2,0.5
+REST/ resource-ori  ented,PE,2,0.5
+Hexagonal (ports& adapters),PE,2,0.5
+Serverless/FaaS,PE,3,1.0
+Event-Bus/Event Broker,PE,2,0.5
+Monolithic,SC,1,0.0
+Layered (N-Tier),SC,1,0.0
+Client server,SC,2,0.5
+Microservices,SC,3,1.0
+Service Oriented (SOA),SC,3,1.0
+Event-Driven/ Messaging,SC,3,1.0
+Microkernal (plug-in),SC,2,0.5
+Component Based,SC,2,0.5
+Pipe and- Filter,SC,2,0.5
+Broker (middleware),SC,3,1.0
+Peer to Peer (P2P),SC,3,1.0
+BlackBoard (Shared-Space),SC,1,0.0
+MVC (model-view-controller),SC,1,0.0
+Space Based ,SC,3,1.0
+REST/ resource-oriented,SC,3,1.0
+Hexagonal (ports& adapters),SC,2,0.5
+Serverless/FaaS,SC,3,1.0
+Event-Bus/Event Broker,SC,3,1.0
+Monolithic,MN,1,0.0
+Layered (N-Tier),MN,3,1.0
+Client server,MN,2,0.5
+Microservices,MN,3,1.0
+Service Oriented (SOA),MN,3,1.0
+Event-Driven/ Messaging,MN,3,1.0
+Microkernal (plug-in),MN,3,1.0
+Component Based,MN,3,1.0
+Pipe and- Filter,MN,2,0.5
+Broker (middleware),MN,2,0.5
+Peer to Peer (P2P),MN,1,0.0
+BlackBoard (Shared-Space),MN,1,0.0
+MVC (model-view-controller),MN,3,1.0
+Space Based ,MN,2,0.5
+REST/ resource-oriented,MN,3,1.0
+Hexagonal (ports& adapters),MN,3,1.0
+Serverless/FaaS,MN,3,1.0
+Event-Bus/Event Broker,MN,3,1.0
+Monolithic,A,2,0.5
+Layered (N-Tier),A,2,0.5
+Client server,A,2,0.5
+Microservices,A,3,1.0
+Service Oriented (SOA),A,3,1.0
+Event-Driven/ Messaging,A,3,1.0
+Microkernal (plug-in),A,2,0.5
+Component Based,A,2,0.5
+Pipe and- Filter,A,1,0.0
+Broker (middleware),A,3,1.0
+Peer to Peer (P2P),A,3,1.0
+BlackBoard (Shared-Space),A,1,0.0
+MVC (model-view-controller),A,2,0.5
+Space Based ,A,3,1.0
+REST/ resource-oriented,A,2,0.5
+Hexagonal (ports& adapters),A,2,0.5
+Serverless/FaaS,A,3,1.0
+Event-Bus/Event Broker,A,3,1.0
+Monolithic,SE,2,0.5
+Layered (N-Tier),SE,3,1.0
+Client server,SE,2,0.5
+Microservices,SE,2,0.5
+Service Oriented (SOA),SE,2,0.5
+Event-Driven/ Messaging,SE,2,0.5
+Microkernal (plug-in),SE,2,0.5
+Component Based,SE,2,0.5
+Pipe and- Filter,SE,1,0.0
+Broker (middleware),SE,2,0.5
+Peer to Peer (P2P),SE,1,0.0
+BlackBoard (Shared-Space),SE,1,0.0
+MVC (model-view-controller),SE,2,0.5
+Space Based ,SE,1,0.0
+REST/ resource-oriented,SE,2,0.5
+Hexagonal (ports& adapters),SE,3,1.0
+Serverless/FaaS,SE,2,0.5
+Event-Bus/Event Broker,SE,2,0.5
+Monolithic,US,2,0.5
+Layered (N-Tier),US,3,1.0
+Client server,US,3,1.0
+Microservices,US,2,0.5
+Service Oriented (SOA),US,2,0.5
+Event-Driven/ Messaging,US,2,0.5
+Microkernal (plug-in),US,2,0.5
+Component Based,US,2,0.5
+Pipe and- Filter,US,1,0.0
+Broker (middleware),US,1,0.0
+Peer to Peer (P2P),US,1,0.0
+BlackBoard (Shared-Space),US,1,0.0
+MVC (model-view-controller),US,3,1.0
+Space Based ,US,1,0.0
+REST/ resource-oriented,US,3,1.0
+Hexagonal (ports& adapters),US,3,1.0
+Serverless/FaaS,US,2,0.5
+Event-Bus/Event Broker,US,2,0.5
+Monolithic,PO,1,0.0
+Layered (N-Tier),PO,2,0.5
+Client server,PO,2,0.5
+Microservices,PO,3,1.0
+Service Oriented (SOA),PO,3,1.0
+Event-Driven/ Messaging,PO,2,0.5
+Microkernal (plug-in),PO,3,1.0
+Component Based,PO,3,1.0
+Pipe and- Filter,PO,2,0.5
+Broker (middleware),PO,2,0.5
+Peer to Peer (P2P),PO,1,0.0
+BlackBoard (Shared-Space),PO,1,0.0
+MVC (model-view-controller),PO,2,0.5
+Space Based ,PO,2,0.5
+REST/ resource-oriented,PO,3,1.0
+Hexagonal (ports& adapters),PO,3,1.0
+Serverless/FaaS,PO,3,1.0
+Event-Bus/Event Broker,PO,2,0.5
+Monolithic,O,2,0.5
+Layered (N-Tier),O,3,1.0
+Client server,O,2,0.5
+Microservices,O,1,0.0
+Service Oriented (SOA),O,2,0.5
+Event-Driven/ Messaging,O,2,0.5
+Microkernal (plug-in),O,3,1.0
+Component Based,O,3,1.0
+Pipe and- Filter,O,2,0.5
+Broker (middleware),O,2,0.5
+Peer to Peer (P2P),O,1,0.0
+BlackBoard (Shared-Space),O,1,0.0
+MVC (model-view-controller),O,3,1.0
+Space Based ,O,2,0.5
+REST/ resource-oriented,O,2,0.5
+Hexagonal (ports& adapters),O,3,1.0
+Serverless/FaaS,O,1,0.0
+Event-Bus/Event Broker,O,2,0.5

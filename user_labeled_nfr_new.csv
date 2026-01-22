@@ -1,0 +1,3 @@
+Timestamp,Title,Requirement,Type,Level
+2026-01-22T00:43:32.268175,Standards Compliance,The system MUST comply with relevant industry standards and regulations.,PE,High
+2026-01-22T00:43:42.166856,Hardware Limitations,The system SHOULD be designed to operate within the limitations of available hardware resources.,PO,High
