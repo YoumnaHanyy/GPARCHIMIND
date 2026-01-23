@@ -11,28 +11,24 @@
   },
   "decisions": [
     {
-      "name": "Use a layered architecture for the SimpleInventoryService",
-      "rationale": "To achieve scalability, availability, and reliability, a layered architecture is suitable for the SimpleInventoryService. This architecture style separates the system into distinct layers, each responsible for a specific functionality, making it easier to maintain and modify individual components without affecting the entire system."
+      "name": "Use a Layered Architecture",
+      "rationale": "To achieve scalability, maintainability, and reusability, a layered architecture is chosen. This will allow for the separation of concerns and make it easier to modify or replace individual layers without affecting the entire system."
     },
     {
-      "name": "Implement a database for storing product information",
-      "rationale": "A database is necessary for storing product information, allowing for efficient storage and retrieval of data. This will support the 'View product list' and 'Update product quantity' functionalities."
+      "name": "Use a Simple Database for Product Storage",
+      "rationale": "Given the non-functional requirements of low scalability and medium availability, a simple database is chosen to store product information. This will minimize the complexity and overhead of the database, allowing for faster development and deployment."
     },
     {
-      "name": "Use a caching mechanism for frequently accessed data",
-      "rationale": "Implementing a caching mechanism will improve the performance of the system by reducing the latency associated with database queries. This is particularly important for the 'View product list' functionality, which may involve frequent queries for product information."
+      "name": "Implement Caching for Product List",
+      "rationale": "To improve performance and reduce latency, caching is implemented for the product list. This will store frequently accessed product information in memory, allowing for faster retrieval and reducing the load on the database."
     },
     {
-      "name": "Utilize a message queue for handling asynchronous tasks",
-      "rationale": "A message queue will enable the system to handle asynchronous tasks, such as sending notifications or updating product quantities, without blocking the main thread. This will improve the responsiveness and reliability of the system."
+      "name": "Use a Synchronous Communication Pattern",
+      "rationale": "Given the non-functional requirements of low latency and medium reliability, a synchronous communication pattern is chosen. This will ensure that requests are processed in a timely manner and that errors are handled promptly."
     },
     {
-      "name": "Implement authentication and authorization mechanisms",
-      "rationale": "To ensure the security and integrity of the system, authentication and authorization mechanisms should be implemented. This will prevent unauthorized access to the system and its data."
-    },
-    {
-      "name": "Monitor system performance and logs for scalability and reliability",
-      "rationale": "Monitoring system performance and logs will enable the detection of potential issues and bottlenecks, allowing for proactive measures to be taken to ensure scalability and reliability."
+      "name": "Implement Error Handling and Logging",
+      "rationale": "To ensure reliability and maintainability, error handling and logging are implemented. This will allow for the detection and resolution of issues, as well as provide valuable insights for system optimization."
     }
   ],
   "views": {
@@ -48,18 +44,18 @@
         },
         {
           "name": "Product Controller",
-          "responsibility": "Handles HTTP requests and calls Product Service"
+          "responsibility": "Handles HTTP requests and responses for product operations"
         },
         {
           "name": "Inventory Service API",
-          "responsibility": "Exposes API endpoints for client interactions"
+          "responsibility": "Exposes API endpoints for product operations"
         }
       ],
       "relationships": [
         {
           "source": "Product Controller",
           "target": "Product Service",
-          "type": "data-flow"
+          "type": "event-flow"
         },
         {
           "source": "Product Service",
@@ -67,8 +63,13 @@
           "type": "data-flow"
         },
         {
-          "source": "Product Controller",
+          "source": "Product Service",
           "target": "Inventory Service API",
+          "type": "data-flow"
+        },
+        {
+          "source": "Inventory Service API",
+          "target": "Product Controller",
           "type": "event-flow"
         }
       ]
@@ -91,11 +92,11 @@
   },
   "metrics": {
     "num_components": 4,
-    "num_relationships": 3,
-    "avg_fan_out": 0.75,
+    "num_relationships": 4,
+    "avg_fan_out": 1.0,
     "max_fan_out": 2,
-    "async_ratio": 0.33,
-    "critical_path_length": 3
+    "async_ratio": 0.5,
+    "critical_path_length": 0
   },
   "services": [
     {
@@ -108,18 +109,18 @@
     },
     {
       "name": "Product Controller",
-      "responsibility": "Handles HTTP requests and calls Product Service"
+      "responsibility": "Handles HTTP requests and responses for product operations"
     },
     {
       "name": "Inventory Service API",
-      "responsibility": "Exposes API endpoints for client interactions"
+      "responsibility": "Exposes API endpoints for product operations"
     }
   ],
   "relationships": [
     {
       "source": "Product Controller",
       "target": "Product Service",
-      "type": "data-flow"
+      "type": "event-flow"
     },
     {
       "source": "Product Service",
@@ -127,36 +128,41 @@
       "type": "data-flow"
     },
     {
-      "source": "Product Controller",
+      "source": "Product Service",
       "target": "Inventory Service API",
+      "type": "data-flow"
+    },
+    {
+      "source": "Inventory Service API",
+      "target": "Product Controller",
       "type": "event-flow"
     }
   ],
   "critique": [
     {
-      "component": "Product Controller",
-      "issue": "Potential bottleneck due to handling HTTP requests and calling multiple services. Consider using a load balancer or service mesh for better scalability.",
-      "nfr": "scalability"
+      "component": "Product Service",
+      "issue": "Tight Coupling",
+      "description": "The Product Service and Product Repository are tightly coupled, which can make it difficult to scale the system horizontally."
     },
     {
       "component": "Product Service",
-      "issue": "Dependent on Product Repository for data, which may impact availability. Consider implementing a caching layer or redundant repositories for improved availability.",
-      "nfr": "availability"
-    },
-    {
-      "component": "Inventory Service API",
-      "issue": "Exposed to external clients, which may impact reliability. Consider implementing authentication and rate limiting for improved security and reliability.",
-      "nfr": "reliability"
+      "issue": "Lack of Fault Tolerance",
+      "description": "The Product Service does not seem to be designed with fault tolerance in mind, which can lead to system failures or outages."
     },
     {
       "component": "Product Repository",
-      "issue": "Potential single point of failure due to its critical role in storing and retrieving product data. Consider implementing a redundant repository or database for improved reliability.",
-      "nfr": "reliability"
+      "issue": "Lack of Fault Tolerance",
+      "description": "The Product Repository does not seem to be designed with fault tolerance in mind, which can lead to system failures or outages."
     },
     {
-      "component": "Product Service",
-      "issue": "Potential performance impact due to frequent calls to Product Repository. Consider implementing a caching layer or optimizing database queries for improved latency.",
-      "nfr": "latency"
+      "component": "Inventory Service API",
+      "issue": "Inadequate Load Balancing",
+      "description": "The Inventory Service API does not seem to have a load balancing mechanism in place, which can lead to uneven distribution of traffic and system failures."
+    },
+    {
+      "component": "Product Controller",
+      "issue": "Inadequate Monitoring",
+      "description": "The Product Controller does not seem to have a monitoring mechanism in place, which can make it difficult to detect system failures or outages."
     }
   ]
 }

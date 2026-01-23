@@ -1,34 +1,54 @@
 import json
+
+from fastapi.templating import Jinja2Templates
+from fastapi.staticfiles import StaticFiles
+
+from fastapi import FastAPI, Request
+from fastapi.responses import FileResponse
 from adl.adl_generator import generate_adl
 from adl.json_to_acme import convert_to_acme
 
-# ---------------- Load requirements ----------------
-with open("input/requirements.json") as f:
-    requirements = json.load(f)
+app = FastAPI()
+templates = Jinja2Templates(directory="templates")
 
-# ---------------- Generate ADL + Validation ----------------
-adl, validation = generate_adl(requirements)
+@app.get("/")
+def serve_index(request: Request):
+    return templates.TemplateResponse("index.html", {"request": request})
 
-# ---------------- Save ADL ----------------
-with open("output/architecture.adl.json", "w") as f:
-    json.dump(adl, f, indent=2)
+# ---------------- Generate Architecture ----------------
+@app.post("/generate")
+def generate_architecture():
 
-# ---------------- Save Validation ----------------
-with open("output/architecture.validation.json", "w") as f:
-    json.dump(validation, f, indent=2)
+    # Load requirements
+    with open("input/requirements.json", "r", encoding="utf-8") as f:
+        requirements = json.load(f)
 
-# ---------------- Convert to ACME ----------------
-acme = convert_to_acme(adl)
+    # Generate ADL + Validation
+    adl, validation = generate_adl(requirements)
 
-with open("output/architecture.acme", "w") as f:
-    f.write(acme)
+    # Save ADL
+    with open("output/architecture.adl.json", "w", encoding="utf-8") as f:
+        json.dump(adl, f, indent=2)
 
-# ---------------- Console Output ----------------
-print("✅ AI-driven Architecture ADL generated")
-print("📊 Architecture metrics computed")
-print("🧪 Architecture validation generated")
+    # Save Validation
+    with open("output/architecture.validation.json", "w", encoding="utf-8") as f:
+        json.dump(validation, f, indent=2)
 
-if not validation.get("is_valid", True):
-    print("❌ Architecture is NOT valid – check architecture.validation.json")
-else:
-    print("✅ Architecture is VALID and production-ready")
+    # Convert to ACME
+    acme = convert_to_acme(adl)
+    with open("output/architecture.acme", "w", encoding="utf-8") as f:
+        f.write(acme)
+
+    return {
+        "status": "Architecture generated successfully",
+        "is_valid": validation.get("is_valid", True)
+    }
+
+# ---------------- Download PDF Report ----------------
+@app.get("/download-report")
+def download_report():
+    return FileResponse(
+        path="output/architecture_report.pdf",
+        filename="architecture_report.pdf",
+        media_type="application/pdf"
+    )

@@ -1,30 +1,52 @@
 import json
 from pathlib import Path
+from reportlab.lib.pagesizes import A4
+from reportlab.pdfgen import canvas
 
 BASE_DIR = Path(__file__).parent
 
 input_req = BASE_DIR / "input" / "requirements.json"
-adl_json = BASE_DIR / "output" / "architecture.adl.json"
 acme_file = BASE_DIR / "output" / "architecture.acme"
-report_file = BASE_DIR / "output" / "architecture_report.txt"
+pdf_file = BASE_DIR / "output" / "architecture_report.pdf"
 
-with open(report_file, "w", encoding="utf-8") as report:
+c = canvas.Canvas(str(pdf_file), pagesize=A4)
+width, height = A4
 
-    report.write("=================================\n")
-    report.write("ARCHITECTURE REPORT\n")
-    report.write("=================================\n\n")
+y = height - 50
 
-    # 1. Requirements
-    report.write("1. REQUIREMENTS\n")
-    report.write("---------------------------------\n")
-    with open(input_req, "r", encoding="utf-8") as f:
-        report.write(json.dumps(json.load(f), indent=2))
-    report.write("\n\n")
+def write_line(text):
+    global y
+    if y < 50:
+        c.showPage()
+        y = height - 50
+    c.drawString(50, y, text)
+    y -= 15
 
-     # 3. Architecture ACME
-    report.write("3. ARCHITECTURE (ACME ADL)\n")
-    report.write("---------------------------------\n")
-    with open(acme_file, "r", encoding="utf-8") as f:
-        report.write(f.read())
+# Title
+write_line("ARCHITECTURE REPORT")
+write_line("=" * 80)
+y -= 20
 
-print("📄 Architecture report generated successfully!")
+# 1. Requirements
+write_line("1. REQUIREMENTS")
+write_line("-" * 80)
+
+with open(input_req, "r", encoding="utf-8") as f:
+    reqs = json.dumps(json.load(f), indent=2)
+
+for line in reqs.split("\n"):
+    write_line(line)
+
+y -= 20
+
+# 2. ACME ADL
+write_line("2. ARCHITECTURE (ACME ADL)")
+write_line("-" * 80)
+
+with open(acme_file, "r", encoding="utf-8") as f:
+    for line in f:
+        write_line(line.rstrip())
+
+c.save()
+
+print("📄 Architecture PDF report generated successfully!")

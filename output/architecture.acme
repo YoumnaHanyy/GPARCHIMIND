@@ -17,20 +17,20 @@ System SimpleInventoryService {
   Component ProductController = new Component {
     Port in;
     Port out;
-    Property responsibility : String = "Handles HTTP requests and calls Product Service";
+    Property responsibility : String = "Handles HTTP requests and responses for product operations";
     Property state : String = "stateless";
     Property scaling : String = "horizontal";
   }
   Component InventoryServiceAPI = new Component {
     Port in;
     Port out;
-    Property responsibility : String = "Exposes API endpoints for client interactions";
+    Property responsibility : String = "Exposes API endpoints for product operations";
     Property state : String = "stateless";
     Property scaling : String = "horizontal";
   }
   Attachment ProductController.out to ProductService.in {
     Property delivery : String = "at-least-once";
-    Property ordering : Boolean = true;
+    Property ordering : Boolean = false;
     Property backpressure : String = "bounded";
   }
   Attachment ProductService.out to ProductRepository.in {
@@ -38,7 +38,12 @@ System SimpleInventoryService {
     Property ordering : Boolean = true;
     Property backpressure : String = "bounded";
   }
-  Attachment ProductController.out to InventoryServiceAPI.in {
+  Attachment ProductService.out to InventoryServiceAPI.in {
+    Property delivery : String = "at-least-once";
+    Property ordering : Boolean = true;
+    Property backpressure : String = "bounded";
+  }
+  Attachment InventoryServiceAPI.out to ProductController.in {
     Property delivery : String = "at-least-once";
     Property ordering : Boolean = false;
     Property backpressure : String = "bounded";
