@@ -1,0 +1,60 @@
+System SimpleInventoryService {
+  Property view : String = "runtime";
+  Component ProductRepository = new Component {
+    Port in;
+    Port out;
+    Property responsibility : String = "Manages product data storage and retrieval";
+    Property state : String = "stateless";
+    Property scaling : String = "horizontal";
+  }
+  Component ProductService = new Component {
+    Port in;
+    Port out;
+    Property responsibility : String = "Handles product-related business logic";
+    Property state : String = "stateless";
+    Property scaling : String = "horizontal";
+  }
+  Component ProductController = new Component {
+    Port in;
+    Port out;
+    Property responsibility : String = "Handles HTTP requests and responses for product-related operations";
+    Property state : String = "stateless";
+    Property scaling : String = "horizontal";
+  }
+  Component ProductModel = new Component {
+    Port in;
+    Port out;
+    Property responsibility : String = "Represents a product entity with its properties and behaviors";
+    Property state : String = "stateless";
+    Property scaling : String = "horizontal";
+  }
+  Attachment ProductController.out to ProductService.in {
+    Property delivery : String = "at-least-once";
+    Property ordering : Boolean = false;
+    Property backpressure : String = "bounded";
+  }
+  Attachment ProductService.out to ProductRepository.in {
+    Property delivery : String = "at-least-once";
+    Property ordering : Boolean = true;
+    Property backpressure : String = "bounded";
+  }
+  Attachment ProductService.out to ProductModel.in {
+    Property delivery : String = "at-least-once";
+    Property ordering : Boolean = true;
+    Property backpressure : String = "bounded";
+  }
+  Attachment ProductController.out to ProductModel.in {
+    Property delivery : String = "at-least-once";
+    Property ordering : Boolean = true;
+    Property backpressure : String = "bounded";
+  }
+  Property resilience_pattern : String = "Retry + CircuitBreaker";
+  Property failure_isolation : Boolean = true;
+  Property authentication : String = "service-to-service";
+  Property authorization : String = "RBAC";
+  Property encryption : String = "in-transit";
+  Property constraint_scalability : String = "Low";
+  Property constraint_availability : String = "Medium";
+  Property constraint_latency : String = "Low";
+  Property constraint_reliability : String = "Medium";
+}

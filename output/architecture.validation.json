@@ -1,0 +1,7 @@
+{
+  "errors": [],
+  "warnings": [
+    "Low async ratio may reduce scalability"
+  ],
+  "is_valid": true
+}

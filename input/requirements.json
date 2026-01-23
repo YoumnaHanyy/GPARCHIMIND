@@ -1,0 +1,15 @@
+{
+  "system_name": "SimpleInventoryService",
+  "architecture_style": "Layered Architecture",
+  "functional_requirements": [
+    "Add products",
+    "Update product quantity",
+    "View product list"
+  ],
+  "non_functional_requirements": {
+    "scalability": "Low",
+    "availability": "Medium",
+    "latency": "Low",
+    "reliability": "Medium"
+  }
+}
