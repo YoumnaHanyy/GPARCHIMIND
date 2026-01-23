@@ -1,5 +1,6 @@
 from huggingface_hub import InferenceClient
 import json
+
 # ================= LLM =================
 
 def ask_llm(prompt: str, temperature=0.2):
@@ -172,16 +173,9 @@ NFRs:
 {nfrs}
 
 Return JSON:
-{{ {
-  "issues": [
-    {
-      "component": "...",
-      "issue": "...",
-      "severity": "low | medium | high",
-      "suggested_fix": "..."
-    }
-  ]
-}
+{{ 
+  "issues": []
+
  }}
 """
     return robust_llm_json(prompt).get("issues", [])
