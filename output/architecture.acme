@@ -1,49 +1,71 @@
-System SimpleInventoryService {
+System OnlineFoodOrderingSystem {
   Property view : String = "runtime";
-  Component ProductService = new Component {
+  Component UserService = new Component {
     Port in;
     Port out;
-    Property responsibility : String = "Handles product related operations";
+    Property responsibility : String = "Handle user registration and login functionality";
     Property state : String = "stateless";
     Property scaling : String = "horizontal";
   }
-  Component ProductRepository = new Component {
+  Component RestaurantService = new Component {
     Port in;
     Port out;
-    Property responsibility : String = "Stores and retrieves product data";
+    Property responsibility : String = "Manage restaurant information and menus";
     Property state : String = "stateless";
     Property scaling : String = "horizontal";
   }
-  Component ProductController = new Component {
+  Component OrderService = new Component {
     Port in;
     Port out;
-    Property responsibility : String = "Handles HTTP requests and responses for product operations";
+    Property responsibility : String = "Manage food orders and order status";
     Property state : String = "stateless";
     Property scaling : String = "horizontal";
   }
-  Component InventoryServiceAPI = new Component {
+  Component OrderStatusService = new Component {
     Port in;
     Port out;
-    Property responsibility : String = "Exposes API endpoints for product operations";
+    Property responsibility : String = "Update order status and notify users";
     Property state : String = "stateless";
     Property scaling : String = "horizontal";
   }
-  Attachment ProductController.out to ProductService.in {
+  Component PaymentService = new Component {
+    Port in;
+    Port out;
+    Property responsibility : String = "Process online payments";
+    Property state : String = "stateless";
+    Property scaling : String = "horizontal";
+  }
+  Attachment UserService.out to OrderService.in {
     Property delivery : String = "at-least-once";
     Property ordering : Boolean = false;
     Property backpressure : String = "bounded";
   }
-  Attachment ProductService.out to ProductRepository.in {
+  Attachment UserService.out to PaymentService.in {
+    Property delivery : String = "at-least-once";
+    Property ordering : Boolean = false;
+    Property backpressure : String = "bounded";
+  }
+  Attachment RestaurantService.out to OrderService.in {
     Property delivery : String = "at-least-once";
     Property ordering : Boolean = true;
     Property backpressure : String = "bounded";
   }
-  Attachment ProductService.out to InventoryServiceAPI.in {
+  Attachment OrderService.out to OrderStatusService.in {
     Property delivery : String = "at-least-once";
-    Property ordering : Boolean = true;
+    Property ordering : Boolean = false;
     Property backpressure : String = "bounded";
   }
-  Attachment InventoryServiceAPI.out to ProductController.in {
+  Attachment OrderStatusService.out to UserService.in {
+    Property delivery : String = "at-least-once";
+    Property ordering : Boolean = false;
+    Property backpressure : String = "bounded";
+  }
+  Attachment OrderService.out to PaymentService.in {
+    Property delivery : String = "at-least-once";
+    Property ordering : Boolean = false;
+    Property backpressure : String = "bounded";
+  }
+  Attachment PaymentService.out to OrderStatusService.in {
     Property delivery : String = "at-least-once";
     Property ordering : Boolean = false;
     Property backpressure : String = "bounded";
@@ -53,8 +75,8 @@ System SimpleInventoryService {
   Property authentication : String = "service-to-service";
   Property authorization : String = "RBAC";
   Property encryption : String = "in-transit";
-  Property constraint_scalability : String = "Low";
-  Property constraint_availability : String = "Medium";
-  Property constraint_latency : String = "Low";
-  Property constraint_reliability : String = "Medium";
+  Property constraint_scalability : String = "High";
+  Property constraint_availability : String = "High";
+  Property constraint_latency : String = "Medium";
+  Property constraint_reliability : String = "High";
 }

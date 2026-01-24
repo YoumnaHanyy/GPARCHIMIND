@@ -1,168 +1,214 @@
 {
   "system": {
-    "name": "SimpleInventoryService",
-    "architectureStyle": "Layered Architecture"
+    "name": "OnlineFoodOrderingSystem",
+    "architectureStyle": "Microservices Architecture"
   },
   "qualityAttributes": {
-    "scalability": "Low",
-    "availability": "Medium",
-    "latency": "Low",
-    "reliability": "Medium"
+    "scalability": "High",
+    "availability": "High",
+    "latency": "Medium",
+    "reliability": "High"
   },
   "decisions": [
     {
-      "name": "Use a Layered Architecture",
-      "rationale": "To achieve scalability, maintainability, and reusability, a layered architecture is chosen. This will allow for the separation of concerns and make it easier to modify or replace individual layers without affecting the entire system."
+      "name": "Use Microservices Architecture for OnlineFoodOrderingSystem",
+      "rationale": "To achieve high scalability, high availability, medium latency, and high reliability, a microservices architecture is suitable for the OnlineFoodOrderingSystem. Each microservice will be responsible for a specific business capability, such as user registration, restaurant browsing, order placement, order tracking, and payment processing."
     },
     {
-      "name": "Use a Simple Database for Product Storage",
-      "rationale": "Given the non-functional requirements of low scalability and medium availability, a simple database is chosen to store product information. This will minimize the complexity and overhead of the database, allowing for faster development and deployment."
+      "name": "Implement Service Discovery for Microservices Communication",
+      "rationale": "To enable high availability and scalability, a service discovery mechanism will be implemented to allow microservices to communicate with each other dynamically. This will enable the system to scale horizontally and handle increased traffic."
     },
     {
-      "name": "Implement Caching for Product List",
-      "rationale": "To improve performance and reduce latency, caching is implemented for the product list. This will store frequently accessed product information in memory, allowing for faster retrieval and reducing the load on the database."
+      "name": "Use Load Balancing for High Availability",
+      "rationale": "To ensure high availability, load balancing will be implemented to distribute incoming traffic across multiple instances of each microservice. This will prevent any single point of failure and ensure that the system remains responsive even in the event of a failure."
     },
     {
-      "name": "Use a Synchronous Communication Pattern",
-      "rationale": "Given the non-functional requirements of low latency and medium reliability, a synchronous communication pattern is chosen. This will ensure that requests are processed in a timely manner and that errors are handled promptly."
+      "name": "Implement Caching for Improved Performance",
+      "rationale": "To improve performance and reduce latency, caching will be implemented to store frequently accessed data. This will enable the system to respond quickly to user requests and improve the overall user experience."
     },
     {
-      "name": "Implement Error Handling and Logging",
-      "rationale": "To ensure reliability and maintainability, error handling and logging are implemented. This will allow for the detection and resolution of issues, as well as provide valuable insights for system optimization."
+      "name": "Use Message Queue for Asynchronous Communication",
+      "rationale": "To enable asynchronous communication between microservices, a message queue will be implemented. This will allow microservices to send and receive messages independently of each other, improving the overall system reliability and scalability."
+    },
+    {
+      "name": "Implement API Gateway for Unified Interface",
+      "rationale": "To provide a unified interface for the OnlineFoodOrderingSystem, an API gateway will be implemented. This will enable a single entry point for all API requests, improving security, scalability, and maintainability."
+    },
+    {
+      "name": "Use Containerization for Microservices Deployment",
+      "rationale": "To enable efficient and scalable deployment of microservices, containerization will be used. This will allow microservices to be packaged and deployed independently, improving the overall system reliability and scalability."
     }
   ],
   "views": {
     "logical": {
       "services": [
         {
-          "name": "Product Service",
-          "responsibility": "Handles product related operations"
+          "name": "User Service",
+          "responsibility": "Handle user registration and login functionality"
         },
         {
-          "name": "Product Repository",
-          "responsibility": "Stores and retrieves product data"
+          "name": "Restaurant Service",
+          "responsibility": "Manage restaurant information and menus"
         },
         {
-          "name": "Product Controller",
-          "responsibility": "Handles HTTP requests and responses for product operations"
+          "name": "Order Service",
+          "responsibility": "Manage food orders and order status"
         },
         {
-          "name": "Inventory Service API",
-          "responsibility": "Exposes API endpoints for product operations"
+          "name": "Order Status Service",
+          "responsibility": "Update order status and notify users"
+        },
+        {
+          "name": "Payment Service",
+          "responsibility": "Process online payments"
         }
       ],
       "relationships": [
         {
-          "source": "Product Controller",
-          "target": "Product Service",
+          "source": "User Service",
+          "target": "Order Service",
           "type": "event-flow"
         },
         {
-          "source": "Product Service",
-          "target": "Product Repository",
+          "source": "User Service",
+          "target": "Payment Service",
+          "type": "event-flow"
+        },
+        {
+          "source": "Restaurant Service",
+          "target": "Order Service",
           "type": "data-flow"
         },
         {
-          "source": "Product Service",
-          "target": "Inventory Service API",
-          "type": "data-flow"
+          "source": "Order Service",
+          "target": "Order Status Service",
+          "type": "event-flow"
         },
         {
-          "source": "Inventory Service API",
-          "target": "Product Controller",
+          "source": "Order Status Service",
+          "target": "User Service",
+          "type": "event-flow"
+        },
+        {
+          "source": "Order Service",
+          "target": "Payment Service",
+          "type": "event-flow"
+        },
+        {
+          "source": "Payment Service",
+          "target": "Order Status Service",
           "type": "event-flow"
         }
       ]
     },
     "deployment": {
-      "scaling": "vertical",
-      "availability": "single-region"
+      "scaling": "horizontal",
+      "availability": "multi-region"
     },
     "security": {
-      "authentication": "centralized",
+      "authentication": "service-to-service",
       "authorization": "RBAC"
     },
     "resilience": {
       "patterns": [
-        "Retry"
+        "Retry",
+        "CircuitBreaker"
       ],
-      "delivery": "at-most-once",
-      "ordering": true
+      "delivery": "at-least-once",
+      "ordering": false
     }
   },
   "metrics": {
-    "num_components": 4,
-    "num_relationships": 4,
-    "avg_fan_out": 1.0,
+    "num_components": 5,
+    "num_relationships": 7,
+    "avg_fan_out": 1.4,
     "max_fan_out": 2,
-    "async_ratio": 0.5,
-    "critical_path_length": 0
+    "async_ratio": 0.86,
+    "critical_path_length": 2
   },
   "services": [
     {
-      "name": "Product Service",
-      "responsibility": "Handles product related operations"
+      "name": "User Service",
+      "responsibility": "Handle user registration and login functionality"
     },
     {
-      "name": "Product Repository",
-      "responsibility": "Stores and retrieves product data"
+      "name": "Restaurant Service",
+      "responsibility": "Manage restaurant information and menus"
     },
     {
-      "name": "Product Controller",
-      "responsibility": "Handles HTTP requests and responses for product operations"
+      "name": "Order Service",
+      "responsibility": "Manage food orders and order status"
     },
     {
-      "name": "Inventory Service API",
-      "responsibility": "Exposes API endpoints for product operations"
+      "name": "Order Status Service",
+      "responsibility": "Update order status and notify users"
+    },
+    {
+      "name": "Payment Service",
+      "responsibility": "Process online payments"
     }
   ],
   "relationships": [
     {
-      "source": "Product Controller",
-      "target": "Product Service",
+      "source": "User Service",
+      "target": "Order Service",
       "type": "event-flow"
     },
     {
-      "source": "Product Service",
-      "target": "Product Repository",
+      "source": "User Service",
+      "target": "Payment Service",
+      "type": "event-flow"
+    },
+    {
+      "source": "Restaurant Service",
+      "target": "Order Service",
       "type": "data-flow"
     },
     {
-      "source": "Product Service",
-      "target": "Inventory Service API",
-      "type": "data-flow"
+      "source": "Order Service",
+      "target": "Order Status Service",
+      "type": "event-flow"
     },
     {
-      "source": "Inventory Service API",
-      "target": "Product Controller",
+      "source": "Order Status Service",
+      "target": "User Service",
+      "type": "event-flow"
+    },
+    {
+      "source": "Order Service",
+      "target": "Payment Service",
+      "type": "event-flow"
+    },
+    {
+      "source": "Payment Service",
+      "target": "Order Status Service",
       "type": "event-flow"
     }
   ],
   "critique": [
     {
-      "component": "Product Service",
-      "issue": "Tight Coupling",
-      "description": "The Product Service and Product Repository are tightly coupled, which can make it difficult to scale the system horizontally."
+      "component": "Order Service",
+      "relationship": "Order Service -> Order Status Service",
+      "type": "event-flow",
+      "description": "High volume of events from Order Service to Order Status Service may impact performance and latency."
     },
     {
-      "component": "Product Service",
-      "issue": "Lack of Fault Tolerance",
-      "description": "The Product Service does not seem to be designed with fault tolerance in mind, which can lead to system failures or outages."
+      "component": "Order Service",
+      "relationship": "Order Service -> Payment Service",
+      "type": "event-flow",
+      "description": "High volume of events from Order Service to Payment Service may impact performance and latency."
     },
     {
-      "component": "Product Repository",
-      "issue": "Lack of Fault Tolerance",
-      "description": "The Product Repository does not seem to be designed with fault tolerance in mind, which can lead to system failures or outages."
+      "component": "Payment Service",
+      "relationship": "Payment Service -> Order Status Service",
+      "type": "event-flow",
+      "description": "High volume of events from Payment Service to Order Status Service may impact performance and latency."
     },
     {
-      "component": "Inventory Service API",
-      "issue": "Inadequate Load Balancing",
-      "description": "The Inventory Service API does not seem to have a load balancing mechanism in place, which can lead to uneven distribution of traffic and system failures."
-    },
-    {
-      "component": "Product Controller",
-      "issue": "Inadequate Monitoring",
-      "description": "The Product Controller does not seem to have a monitoring mechanism in place, which can make it difficult to detect system failures or outages."
+      "component": "User Service",
+      "relationship": "User Service -> Order Service",
+      "type": "event-flow",
+      "description": "High volume of events from User Service to Order Service may impact performance and latency."
     }
   ]
 }
