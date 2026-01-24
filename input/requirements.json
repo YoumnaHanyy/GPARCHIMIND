@@ -1,15 +1,17 @@
 {
-  "system_name": "SimpleInventoryService",
-  "architecture_style": "Layered Architecture",
+  "system_name": "OnlineFoodOrderingSystem",
+  "architecture_style": "Microservices Architecture",
   "functional_requirements": [
-    "Add products",
-    "Update product quantity",
-    "View product list"
+    "User registration and login",
+    "Browse restaurants and menus",
+    "Place food orders",
+    "Track order status",
+    "Process online payments"
   ],
   "non_functional_requirements": {
-    "scalability": "Low",
-    "availability": "Medium",
-    "latency": "Low",
-    "reliability": "Medium"
+    "scalability": "High",
+    "availability": "High",
+    "latency": "Medium",
+    "reliability": "High"
   }
 }

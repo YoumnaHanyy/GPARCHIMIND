@@ -1,0 +1,18 @@
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+LAYOUT_WITH_LEGEND()
+System_Boundary(system, "OnlineFoodOrderingSystem") {
+  Container(UserService, "User Service", "Service", "Handle user registration and login functionality")
+  Container(RestaurantService, "Restaurant Service", "Service", "Manage restaurant information and menus")
+  Container(OrderService, "Order Service", "Service", "Manage food orders and order status")
+  Container(OrderStatusService, "Order Status Service", "Service", "Update order status and notify users")
+  Container(PaymentService, "Payment Service", "Service", "Process online payments")
+}
+Rel(UserService, OrderService, "event-flow")
+Rel(UserService, PaymentService, "event-flow")
+Rel(RestaurantService, OrderService, "data-flow")
+Rel(OrderService, OrderStatusService, "event-flow")
+Rel(OrderStatusService, UserService, "event-flow")
+Rel(OrderService, PaymentService, "event-flow")
+Rel(PaymentService, OrderStatusService, "event-flow")
+@enduml
