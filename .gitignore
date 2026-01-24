@@ -1,0 +1,8 @@
+results/
+trained_nfr_model/
+trained_nfr_type_model/
+sentence_model/model.safetensors
+
+*.pt
+*.bin
+*.safetensors
