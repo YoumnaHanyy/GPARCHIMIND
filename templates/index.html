@@ -10,6 +10,7 @@
     .result-section { display: none; }
     .result-section.active { display: block; }
     .nav-pills .nav-link { cursor: pointer; }
+    .nav-pills .nav-link.disabled { cursor: not-allowed; opacity: 0.5; }
 
     #processResult {
       white-space: pre-wrap;
@@ -23,14 +24,14 @@
     }
 
     .nfr-card {
-      background: #fff;
+      background: white;
       border: 1px solid #dee2e6;
       border-radius: 10px;
-      padding: 16px;
-      margin-bottom: 14px;
+      padding: 14px;
+      margin-bottom: 12px;
     }
-
-    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; }
+    .nfr-card h6 { margin: 0 0 8px 0; }
+    .small-muted { font-size: 0.9rem; color: #6c757d; }
   </style>
 </head>
 
@@ -40,40 +41,69 @@
       <div class="card-body">
         <h3 class="card-title mb-3">ArchiMind — Upload SRS PDF</h3>
         <p class="text-muted">
-          Select an SRS PDF. The server will extract requirements and generate architecture recommendations.
-          If some NFR Types have low confidence, you can confirm them to improve the dataset.
+          Upload SRS PDF → extract FR/NFR → if low confidence types exist, you confirm them → then generate architecture recommendations.
         </p>
 
         <form id="processForm">
           <div class="mb-3">
             <input class="form-control" type="file" id="processFileInput" accept=".pdf" />
           </div>
-          <button class="btn btn-primary" type="submit">Process PDF</button>
+          <button class="btn btn-primary" type="submit">Upload & Extract</button>
         </form>
 
         <hr>
 
+        <!-- Actions after review -->
+        <div id="reviewActions" style="display:none;" class="mb-3">
+          <button id="saveNfrBtn" class="btn btn-success me-2" disabled>Save Confirmations</button>
+          <button id="generateBtn" class="btn btn-dark" disabled>Generate Recommendations</button>
+          <div class="small-muted mt-2" id="reviewHint"></div>
+        </div>
+
+        <!-- Navigation Tabs -->
         <div id="resultNavigation" style="display: none;">
           <h5 class="mb-3">Results:</h5>
           <ul class="nav nav-pills mb-4" id="resultTabs">
-            <li class="nav-item"><a class="nav-link active" data-tab="extraction">Extraction</a></li>
-            <li class="nav-item"><a class="nav-link" data-tab="functional">Functional Method</a></li>
-            <li class="nav-item"><a class="nav-link" data-tab="ordinal">Ordinal Method</a></li>
-            <li class="nav-item"><a class="nav-link" data-tab="binary">Binary Method</a></li>
-            <li class="nav-item"><a class="nav-link" data-tab="weighted">Weighted Score</a></li>
-            <li class="nav-item"><a class="nav-link" data-tab="hybrid">Hybrid Method</a></li>
+            <li class="nav-item">
+              <a class="nav-link active" data-tab="extraction">Extraction</a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link" data-tab="review">Review NFRs</a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link disabled" data-tab="functional">Functional Method</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link disabled" data-tab="ordinal">Ordinal Method</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link disabled" data-tab="binary">Binary Method</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link disabled" data-tab="weighted">Weighted Score</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link disabled" data-tab="hybrid">Hybrid Method</a>
+            </li>
           </ul>
         </div>
 
+        <!-- Loading Message -->
         <div id="loadingMessage" style="display: none;" class="text-center p-4">
           <div class="spinner-border text-primary" role="status">
             <span class="visually-hidden">Loading...</span>
           </div>
-          <p class="mt-3">Processing PDF... Please wait...</p>
+          <p class="mt-3">Processing...</p>
         </div>
 
+        <!-- Result Content Sections -->
         <div id="processResult" style="display: none;">
           <div id="section-extraction" class="result-section active"></div>
+
+          <div id="section-review" class="result-section"></div>
+
           <div id="section-functional" class="result-section"></div>
           <div id="section-ordinal" class="result-section"></div>
           <div id="section-binary" class="result-section"></div>
@@ -81,7 +111,9 @@
           <div id="section-hybrid" class="result-section"></div>
         </div>
 
+        <!-- Error Message -->
         <div id="errorMessage" style="display: none;"></div>
+
       </div>
     </div>
   </div>
@@ -89,122 +121,208 @@
   <script>
     const processForm = document.getElementById('processForm');
     const processFileInput = document.getElementById('processFileInput');
+
     const processResult = document.getElementById('processResult');
     const resultNavigation = document.getElementById('resultNavigation');
     const loadingMessage = document.getElementById('loadingMessage');
     const errorMessage = document.getElementById('errorMessage');
 
+    const reviewActions = document.getElementById('reviewActions');
+    const saveNfrBtn = document.getElementById('saveNfrBtn');
+    const generateBtn = document.getElementById('generateBtn');
+    const reviewHint = document.getElementById('reviewHint');
+
     let currentData = null;
+    let pendingQuestions = [];
+    let reviewSelections = {}; // key: index -> selectedType
 
-    document.getElementById('resultTabs').addEventListener('click', (e) => {
-      if (e.target.classList.contains('nav-link')) {
-        const tab = e.target.getAttribute('data-tab');
-
-        document.querySelectorAll('#resultTabs .nav-link').forEach(link => link.classList.remove('active'));
-        e.target.classList.add('active');
-
-        document.querySelectorAll('.result-section').forEach(section => section.classList.remove('active'));
-        document.getElementById(`section-${tab}`).classList.add('active');
-      }
-    });
-
-    function pct(x) {
-      if (x === null || x === undefined) return '';
-      return Math.round(x * 100) + '%';
-    }
-
-    function renderLowConfidenceUI(container, lowList) {
-      if (!lowList || lowList.length === 0) return;
-
-      const alert = document.createElement('div');
-      alert.className = 'alert alert-warning';
-      alert.innerHTML = `<b>Some NFRs have low confidence Type.</b> Please confirm them to improve the dataset.`;
-      container.appendChild(alert);
-
-      lowList.forEach(item => {
-        const card = document.createElement('div');
-        card.className = 'nfr-card';
-
-        const topOptions = (item.top || []);
-        const best = item.best || { type: '', confidence: 0 };
-
-        card.innerHTML = `
-          <div class="mb-2"><b>NFR (Low confidence)</b></div>
-          <div><b>Title:</b> ${item.title || ''}</div>
-          <div class="mt-2"><b>Description:</b></div>
-          <div class="mono">${(item.description || '').replaceAll('<', '&lt;')}</div>
-
-          <div class="mt-3"><b>Model guess:</b> ${best.type} (${pct(best.confidence)})</div>
-
-          <div class="row g-2 mt-2 align-items-end">
-            <div class="col-md-4">
-              <label class="form-label">Choose Type</label>
-              <select class="form-select" id="sel-${item.index}">
-                <option value="">-- select --</option>
-                ${topOptions.map(o => `<option value="${o.type}">${o.type} (${pct(o.confidence)})</option>`).join('')}
-              </select>
-            </div>
-
-            <div class="col-md-4">
-              <label class="form-label">Or type custom (e.g., PE, SE, US)</label>
-              <input class="form-control" id="txt-${item.index}" placeholder="Type code...">
-            </div>
-
-            <div class="col-md-4">
-              <button class="btn btn-success w-100" id="btn-${item.index}">Save</button>
-            </div>
-          </div>
-
-          <div class="mt-2" id="msg-${item.index}"></div>
-        `;
-
-        container.appendChild(card);
-
-        const btn = card.querySelector(`#btn-${item.index}`);
-        btn.addEventListener('click', async () => {
-          const sel = card.querySelector(`#sel-${item.index}`).value.trim();
-          const custom = card.querySelector(`#txt-${item.index}`).value.trim().toUpperCase();
-          const type = custom || sel;
-
-          const msg = card.querySelector(`#msg-${item.index}`);
-          msg.innerHTML = '';
-
-          if (!type) {
-            msg.innerHTML = `<div class="alert alert-danger p-2">Please choose or type a Type code.</div>`;
-            return;
-          }
-
-          btn.disabled = true;
-          btn.textContent = 'Saving...';
-
-          try {
-            const resp = await fetch('/confirm_nfr/', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ index: item.index, type })
-            });
-
-            const data = await resp.json();
-
-            if (!resp.ok || data.error) {
-              msg.innerHTML = `<div class="alert alert-danger p-2">Error: ${data.error || JSON.stringify(data)}</div>`;
-            } else {
-              msg.innerHTML = `<div class="alert alert-success p-2">
-                ✅ Saved! Type: <b>${data.saved.Type}</b> — Level (LLM): <b>${data.saved.Level}</b><br>
-                Saved into dataset file.
-              </div>`;
-            }
-          } catch (err) {
-            msg.innerHTML = `<div class="alert alert-danger p-2">Error: ${err}</div>`;
-          } finally {
-            btn.disabled = false;
-            btn.textContent = 'Save';
-          }
-        });
+    function setTabsEnabled(enabled) {
+      const tabs = ["functional", "ordinal", "binary", "weighted", "hybrid"];
+      tabs.forEach(t => {
+        const el = document.querySelector(`#resultTabs .nav-link[data-tab="${t}"]`);
+        if (!el) return;
+        if (enabled) el.classList.remove("disabled");
+        else el.classList.add("disabled");
       });
     }
 
-    function displayResults(data) {
+    // Tab switching
+    document.getElementById('resultTabs').addEventListener('click', (e) => {
+      if (!e.target.classList.contains('nav-link')) return;
+      if (e.target.classList.contains('disabled')) return;
+
+      const tab = e.target.getAttribute('data-tab');
+
+      document.querySelectorAll('#resultTabs .nav-link').forEach(link => link.classList.remove('active'));
+      e.target.classList.add('active');
+
+      document.querySelectorAll('.result-section').forEach(section => section.classList.remove('active'));
+      document.getElementById(`section-${tab}`).classList.add('active');
+    });
+
+    function renderExtraction(data) {
+      const extractionSection = document.getElementById('section-extraction');
+      const extractionData = {
+        functional_requirements: data.functional || [],
+        non_functional_requirements: data.non_functional || [],
+        nfr_type_predictions: data.nfr_type_predictions || [],
+        pending_questions_count: (data.pending_questions || []).length
+      };
+      extractionSection.textContent = JSON.stringify(extractionData, null, 2);
+    }
+
+    function renderReview(data) {
+      const reviewSection = document.getElementById('section-review');
+      pendingQuestions = data.pending_questions || [];
+      reviewSelections = {};
+
+      if (!pendingQuestions.length) {
+        reviewSection.innerHTML = `<div class="alert alert-success">No low-confidence NFRs. You can generate recommendations directly.</div>`;
+        saveNfrBtn.disabled = true;
+        generateBtn.disabled = false;
+        reviewHint.textContent = "All NFR types are confident enough.";
+        return;
+      }
+
+      let html = `<div class="alert alert-warning">
+        Some NFRs have low confidence. Please confirm their Type, then click <b>Save Confirmations</b>.
+      </div>`;
+
+      pendingQuestions.forEach((q) => {
+        const idx = q.index;
+        const confPct = Math.round((q.confidence || 0) * 100);
+
+        html += `
+          <div class="nfr-card">
+            <h6>#${idx + 1} — ${q.title || "NFR"}</h6>
+            <div class="small-muted mb-2">Model confidence: <b>${confPct}%</b></div>
+            <div class="mb-2"><b>Description:</b><br>${(q.description || "").replaceAll("<", "&lt;")}</div>
+
+            <label class="form-label"><b>Select Type</b> (you can choose one of the suggestions or type custom):</label>
+            <select class="form-select mb-2" data-idx="${idx}">
+              <option value="">-- Choose --</option>
+              ${q.suggestions.map(s => {
+                const p = Math.round((s.confidence || 0) * 100);
+                return `<option value="${s.label}">${s.label} (${p}%)</option>`;
+              }).join("")}
+              <option value="__custom__">Other (custom)</option>
+            </select>
+
+            <input class="form-control mb-2 d-none" placeholder="Type custom label e.g., SE or PE" data-custom="${idx}" />
+
+          </div>
+        `;
+      });
+
+      reviewSection.innerHTML = html;
+
+      // attach listeners
+      reviewSection.querySelectorAll("select.form-select").forEach(sel => {
+        sel.addEventListener("change", (e) => {
+          const idx = e.target.getAttribute("data-idx");
+          const val = e.target.value;
+          const customInput = reviewSection.querySelector(`input[data-custom="${idx}"]`);
+
+          if (val === "__custom__") {
+            customInput.classList.remove("d-none");
+            reviewSelections[idx] = "";
+          } else {
+            customInput.classList.add("d-none");
+            customInput.value = "";
+            reviewSelections[idx] = val || "";
+          }
+
+          updateSaveButtonState();
+        });
+      });
+
+      reviewSection.querySelectorAll("input.form-control[data-custom]").forEach(inp => {
+        inp.addEventListener("input", (e) => {
+          const idx = e.target.getAttribute("data-custom");
+          reviewSelections[idx] = e.target.value.trim();
+          updateSaveButtonState();
+        });
+      });
+
+      saveNfrBtn.disabled = true;
+      generateBtn.disabled = true;
+      reviewHint.textContent = "Confirm all pending NFRs to unlock Generate.";
+    }
+
+    function updateSaveButtonState() {
+      // must confirm all pending
+      const allDone = pendingQuestions.every(q => {
+        const idx = String(q.index);
+        return (reviewSelections[idx] || "").trim().length > 0;
+      });
+
+      saveNfrBtn.disabled = !allDone;
+      if (allDone) reviewHint.textContent = "All pending NFRs confirmed. Click Save.";
+      else reviewHint.textContent = "Please confirm ALL pending NFRs.";
+    }
+
+    async function saveConfirmations() {
+      const items = pendingQuestions.map(q => {
+        const idx = String(q.index);
+        return {
+          index: q.index,
+          title: q.title,
+          description: q.description,
+          type: (reviewSelections[idx] || "").trim()
+        };
+      });
+
+      const resp = await fetch("/confirm_nfr/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ items })
+      });
+
+      const data = await resp.json();
+      if (data.error) {
+        throw new Error(data.exception || JSON.stringify(data));
+      }
+      return data;
+    }
+
+    async function generateRecommendations() {
+      const resp = await fetch("/generate_recommendations/", {
+        method: "POST"
+      });
+      const data = await resp.json();
+      if (data.error) {
+        throw new Error(data.exception || JSON.stringify(data));
+      }
+      return data;
+    }
+
+    function fillRecommendationTabs(finalData) {
+      // enable tabs
+      setTabsEnabled(true);
+
+      // Functional
+      const functionalSection = document.getElementById('section-functional');
+      const functionalData = finalData.architecture_recommendations?.functional_method || {};
+      functionalSection.textContent = JSON.stringify(functionalData, null, 2);
+
+      // Ordinal
+      const ordinalSection = document.getElementById('section-ordinal');
+      ordinalSection.textContent = JSON.stringify({ top_architectures: finalData.architecture_recommendations?.ordinal_method || [] }, null, 2);
+
+      // Binary
+      const binarySection = document.getElementById('section-binary');
+      binarySection.textContent = JSON.stringify({ top_architectures: finalData.architecture_recommendations?.binary_method || [] }, null, 2);
+
+      // Weighted
+      const weightedSection = document.getElementById('section-weighted');
+      weightedSection.textContent = JSON.stringify(finalData.architecture_recommendations?.weighted_score_method || {}, null, 2);
+
+      // Hybrid
+      const hybridSection = document.getElementById('section-hybrid');
+      hybridSection.textContent = JSON.stringify({ top_architectures: finalData.architecture_recommendations?.hybrid_method || [] }, null, 2);
+    }
+
+    function displayPhase1(data) {
       currentData = data;
 
       loadingMessage.style.display = 'none';
@@ -212,76 +330,33 @@
       resultNavigation.style.display = 'block';
       processResult.style.display = 'block';
 
+      // reset to extraction
       document.querySelectorAll('#resultTabs .nav-link').forEach(link => link.classList.remove('active'));
       document.querySelector('#resultTabs .nav-link[data-tab="extraction"]').classList.add('active');
-
       document.querySelectorAll('.result-section').forEach(section => section.classList.remove('active'));
       document.getElementById('section-extraction').classList.add('active');
 
-      // Extraction Section
-      const extractionSection = document.getElementById('section-extraction');
-      extractionSection.innerHTML = '';
+      // Tabs disabled until generate
+      setTabsEnabled(false);
 
-      // Low-confidence UI
-      renderLowConfidenceUI(extractionSection, data.low_confidence_nfrs);
+      // Actions shown
+      reviewActions.style.display = "block";
+      saveNfrBtn.disabled = true;
+      generateBtn.disabled = true;
 
-      // Also show raw extraction JSON (optional)
-      const pre = document.createElement('pre');
-      const extractionData = {
-        functional_requirements: data.functional || [],
-        non_functional_requirements: data.non_functional || []
-      };
-      pre.textContent = JSON.stringify(extractionData, null, 2);
-      extractionSection.appendChild(pre);
+      renderExtraction(data);
+      renderReview(data);
 
-      // Functional Method
-      const functionalSection = document.getElementById('section-functional');
-      {
-        const functionalData = data.architecture_recommendations?.functional_method || {};
-        functionalSection.textContent = Object.keys(functionalData).length
-          ? JSON.stringify(functionalData, null, 2)
-          : 'No functional method results available';
-      }
-
-      // Ordinal
-      const ordinalSection = document.getElementById('section-ordinal');
-      {
-        const ordinalData = data.architecture_recommendations?.ordinal_method || [];
-        ordinalSection.textContent = ordinalData.length
-          ? JSON.stringify({ top_architectures: ordinalData }, null, 2)
-          : 'No ordinal method results available';
-      }
-
-      // Binary
-      const binarySection = document.getElementById('section-binary');
-      {
-        const binaryData = data.architecture_recommendations?.binary_method || [];
-        binarySection.textContent = binaryData.length
-          ? JSON.stringify({ top_architectures: binaryData }, null, 2)
-          : 'No binary method results available';
-      }
-
-      // Weighted
-      const weightedSection = document.getElementById('section-weighted');
-      {
-        const weightedData = data.architecture_recommendations?.weighted_score_method || {};
-        weightedSection.textContent = Object.keys(weightedData).length
-          ? JSON.stringify(weightedData, null, 2)
-          : 'No weighted score results available';
-      }
-
-      // Hybrid
-      const hybridSection = document.getElementById('section-hybrid');
-      {
-        const hybridData = data.architecture_recommendations?.hybrid_method || [];
-        hybridSection.textContent = hybridData.length
-          ? JSON.stringify({ top_architectures: hybridData }, null, 2)
-          : 'No hybrid method results available';
+      // if ready directly
+      if (data.ready_for_recommendations) {
+        generateBtn.disabled = false;
       }
     }
 
+    // Upload & Extract
     processForm.addEventListener('submit', async (e) => {
       e.preventDefault();
+
       if (!processFileInput.files || processFileInput.files.length === 0) {
         alert('Please choose a PDF file.');
         return;
@@ -291,26 +366,69 @@
       const fd = new FormData();
       fd.append('file', file);
 
+      // reset UI
       resultNavigation.style.display = 'none';
       processResult.style.display = 'none';
       errorMessage.style.display = 'none';
       loadingMessage.style.display = 'block';
+      reviewActions.style.display = "none";
 
       try {
         const resp = await fetch('/upload_srs/', { method: 'POST', body: fd });
         const data = await resp.json();
 
-        if (!resp.ok || data.error) {
+        if (data.error) {
           loadingMessage.style.display = 'none';
           errorMessage.style.display = 'block';
           errorMessage.innerHTML = `<div class="alert alert-danger">Error: ${data.exception || JSON.stringify(data)}</div>`;
-        } else {
-          displayResults(data);
+          return;
         }
+
+        displayPhase1(data);
+
       } catch (err) {
         loadingMessage.style.display = 'none';
         errorMessage.style.display = 'block';
-        errorMessage.innerHTML = `<div class="alert alert-danger">Error during processing: ${err}</div>`;
+        errorMessage.innerHTML = `<div class="alert alert-danger">Error during upload/extraction: ${err}</div>`;
+      }
+    });
+
+    // Save button
+    saveNfrBtn.addEventListener("click", async () => {
+      try {
+        loadingMessage.style.display = 'block';
+        const res = await saveConfirmations();
+        loadingMessage.style.display = 'none';
+        reviewHint.textContent = `Saved ${res.saved_count} items. Now you can Generate Recommendations.`;
+        generateBtn.disabled = false;
+        saveNfrBtn.disabled = true;
+      } catch (e) {
+        loadingMessage.style.display = 'none';
+        errorMessage.style.display = 'block';
+        errorMessage.innerHTML = `<div class="alert alert-danger">Save failed: ${e}</div>`;
+      }
+    });
+
+    // Generate button
+    generateBtn.addEventListener("click", async () => {
+      try {
+        loadingMessage.style.display = 'block';
+        const finalData = await generateRecommendations();
+        loadingMessage.style.display = 'none';
+
+        // Fill tabs
+        fillRecommendationTabs(finalData);
+
+        // Switch to hybrid tab (optional) or stay
+        document.querySelectorAll('#resultTabs .nav-link').forEach(link => link.classList.remove('active'));
+        document.querySelector('#resultTabs .nav-link[data-tab="hybrid"]').classList.add('active');
+        document.querySelectorAll('.result-section').forEach(section => section.classList.remove('active'));
+        document.getElementById('section-hybrid').classList.add('active');
+
+      } catch (e) {
+        loadingMessage.style.display = 'none';
+        errorMessage.style.display = 'block';
+        errorMessage.innerHTML = `<div class="alert alert-danger">Generate failed: ${e}</div>`;
       }
     });
   </script>
