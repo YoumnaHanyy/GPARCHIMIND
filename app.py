@@ -16,7 +16,7 @@ import pandas as pd
 from datetime import datetime
 
 MAX_CHARS = 12000
-HF_API_KEY = "REDACTED_HF_TOKEN"
+HF_TOKEN = os.getenv("HF_TOKEN")
 MODEL_NAME = "meta-llama/Meta-Llama-3-8B-Instruct"
 
 USER_FEEDBACK_CSV = "user_labeled_nfr_new.csv"

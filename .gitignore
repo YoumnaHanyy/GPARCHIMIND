@@ -6,3 +6,6 @@ sentence_model/model.safetensors
 *.pt
 *.bin
 *.safetensors
+
+.env
+*.env

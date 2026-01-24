@@ -27,7 +27,8 @@ os.makedirs(UPLOAD_DIR, exist_ok=True)
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("archimind")
 
-HF_API_KEY = "REDACTED_HF_TOKEN"
+
+HF_TOKEN = os.getenv("HF_TOKEN")
 MODEL_NAME = "meta-llama/Meta-Llama-3-8B-Instruct"
 MAX_CHARS = 12000
 CHUNK_SIZE = 4000
