@@ -1,17 +1,19 @@
 {
   "system_name": "OnlineFoodOrderingSystem",
-  "architecture_style": "Microservices Architecture",
+  "architecture_style": "Event-Driven Microservices Architecture",
   "functional_requirements": [
-    "User registration and login",
+    "User registration and authentication",
     "Browse restaurants and menus",
     "Place food orders",
-    "Track order status",
-    "Process online payments"
+    "Process online payments",
+    "Track order status in real time",
+    "Send order notifications to users"
   ],
   "non_functional_requirements": {
     "scalability": "High",
     "availability": "High",
     "latency": "Medium",
-    "reliability": "High"
+    "reliability": "High",
+    "consistency": "Eventual"
   }
 }

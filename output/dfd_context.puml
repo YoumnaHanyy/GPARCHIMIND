@@ -1,0 +1,14 @@
+@startuml
+left to right direction
+skinparam rectangle {
+  BackgroundColor LightGray
+  BorderColor Black
+}
+skinparam package {
+  BackgroundColor White
+}
+rectangle "End User" <<external>>
+rectangle "OnlineFoodOrderingSystem" <<process>>
+"End User" --> "OnlineFoodOrderingSystem" : Requests / Inputs
+"OnlineFoodOrderingSystem" --> "End User" : Responses / Results
+@enduml

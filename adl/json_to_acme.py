@@ -1,22 +1,25 @@
 def normalize(name: str) -> str:
     return name.replace(" ", "")
 
-def convert_to_acme(adl):
+
+def convert_to_acme(arch):
     lines = []
-    system_name = normalize(adl["system"]["name"])
+    system_name = normalize(arch["system"])
 
     # ================= SYSTEM =================
     lines.append(f"System {system_name} {{")
     lines.append('  Property view : String = "runtime";')
+    lines.append(f'  Property architectureStyle : String = "{arch.get("style", "")}";')
+    lines.append(f'  Property source : String = "{arch.get("source", "")}";')
 
     # ================= COMPONENTS =================
-    for s in adl.get("services", []):
-        comp_name = normalize(s["name"])
-        responsibility = s.get("responsibility", "")
+    for c in arch.get("components", []):
+        comp_name = normalize(c["name"])
+        responsibility = c.get("responsibility", "")
+
+        name_lower = c["name"].lower()
 
         # ---- heuristics for production semantics ----
-        name_lower = s["name"].lower()
-
         if "database" in name_lower:
             state = "stateful"
             scaling = "vertical"
@@ -31,7 +34,7 @@ def convert_to_acme(adl):
         lines.append(f'    Property state : String = "{state}";')
         lines.append(f'    Property scaling : String = "{scaling}";')
 
-        if "loadbalancer" in name_lower:
+        if "gateway" in name_lower or "loadbalancer" in name_lower:
             lines.append('    Property type : String = "L7";')
             lines.append('    Property healthChecks : Boolean = true;')
 
@@ -45,14 +48,13 @@ def convert_to_acme(adl):
         lines.append("  }")
 
     # ================= ATTACHMENTS =================
-    for r in adl.get("relationships", []):
+    for r in arch.get("relationships", []):
         src = normalize(r.get("source"))
         dst = normalize(r.get("target"))
         rtype = r.get("type", "data-flow")
 
         lines.append(f"  Attachment {src}.out to {dst}.in {{")
 
-        # runtime semantics
         if rtype == "event-flow":
             lines.append('    Property delivery : String = "at-least-once";')
             lines.append('    Property ordering : Boolean = false;')
@@ -64,18 +66,18 @@ def convert_to_acme(adl):
         lines.append("  }")
 
     # ================= RESILIENCE =================
-    lines.append('  Property resilience_pattern : String = "Retry + CircuitBreaker";')
-    lines.append('  Property failure_isolation : Boolean = true;')
+    intents = arch.get("production_intents", {}).get("resilience", {})
+    if intents:
+        patterns = ", ".join(intents.get("patterns", []))
+        lines.append(f'  Property resilience_pattern : String = "{patterns}";')
+        lines.append(f'  Property delivery : String = "{intents.get("delivery", "")}";')
+        lines.append(f'  Property ordering : Boolean = {str(intents.get("ordering", True)).lower()};')
 
     # ================= SECURITY =================
-    lines.append('  Property authentication : String = "service-to-service";')
-    lines.append('  Property authorization : String = "RBAC";')
-    lines.append('  Property encryption : String = "in-transit";')
-
-    # ================= QUALITY ATTRIBUTES =================
-    qa = adl.get("qualityAttributes", {})
-    for k, v in qa.items():
-        lines.append(f'  Property constraint_{k} : String = "{v}";')
+    security = arch.get("production_intents", {}).get("security", {})
+    if security:
+        lines.append(f'  Property authentication : String = "{security.get("authentication", "")}";')
+        lines.append(f'  Property authorization : String = "{security.get("authorization", "")}";')
 
     lines.append("}")
     return "\n".join(lines)

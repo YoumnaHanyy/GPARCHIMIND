@@ -1,0 +1,26 @@
+@startuml
+autonumber
+actor User
+participant "User Service" as UserService
+participant "Restaurant Service" as RestaurantService
+participant "Order Service" as OrderService
+participant "Payment Gateway" as PaymentGateway
+participant "Notification Service" as NotificationService
+participant "Database" as Database
+participant "API Gateway" as APIGateway
+participant "Web Application" as WebApplication
+WebApplication -> APIGateway : Receive user request
+APIGateway -> UserService : Authenticate user
+UserService -> Database : Retrieve user data
+APIGateway -> RestaurantService : Retrieve restaurant data
+APIGateway ->> OrderService : Create new order
+OrderService ->> Database : Create new order in database
+OrderService ->> NotificationService : Send order notification
+NotificationService ->> Database : Store notification in database
+OrderService ->> PaymentGateway : Process payment
+PaymentGateway ->> Database : Store payment in database
+PaymentGateway ->> NotificationService : Send payment notification
+NotificationService ->> Database : Store payment notification in database
+APIGateway ->> NotificationService : Send order confirmation
+NotificationService ->> Database : Store order confirmation in database
+@enduml

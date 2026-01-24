@@ -1,11 +1,17 @@
 import json
 import subprocess
 from fastapi import FastAPI, Request
+from adl.json_to_process_view import convert_to_process_view
+
 from fastapi.responses import FileResponse
+from adl.json_to_dfd_context import convert_to_dfd_context
 from report_generator import generate_report
 from fastapi.templating import Jinja2Templates
 from adl.json_to_c4_plantuml import convert_to_c4_plantuml
-from adl.adl_generator import generate_adl
+from adl.ai_engine import ai_generate_architecture
+
+from adl.json_to_context_view import convert_to_context_view
+
 from adl.json_to_acme import convert_to_acme
 
 
@@ -27,30 +33,59 @@ def generate_architecture():
     with open("input/requirements.json", "r", encoding="utf-8") as f:
         requirements = json.load(f)
 
-    adl, validation = generate_adl(requirements)
+    arch = ai_generate_architecture(
+    requirements["system_name"],
+    requirements["functional_requirements"],
+    requirements["non_functional_requirements"],
+    requirements["architecture_style"]
+    )
 
     with open("output/architecture.adl.json", "w", encoding="utf-8") as f:
-        json.dump(adl, f, indent=2)
+        json.dump(arch, f, indent=2)
+
 
     with open("output/architecture.validation.json", "w", encoding="utf-8") as f:
-        json.dump(validation, f, indent=2)
+        json.dump(arch["critique"], f, indent=2)
 
-    acme = convert_to_acme(adl)
+
+    acme = convert_to_acme(arch)
     with open("output/architecture.acme", "w", encoding="utf-8") as f:
         f.write(acme)
 
     # ---- C4 PlantUML ----
-    c4_puml = convert_to_c4_plantuml(adl)
+    c4_puml = convert_to_c4_plantuml(arch)
     with open("output/architecture_c4.puml", "w", encoding="utf-8") as f:
         f.write(c4_puml)
 
+    # ---- Context View ----
+    context_puml = convert_to_context_view(arch)
+
+    with open("output/context_view.puml", "w", encoding="utf-8") as f:
+       f.write(context_puml)
+
+    # ---- DFD Context View (Level 0) ----
+    dfd_puml = convert_to_dfd_context(arch)
+
+    with open("output/dfd_context.puml", "w", encoding="utf-8") as f:
+       f.write(dfd_puml)
+
+    # ---- Process View ----
+    process_puml = convert_to_process_view(arch)
+
+    with open("output/process_view.puml", "w", encoding="utf-8") as f:
+       f.write(process_puml)
     subprocess.run([
-        r"C:\Program Files\Java\jdk-21\bin\java.exe",
-        "-jar",
-        "plantuml.jar",
-        "-tpng",
-        "output/architecture_c4.puml"
-    ], check=True)
+    r"C:\Program Files\Java\jdk-21\bin\java.exe",
+    "-jar",
+    "plantuml.jar",
+    "-tpng",
+    "output/architecture_c4.puml",
+    "output/dfd_context.puml",
+    "output/context_view.puml",
+    "output/process_view.puml"
+], check=True)
+
+
 
     # ---- Generate PDF automatically ----
     pdf_path = generate_report()
