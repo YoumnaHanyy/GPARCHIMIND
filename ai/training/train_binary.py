@@ -1,176 +1,102 @@
-"""
-Train Binary NFR Classifier (BERT)
-Label: 0 / 1
-"""
+# ai/training/train_binary.py
 
 import pandas as pd
 import numpy as np
 import torch
-from transformers import (
-    BertTokenizer,
-    BertForSequenceClassification,
-    Trainer,
-    TrainingArguments
-)
+from transformers import BertTokenizer, BertForSequenceClassification, Trainer, TrainingArguments
 from datasets import Dataset
 import evaluate
-import os
-import inspect
-import random
 
+from infrastructure.database import db   # 👈 Mongo connection
 
-# ============================================================
-# 1️⃣ Reproducibility
-# ============================================================
+# =============================
+# 1. Load dataset from MongoDB
+# =============================
+collection = db["merged_NFR_cleaned_no_dots"]
 
-SEED = 42
-torch.manual_seed(SEED)
-np.random.seed(SEED)
-random.seed(SEED)
+docs = list(
+    collection.find(
+        {},
+        {
+            "_id": 0,
+            "Requirement": 1,
+            "label": 1
+        }
+    )
+)
 
+df = pd.DataFrame(docs)
 
-# ============================================================
-# 2️⃣ Paths & Config
-# ============================================================
+df = df.rename(columns={
+    "Requirement": "text"
+})
 
-DATASET_PATH = "nfr_training_Binarydata.csv"
-MODEL_NAME = "bert-base-uncased"
-SAVE_DIR = "trained_nfr_binary_model"
-
-NUM_LABELS = 2
-MAX_LENGTH = 128
-BATCH_SIZE = 8
-EPOCHS = 3
-LR = 2e-5
-
-
-# ============================================================
-# 3️⃣ Load Dataset
-# ============================================================
-
-df = pd.read_csv(DATASET_PATH)
-df = df[["text", "label"]]   # enforce schema
-
-print("Dataset sample:")
+print("✅ Loaded binary training data from MongoDB")
 print(df.head())
 
-
-# ============================================================
-# 4️⃣ Tokenizer
-# ============================================================
-
-tokenizer = BertTokenizer.from_pretrained(MODEL_NAME)
+# =============================
+# 2. Tokenization
+# =============================
+tokenizer = BertTokenizer.from_pretrained("bert-base-uncased")
 
 def tokenize(batch):
     return tokenizer(
         batch["text"],
         padding="max_length",
         truncation=True,
-        max_length=MAX_LENGTH
+        max_length=128
     )
-
-
-# ============================================================
-# 5️⃣ HuggingFace Dataset
-# ============================================================
 
 dataset = Dataset.from_pandas(df)
 dataset = dataset.map(tokenize, batched=True)
+
 dataset = dataset.rename_column("label", "labels")
 dataset.set_format(
     type="torch",
     columns=["input_ids", "attention_mask", "labels"]
 )
 
-splits = dataset.train_test_split(test_size=0.2, seed=SEED)
-train_dataset = splits["train"]
-eval_dataset = splits["test"]
+dataset = dataset.train_test_split(test_size=0.2)
 
-print(f"Train size: {len(train_dataset)}")
-print(f"Eval size: {len(eval_dataset)}")
-
-
-# ============================================================
-# 6️⃣ Model
-# ============================================================
-
+# =============================
+# 3. Model
+# =============================
 model = BertForSequenceClassification.from_pretrained(
-    MODEL_NAME,
-    num_labels=NUM_LABELS
+    "bert-base-uncased",
+    num_labels=2
 )
 
-
-# ============================================================
-# 7️⃣ Metrics
-# ============================================================
-
-accuracy_metric = evaluate.load("accuracy")
+metric = evaluate.load("accuracy")
 
 def compute_metrics(eval_pred):
     logits, labels = eval_pred
-    preds = np.argmax(logits, axis=-1)
-    return accuracy_metric.compute(
-        predictions=preds,
-        references=labels
-    )
+    preds = np.argmax(logits, axis=1)
+    return metric.compute(predictions=preds, references=labels)
 
-
-# ============================================================
-# 8️⃣ Training Arguments (Version Safe)
-# ============================================================
-
-args = {
-    "output_dir": "./results_binary",
-    "learning_rate": LR,
-    "num_train_epochs": EPOCHS,
-    "per_device_train_batch_size": BATCH_SIZE,
-    "per_device_eval_batch_size": BATCH_SIZE,
-    "logging_dir": "./logs",
-    "logging_steps": 20,
-    "save_strategy": "epoch",
-    "seed": SEED,
-}
-
-sig = inspect.signature(TrainingArguments.__init__)
-if "evaluation_strategy" in sig.parameters:
-    args["evaluation_strategy"] = "epoch"
-if "do_eval" in sig.parameters:
-    args["do_eval"] = True
-
-training_args = TrainingArguments(**args)
-
-
-# ============================================================
-# 9️⃣ Trainer
-# ============================================================
+training_args = TrainingArguments(
+    output_dir="results_binary",
+    num_train_epochs=3,
+    per_device_train_batch_size=8,
+    per_device_eval_batch_size=8,
+    evaluation_strategy="epoch",
+    logging_steps=50,
+)
 
 trainer = Trainer(
     model=model,
     args=training_args,
-    train_dataset=train_dataset,
-    eval_dataset=eval_dataset,
-    compute_metrics=compute_metrics,
-    tokenizer=tokenizer
+    train_dataset=dataset["train"],
+    eval_dataset=dataset["test"],
+    tokenizer=tokenizer,
+    compute_metrics=compute_metrics
 )
 
-
-# ============================================================
-# 🔟 Train
-# ============================================================
-
+# =============================
+# 4. Train & Save
+# =============================
 trainer.train()
 
-eval_results = trainer.evaluate()
-print("Evaluation Results:", eval_results)
+model.save_pretrained("models/trained_nfr_binary_model")
+tokenizer.save_pretrained("models/trained_nfr_binary_model")
 
-
-# ============================================================
-# 1️⃣1️⃣ Save Model
-# ============================================================
-
-os.makedirs(SAVE_DIR, exist_ok=True)
-
-model.save_pretrained(SAVE_DIR)
-tokenizer.save_pretrained(SAVE_DIR)
-
-print(f"✅ Binary model saved to: {SAVE_DIR}")
+print("✅ Binary NFR model trained & saved from MongoDB")

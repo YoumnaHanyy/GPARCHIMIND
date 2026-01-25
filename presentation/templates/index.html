@@ -194,8 +194,29 @@ document.getElementById("section-extraction").innerHTML =
 document.getElementById("section-ordinal").innerHTML =
   renderOrdinal(data.ordinal_method);
 
-    document.getElementById("section-binary").innerHTML =
-  "<p class='text-muted'>Binary method not implemented yet.</p>";
+   function renderBinary(binaryData) {
+  if (!binaryData || !binaryData.top_architectures) {
+    return "<p class='text-muted'>No binary results available.</p>";
+  }
+
+  let html = "<h5 class='section-header'>Binary Method – Top Architectures</h5>";
+
+  binaryData.top_architectures.forEach((item, idx) => {
+    html += `
+      <div class="mb-3">
+        <div class="req-title">${idx + 1}. ${item.architecture}</div>
+        <div class="req-desc">
+          Score: <strong>${item.score}</strong>
+        </div>
+      </div>
+    `;
+  });
+
+  return html;
+}
+
+document.getElementById("section-binary").innerHTML =
+  renderBinary(data.binary_method);
 
 document.getElementById("section-weighted").innerHTML =
   "<p class='text-muted'>Weighted method not implemented yet.</p>";

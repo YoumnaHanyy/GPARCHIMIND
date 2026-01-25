@@ -1,157 +1,103 @@
 import numpy as np
 import torch
-import pandas as pd
-
 from transformers import BertTokenizer, BertForSequenceClassification
-
-# MongoDB
 from infrastructure.database import db
+from collections import defaultdict
 
+MODEL_DIR = "models/trained_nfr_binary_model"
 
-# ============================================================
-# 1️⃣ Load Binary BERT Model
-# ============================================================
-
-MODEL_DIR = "trained_nfr_binary_model"
+NFR_ORDER = ["PE", "SC", "MN", "A", "SE", "US", "PO", "O"]
 
 tokenizer = BertTokenizer.from_pretrained(MODEL_DIR)
 model = BertForSequenceClassification.from_pretrained(MODEL_DIR)
 model.eval()
 
 
-# ============================================================
-# 2️⃣ Binary Prediction for One Sentence
-# ============================================================
+def predict_binary_architecture():
+    # =============================
+    # 1️⃣ Load predicted NFRs
+    # =============================
+    nfr_collection = db["nfr_predictions"]
 
-def predict_binary(sentence: str) -> int:
-    """
-    Predict binary label for one sentence
-    return: 0 or 1
-    """
-    tokens = tokenizer(
-        sentence,
-        return_tensors="pt",
-        truncation=True,
-        padding="max_length",
-        max_length=128
+    extracted_nfrs = list(
+        nfr_collection.find(
+            {}, {"_id": 0, "description": 1, "predicted_type": 1}
+        )
     )
 
-    with torch.no_grad():
-        output = model(**tokens)
+    def predict(sentence):
+        tokens = tokenizer(
+            sentence,
+            return_tensors="pt",
+            truncation=True,
+            padding="max_length",
+            max_length=128
+        )
+        with torch.no_grad():
+            output = model(**tokens)
+        return int(torch.argmax(output.logits).item())  # 👈 force int
 
-    return torch.argmax(output.logits).item()
+    # =============================
+    # 2️⃣ Build SRS binary vector
+    # =============================
+    srs_vector = {k: 0 for k in NFR_ORDER}
 
+    for item in extracted_nfrs:
+        nfr_type = item.get("predicted_type")
+        if nfr_type in NFR_ORDER:
+            srs_vector[nfr_type] = predict(item["description"])
 
-# ============================================================
-# 3️⃣ Load NFR Sentences from MongoDB
-# ============================================================
+    srs_vec = np.array([int(srs_vector[k]) for k in NFR_ORDER])
 
-def load_nfr_sentences():
-    """
-    Reads NFR requirements from MongoDB
-    Collection: merged_NFR_cleaned_no_dots
-    """
-    collection = db["merged_NFR_cleaned_no_dots"]
-    docs = list(collection.find({}, {"_id": 0, "Requirement": 1}))
-    return [d["Requirement"] for d in docs]
+    # =============================
+    # 3️⃣ Load architectures from Mongo
+    # =============================
+    arch_collection = db["ArchitectureDataset"]
 
+    raw_archs = list(
+        arch_collection.find(
+            {},
+            {"_id": 0, "Architecture": 1, "Type": 1, "label": 1}
+        )
+    )
 
-# ============================================================
-# 4️⃣ Build Binary Vector
-# ============================================================
+    arch_vectors = defaultdict(lambda: {k: 0 for k in NFR_ORDER})
 
-NFR_ORDER = ["PE", "SC", "MN", "A", "SE", "US", "PO", "O"]
+    for row in raw_archs:
+        arch_name = row.get("Architecture")
+        nfr_type = row.get("Type")
+        label = row.get("label")
 
-def build_binary_vector(sentences):
-    """
-    Convert SRS sentences into binary NFR vector
-    """
-    vector = {k: 0 for k in NFR_ORDER}
+        # 👇 critical fix
+        if (
+            arch_name
+            and nfr_type in NFR_ORDER
+            and label is not None
+        ):
+            arch_vectors[arch_name][nfr_type] = int(label)
 
-    for s in sentences:
-        for nfr in NFR_ORDER:
-            if nfr.lower() in s.lower():
-                vector[nfr] = predict_binary(s)
-
-    return vector
-
-
-# ============================================================
-# 5️⃣ Load Architecture Dataset from MongoDB
-# ============================================================
-
-def load_architecture_dataset():
-    """
-    Reads architecture dataset from MongoDB
-    Collection: ArchitectureDataset
-    """
-    collection = db["ArchitectureDataset"]
-    docs = list(collection.find({}, {"_id": 0}))
-    return pd.DataFrame(docs)
-
-
-# ============================================================
-# 6️⃣ Compute Architecture Scores
-# ============================================================
-
-def compute_architecture_scores(binary_vector, arch_df):
-    """
-    Compare SRS vector with architecture vectors
-    """
+    # =============================
+    # 4️⃣ Score architectures
+    # =============================
     results = []
 
-    for _, row in arch_df.iterrows():
-        arch_name = row["Architecture Style"]
-
-        arch_vec = row[NFR_ORDER].values.astype(int)
-        srs_vec = np.array([binary_vector[k] for k in NFR_ORDER])
+    for arch_name, vec in arch_vectors.items():
+        arch_vec = np.array([int(vec[k]) for k in NFR_ORDER])
 
         diff = np.sum(np.abs(arch_vec - srs_vec))
-        score = 1 - (diff / len(NFR_ORDER))
+        score = round(1 - (diff / len(NFR_ORDER)), 3)
 
         results.append({
             "architecture": arch_name,
-            "score": round(float(score), 4)
+            "score": score
         })
 
+    # =============================
+    # 5️⃣ Sort & return
+    # =============================
     results.sort(key=lambda x: x["score"], reverse=True)
-    return results
-
-
-# ============================================================
-# 7️⃣ Main Binary Method Pipeline
-# ============================================================
-
-def run_binary_method():
-    """
-    Full Binary Method pipeline
-    """
-    sentences = load_nfr_sentences()
-    binary_vector = build_binary_vector(sentences)
-
-    arch_df = load_architecture_dataset()
-    scores = compute_architecture_scores(binary_vector, arch_df)
 
     return {
-        "binary_vector": binary_vector,
-        "top_5_architectures": scores[:5],
-        "best_architecture": scores[0] if scores else None
+        "srs_vector": srs_vector,
+        "top_architectures": results[:5]
     }
-
-
-# ============================================================
-# 8️⃣ Local Testing
-# ============================================================
-
-if __name__ == "__main__":
-    result = run_binary_method()
-
-    print("\n=== Binary Vector ===")
-    print(result["binary_vector"])
-
-    print("\n=== Top 5 Architectures ===")
-    for arch in result["top_5_architectures"]:
-        print(arch)
-
-    print("\n=== Best Architecture ===")
-    print(result["best_architecture"])
