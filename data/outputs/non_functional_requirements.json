@@ -2,25 +2,37 @@
   {
     "title": "Security",
     "description": "The system MUST ensure the security and integrity of user data.",
-    "predicted_type": "SE",
-    "predicted_level": "High"
+    "source": {
+      "page": 19,
+      "start_index": null
+    },
+    "project_id": 2
   },
   {
     "title": "Accuracy",
     "description": "The system MUST provide accurate job recommendations.",
-    "predicted_type": "US",
-    "predicted_level": "High"
+    "source": {
+      "page": 19,
+      "start_index": null
+    },
+    "project_id": 2
   },
   {
     "title": "Usability",
     "description": "The system SHOULD be user-friendly and easy to use.",
-    "predicted_type": "US",
-    "predicted_level": "Low"
+    "source": {
+      "page": 19,
+      "start_index": null
+    },
+    "project_id": 2
   },
   {
     "title": "Response time",
     "description": "The system MUST respond in a timely manner.",
-    "predicted_type": "PE",
-    "predicted_level": "High"
+    "source": {
+      "page": 19,
+      "start_index": null
+    },
+    "project_id": 2
   }
 ]

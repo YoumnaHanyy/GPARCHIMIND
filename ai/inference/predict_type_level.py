@@ -1,77 +1,72 @@
-import torch
-import pandas as pd
-import numpy as np
 import json
-
+import os
+import torch
 from transformers import BertTokenizer, BertForSequenceClassification
 from sklearn.preprocessing import LabelEncoder
 
-# MongoDB
-from infrastructure.database import db
+# load dataset from MongoDB (for encoders)
+from infrastructure.repositories.nfr_dataset_repository import (
+    NFRDatasetRepository,
+    NFRPredictionRepository
+)
 
 
-# ============================================================
-# 1️⃣ Load Training Data from MongoDB (for Label Encoders)
-# ============================================================
+BASE_OUTPUT = "data/outputs"
 
-def load_training_dataset():
+NFR_INPUT_PATH = os.path.join(BASE_OUTPUT, "non_functional_requirements.json")
+OUTPUT_PATH = os.path.join(BASE_OUTPUT, "nfr_predictions_type_level.json")
+
+MODEL_TYPE_PATH = "models/trained_nfr_type_model"
+MODEL_LEVEL_PATH = "models/trained_nfr_level_model"
+
+
+def predict_and_save_nfr():
     """
-    Collection: merged_NFR_cleaned_no_dots
-    Fields: Type, Level
+    Reads extracted NFRs from JSON,
+    predicts Type + Level,
+    saves results to JSON,
+    and returns predictions list.
     """
-    collection = db["merged_NFR_cleaned_no_dots"]
-    docs = list(collection.find({}, {"_id": 0, "Type": 1, "Level": 1}))
-    return pd.DataFrame(docs)
+
+    # ===============================
+    # 1️⃣ Load dataset from MongoDB (for LabelEncoders)
+    # ===============================
+    df = NFRDatasetRepository.load_nfr_dataset_from_mongo()
+
+    le_type = LabelEncoder()
+    le_type.fit(df["Type"])
+
+    le_level = LabelEncoder()
+    le_level.fit(df["Level"])
 
 
-df_train = load_training_dataset()
+    # ===============================
+    # 2️⃣ Load tokenizer & models
+    # ===============================
+    tokenizer = BertTokenizer.from_pretrained(MODEL_TYPE_PATH)
 
-le_type = LabelEncoder()
-le_type.fit(df_train["Type"])
+    model_type = BertForSequenceClassification.from_pretrained(MODEL_TYPE_PATH)
+    model_level = BertForSequenceClassification.from_pretrained(MODEL_LEVEL_PATH)
 
-le_level = LabelEncoder()
-le_level.fit(df_train["Level"])
-
-
-# ============================================================
-# 2️⃣ Load Models + Tokenizer
-# ============================================================
-
-TOKENIZER_NAME = "bert-base-uncased"
-
-MODEL_TYPE_DIR = "trained_nfr_type_model"
-MODEL_LEVEL_DIR = "trained_nfr_level_model"
-
-tokenizer = BertTokenizer.from_pretrained(TOKENIZER_NAME)
-
-model_type = BertForSequenceClassification.from_pretrained(MODEL_TYPE_DIR)
-model_level = BertForSequenceClassification.from_pretrained(MODEL_LEVEL_DIR)
-
-model_type.eval()
-model_level.eval()
+    model_type.eval()
+    model_level.eval()
 
 
-# ============================================================
-# 3️⃣ Load Extracted NFRs from MongoDB
-# ============================================================
+    # ===============================
+    # 3️⃣ Load extracted NFRs
+    # ===============================
+    with open(NFR_INPUT_PATH, "r", encoding="utf-8") as f:
+        nfrs = json.load(f)
 
-def load_extracted_nfrs():
-    """
-    Collection: extracted_nfrs
-    Field: description
-    """
-    collection = db["extracted_nfrs"]
-    docs = list(collection.find({}, {"_id": 0, "title": 1, "description": 1}))
-    return docs
+    texts = [item["description"] for item in nfrs]
+
+    if not texts:
+        raise ValueError("❌ No NFRs found to predict")
 
 
-# ============================================================
-# 4️⃣ Predict Type + Level
-# ============================================================
-
-def predict_type_and_level(nfr_list):
-    texts = [item["description"] for item in nfr_list]
-
+    # ===============================
+    # 4️⃣ Tokenize
+    # ===============================
     tokens = tokenizer(
         texts,
         padding=True,
@@ -80,59 +75,41 @@ def predict_type_and_level(nfr_list):
         return_tensors="pt"
     )
 
+
+    # ===============================
+    # 5️⃣ Predict Type + Level
+    # ===============================
     with torch.no_grad():
-        out_type = model_type(**tokens)
-        out_level = model_level(**tokens)
+        logits_type = model_type(**tokens).logits
+        logits_level = model_level(**tokens).logits
 
-    pred_type_idx = torch.argmax(out_type.logits, dim=1).numpy()
-    pred_level_idx = torch.argmax(out_level.logits, dim=1).numpy()
+    pred_type_ids = torch.argmax(logits_type, dim=1).cpu().numpy()
+    pred_level_ids = torch.argmax(logits_level, dim=1).cpu().numpy()
 
-    pred_types = le_type.inverse_transform(pred_type_idx)
-    pred_levels = le_level.inverse_transform(pred_level_idx)
+    pred_types = le_type.inverse_transform(pred_type_ids)
+    pred_levels = le_level.inverse_transform(pred_level_ids)
 
+
+    # ===============================
+    # 6️⃣ Build output JSON
+    # ===============================
     results = []
-    for i, item in enumerate(nfr_list):
+    for i, item in enumerate(nfrs):
         results.append({
-            "title": item.get("title", f"NFR_{i+1}"),
-            "description": item["description"],
+            "title": item.get("title"),
+            "description": item.get("description"),
             "predicted_type": pred_types[i],
             "predicted_level": pred_levels[i]
         })
 
+
+    # ===============================
+    # 7️⃣ Save results
+    # ===============================
+    with open(OUTPUT_PATH, "w", encoding="utf-8") as f:
+        json.dump(results, f, indent=2, ensure_ascii=False)
+
+    print(f"✅ NFR predictions saved to: {OUTPUT_PATH}")
+    
+    NFRPredictionRepository.save(project_id=2, predictions=results)
     return results
-
-
-# ============================================================
-# 5️⃣ Save Predictions to MongoDB
-# ============================================================
-
-def save_predictions(results):
-    collection = db["nfr_predictions_type_level"]
-    collection.delete_many({})
-    collection.insert_many(results)
-
-
-# ============================================================
-# 6️⃣ Main Pipeline
-# ============================================================
-
-def run_type_level_prediction():
-    nfrs = load_extracted_nfrs()
-    predictions = predict_type_and_level(nfrs)
-    save_predictions(predictions)
-    return predictions
-
-
-# ============================================================
-# 7️⃣ Local Testing
-# ============================================================
-
-if __name__ == "__main__":
-    results = run_type_level_prediction()
-
-    print("\n=== NFR TYPE + LEVEL PREDICTIONS ===")
-    for r in results:
-        print(
-            f"{r['title']} → {r['predicted_type']} "
-            f"(Level: {r['predicted_level']})"
-        )

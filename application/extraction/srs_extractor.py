@@ -2,8 +2,11 @@ import fitz  # PyMuPDF
 import json
 import re
 import logging
-from typing import List, Dict, Optional
+from typing import List, Dict
 from huggingface_hub import InferenceClient
+
+from infrastructure.repositories.extraction_repository import ExtractionRepository
+
 
 logger = logging.getLogger("srs_extractor")
 
@@ -41,31 +44,34 @@ class SRSExtractor:
 
         start = cleaned.find("{")
         if start == -1:
-            raise ValueError("No JSON object found")
+            raise ValueError("No JSON object found in model output")
 
         stack = []
         in_string = False
 
         for i in range(start, len(cleaned)):
-            c = cleaned[i]
-            if c == '"' and cleaned[i - 1] != "\\":
+            ch = cleaned[i]
+
+            if ch == '"' and cleaned[i - 1] != "\\":
                 in_string = not in_string
+
             if not in_string:
-                if c == "{":
+                if ch == "{":
                     stack.append("{")
-                elif c == "}":
+                elif ch == "}":
                     stack.pop()
                     if not stack:
                         json_text = cleaned[start:i + 1]
                         return json.loads(json_text)
 
-        raise ValueError("Unbalanced JSON")
+        raise ValueError("Unbalanced JSON in model output")
 
     # -------------------------------
     # FUNCTIONAL + NON-FUNCTIONAL EXTRACTION
     # -------------------------------
-    def extract_requirements(self, srs_text: str) -> Dict:
-        prompt = f"""
+    def extract_requirements(self, srs_text: str, project_id: int = 2) -> Dict:
+        try:
+            prompt = f"""
 You are an expert software analyst.
 Extract Functional and Non-Functional Requirements from the SRS below.
 
@@ -92,16 +98,56 @@ SRS:
 {srs_text[:MAX_CHARS]}
 """
 
-        response = self.client.chat.completions.create(
-            model=MODEL_NAME,
-            messages=[
-                {"role": "system", "content": "Return JSON only. No explanation."},
-                {"role": "user", "content": prompt}
-            ],
-            temperature=0,
-            max_tokens=4000,
-            response_format={"type": "json_object"}
+            response = self.client.chat.completions.create(
+                model=MODEL_NAME,
+                messages=[
+                    {"role": "system", "content": "Return JSON only. No explanation."},
+                    {"role": "user", "content": prompt}
+                ],
+                temperature=0,
+                max_tokens=4000
+            )
+
+            output = response.choices[0].message["content"]
+            extracted = self.extract_json_from_model_output(output)
+
+        except Exception as e:
+            logger.exception("❌ HuggingFace extraction failed")
+            raise RuntimeError(f"LLM extraction failed: {e}")
+
+        # -------------------------------
+        # SPLIT RESULTS
+        # -------------------------------
+        functional_requirements = extracted.get("functional", [])
+        non_functional_requirements = extracted.get("non_functional", [])
+
+        # -------------------------------
+        # SAVE TO DATABASE
+        # -------------------------------
+        ExtractionRepository.save_functional(
+            project_id,
+            functional_requirements
         )
 
-        output = response.choices[0].message["content"]
-        return self.extract_json_from_model_output(output)
+        ExtractionRepository.save_non_functional(
+            project_id,
+            non_functional_requirements
+        )
+
+        # -------------------------------
+        # SAVE TO JSON FILES
+        # -------------------------------
+        paths = ExtractionRepository.save_extraction_results(
+            project_id=project_id,
+            fr=functional_requirements,
+            nfr=non_functional_requirements
+        )
+
+        # -------------------------------
+        # RETURN FINAL RESULT
+        # -------------------------------
+        return {
+            "functional": functional_requirements,
+            "non_functional": non_functional_requirements,
+            "saved_files": paths
+        }
