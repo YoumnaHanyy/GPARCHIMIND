@@ -8,7 +8,7 @@ skinparam package {
   BackgroundColor White
 }
 rectangle "End User" <<external>>
-rectangle "OnlineFoodOrderingSystem" <<process>>
-"End User" --> "OnlineFoodOrderingSystem" : Requests / Inputs
-"OnlineFoodOrderingSystem" --> "End User" : Responses / Results
+rectangle "ELearningManagementSystem" <<process>>
+"End User" --> "ELearningManagementSystem" : Requests / Inputs
+"ELearningManagementSystem" --> "End User" : Responses / Results
 @enduml

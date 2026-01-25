@@ -1,19 +1,20 @@
 {
-  "system_name": "OnlineFoodOrderingSystem",
-  "architecture_style": "Event-Driven Microservices Architecture",
+  "system_name": "ELearningManagementSystem",
+  "architecture_style": "Microservices Architecture",
   "functional_requirements": [
     "User registration and authentication",
-    "Browse restaurants and menus",
-    "Place food orders",
-    "Process online payments",
-    "Track order status in real time",
-    "Send order notifications to users"
+    "Manage courses and lessons",
+    "Enroll students in courses",
+    "Stream video lectures",
+    "Track student progress and grades",
+    "Send notifications to students and instructors"
   ],
   "non_functional_requirements": {
     "scalability": "High",
     "availability": "High",
     "latency": "Medium",
     "reliability": "High",
-    "consistency": "Eventual"
+    "consistency": "Eventual",
+    "security": "High"
   }
 }

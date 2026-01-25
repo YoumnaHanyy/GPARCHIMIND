@@ -2,9 +2,7 @@
 !include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
 LAYOUT_WITH_LEGEND()
 Person(User, "End User", "Uses the system")
-System(SystemA, "OnlineFoodOrderingSystem", "System under design")
-System_Ext(PaymentGateway, "Payment Gateway", "External payment processor")
-Rel(SystemA, PaymentGateway, "Processes payments via")
+System(SystemA, "ELearningManagementSystem", "System under design")
 System_Ext(NotificationService, "Notification Service", "External notification system")
 Rel(SystemA, NotificationService, "Sends notifications via")
 Rel(User, SystemA, "Uses")

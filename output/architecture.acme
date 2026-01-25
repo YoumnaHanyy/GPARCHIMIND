@@ -1,87 +1,78 @@
-System OnlineFoodOrderingSystem {
+System ELearningManagementSystem {
   Property view : String = "runtime";
-  Property architectureStyle : String = "Event-Driven Microservices Architecture";
+  Property architectureStyle : String = "Microservices Architecture";
   Property source : String = "AI";
   Component UserService = new Component {
     Port in;
     Port out;
-    Property responsibility : String = "Handles user registration, authentication, and profile management.";
+    Property responsibility : String = "Handle user registration, authentication, and profile management.";
     Property state : String = "stateless";
     Property scaling : String = "horizontal";
   }
-  Component RestaurantService = new Component {
+  Component CourseService = new Component {
     Port in;
     Port out;
-    Property responsibility : String = "Manages restaurant information, menus, and order processing.";
+    Property responsibility : String = "Manage courses, lessons, and course enrollments.";
     Property state : String = "stateless";
     Property scaling : String = "horizontal";
   }
-  Component OrderService = new Component {
+  Component VideoStreamingService = new Component {
     Port in;
     Port out;
-    Property responsibility : String = "Processes food orders, handles payment, and tracks order status in real-time.";
+    Property responsibility : String = "Stream video lectures and handle video playback.";
     Property state : String = "stateless";
     Property scaling : String = "horizontal";
   }
-  Component PaymentGateway = new Component {
+  Component ProgressTrackingService = new Component {
     Port in;
     Port out;
-    Property responsibility : String = "Facilitates online payments through various payment methods.";
+    Property responsibility : String = "Track student progress and grades.";
+    Property state : String = "stateless";
+    Property scaling : String = "horizontal";
+  }
+  Component NotificationService = new Component {
+    Port in;
+    Port out;
+    Property responsibility : String = "Send notifications to students and instructors.";
+    Property state : String = "stateless";
+    Property scaling : String = "horizontal";
+  }
+  Component APIGateway = new Component {
+    Port in;
+    Port out;
+    Property responsibility : String = "Handle incoming requests, route them to the appropriate service, and manage authentication.";
     Property state : String = "stateless";
     Property scaling : String = "horizontal";
     Property type : String = "L7";
     Property healthChecks : Boolean = true;
   }
-  Component NotificationService = new Component {
-    Port in;
-    Port out;
-    Property responsibility : String = "Sends order notifications to users via email, SMS, or other channels.";
-    Property state : String = "stateless";
-    Property scaling : String = "horizontal";
-  }
   Component Database = new Component {
     Port in;
     Port out;
-    Property responsibility : String = "Stores and retrieves data for all components.";
+    Property responsibility : String = "Store user, course, lesson, and progress data.";
     Property state : String = "stateful";
     Property scaling : String = "vertical";
     Property consistency : String = "eventual";
     Property replication : String = "multi-node";
   }
-  Component APIGateway = new Component {
-    Port in;
-    Port out;
-    Property responsibility : String = "Routes incoming requests to the respective components and handles authentication.";
-    Property state : String = "stateless";
-    Property scaling : String = "horizontal";
-    Property type : String = "L7";
-    Property healthChecks : Boolean = true;
-  }
-  Component WebApplication = new Component {
-    Port in;
-    Port out;
-    Property responsibility : String = "Provides a user-friendly interface for users to interact with the system.";
-    Property state : String = "stateless";
-    Property scaling : String = "horizontal";
-  }
   Attachment APIGateway.out to UserService.in {
     Property delivery : String = "at-least-once";
-    Property ordering : Boolean = true;
+    Property ordering : Boolean = false;
     Property backpressure : String = "bounded";
   }
-  Attachment APIGateway.out to RestaurantService.in {
+  Attachment APIGateway.out to CourseService.in {
     Property delivery : String = "at-least-once";
-    Property ordering : Boolean = true;
+    Property ordering : Boolean = false;
     Property backpressure : String = "bounded";
   }
-  Attachment APIGateway.out to OrderService.in {
+  Attachment APIGateway.out to VideoStreamingService.in {
     Property delivery : String = "at-least-once";
-    Property ordering : Boolean = true;
+    Property ordering : Boolean = false;
     Property backpressure : String = "bounded";
   }
-  Attachment APIGateway.out to PaymentGateway.in {
+  Attachment APIGateway.out to ProgressTrackingService.in {
     Property delivery : String = "at-least-once";
-    Property ordering : Boolean = true;
+    Property ordering : Boolean = false;
     Property backpressure : String = "bounded";
   }
   Attachment APIGateway.out to NotificationService.in {
@@ -94,17 +85,17 @@ System OnlineFoodOrderingSystem {
     Property ordering : Boolean = true;
     Property backpressure : String = "bounded";
   }
-  Attachment RestaurantService.out to Database.in {
+  Attachment CourseService.out to Database.in {
     Property delivery : String = "at-least-once";
     Property ordering : Boolean = true;
     Property backpressure : String = "bounded";
   }
-  Attachment OrderService.out to Database.in {
+  Attachment VideoStreamingService.out to Database.in {
     Property delivery : String = "at-least-once";
     Property ordering : Boolean = true;
     Property backpressure : String = "bounded";
   }
-  Attachment PaymentGateway.out to Database.in {
+  Attachment ProgressTrackingService.out to Database.in {
     Property delivery : String = "at-least-once";
     Property ordering : Boolean = true;
     Property backpressure : String = "bounded";
@@ -114,19 +105,34 @@ System OnlineFoodOrderingSystem {
     Property ordering : Boolean = true;
     Property backpressure : String = "bounded";
   }
-  Attachment OrderService.out to NotificationService.in {
-    Property delivery : String = "at-least-once";
-    Property ordering : Boolean = false;
-    Property backpressure : String = "bounded";
-  }
-  Attachment PaymentGateway.out to NotificationService.in {
-    Property delivery : String = "at-least-once";
-    Property ordering : Boolean = false;
-    Property backpressure : String = "bounded";
-  }
-  Attachment WebApplication.out to APIGateway.in {
+  Attachment APIGateway.out to Database.in {
     Property delivery : String = "at-least-once";
     Property ordering : Boolean = true;
+    Property backpressure : String = "bounded";
+  }
+  Attachment UserService.out to ProgressTrackingService.in {
+    Property delivery : String = "at-least-once";
+    Property ordering : Boolean = false;
+    Property backpressure : String = "bounded";
+  }
+  Attachment CourseService.out to ProgressTrackingService.in {
+    Property delivery : String = "at-least-once";
+    Property ordering : Boolean = false;
+    Property backpressure : String = "bounded";
+  }
+  Attachment VideoStreamingService.out to ProgressTrackingService.in {
+    Property delivery : String = "at-least-once";
+    Property ordering : Boolean = false;
+    Property backpressure : String = "bounded";
+  }
+  Attachment NotificationService.out to ProgressTrackingService.in {
+    Property delivery : String = "at-least-once";
+    Property ordering : Boolean = false;
+    Property backpressure : String = "bounded";
+  }
+  Attachment ProgressTrackingService.out to NotificationService.in {
+    Property delivery : String = "at-least-once";
+    Property ordering : Boolean = false;
     Property backpressure : String = "bounded";
   }
   Property resilience_pattern : String = "Retry, CircuitBreaker";

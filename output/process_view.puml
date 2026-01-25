@@ -2,25 +2,26 @@
 autonumber
 actor User
 participant "User Service" as UserService
-participant "Restaurant Service" as RestaurantService
-participant "Order Service" as OrderService
-participant "Payment Gateway" as PaymentGateway
+participant "Course Service" as CourseService
+participant "Video Streaming Service" as VideoStreamingService
+participant "Progress Tracking Service" as ProgressTrackingService
 participant "Notification Service" as NotificationService
-participant "Database" as Database
 participant "API Gateway" as APIGateway
-participant "Web Application" as WebApplication
-WebApplication -> APIGateway : Receive user request
-APIGateway -> UserService : Authenticate user
-UserService -> Database : Retrieve user data
-APIGateway -> RestaurantService : Retrieve restaurant data
-APIGateway ->> OrderService : Create new order
-OrderService ->> Database : Create new order in database
-OrderService ->> NotificationService : Send order notification
-NotificationService ->> Database : Store notification in database
-OrderService ->> PaymentGateway : Process payment
-PaymentGateway ->> Database : Store payment in database
-PaymentGateway ->> NotificationService : Send payment notification
-NotificationService ->> Database : Store payment notification in database
-APIGateway ->> NotificationService : Send order confirmation
-NotificationService ->> Database : Store order confirmation in database
+participant "Database" as Database
+APIGateway ->> UserService : Forward user registration request
+APIGateway ->> CourseService : Forward course management request
+APIGateway ->> VideoStreamingService : Forward video streaming request
+APIGateway ->> ProgressTrackingService : Forward progress tracking request
+APIGateway ->> NotificationService : Forward notification request
+UserService -> Database : Store user data
+CourseService -> Database : Store course data
+VideoStreamingService -> Database : Store video streaming data
+ProgressTrackingService -> Database : Store progress tracking data
+NotificationService -> Database : Store notification data
+APIGateway -> Database : Store API Gateway data
+UserService ->> ProgressTrackingService : Notify progress tracking of user registration
+CourseService ->> ProgressTrackingService : Notify progress tracking of course enrollment
+VideoStreamingService ->> ProgressTrackingService : Notify progress tracking of video streaming
+NotificationService ->> ProgressTrackingService : Notify progress tracking of notifications
+ProgressTrackingService ->> NotificationService : Notify notification service of progress updates
 @enduml

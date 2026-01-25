@@ -2,16 +2,15 @@ import json
 import subprocess
 from fastapi import FastAPI, Request
 from adl.json_to_process_view import convert_to_process_view
-
 from fastapi.responses import FileResponse
 from adl.json_to_dfd_context import convert_to_dfd_context
 from report_generator import generate_report
 from fastapi.templating import Jinja2Templates
+from adl.json_to_deployment_view import convert_to_deployment_view
+
 from adl.json_to_c4_plantuml import convert_to_c4_plantuml
 from adl.ai_engine import ai_generate_architecture
-
 from adl.json_to_context_view import convert_to_context_view
-
 from adl.json_to_acme import convert_to_acme
 
 
@@ -74,6 +73,13 @@ def generate_architecture():
 
     with open("output/process_view.puml", "w", encoding="utf-8") as f:
        f.write(process_puml)
+
+
+    # ---- Physical View (Deployment Diagram) ----
+    deployment_puml = convert_to_deployment_view(arch)
+
+    with open("output/deployment_view.puml", "w", encoding="utf-8") as f:
+      f.write(deployment_puml)
     subprocess.run([
     r"C:\Program Files\Java\jdk-21\bin\java.exe",
     "-jar",
@@ -82,7 +88,8 @@ def generate_architecture():
     "output/architecture_c4.puml",
     "output/dfd_context.puml",
     "output/context_view.puml",
-    "output/process_view.puml"
+    "output/process_view.puml",
+    "output/deployment_view.puml"
 ], check=True)
 
 

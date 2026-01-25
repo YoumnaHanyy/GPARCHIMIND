@@ -1,0 +1,50 @@
+@startuml
+!theme plain
+left to right direction
+node "Client" {
+  component "User"
+}
+node "Kubernetes Ingress" {
+  component "Ingress Controller"
+}
+node "User Service Pod" {
+  component "User Service"
+}
+node "Course Service Pod" {
+  component "Course Service"
+}
+node "Video Streaming Service Pod" {
+  component "Video Streaming Service"
+}
+node "Progress Tracking Service Pod" {
+  component "Progress Tracking Service"
+}
+node "Notification Service Pod" {
+  component "Notification Service"
+}
+node "API Gateway Pod" {
+  component "API Gateway"
+}
+node "Database StatefulSet" {
+  database "Database"
+}
+"User" --> "Ingress Controller" : TCP/IP
+"Ingress Controller" --> "API Gateway Pod" : HTTP/HTTPS
+"User" --> "Ingress Controller"
+"Ingress Controller" --> "API Gateway Pod"
+"API Gateway Pod" --> "User Service Pod"
+"API Gateway Pod" --> "Course Service Pod"
+"API Gateway Pod" --> "Video Streaming Service Pod"
+"API Gateway Pod" --> "Progress Tracking Service Pod"
+"API Gateway Pod" --> "Notification Service Pod"
+"User Service Pod" --> "Database StatefulSet"
+"Course Service Pod" --> "Database StatefulSet"
+"Video Streaming Service Pod" --> "Database StatefulSet"
+"Progress Tracking Service Pod" --> "Database StatefulSet"
+"Notification Service Pod" --> "Database StatefulSet"
+"API Gateway Pod" --> "Database StatefulSet"
+node "Secondary Region" {
+  component "Replica Services"
+}
+"Ingress Controller" --> "Secondary Region" : failover
+@enduml
