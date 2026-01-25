@@ -1,0 +1,25 @@
+from infrastructure.database import db
+
+# ⚠️ الاسم لازم يطابق MongoDB EXACT
+architecture_collection = db["ArchitectureDataset"]
+
+def get_architecture_dataset():
+    """
+    Load architecture dataset from MongoDB
+    """
+    cursor = architecture_collection.find(
+        {},
+        {
+            "_id": 0,
+            "Architecture": 1,
+            "Type": 1,
+            "Level": 1
+        }
+    )
+
+    data = list(cursor)
+
+    if not data:
+        raise ValueError("ArchitectureDataset collection is empty")
+
+    return data

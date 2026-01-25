@@ -13,13 +13,13 @@
   },
   {
     "title": "Usability",
-    "description": "The system SHOULD be user-friendly and easy to use.",
+    "description": "The system SHOULD provide an intuitive and user-friendly interface.",
     "predicted_type": "US",
     "predicted_level": "Low"
   },
   {
     "title": "Response time",
-    "description": "The system MUST respond in a timely manner.",
+    "description": "The system MUST respond within a reasonable time frame.",
     "predicted_type": "PE",
     "predicted_level": "High"
   }

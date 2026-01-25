@@ -19,7 +19,7 @@
   },
   {
     "title": "Usability",
-    "description": "The system SHOULD be user-friendly and easy to use.",
+    "description": "The system SHOULD provide an intuitive and user-friendly interface.",
     "source": {
       "page": 19,
       "start_index": null
@@ -28,7 +28,7 @@
   },
   {
     "title": "Response time",
-    "description": "The system MUST respond in a timely manner.",
+    "description": "The system MUST respond within a reasonable time frame.",
     "source": {
       "page": 19,
       "start_index": null

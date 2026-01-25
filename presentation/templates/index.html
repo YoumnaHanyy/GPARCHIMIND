@@ -167,21 +167,42 @@ document.getElementById("section-extraction").innerHTML =
   frHtml + "<hr/>" + nfrHtml;
 
 
-    document.getElementById("section-functional").textContent =
-      JSON.stringify(data.architecture_recommendations.functional_method || {}, null, 2);
+    document.getElementById("section-functional").innerHTML =
+  "<p class='text-muted'>Functional architecture method not implemented yet.</p>";
 
-    document.getElementById("section-ordinal").textContent =
-      JSON.stringify(data.architecture_recommendations.ordinal_method || [], null, 2);
-
-    document.getElementById("section-binary").textContent =
-      JSON.stringify(data.architecture_recommendations.binary_method || [], null, 2);
-
-    document.getElementById("section-weighted").textContent =
-      JSON.stringify(data.architecture_recommendations.weighted_score_method || {}, null, 2);
-
-    document.getElementById("section-hybrid").textContent =
-      JSON.stringify(data.architecture_recommendations.hybrid_method || [], null, 2);
+    function renderOrdinal(ordinalData) {
+  if (!ordinalData || ordinalData.length === 0) {
+    return "<p class='text-muted'>No ordinal results available.</p>";
   }
+
+  let html = "<h5 class='section-header'>Ordinal Method – Top Architectures</h5>";
+
+  ordinalData.forEach((item, idx) => {
+    html += `
+      <div class="mb-3">
+        <div class="req-title">${idx + 1}. ${item.architecture}</div>
+        <div class="req-desc">
+          Matched NFRs: <strong>${item.matched_nfrs}</strong>
+        </div>
+      </div>
+    `;
+  });
+
+  return html;
+}
+
+document.getElementById("section-ordinal").innerHTML =
+  renderOrdinal(data.ordinal_method);
+
+    document.getElementById("section-binary").innerHTML =
+  "<p class='text-muted'>Binary method not implemented yet.</p>";
+
+document.getElementById("section-weighted").innerHTML =
+  "<p class='text-muted'>Weighted method not implemented yet.</p>";
+
+document.getElementById("section-hybrid").innerHTML =
+  "<p class='text-muted'>Hybrid method not implemented yet.</p>";
+}
 
   form.onsubmit = async e => {
     e.preventDefault();

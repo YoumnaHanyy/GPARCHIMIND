@@ -10,7 +10,7 @@
   },
   {
     "title": "Detailed Functional Specification",
-    "description": "The system will initiate text-based conversations with users through a mobile application, analyze and extract pertinent details from the user’s responses, and provide a tailored strategy to steer individuals toward fulfilling and enjoyable job options.",
+    "description": "The system will contain dataset extracted from wuzzuf using web Scraping technique.",
     "source": {
       "page": 16,
       "start_index": null
@@ -18,55 +18,82 @@
     "project_id": 2
   },
   {
-    "title": "Skill Extraction Module",
-    "description": "The system will extract skills from unstructured CVs and JDs.",
+    "title": "System Overview",
+    "description": "The system will provide a personalized experience through the bot, increasing the user’s engagement.",
     "source": {
-      "page": 4,
+      "page": 10,
       "start_index": null
     },
     "project_id": 2
   },
   {
-    "title": "Word2Vec Model",
-    "description": "The system will use a Word2Vec model to create dense vectors of skills.",
+    "title": "System Context",
+    "description": "The system will be designed to provide a tailored strategy to steer individuals toward fulfilling and enjoyable job options.",
     "source": {
-      "page": 4,
-      "start_index": null
-    },
-    "project_id": 2
-  },
-  {
-    "title": "Feature Selection",
-    "description": "The system will select a representative subset of skills using feature selection.",
-    "source": {
-      "page": 4,
-      "start_index": null
-    },
-    "project_id": 2
-  },
-  {
-    "title": "Ranking",
-    "description": "The system will use a ranking algorithm to determine which n JDs are most suitable for a specific job seeker.",
-    "source": {
-      "page": 4,
-      "start_index": null
-    },
-    "project_id": 2
-  },
-  {
-    "title": "User Characteristics",
-    "description": "The system will consider user characteristics such as skills and interests.",
-    "source": {
-      "page": 13,
+      "page": 12,
       "start_index": null
     },
     "project_id": 2
   },
   {
     "title": "Objectives",
-    "description": "The system will have objectives such as providing a personalized experience and increasing user engagement.",
+    "description": "The system will provide a job coach recommender system designed to guide each person on their journey.",
     "source": {
       "page": 13,
+      "start_index": null
+    },
+    "project_id": 2
+  },
+  {
+    "title": "User Characteristics",
+    "description": "The system will be designed to provide a personalized experience through the bot, increasing the user’s engagement.",
+    "source": {
+      "page": 13,
+      "start_index": null
+    },
+    "project_id": 2
+  },
+  {
+    "title": "System Scope",
+    "description": "The system will provide a job coach recommender system designed to guide each person on their journey.",
+    "source": {
+      "page": 12,
+      "start_index": null
+    },
+    "project_id": 2
+  },
+  {
+    "title": "System Description",
+    "description": "The system will provide a job coach recommender system designed to guide each person on their journey.",
+    "source": {
+      "page": 9,
+      "start_index": null
+    },
+    "project_id": 2
+  },
+  {
+    "title": "Problem Statement",
+    "description": "The system will provide a job coach recommender system designed to guide each person on their journey.",
+    "source": {
+      "page": 9,
+      "start_index": null
+    },
+    "project_id": 2
+  },
+  {
+    "title": "System Functions",
+    "description": "The system will provide a job coach recommender system designed to guide each person on their journey.",
+    "source": {
+      "page": 14,
+      "start_index": null
+    },
+    "project_id": 2
+  },
+  {
+    "title": "Detailed Functional Specification",
+    "description": "The system will contain dataset extracted from wuzzuf using web Scraping technique.",
+    "source": {
+      "page": 16,
       "start_index": null
     },
     "project_id": 2

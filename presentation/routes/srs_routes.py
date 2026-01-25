@@ -4,6 +4,7 @@ import os
 
 from application.extraction.extraction_service import process_srs
 from ai.inference.predict_type_level import predict_and_save_nfr
+from application.extraction.ordinal_service import execute_ordinal_method
 
 router = APIRouter()
 
@@ -11,9 +12,6 @@ UPLOAD_DIR = "uploads"
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 
 
-# ===============================
-# helper to remove ObjectId
-# ===============================
 def clean_object_id(items: list):
     cleaned = []
     for item in items:
@@ -41,13 +39,17 @@ async def extract_srs(file: UploadFile = File(...)):
             hf_key=os.getenv("HF_API_KEY")
         )
 
-        # 3️⃣ predict NFR
+        # 3️⃣ predict NFR type + level
         predictions = predict_and_save_nfr()
 
-        # 4️⃣ response للـ UI (❌ no ObjectId)
+        # 4️⃣ 🔥 run ordinal automatically
+        ordinal_result = execute_ordinal_method()
+
+        # 5️⃣ response للـ UI
         return {
             "functional": clean_object_id(extraction_result["functional"]),
-            "nfr_predictions": clean_object_id(predictions)
+            "nfr_predictions": clean_object_id(predictions),
+            "ordinal_method": ordinal_result["result"]  # 👈 يظهر فورًا
         }
 
     except Exception as e:
