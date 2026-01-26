@@ -22,11 +22,8 @@ node "Progress Tracking Service Pod" {
 node "Notification Service Pod" {
   component "Notification Service"
 }
-node "API Gateway Pod" {
-  component "API Gateway"
-}
 node "Database StatefulSet" {
-  database "Database"
+  database "Database Service"
 }
 "User" --> "Ingress Controller" : TCP/IP
 "Ingress Controller" --> "API Gateway Pod" : HTTP/HTTPS
@@ -42,7 +39,6 @@ node "Database StatefulSet" {
 "Video Streaming Service Pod" --> "Database StatefulSet"
 "Progress Tracking Service Pod" --> "Database StatefulSet"
 "Notification Service Pod" --> "Database StatefulSet"
-"API Gateway Pod" --> "Database StatefulSet"
 node "Secondary Region" {
   component "Replica Services"
 }

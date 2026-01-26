@@ -6,22 +6,17 @@ participant "Course Service" as CourseService
 participant "Video Streaming Service" as VideoStreamingService
 participant "Progress Tracking Service" as ProgressTrackingService
 participant "Notification Service" as NotificationService
-participant "API Gateway" as APIGateway
-participant "Database" as Database
-APIGateway ->> UserService : Forward user registration request
-APIGateway ->> CourseService : Forward course management request
-APIGateway ->> VideoStreamingService : Forward video streaming request
-APIGateway ->> ProgressTrackingService : Forward progress tracking request
-APIGateway ->> NotificationService : Forward notification request
-UserService -> Database : Store user data
-CourseService -> Database : Store course data
-VideoStreamingService -> Database : Store video streaming data
-ProgressTrackingService -> Database : Store progress tracking data
-NotificationService -> Database : Store notification data
-APIGateway -> Database : Store API Gateway data
-UserService ->> ProgressTrackingService : Notify progress tracking of user registration
-CourseService ->> ProgressTrackingService : Notify progress tracking of course enrollment
-VideoStreamingService ->> ProgressTrackingService : Notify progress tracking of video streaming
-NotificationService ->> ProgressTrackingService : Notify progress tracking of notifications
-ProgressTrackingService ->> NotificationService : Notify notification service of progress updates
+participant "Database Service" as DatabaseService
+UserService ->> CourseService : User enrolled in a course
+UserService ->> ProgressTrackingService : User started a course
+CourseService -> VideoStreamingService : Course content requested
+CourseService ->> ProgressTrackingService : User completed a lesson
+VideoStreamingService ->> NotificationService : Video playback started
+ProgressTrackingService ->> NotificationService : User progress updated
+NotificationService -> DatabaseService : Notification sent
+CourseService -> DatabaseService : Course data updated
+UserService -> DatabaseService : User data updated
+ProgressTrackingService -> DatabaseService : Progress data updated
+VideoStreamingService -> DatabaseService : Video streaming data updated
+NotificationService -> DatabaseService : Notification data updated
 @enduml

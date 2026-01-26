@@ -5,109 +5,50 @@ System ELearningManagementSystem {
   Component UserService = new Component {
     Port in;
     Port out;
-    Property responsibility : String = "Handle user registration, authentication, and profile management.";
+    Property responsibility : String = "Handles user registration, authentication, and profile management.";
     Property state : String = "stateless";
     Property scaling : String = "horizontal";
   }
   Component CourseService = new Component {
     Port in;
     Port out;
-    Property responsibility : String = "Manage courses, lessons, and course enrollments.";
+    Property responsibility : String = "Manages courses, lessons, and course enrollments.";
     Property state : String = "stateless";
     Property scaling : String = "horizontal";
   }
   Component VideoStreamingService = new Component {
     Port in;
     Port out;
-    Property responsibility : String = "Stream video lectures and handle video playback.";
+    Property responsibility : String = "Streams video lectures to students.";
     Property state : String = "stateless";
     Property scaling : String = "horizontal";
   }
   Component ProgressTrackingService = new Component {
     Port in;
     Port out;
-    Property responsibility : String = "Track student progress and grades.";
+    Property responsibility : String = "Tracks student progress and grades.";
     Property state : String = "stateless";
     Property scaling : String = "horizontal";
   }
   Component NotificationService = new Component {
     Port in;
     Port out;
-    Property responsibility : String = "Send notifications to students and instructors.";
+    Property responsibility : String = "Sends notifications to students and instructors.";
     Property state : String = "stateless";
     Property scaling : String = "horizontal";
   }
-  Component APIGateway = new Component {
+  Component DatabaseService = new Component {
     Port in;
     Port out;
-    Property responsibility : String = "Handle incoming requests, route them to the appropriate service, and manage authentication.";
-    Property state : String = "stateless";
-    Property scaling : String = "horizontal";
-    Property type : String = "L7";
-    Property healthChecks : Boolean = true;
-  }
-  Component Database = new Component {
-    Port in;
-    Port out;
-    Property responsibility : String = "Store user, course, lesson, and progress data.";
+    Property responsibility : String = "Manages data storage and retrieval for the E-Learning Management System.";
     Property state : String = "stateful";
     Property scaling : String = "vertical";
     Property consistency : String = "eventual";
     Property replication : String = "multi-node";
   }
-  Attachment APIGateway.out to UserService.in {
+  Attachment UserService.out to CourseService.in {
     Property delivery : String = "at-least-once";
     Property ordering : Boolean = false;
-    Property backpressure : String = "bounded";
-  }
-  Attachment APIGateway.out to CourseService.in {
-    Property delivery : String = "at-least-once";
-    Property ordering : Boolean = false;
-    Property backpressure : String = "bounded";
-  }
-  Attachment APIGateway.out to VideoStreamingService.in {
-    Property delivery : String = "at-least-once";
-    Property ordering : Boolean = false;
-    Property backpressure : String = "bounded";
-  }
-  Attachment APIGateway.out to ProgressTrackingService.in {
-    Property delivery : String = "at-least-once";
-    Property ordering : Boolean = false;
-    Property backpressure : String = "bounded";
-  }
-  Attachment APIGateway.out to NotificationService.in {
-    Property delivery : String = "at-least-once";
-    Property ordering : Boolean = false;
-    Property backpressure : String = "bounded";
-  }
-  Attachment UserService.out to Database.in {
-    Property delivery : String = "at-least-once";
-    Property ordering : Boolean = true;
-    Property backpressure : String = "bounded";
-  }
-  Attachment CourseService.out to Database.in {
-    Property delivery : String = "at-least-once";
-    Property ordering : Boolean = true;
-    Property backpressure : String = "bounded";
-  }
-  Attachment VideoStreamingService.out to Database.in {
-    Property delivery : String = "at-least-once";
-    Property ordering : Boolean = true;
-    Property backpressure : String = "bounded";
-  }
-  Attachment ProgressTrackingService.out to Database.in {
-    Property delivery : String = "at-least-once";
-    Property ordering : Boolean = true;
-    Property backpressure : String = "bounded";
-  }
-  Attachment NotificationService.out to Database.in {
-    Property delivery : String = "at-least-once";
-    Property ordering : Boolean = true;
-    Property backpressure : String = "bounded";
-  }
-  Attachment APIGateway.out to Database.in {
-    Property delivery : String = "at-least-once";
-    Property ordering : Boolean = true;
     Property backpressure : String = "bounded";
   }
   Attachment UserService.out to ProgressTrackingService.in {
@@ -115,17 +56,17 @@ System ELearningManagementSystem {
     Property ordering : Boolean = false;
     Property backpressure : String = "bounded";
   }
+  Attachment CourseService.out to VideoStreamingService.in {
+    Property delivery : String = "at-least-once";
+    Property ordering : Boolean = true;
+    Property backpressure : String = "bounded";
+  }
   Attachment CourseService.out to ProgressTrackingService.in {
     Property delivery : String = "at-least-once";
     Property ordering : Boolean = false;
     Property backpressure : String = "bounded";
   }
-  Attachment VideoStreamingService.out to ProgressTrackingService.in {
-    Property delivery : String = "at-least-once";
-    Property ordering : Boolean = false;
-    Property backpressure : String = "bounded";
-  }
-  Attachment NotificationService.out to ProgressTrackingService.in {
+  Attachment VideoStreamingService.out to NotificationService.in {
     Property delivery : String = "at-least-once";
     Property ordering : Boolean = false;
     Property backpressure : String = "bounded";
@@ -133,6 +74,36 @@ System ELearningManagementSystem {
   Attachment ProgressTrackingService.out to NotificationService.in {
     Property delivery : String = "at-least-once";
     Property ordering : Boolean = false;
+    Property backpressure : String = "bounded";
+  }
+  Attachment NotificationService.out to DatabaseService.in {
+    Property delivery : String = "at-least-once";
+    Property ordering : Boolean = true;
+    Property backpressure : String = "bounded";
+  }
+  Attachment CourseService.out to DatabaseService.in {
+    Property delivery : String = "at-least-once";
+    Property ordering : Boolean = true;
+    Property backpressure : String = "bounded";
+  }
+  Attachment UserService.out to DatabaseService.in {
+    Property delivery : String = "at-least-once";
+    Property ordering : Boolean = true;
+    Property backpressure : String = "bounded";
+  }
+  Attachment ProgressTrackingService.out to DatabaseService.in {
+    Property delivery : String = "at-least-once";
+    Property ordering : Boolean = true;
+    Property backpressure : String = "bounded";
+  }
+  Attachment VideoStreamingService.out to DatabaseService.in {
+    Property delivery : String = "at-least-once";
+    Property ordering : Boolean = true;
+    Property backpressure : String = "bounded";
+  }
+  Attachment NotificationService.out to DatabaseService.in {
+    Property delivery : String = "at-least-once";
+    Property ordering : Boolean = true;
     Property backpressure : String = "bounded";
   }
   Property resilience_pattern : String = "Retry, CircuitBreaker";

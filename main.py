@@ -18,14 +18,16 @@ app = FastAPI()
 templates = Jinja2Templates(directory="templates")
 
 
-
-
 # ---------------- UI ----------------
+@app.get("/ArchitectureGenerator")
+def serve_archgen(request: Request):
+    return templates.TemplateResponse("ArchGen.html", {"request": request})
+
 @app.get("/")
 def serve_index(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
 
-
+# ================= AI ENGINE WRAPPERS =================
 @app.get("/generate")
 def generate_architecture():
 
