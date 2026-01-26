@@ -214,12 +214,32 @@ document.getElementById("section-ordinal").innerHTML =
 
   return html;
 }
+function renderWeighted(weightedData) {
+  if (!weightedData || !weightedData.top_architectures) {
+    return "<p class='text-muted'>No weighted results available.</p>";
+  }
+
+  let html = "<h5 class='section-header'>Weighted Score Method – Top Architectures</h5>";
+
+  weightedData.top_architectures.forEach((item, idx) => {
+    html += `
+      <div class="mb-3">
+        <div class="req-title">${idx + 1}. ${item.Architecture}</div>
+        <div class="req-desc">
+          Score: <strong>${item.Score}</strong>
+        </div>
+      </div>
+    `;
+  });
+
+  return html;
+}
 
 document.getElementById("section-binary").innerHTML =
   renderBinary(data.binary_method);
 
 document.getElementById("section-weighted").innerHTML =
-  "<p class='text-muted'>Weighted method not implemented yet.</p>";
+  renderWeighted(data.weighted_method);
 
 document.getElementById("section-hybrid").innerHTML =
   "<p class='text-muted'>Hybrid method not implemented yet.</p>";

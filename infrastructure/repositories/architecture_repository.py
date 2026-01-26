@@ -1,6 +1,5 @@
 from infrastructure.database import db
 
-# ⚠️ الاسم لازم يطابق MongoDB EXACT
 architecture_collection = db["ArchitectureDataset"]
 
 def get_architecture_dataset():
@@ -13,7 +12,8 @@ def get_architecture_dataset():
             "_id": 0,
             "Architecture": 1,
             "Type": 1,
-            "Level": 1
+            "Level": 1,
+            "LevelNorm": 1   # ✅ مهم للـ Weighted
         }
     )
 

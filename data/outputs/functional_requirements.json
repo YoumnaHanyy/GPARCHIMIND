@@ -1,73 +1,109 @@
 [
   {
-    "title": "Script Generator",
-    "description": "Transforms user input into video scripts.",
+    "title": "Provide a comprehensive learning support system",
+    "description": "Conduct precise assessments, identify challenges related to reading and working memory, and deliver personalized AI-driven tutoring experiences.",
     "source": {
-      "page": 10,
-      "start_index": "4.1"
+      "page": null,
+      "start_index": null
     },
     "project_id": 2
   },
   {
-    "title": "Video Generator",
-    "description": "Creates videos, including long, short videos and stories based on user provided text or scripts.",
+    "title": "Conduct precise assessments",
+    "description": "Identify challenges related to reading and working memory.",
     "source": {
-      "page": 10,
-      "start_index": "4.2"
+      "page": null,
+      "start_index": null
     },
     "project_id": 2
   },
   {
-    "title": "Script Video Editor",
-    "description": "Enables users to edit video content through text inputs.",
+    "title": "Deliver personalized AI-driven tutoring experiences",
+    "description": "Provide tailored educational interventions for individuals with learning disabilities.",
     "source": {
-      "page": 10,
-      "start_index": "4.2"
+      "page": null,
+      "start_index": null
     },
     "project_id": 2
   },
   {
-    "title": "Voice Over",
-    "description": "Allowing users to have a voice over on the videos.",
+    "title": "Emulate human teaching methods in mathematics",
+    "description": "Offer continuous availability and foster student growth by encouraging reflection on both successful and challenging decisions made during interactive games.",
     "source": {
-      "page": 7,
-      "start_index": "3.2"
+      "page": null,
+      "start_index": null
     },
     "project_id": 2
   },
   {
-    "title": "Background Music",
-    "description": "Library of free music/sounds to be used on the videos.",
+    "title": "Provide a tailored language tutoring environment",
+    "description": "Use personalized games, activities, and a user interface tailored to the unique needs of individuals with Dyslexia.",
     "source": {
-      "page": 7,
-      "start_index": "3.2"
+      "page": null,
+      "start_index": null
     },
     "project_id": 2
   },
   {
-    "title": "Captions",
-    "description": "Automatically generates on video captions.",
+    "title": "Classify individuals with Dyslexia",
+    "description": "Use a specialized platform for diagnosing Dyslexia and creating a tailored language tutoring environment.",
     "source": {
-      "page": 7,
-      "start_index": "3.2"
+      "page": null,
+      "start_index": null
     },
     "project_id": 2
   },
   {
-    "title": "Increase the Length of the Video",
-    "description": "Increase video length from the current average to a minimum of three minutes.",
+    "title": "Identify learning problems",
+    "description": "Use a fuzzy neural network (FNN) to identify learning difficulties specifically Dyslexia, Dyscalculia, and Dysgraphia.",
     "source": {
-      "page": 8,
-      "start_index": "3.5.1"
+      "page": null,
+      "start_index": null
     },
     "project_id": 2
   },
   {
-    "title": "Implement Advanced Edits for Scripts",
-    "description": "Implement user-friendly script editing functionalities.",
+    "title": "Teach students according to their preferences",
+    "description": "Use a fuzzy neural network (FNN) to teach students according to their preferences.",
     "source": {
-      "page": 9,
-      "start_index": "3.5.2"
+      "page": null,
+      "start_index": null
+    },
+    "project_id": 2
+  },
+  {
+    "title": "Create an interactive learning environment",
+    "description": "Integrate elements such as chat, games, and voice interactions.",
+    "source": {
+      "page": null,
+      "start_index": null
+    },
+    "project_id": 2
+  },
+  {
+    "title": "Use machine learning, natural language processing, and reinforcement learning",
+    "description": "Use these technologies for interactive online learning.",
+    "source": {
+      "page": null,
+      "start_index": null
+    },
+    "project_id": 2
+  },
+  {
+    "title": "Accommodate millions of students",
+    "description": "Use a cloud-based infrastructure to accommodate millions of students.",
+    "source": {
+      "page": null,
+      "start_index": null
+    },
+    "project_id": 2
+  },
+  {
+    "title": "Provide a scalable intelligent tutoring system",
+    "description": "Use a modular design to create new modules and accommodate millions of students.",
+    "source": {
+      "page": null,
+      "start_index": null
     },
     "project_id": 2
   }

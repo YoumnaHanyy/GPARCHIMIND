@@ -6,8 +6,11 @@ from application.extraction.extraction_service import process_srs
 from ai.inference.predict_type_level import predict_and_save_nfr
 from application.extraction.ordinal_service import execute_ordinal_method
 from application.extraction.binary_service import execute_binary_method
+from application.extraction.weighted_service import execute_weighted_method
+from application.extraction.nfr_stats_service import compute_nfr_statistics
 
 
+from infrastructure.repositories.weighted_repository import save_weighted_result
 router = APIRouter()
 
 UPLOAD_DIR = "uploads"
@@ -44,18 +47,31 @@ async def extract_srs(file: UploadFile = File(...)):
         # 3️⃣ predict NFR type + level
         predictions = predict_and_save_nfr()
 
+        # 🔹 NEW: compute stats for weighted
+        freq_norm, must_norm, importance = compute_nfr_statistics(predictions)
+
+
+
         # 4️⃣ ordinal
         ordinal_result = execute_ordinal_method()
 
         # 5️⃣ 🔥 binary (ده كان ناقص)
         binary_result = execute_binary_method()
 
+        # 6️⃣ weighted (🆕)
+        weighted_result = execute_weighted_method(
+                                     freq_norm=freq_norm,
+                                     must_norm=must_norm,
+                                     importance=importance
+                                    )
+        save_weighted_result(project_id, weighted_result)
         # 6️⃣ response للـ UI
         return {
             "functional": clean_object_id(extraction_result["functional"]),
             "nfr_predictions": clean_object_id(predictions),
             "ordinal_method": ordinal_result["result"],
-            "binary_method": binary_result  # 👈
+            "binary_method": binary_result,
+            "weighted_method": weighted_result   # ✅  # 👈
         }
 
     except Exception as e:
