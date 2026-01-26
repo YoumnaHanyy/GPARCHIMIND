@@ -166,9 +166,37 @@ let nfrHtml = "<h5 class='section-header'>2- Non-Functional Requirements</h5>";
 document.getElementById("section-extraction").innerHTML =
   frHtml + "<hr/>" + nfrHtml;
 
+function renderFunctional(data) {
+  if (!data || !data.top_architectures) {
+    return "<p class='text-muted'>No functional results.</p>";
+  }
 
-    document.getElementById("section-functional").innerHTML =
-  "<p class='text-muted'>Functional architecture method not implemented yet.</p>";
+  let html = "<h5 class='section-header'>Functional Architecture Method</h5>";
+
+  data.top_architectures.forEach((item, idx) => {
+    html += `
+      <div class="mb-4">
+        <div class="req-title">
+          ${idx + 1}. ${item.Architecture.replace("_", " ").toUpperCase()}
+        </div>
+
+        <div class="req-desc">
+          <strong>Score:</strong> ${item.Score}
+        </div>
+
+        <div class="req-desc">
+          ${item.Reason}
+        </div>
+      </div>
+    `;
+  });
+
+  return html;
+}
+
+
+document.getElementById("section-functional").innerHTML =
+  renderFunctional(data.functional_method);
 
     function renderOrdinal(ordinalData) {
   if (!ordinalData || ordinalData.length === 0) {

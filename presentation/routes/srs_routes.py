@@ -8,6 +8,7 @@ from application.extraction.ordinal_service import execute_ordinal_method
 from application.extraction.binary_service import execute_binary_method
 from application.extraction.weighted_service import execute_weighted_method
 from application.extraction.nfr_stats_service import compute_nfr_statistics
+from application.extraction.functional_service import execute_functional_method
 
 
 from infrastructure.repositories.weighted_repository import save_weighted_result
@@ -44,6 +45,10 @@ async def extract_srs(file: UploadFile = File(...)):
             hf_key=os.getenv("HF_API_KEY")
         )
 
+        # functional architecture (🆕)
+        functional_result = execute_functional_method(project_id)
+
+
         # 3️⃣ predict NFR type + level
         predictions = predict_and_save_nfr()
 
@@ -69,6 +74,7 @@ async def extract_srs(file: UploadFile = File(...)):
         return {
             "functional": clean_object_id(extraction_result["functional"]),
             "nfr_predictions": clean_object_id(predictions),
+            "functional_method": functional_result,
             "ordinal_method": ordinal_result["result"],
             "binary_method": binary_result,
             "weighted_method": weighted_result   # ✅  # 👈

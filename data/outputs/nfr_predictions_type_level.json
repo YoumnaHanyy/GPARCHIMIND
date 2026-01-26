@@ -1,56 +1,26 @@
 [
   {
-    "title": "Scalability",
-    "description": "The system must be able to accommodate millions of students.",
-    "predicted_type": "SC",
+    "title": "Security",
+    "description": "The system MUST ensure the confidentiality, integrity, and availability of user data.",
+    "predicted_type": "SE",
+    "predicted_level": "High"
+  },
+  {
+    "title": "Accuracy",
+    "description": "The system MUST provide accurate job recommendations based on user input.",
+    "predicted_type": "US",
     "predicted_level": "High"
   },
   {
     "title": "Usability",
-    "description": "The system must be user-friendly and provide a tailored interface for individuals with Dyslexia.",
+    "description": "The system SHOULD be user-friendly and provide a seamless user experience.",
     "predicted_type": "US",
-    "predicted_level": "High"
+    "predicted_level": "Low"
   },
   {
-    "title": "Accessibility",
-    "description": "The system must be accessible to individuals with Dyslexia and provide accommodations for their needs.",
-    "predicted_type": "US",
-    "predicted_level": "High"
-  },
-  {
-    "title": "Data Privacy",
-    "description": "The system must comply with data privacy regulations and protect user data.",
-    "predicted_type": "SE",
-    "predicted_level": "High"
-  },
-  {
-    "title": "Standard Compliance",
-    "description": "The system must comply with relevant standards and regulations.",
-    "predicted_type": "L",
-    "predicted_level": "High"
-  },
-  {
-    "title": "Performance",
-    "description": "The system must provide fast and efficient performance.",
+    "title": "Response time",
+    "description": "The system MUST respond within a reasonable time frame to user input.",
     "predicted_type": "PE",
-    "predicted_level": "High"
-  },
-  {
-    "title": "Security",
-    "description": "The system must provide robust security measures to protect user data and prevent unauthorized access.",
-    "predicted_type": "SE",
-    "predicted_level": "High"
-  },
-  {
-    "title": "Reliability",
-    "description": "The system must be reliable and provide consistent performance.",
-    "predicted_type": "PE",
-    "predicted_level": "High"
-  },
-  {
-    "title": "Maintainability",
-    "description": "The system must be easy to maintain and update.",
-    "predicted_type": "MN",
     "predicted_level": "High"
   }
 ]

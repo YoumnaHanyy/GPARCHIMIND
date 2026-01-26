@@ -1,108 +1,54 @@
 [
   {
-    "title": "Provide a comprehensive learning support system",
-    "description": "Conduct precise assessments, identify challenges related to reading and working memory, and deliver personalized AI-driven tutoring experiences.",
+    "title": "System Functions",
+    "description": "The system will provide a job coach recommender system designed to guide each person on their journey.",
     "source": {
-      "page": null,
+      "page": 14,
       "start_index": null
     },
     "project_id": 2
   },
   {
-    "title": "Conduct precise assessments",
-    "description": "Identify challenges related to reading and working memory.",
+    "title": "Detailed Functional Specification",
+    "description": "The system will contain dataset extracted from wuzzuf using web Scraping technique.",
     "source": {
-      "page": null,
+      "page": 16,
       "start_index": null
     },
     "project_id": 2
   },
   {
-    "title": "Deliver personalized AI-driven tutoring experiences",
-    "description": "Provide tailored educational interventions for individuals with learning disabilities.",
+    "title": "System Overview",
+    "description": "The system will initiate text-based conversations with users through a mobile application.",
     "source": {
-      "page": null,
+      "page": 10,
       "start_index": null
     },
     "project_id": 2
   },
   {
-    "title": "Emulate human teaching methods in mathematics",
-    "description": "Offer continuous availability and foster student growth by encouraging reflection on both successful and challenging decisions made during interactive games.",
+    "title": "System Context",
+    "description": "The system will provide a personalized experience through the bot.",
     "source": {
-      "page": null,
+      "page": 12,
       "start_index": null
     },
     "project_id": 2
   },
   {
-    "title": "Provide a tailored language tutoring environment",
-    "description": "Use personalized games, activities, and a user interface tailored to the unique needs of individuals with Dyslexia.",
+    "title": "Objectives",
+    "description": "The system will provide a tailored strategy to steer individuals toward fulfilling and enjoyable job options.",
     "source": {
-      "page": null,
+      "page": 13,
       "start_index": null
     },
     "project_id": 2
   },
   {
-    "title": "Classify individuals with Dyslexia",
-    "description": "Use a specialized platform for diagnosing Dyslexia and creating a tailored language tutoring environment.",
+    "title": "User Characteristics",
+    "description": "The system will be designed for individuals, including students, who are seeking job guidance.",
     "source": {
-      "page": null,
-      "start_index": null
-    },
-    "project_id": 2
-  },
-  {
-    "title": "Identify learning problems",
-    "description": "Use a fuzzy neural network (FNN) to identify learning difficulties specifically Dyslexia, Dyscalculia, and Dysgraphia.",
-    "source": {
-      "page": null,
-      "start_index": null
-    },
-    "project_id": 2
-  },
-  {
-    "title": "Teach students according to their preferences",
-    "description": "Use a fuzzy neural network (FNN) to teach students according to their preferences.",
-    "source": {
-      "page": null,
-      "start_index": null
-    },
-    "project_id": 2
-  },
-  {
-    "title": "Create an interactive learning environment",
-    "description": "Integrate elements such as chat, games, and voice interactions.",
-    "source": {
-      "page": null,
-      "start_index": null
-    },
-    "project_id": 2
-  },
-  {
-    "title": "Use machine learning, natural language processing, and reinforcement learning",
-    "description": "Use these technologies for interactive online learning.",
-    "source": {
-      "page": null,
-      "start_index": null
-    },
-    "project_id": 2
-  },
-  {
-    "title": "Accommodate millions of students",
-    "description": "Use a cloud-based infrastructure to accommodate millions of students.",
-    "source": {
-      "page": null,
-      "start_index": null
-    },
-    "project_id": 2
-  },
-  {
-    "title": "Provide a scalable intelligent tutoring system",
-    "description": "Use a modular design to create new modules and accommodate millions of students.",
-    "source": {
-      "page": null,
+      "page": 13,
       "start_index": null
     },
     "project_id": 2

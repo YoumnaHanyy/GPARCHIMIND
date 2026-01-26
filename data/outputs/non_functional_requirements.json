@@ -1,81 +1,36 @@
 [
   {
-    "title": "Scalability",
-    "description": "The system must be able to accommodate millions of students.",
+    "title": "Security",
+    "description": "The system MUST ensure the confidentiality, integrity, and availability of user data.",
     "source": {
-      "page": null,
+      "page": 19,
+      "start_index": null
+    },
+    "project_id": 2
+  },
+  {
+    "title": "Accuracy",
+    "description": "The system MUST provide accurate job recommendations based on user input.",
+    "source": {
+      "page": 19,
       "start_index": null
     },
     "project_id": 2
   },
   {
     "title": "Usability",
-    "description": "The system must be user-friendly and provide a tailored interface for individuals with Dyslexia.",
+    "description": "The system SHOULD be user-friendly and provide a seamless user experience.",
     "source": {
-      "page": null,
+      "page": 19,
       "start_index": null
     },
     "project_id": 2
   },
   {
-    "title": "Accessibility",
-    "description": "The system must be accessible to individuals with Dyslexia and provide accommodations for their needs.",
+    "title": "Response time",
+    "description": "The system MUST respond within a reasonable time frame to user input.",
     "source": {
-      "page": null,
-      "start_index": null
-    },
-    "project_id": 2
-  },
-  {
-    "title": "Data Privacy",
-    "description": "The system must comply with data privacy regulations and protect user data.",
-    "source": {
-      "page": null,
-      "start_index": null
-    },
-    "project_id": 2
-  },
-  {
-    "title": "Standard Compliance",
-    "description": "The system must comply with relevant standards and regulations.",
-    "source": {
-      "page": null,
-      "start_index": null
-    },
-    "project_id": 2
-  },
-  {
-    "title": "Performance",
-    "description": "The system must provide fast and efficient performance.",
-    "source": {
-      "page": null,
-      "start_index": null
-    },
-    "project_id": 2
-  },
-  {
-    "title": "Security",
-    "description": "The system must provide robust security measures to protect user data and prevent unauthorized access.",
-    "source": {
-      "page": null,
-      "start_index": null
-    },
-    "project_id": 2
-  },
-  {
-    "title": "Reliability",
-    "description": "The system must be reliable and provide consistent performance.",
-    "source": {
-      "page": null,
-      "start_index": null
-    },
-    "project_id": 2
-  },
-  {
-    "title": "Maintainability",
-    "description": "The system must be easy to maintain and update.",
-    "source": {
-      "page": null,
+      "page": 19,
       "start_index": null
     },
     "project_id": 2
