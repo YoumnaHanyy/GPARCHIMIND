@@ -1,38 +1,56 @@
 [
   {
-    "title": "Standards Compliance",
-    "description": "The system MUST comply with industry standards for text-to-video generation.",
-    "predicted_type": "LF",
-    "predicted_level": "High"
-  },
-  {
-    "title": "Hardware Limitations",
-    "description": "The system MUST be able to handle high GPU-intensive processes.",
+    "title": "Scalability",
+    "description": "The system must be able to accommodate a large number of users and provide a seamless experience.",
     "predicted_type": "SC",
-    "predicted_level": "High"
-  },
-  {
-    "title": "Performance",
-    "description": "The system SHOULD be able to generate videos in a timely manner.",
-    "predicted_type": "PE",
-    "predicted_level": "Low"
-  },
-  {
-    "title": "Security",
-    "description": "The system MUST ensure the security and integrity of user data.",
-    "predicted_type": "SE",
     "predicted_level": "High"
   },
   {
     "title": "Usability",
-    "description": "The system MUST be user-friendly and easy to navigate.",
+    "description": "The system must be user-friendly and accessible for individuals with Dyslexia.",
     "predicted_type": "US",
     "predicted_level": "High"
   },
   {
-    "title": "Scalability",
-    "description": "The system MUST be able to handle a large number of users and requests.",
-    "predicted_type": "SC",
+    "title": "Adaptability",
+    "description": "The system must be adaptable to the needs of individuals with Dyslexia.",
+    "predicted_type": "US",
+    "predicted_level": "High"
+  },
+  {
+    "title": "Integration",
+    "description": "The system must be integrated into existing educational practices.",
+    "predicted_type": "US",
+    "predicted_level": "High"
+  },
+  {
+    "title": "Security",
+    "description": "The system must ensure the security and confidentiality of user data.",
+    "predicted_type": "SE",
+    "predicted_level": "High"
+  },
+  {
+    "title": "Performance",
+    "description": "The system must provide a fast and responsive experience for users.",
+    "predicted_type": "PE",
+    "predicted_level": "High"
+  },
+  {
+    "title": "Reliability",
+    "description": "The system must be reliable and provide a consistent experience for users.",
+    "predicted_type": "US",
+    "predicted_level": "High"
+  },
+  {
+    "title": "Maintainability",
+    "description": "The system must be easy to maintain and update.",
+    "predicted_type": "MN",
+    "predicted_level": "High"
+  },
+  {
+    "title": "Testability",
+    "description": "The system must be easy to test and validate.",
+    "predicted_type": "US",
     "predicted_level": "High"
   }
 ]

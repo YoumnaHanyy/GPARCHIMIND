@@ -1,73 +1,163 @@
 [
   {
-    "title": "Script Generator",
-    "description": "Transforms user input into video scripts.",
+    "title": "Provide a comprehensive learning support system",
+    "description": "Conduct precise assessments, identify challenges related to reading and working memory, and deliver personalized AI-driven tutoring experiences.",
     "source": {
-      "page": 3,
-      "start_index": 3
+      "page": null,
+      "start_index": null
     },
     "project_id": 2
   },
   {
-    "title": "Video Generator",
-    "description": "Creates videos, including long, short videos and stories based on user provided text or scripts.",
+    "title": "Conduct precise assessments",
+    "description": "Identify challenges related to reading and working memory.",
     "source": {
-      "page": 3,
-      "start_index": 4
+      "page": null,
+      "start_index": null
     },
     "project_id": 2
   },
   {
-    "title": "Script Video Editor",
-    "description": "Enables users to edit video content through text inputs.",
+    "title": "Deliver personalized AI-driven tutoring experiences",
+    "description": "Provide tailored educational interventions for individuals with learning disabilities.",
     "source": {
-      "page": 3,
-      "start_index": 5
+      "page": null,
+      "start_index": null
     },
     "project_id": 2
   },
   {
-    "title": "Voice Over",
-    "description": "Allowing users to have a voice over on the videos.",
+    "title": "Emulate human teaching methods in mathematics",
+    "description": "Encourage reflection on both successful and challenging decisions made during interactive games.",
     "source": {
-      "page": 3,
-      "start_index": 6
+      "page": null,
+      "start_index": null
     },
     "project_id": 2
   },
   {
-    "title": "Background Music",
-    "description": "Library of free music/sounds to be used on the videos.",
+    "title": "Conduct early and accurate diagnostic tools",
+    "description": "Provide timely and personalized interventions.",
     "source": {
-      "page": 3,
-      "start_index": 7
+      "page": null,
+      "start_index": null
     },
     "project_id": 2
   },
   {
-    "title": "Captions",
-    "description": "Automatically generates on video captions.",
+    "title": "Provide a tailored language tutoring environment",
+    "description": "Use personalized games, activities, and a user interface tailored to the unique needs of individuals with Dyslexia.",
     "source": {
-      "page": 3,
-      "start_index": 7
+      "page": null,
+      "start_index": null
     },
     "project_id": 2
   },
   {
-    "title": "Increase the Length of the Video",
-    "description": "Increase video length from the current average to a minimum of three minutes.",
+    "title": "Classify individuals with Dyslexia",
+    "description": "Use a specialized platform for classifying individuals with Dyslexia.",
     "source": {
-      "page": 8,
-      "start_index": 3
+      "page": null,
+      "start_index": null
     },
     "project_id": 2
   },
   {
-    "title": "Implement Advanced Edits for Scripts",
-    "description": "Implement user-friendly script editing functionalities.",
+    "title": "Create a personalized teaching strategy",
+    "description": "Determine the limitations and preferences of individuals through an initial evaluation.",
     "source": {
-      "page": 9,
-      "start_index": 3
+      "page": null,
+      "start_index": null
+    },
+    "project_id": 2
+  },
+  {
+    "title": "Use voice, chat, personalized games, exercises, and approaches adapted to the specific needs of individuals with Dyslexia",
+    "description": "Uncover the language potential of individuals with Dyslexia.",
+    "source": {
+      "page": null,
+      "start_index": null
+    },
+    "project_id": 2
+  },
+  {
+    "title": "Provide a one-to-one tutoring system",
+    "description": "Enhance reading, spelling, and memorization aspects like phonological awareness in new languages.",
+    "source": {
+      "page": null,
+      "start_index": null
+    },
+    "project_id": 2
+  },
+  {
+    "title": "Streamline the learning process",
+    "description": "Ease the burden on parents and teachers while supporting children’s development.",
+    "source": {
+      "page": null,
+      "start_index": null
+    },
+    "project_id": 2
+  },
+  {
+    "title": "Identify learning problems",
+    "description": "Use a fuzzy neural network (FNN) to identify learning problems in individuals with Dyslexia, Dyscalculia, and Dysgraphia.",
+    "source": {
+      "page": null,
+      "start_index": null
+    },
+    "project_id": 2
+  },
+  {
+    "title": "Teach students according to their preferences",
+    "description": "Use a fuzzy neural network (FNN) to teach students according to their preferences.",
+    "source": {
+      "page": null,
+      "start_index": null
+    },
+    "project_id": 2
+  },
+  {
+    "title": "Provide a scalable intelligent tutoring system",
+    "description": "Use a microservices architecture and a cloud-based infrastructure to accommodate millions of students.",
+    "source": {
+      "page": null,
+      "start_index": null
+    },
+    "project_id": 2
+  },
+  {
+    "title": "Provide a mixed-interface approach",
+    "description": "Include videos, dialogue-based exercises, question-answering, diagrams, math exercises, and gamification.",
+    "source": {
+      "page": null,
+      "start_index": null
+    },
+    "project_id": 2
+  },
+  {
+    "title": "Provide a user-friendly interface",
+    "description": "Make the system accessible and easy to use for individuals with Dyslexia.",
+    "source": {
+      "page": null,
+      "start_index": null
+    },
+    "project_id": 2
+  },
+  {
+    "title": "Provide a system that is adaptable to the needs of individuals with Dyslexia",
+    "description": "Make the system adaptable to the needs of individuals with Dyslexia.",
+    "source": {
+      "page": null,
+      "start_index": null
+    },
+    "project_id": 2
+  },
+  {
+    "title": "Provide a system that is integrated into existing educational practices",
+    "description": "Make the system integrated into existing educational practices.",
+    "source": {
+      "page": null,
+      "start_index": null
     },
     "project_id": 2
   }

@@ -1,55 +1,82 @@
 [
   {
-    "title": "Standards Compliance",
-    "description": "The system MUST comply with industry standards for text-to-video generation.",
+    "title": "Scalability",
+    "description": "The system must be able to accommodate a large number of users and provide a seamless experience.",
     "source": {
-      "page": 11,
-      "start_index": 1
-    },
-    "project_id": 2
-  },
-  {
-    "title": "Hardware Limitations",
-    "description": "The system MUST be able to handle high GPU-intensive processes.",
-    "source": {
-      "page": 11,
-      "start_index": 2
-    },
-    "project_id": 2
-  },
-  {
-    "title": "Performance",
-    "description": "The system SHOULD be able to generate videos in a timely manner.",
-    "source": {
-      "page": 11,
-      "start_index": 3
-    },
-    "project_id": 2
-  },
-  {
-    "title": "Security",
-    "description": "The system MUST ensure the security and integrity of user data.",
-    "source": {
-      "page": 11,
-      "start_index": 4
+      "page": null,
+      "start_index": null
     },
     "project_id": 2
   },
   {
     "title": "Usability",
-    "description": "The system MUST be user-friendly and easy to navigate.",
+    "description": "The system must be user-friendly and accessible for individuals with Dyslexia.",
     "source": {
-      "page": 11,
-      "start_index": 5
+      "page": null,
+      "start_index": null
     },
     "project_id": 2
   },
   {
-    "title": "Scalability",
-    "description": "The system MUST be able to handle a large number of users and requests.",
+    "title": "Adaptability",
+    "description": "The system must be adaptable to the needs of individuals with Dyslexia.",
     "source": {
-      "page": 11,
-      "start_index": 6
+      "page": null,
+      "start_index": null
+    },
+    "project_id": 2
+  },
+  {
+    "title": "Integration",
+    "description": "The system must be integrated into existing educational practices.",
+    "source": {
+      "page": null,
+      "start_index": null
+    },
+    "project_id": 2
+  },
+  {
+    "title": "Security",
+    "description": "The system must ensure the security and confidentiality of user data.",
+    "source": {
+      "page": null,
+      "start_index": null
+    },
+    "project_id": 2
+  },
+  {
+    "title": "Performance",
+    "description": "The system must provide a fast and responsive experience for users.",
+    "source": {
+      "page": null,
+      "start_index": null
+    },
+    "project_id": 2
+  },
+  {
+    "title": "Reliability",
+    "description": "The system must be reliable and provide a consistent experience for users.",
+    "source": {
+      "page": null,
+      "start_index": null
+    },
+    "project_id": 2
+  },
+  {
+    "title": "Maintainability",
+    "description": "The system must be easy to maintain and update.",
+    "source": {
+      "page": null,
+      "start_index": null
+    },
+    "project_id": 2
+  },
+  {
+    "title": "Testability",
+    "description": "The system must be easy to test and validate.",
+    "source": {
+      "page": null,
+      "start_index": null
     },
     "project_id": 2
   }
