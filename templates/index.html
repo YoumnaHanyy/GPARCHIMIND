@@ -38,7 +38,7 @@
 
         /* --- HERO SECTION --- */
         header { 
-            position: relative; padding: 150px 8% 140px;
+            position: relative; padding: 100px 8% 140px;
             display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center;
         }
 
@@ -108,47 +108,58 @@
         .cursor { border-left: 8px solid var(--primary); animation: blink 1s infinite; margin-left: 5px; }
         @keyframes blink { 50% { opacity: 0; }}
     
-    
-    </style>
-</head>
-<body>
+    .clean-footer {
+        padding: 80px 8% 40px;
+        background: #ffffff;
+        border-top: 1px solid #f1f5f9;
+    }
 
-    <nav>
-        <div class="logo" style="font-weight: 800; font-size: 1.5rem;"><i class="fas fa-microchip"></i>Archi<span>Mind</span></div>
-        <div style="display: flex; gap: 35px; align-items: center;">
-            <a href="#" style="color: var(--text-dim); text-decoration: none; font-weight: 600;">Engine</a>
-            <button class="btn-main" style="padding: 10px 25px; font-size: 0.85rem;">Get Started</button>
-        </div>
-    </nav>
+    .footer-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 60px;
+    }
 
-    <header>
-        <div class="code-bg" id="code-stream"></div>
-        
-        <div class="hero-text">
-            <div style="background: var(--primary-light); color: var(--primary); padding: 6px 15px; border-radius: 50px; display: inline-block; font-weight: 800; font-size: 0.7rem; margin-bottom: 20px;">AI ARCHITECTURE ENGINE</div>
-            <h1>Smarter Architecture.Less Rework.<span>Sustainable Software</span></h1>
-            <p class="hero-description">“An intelligent assistant that bridges requirements and architecture by recommending sustainable architectural styles, generating formal ADL blueprints, and structuring clean, maintainable MVC foundations for long-term software longevity.”</p>
-            <button class="btn-main">Generate Blueprint</button>
-        </div>
+    .footer-logo {
+        font-size: 1.5rem;
+        font-weight: 900;
+        letter-spacing: -1px;
+        color: #0f172a;
+    }
 
-        <div class="diagram-container" id="diagram">
-            <div class="scanner"></div>
-            <div class="layer layer-1">
-                <i class="fas fa-network-wired"></i>
-                <span>ADL Blueprint</span>
-            </div>
-            <div class="layer layer-2">
-                <i class="fas fa-cubes"></i>
-                <span>Architecture Style Selector</span>
-            </div>
-            <div class="layer layer-3">
-                <i class="fas fa-database"></i>
-                <span>Code Skeleton generation</span>
-            </div>
-        </div>
-    </header>
-<style>
-    .engine-section { 
+    .footer-logo span { color: var(--primary); }
+
+    .footer-links { display: flex; gap: 30px; }
+    .footer-links a {
+        text-decoration: none;
+        color: #64748b;
+        font-size: 0.85rem;
+        font-weight: 600;
+        transition: 0.3s;
+    }
+    .footer-links a:hover { color: var(--primary); }
+
+    .cta-final {
+        background: #f8fafc;
+        border-radius: 40px;
+        padding: 60px;
+        text-align: center;
+        margin-bottom: 80px;
+        border: 1px solid #f1f5f9;
+    }
+
+    .cta-final h2 { font-size: 2.5rem; font-weight: 900; margin-bottom: 20px; }
+
+    .copyright {
+        display: flex;
+        justify-content: space-between;
+        color: #94a3b8;
+        font-size: 0.75rem;
+        border-top: 1px solid #f1f5f9;
+        padding-top: 40px;
+    }
+     .engine-section { 
         padding: 120px 8%; 
         background: #fafafa; 
         position: relative;
@@ -241,59 +252,8 @@
         background: radial-gradient(circle, rgba(5, 150, 105, 0.05) 0%, transparent 70%);
         pointer-events: none;
     }
-</style>
 
-<section class="engine-section">
-    <div class="brain-glow"></div>
-    
-    <div class="engine-container">
-        <div class="text-content">
-            <h2 style="font-size: 3.2rem; font-weight: 900; margin-bottom: 25px; letter-spacing: -3px; line-height: 1;">
-                Style Selection <br><span style="color: var(--primary);">Real-time Engine</span>
-            </h2>
-            
-            <p style="color: #64748b; font-size: 1.1rem; margin-bottom: 40px;">
-                MCDM framework processes 150+ architectural combinations to select the optimal blueprint for your NFRs.
-            </p>
-
-            <div class="decision-box">
-                <div style="display: flex; align-items: center; margin-bottom: 15px;">
-                    <span class="status-ping"></span>
-                    <span style="color: var(--primary); font-weight: 800; font-size: 0.75rem; letter-spacing: 1.5px;">SYSTEM COMPUTING...</span>
-                </div>
-                <h3 id="chosen-style" style="font-size: 2.2rem; margin-bottom: 15px; font-weight: 800; color: #0f172a;">Microservices</h3>
-                <p id="style-desc" style="color: #64748b; line-height: 1.6;">
-                    Chosen for high scalability and independent module deployment based on your extracted Quality Attributes.
-                </p>
-            </div>
-        </div>
-
-        <div class="visual-content">
-            <div class="adl-terminal">
-                <div class="terminal-header">
-                    <div class="dot red"></div>
-                    <div class="dot yellow"></div>
-                    <div class="dot green"></div>
-                    <span style="font-size: 0.7rem; color: #64748b; margin-left: 10px; font-weight: 700;">blueprint.adl — ArchiMind Console</span>
-                </div>
-                <div id="adl-content">
-                    // Generating Formal ADL... <br>
-                    <span style="color: #a78bfa;">Style</span>: Microservices; <br>
-                    <span style="color: #a78bfa;">Components</span>: { Auth, Order, Inventory }; <br>
-                    <span style="color: #a78bfa;">Connectors</span>: { REST, EventBus }; <br>
-                    <span style="color: #22c55e;">// Consistency Check: PASS</span> <br>
-                    <span style="color: #f59e0b;">// Traceability: Verified (94.2%)</span>
-                </div><span class="cursor"></span>
-            </div>
-        </div>
-    </div>
-</section>
-
-
-
-<style>
-    /* --- THE ULTIMATE NEURAL PIPELINE --- */
-    .workflow-section { 
+        .workflow-section { 
         padding: 120px 8%; 
         background: #ffffff; 
         position: relative;
@@ -407,89 +367,8 @@
     .step-card:hover .tech-badge {
         background: #ffffff; border-color: var(--primary); color: var(--primary);
     }
-</style>
 
-<section class="workflow-section">
-    <h2 class="workflow-title">The ArchiMind Lifecycle</h2>
-    
-    <div class="timeline-container">
-        <div class="pipeline-track">
-            <div class="pulse-dot"></div>
-        </div>
-
-        <div class="step-card">
-            <div class="step-icon"><i class="fas fa-file-upload"></i></div>
-            <center><div class="phase-tag p1">Phase 1: Capture</div></center>
-            <div class="step-content">
-                <h4>Requirement Analysis</h4>
-                <ul class="phase-details">
-                    <li>Upload of SRS documentation</li>
-                    <li>Functional & NFR extract</li>
-                    <li>Verification of SRS</li>
-                </ul>
-                <div class="tech-badges-container">
-                    <span class="tech-badge">BERT CLASSIFIER</span>
-                    <span class="tech-badge">NLP</span>
-                </div>
-            </div>
-        </div>
-
-        <div class="step-card">
-            <div class="step-icon"><i class="fas fa-brain"></i></div>
-            <center><div class="phase-tag p2">Phase 2: Logic</div></center>
-            <div class="step-content">
-                <h4>AI Recommendation</h4>
-                <ul class="phase-details">
-                   
-                    <li>Binary & Ordinal Evaluation</li>
-                    <li>Weighted Style Scoring</li>
-                     <li>Multi-Criteria Decision Making</li>
-                </ul>
-                <div class="tech-badges-container">
-                    <span class="tech-badge">MCDM ENGINE</span>
-                </div>
-            </div>
-        </div>
-
-        <div class="step-card">
-            <div class="step-icon"><i class="fas fa-shield-alt"></i></div>
-            <center><div class="phase-tag p3">Phase 3: Formal</div></center>
-            <div class="step-content">
-                <h4>ADL Verification</h4>
-                <ul class="phase-details">
-                    <li>ADL Blueprint Generation</li>
-                    <li>Consistency Checking</li>
-                    <li>Formal Asset Validation</li>
-                </ul>
-                <div class="tech-badges-container">
-                    <span class="tech-badge">FORMAL ASSET</span>
-                    <span class="tech-badge">VERIFIED</span>
-                </div>
-            </div>
-        </div>
-
-        <div class="step-card">
-            <div class="step-icon"><i class="fas fa-seedling"></i></div>
-            <center><div class="phase-tag p4">Phase 4: Output</div></center>
-            <div class="step-content">
-                <h4>Sustainable Support</h4>
-                <ul class="phase-details">
-                    <li>Module Decomposition</li>
-                    <li>Pattern Suggestion (MVC)</li>
-                    <li>Code Skeleton Generation</li>
-                </ul>
-                <div class="tech-badges-container">
-                    <span class="tech-badge">MVC SKELETON</span>
-                    <span class="tech-badge">CLEAN CODE</span>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-
-<style>
-    .live-eval-section {
+     .live-eval-section {
         padding: 100px 8%;
         background: #ffffff;
         font-family: 'Plus Jakarta Sans', sans-serif;
@@ -562,75 +441,7 @@
 
     /* 4. Weighted: Floating Percentages */
     .weight-val { color: #a78bfa; font-weight: 700; }
-</style>
 
-<section class="live-eval-section">
-    <center>
-        <h2 style="font-size: 3rem; font-weight: 900; letter-spacing: -2px;">Systematic Selection Logic</h2>
-        <p style="color: #64748b; margin-top: 10px;">The exact mathematical process our AI uses to coose your architecture style.</p>
-    </center>
-
-    <div class="eval-container">
-        <div class="eval-module">
-            <span class="module-label">METHOD 01</span>
-            <h3 class="eval-title">Functional Analysis</h3>
-            <p class="eval-subtitle">Extracting system behaviors from SRS documentation.</p>
-            <div class="data-display">
-                <div style="color: #94a3b8;">> Extracting entities...</div>
-                <div style="margin-top: 10px;">[User_Auth] <span style="color: var(--primary);">FOUND</span></div>
-                <div>[Payment_Gateway] <span style="color: var(--primary);">FOUND</span></div>
-                <div class="loader-bar"><div class="loader-progress"></div></div>
-            </div>
-        </div>
-
-        <div class="eval-module">
-            <span class="module-label">METHOD 02</span>
-            <h3 class="eval-title">Binary Constraint Filter</h3>
-            <p class="eval-subtitle">Checking non-negotiable NFR compliance (Yes/No).</p>
-            <div class="data-display">
-                <div class="binary-row"><span>Scalability Required:</span> <span class="status-bit">1</span></div>
-                <div class="binary-row"><span>Offline Mode:</span> <span class="status-bit" style="animation-delay: 0.5s;">0</span></div>
-                <div class="binary-row"><span>Real-time Sync:</span> <span class="status-bit">1</span></div>
-                <div style="color: #64748b; font-size: 0.7rem; margin-top: 5px;">// 1 = Style Compatible, 0 = Rejected</div>
-            </div>
-        </div>
-
-        <div class="eval-module">
-            <span class="module-label">METHOD 03</span>
-            <h3 class="eval-title">Ordinal Ranking</h3>
-            <p class="eval-subtitle">Categorizing NFR priority (High, Medium, Low).</p>
-            <div class="data-display">
-                <div style="margin-bottom: 10px;">
-                    <div>Availability: <span class="rank-tag high">HIGH</span></div>
-                    <div style="margin-top: 8px;">Cost Efficiency: <span class="rank-tag med">MEDIUM</span></div>
-                    <div style="margin-top: 8px;">Security: <span class="rank-tag high">HIGH</span></div>
-                </div>
-            </div>
-        </div>
-
-        <div class="eval-module">
-            <span class="module-label">METHOD 04</span>
-            <h3 class="eval-title">Weighted Scoring</h3>
-            <p class="eval-subtitle">Calculating final style score based on importance.</p>
-            <div class="data-display">
-                <div style="display: flex; gap: 10px; align-items: center;">
-                    <div style="height: 10px; width: 70%; background: #1e293b; border-radius: 5px;">
-                        <div style="height: 100%; width: 85%; background: #a78bfa; border-radius: 5px;"></div>
-                    </div>
-                    <span class="weight-val">8.5/10</span>
-                </div>
-                <div style="margin-top: 15px; font-size: 0.75rem;">
-                    Style: Microservices -> <span style="color: #22c55e;">Match: 94.2%</span><br>
-                    Style: Monolithic -> <span style="color: #ef4444;">Match: 41.0%</span>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-
-
-<style>
     .bridge-section { padding: 100px 8%; background: #ffffff; position: relative; }
     
     .bridge-grid { 
@@ -799,74 +610,8 @@
         font-weight: 900;
         letter-spacing: 1px;
     }
-</style>
 
-<section class="bridge-section">
-    <div class="bridge-grid">
-        <div>
-            <i class="fas fa-random bridge-icon"></i>
-            <h2 style="font-size: 2.5rem; font-weight: 900; letter-spacing: -1.5px; margin-bottom: 20px;">
-                Bridging the <span style="color: var(--primary);">Architectural Gap</span>
-            </h2>
-            <p style="color: #64748b; margin-bottom: 30px; line-height: 1.6;">
-                Manual architecture often suffers from **Human Bias** and "Gut Feeling," leading to a disconnect between what the business needs and what the code actually does.
-            </p>
-
-            <div class="bias-box">
-                <strong style="color: #991b1b; display: block; margin-bottom: 5px;">Traditional Architect</strong>
-                <p style="font-size: 0.9rem; color: #b91c1c;">Subjective choices, technology bias, and manual traceability gaps.</p>
-            </div>
-
-            <center><div class="versus-badge">VS</div></center>
-
-            <div class="objective-box">
-                <strong style="color: #166534; display: block; margin-bottom: 5px;">ArchiMind AI</strong>
-                <p style="font-size: 0.9rem; color: #15803d;">Mathematical MCDM evaluation, BERT-based extraction, and 100% objective mapping.</p>
-            </div>
-        </div>
-
-        <div class="bridge-visual-container">
-            <div class="logic-glow"></div>
-            
-            <div class="node-stack">
-                <div class="glass-node">
-                    <span class="node-label">Input Source</span>
-                    <div class="node-value">
-                        <i class="fas fa-file-code" style="color: #64748b;"></i>
-                        SRS Requirements
-                    </div>
-                </div>
-
-                <div class="connector-path"></div>
-
-                <div class="mcdm-engine-orb">
-                    <i class="fas fa-shield-virus"></i>
-                    <span>MCDM</span>
-                </div>
-
-                <div class="connector-path"></div>
-
-                <div class="glass-node" style="border-color: var(--primary-light);">
-                    <span class="node-label">Output Target</span>
-                    <div class="node-value">
-                        <i class="fas fa-cubes" style="color: var(--primary);"></i>
-                        Verified Code Skeleton<br>
-                        ADL Blueprint
-                        Architecture report
-
-                    </div>
-                </div>
-
-                <p style="margin-top: 30px; font-size: 0.75rem; color: #94a3b8; font-weight: 600; text-align: center;">
-                    <i class="fas fa-lock" style="margin-right: 5px;"></i>
-                    Zero-Bias Mathematical Mapping Enabled
-                </p>
-            </div>
-        </div>
-    </div>
-</section>
-<style>
-    .blueprint-light {
+      .blueprint-light {
         padding: 120px 8%;
         background: #ffffff;
         color: #0f172a;
@@ -981,6 +726,319 @@
     opacity: 1;
     background: rgba(5, 150, 105, 0.05);
 }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="logo" style="font-weight: 800; font-size: 1.5rem;"><i class="fas fa-microchip"></i>Archi<span>Mind</span></div>
+        <div style="display: flex; gap: 35px; align-items: center;">
+            <a href="#" style="color: var(--text-dim); text-decoration: none; font-weight: 600;">Explore</a>
+            <a href="/Login" style="color: var(--text-dim); text-decoration: none; font-weight: 600;">Login</a>
+            <a href="/Register" class="btn-main" style="padding: 10px 25px; font-size: 0.85rem;">Sign Up</a>
+        </div>
+    </nav>
+
+    <header>
+        <div class="code-bg" id="code-stream"></div>
+        
+        <div class="hero-text">
+            <div style="background: var(--primary-light); color: var(--primary); padding: 6px 15px; border-radius: 50px; display: inline-block; font-weight: 800; font-size: 0.7rem; margin-bottom: 20px;">AI ARCHITECTURE ENGINE</div>
+            <h1>Smarter Architecture.Less Rework.<span>Sustainable Software</span></h1>
+            <p class="hero-description">“An intelligent assistant that bridges requirements and architecture by recommending sustainable architectural styles, generating formal ADL blueprints, and structuring clean, maintainable MVC foundations for long-term software longevity.”</p>
+            <button class="btn-main">Generate Blueprint</button>
+        </div>
+
+        <div class="diagram-container" id="diagram">
+            <div class="scanner"></div>
+            <div class="layer layer-1">
+                <i class="fas fa-network-wired"></i>
+                <span>ADL Blueprint</span>
+            </div>
+            <div class="layer layer-2">
+                <i class="fas fa-cubes"></i>
+                <span>Architecture Style Selector</span>
+            </div>
+            <div class="layer layer-3">
+                <i class="fas fa-database"></i>
+                <span>Code Skeleton generation</span>
+            </div>
+        </div>
+    </header>
+
+
+<section class="engine-section">
+    <div class="brain-glow"></div>
+    
+    <div class="engine-container">
+        <div class="text-content">
+            <h2 style="font-size: 3.2rem; font-weight: 900; margin-bottom: 25px; letter-spacing: -3px; line-height: 1;">
+                Style Selection <br><span style="color: var(--primary);">Real-time Engine</span>
+            </h2>
+            
+            <p style="color: #64748b; font-size: 1.1rem; margin-bottom: 40px;">
+                MCDM framework processes 150+ architectural combinations to select the optimal blueprint for your NFRs.
+            </p>
+
+            <div class="decision-box">
+                <div style="display: flex; align-items: center; margin-bottom: 15px;">
+                    <span class="status-ping"></span>
+                    <span style="color: var(--primary); font-weight: 800; font-size: 0.75rem; letter-spacing: 1.5px;">SYSTEM COMPUTING...</span>
+                </div>
+                <h3 id="chosen-style" style="font-size: 2.2rem; margin-bottom: 15px; font-weight: 800; color: #0f172a;">Microservices</h3>
+                <p id="style-desc" style="color: #64748b; line-height: 1.6;">
+                    Chosen for high scalability and independent module deployment based on your extracted Quality Attributes.
+                </p>
+            </div>
+        </div>
+
+        <div class="visual-content">
+            <div class="adl-terminal">
+                <div class="terminal-header">
+                    <div class="dot red"></div>
+                    <div class="dot yellow"></div>
+                    <div class="dot green"></div>
+                    <span style="font-size: 0.7rem; color: #64748b; margin-left: 10px; font-weight: 700;">blueprint.adl — ArchiMind Console</span>
+                </div>
+                <div id="adl-content">
+                    // Generating Formal ADL... <br>
+                    <span style="color: #a78bfa;">Style</span>: Microservices; <br>
+                    <span style="color: #a78bfa;">Components</span>: { Auth, Order, Inventory }; <br>
+                    <span style="color: #a78bfa;">Connectors</span>: { REST, EventBus }; <br>
+                    <span style="color: #22c55e;">// Consistency Check: PASS</span> <br>
+                    <span style="color: #f59e0b;">// Traceability: Verified (94.2%)</span>
+                </div><span class="cursor"></span>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+<style>
+    /* --- THE ULTIMATE NEURAL PIPELINE --- */
+
+</style>
+
+<section class="workflow-section">
+    <h2 class="workflow-title">The ArchiMind Lifecycle</h2>
+    
+    <div class="timeline-container">
+        <div class="pipeline-track">
+            <div class="pulse-dot"></div>
+        </div>
+
+        <div class="step-card">
+            <div class="step-icon"><i class="fas fa-file-upload"></i></div>
+            <center><div class="phase-tag p1">Phase 1: Capture</div></center>
+            <div class="step-content">
+                <h4>Requirement Analysis</h4>
+                <ul class="phase-details">
+                    <li>Upload of SRS documentation</li>
+                    <li>Functional & NFR extract</li>
+                    <li>Verification of SRS</li>
+                </ul>
+                <div class="tech-badges-container">
+                    <span class="tech-badge">BERT CLASSIFIER</span>
+                    <span class="tech-badge">NLP</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="step-card">
+            <div class="step-icon"><i class="fas fa-brain"></i></div>
+            <center><div class="phase-tag p2">Phase 2: Logic</div></center>
+            <div class="step-content">
+                <h4>AI Recommendation</h4>
+                <ul class="phase-details">
+                   
+                    <li>Binary & Ordinal Evaluation</li>
+                    <li>Weighted Style Scoring</li>
+                     <li>Multi-Criteria Decision Making</li>
+                </ul>
+                <div class="tech-badges-container">
+                    <span class="tech-badge">MCDM ENGINE</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="step-card">
+            <div class="step-icon"><i class="fas fa-shield-alt"></i></div>
+            <center><div class="phase-tag p3">Phase 3: Formal</div></center>
+            <div class="step-content">
+                <h4>ADL Verification</h4>
+                <ul class="phase-details">
+                    <li>ADL Blueprint Generation</li>
+                    <li>Consistency Checking</li>
+                    <li>Formal Asset Validation</li>
+                </ul>
+                <div class="tech-badges-container">
+                    <span class="tech-badge">FORMAL ASSET</span>
+                    <span class="tech-badge">VERIFIED</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="step-card">
+            <div class="step-icon"><i class="fas fa-seedling"></i></div>
+            <center><div class="phase-tag p4">Phase 4: Output</div></center>
+            <div class="step-content">
+                <h4>Sustainable Support</h4>
+                <ul class="phase-details">
+                    <li>Module Decomposition</li>
+                    <li>Pattern Suggestion (MVC)</li>
+                    <li>Code Skeleton Generation</li>
+                </ul>
+                <div class="tech-badges-container">
+                    <span class="tech-badge">MVC SKELETON</span>
+                    <span class="tech-badge">CLEAN CODE</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<style>
+   
+</style>
+
+<section class="live-eval-section">
+    <center>
+        <h2 style="font-size: 3rem; font-weight: 900; letter-spacing: -2px;">Systematic Selection Logic</h2>
+        <p style="color: #64748b; margin-top: 10px;">The exact mathematical process our AI uses to coose your architecture style.</p>
+    </center>
+
+    <div class="eval-container">
+        <div class="eval-module">
+            <span class="module-label">METHOD 01</span>
+            <h3 class="eval-title">Functional Analysis</h3>
+            <p class="eval-subtitle">Extracting system behaviors from SRS documentation.</p>
+            <div class="data-display">
+                <div style="color: #94a3b8;">> Extracting entities...</div>
+                <div style="margin-top: 10px;">[User_Auth] <span style="color: var(--primary);">FOUND</span></div>
+                <div>[Payment_Gateway] <span style="color: var(--primary);">FOUND</span></div>
+                <div class="loader-bar"><div class="loader-progress"></div></div>
+            </div>
+        </div>
+
+        <div class="eval-module">
+            <span class="module-label">METHOD 02</span>
+            <h3 class="eval-title">Binary Constraint Filter</h3>
+            <p class="eval-subtitle">Checking non-negotiable NFR compliance (Yes/No).</p>
+            <div class="data-display">
+                <div class="binary-row"><span>Scalability:</span> <span class="status-bit">1</span></div>
+                <div class="binary-row"><span>Performance:</span> <span class="status-bit" style="animation-delay: 0.5s;">0</span></div>
+                <div class="binary-row"><span>Security:</span> <span class="status-bit">1</span></div>
+                <div style="color: #64748b; font-size: 0.7rem; margin-top: 5px;">// 1 = Style Compatible, 0 = Rejected</div>
+            </div>
+        </div>
+
+        <div class="eval-module">
+            <span class="module-label">METHOD 03</span>
+            <h3 class="eval-title">Ordinal Ranking</h3>
+            <p class="eval-subtitle">Categorizing NFR priority (High, Medium, Low).</p>
+            <div class="data-display">
+                <div style="margin-bottom: 10px;">
+                    <div>Availability: <span class="rank-tag high">HIGH</span></div>
+                    <div style="margin-top: 8px;">Cost Efficiency: <span class="rank-tag med">MEDIUM</span></div>
+                    <div style="margin-top: 8px;">Security: <span class="rank-tag high">HIGH</span></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="eval-module">
+            <span class="module-label">METHOD 04</span>
+            <h3 class="eval-title">Weighted Scoring</h3>
+            <p class="eval-subtitle">Calculating final style score based on importance.</p>
+            <div class="data-display">
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <div style="height: 10px; width: 70%; background: #1e293b; border-radius: 5px;">
+                        <div style="height: 100%; width: 85%; background: #a78bfa; border-radius: 5px;"></div>
+                    </div>
+                    <span class="weight-val">8.5/10</span>
+                </div>
+                <div style="margin-top: 15px; font-size: 0.75rem;">
+                    Style: Microservices -> <span style="color: #22c55e;">Match: 94.2%</span><br>
+                    Style: Monolithic -> <span style="color: #ef4444;">Match: 41.0%</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+<style>
+    
+</style>
+
+<section class="bridge-section">
+    <div class="bridge-grid">
+        <div>
+            <i class="fas fa-random bridge-icon"></i>
+            <h2 style="font-size: 2.5rem; font-weight: 900; letter-spacing: -1.5px; margin-bottom: 20px;">
+                Bridging the <span style="color: var(--primary);">Architectural Gap</span>
+            </h2>
+            <p style="color: #64748b; margin-bottom: 30px; line-height: 1.6;">
+                Manual architecture often suffers from **Human Bias** and "Gut Feeling," leading to a disconnect between what the business needs and what the code actually does.
+            </p>
+
+            <div class="bias-box">
+                <strong style="color: #991b1b; display: block; margin-bottom: 5px;">Traditional Architect</strong>
+                <p style="font-size: 0.9rem; color: #b91c1c;">Subjective choices, technology bias, and manual traceability gaps.</p>
+            </div>
+
+            <center><div class="versus-badge">VS</div></center>
+
+            <div class="objective-box">
+                <strong style="color: #166534; display: block; margin-bottom: 5px;">ArchiMind AI</strong>
+                <p style="font-size: 0.9rem; color: #15803d;">Mathematical MCDM evaluation, BERT-based extraction, and 100% objective mapping.</p>
+            </div>
+        </div>
+
+        <div class="bridge-visual-container">
+            <div class="logic-glow"></div>
+            
+            <div class="node-stack">
+                <div class="glass-node">
+                    <span class="node-label">Input Source</span>
+                    <div class="node-value">
+                        <i class="fas fa-file-code" style="color: #64748b;"></i>
+                        SRS Requirements
+                    </div>
+                </div>
+
+                <div class="connector-path"></div>
+
+                <div class="mcdm-engine-orb">
+                    <i class="fas fa-shield-virus"></i>
+                    <span>MCDM</span>
+                </div>
+
+                <div class="connector-path"></div>
+
+                <div class="glass-node" style="border-color: var(--primary-light);">
+                    <span class="node-label">Output Target</span>
+                    <div class="node-value">
+                        <i class="fas fa-cubes" style="color: var(--primary);"></i>
+                        Verified Code Skeleton<br>
+                        ADL Blueprint
+                        Architecture report
+
+                    </div>
+                </div>
+
+                <p style="margin-top: 30px; font-size: 0.75rem; color: #94a3b8; font-weight: 600; text-align: center;">
+                    <i class="fas fa-lock" style="margin-right: 5px;"></i>
+                    Zero-Bias Mathematical Mapping Enabled
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+<style>
+  
 </style>
 
 <section class="blueprint-light">
@@ -1024,57 +1082,7 @@
     </div>
 </section>
 <style>
-    .clean-footer {
-        padding: 80px 8% 40px;
-        background: #ffffff;
-        border-top: 1px solid #f1f5f9;
-    }
-
-    .footer-content {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 60px;
-    }
-
-    .footer-logo {
-        font-size: 1.5rem;
-        font-weight: 900;
-        letter-spacing: -1px;
-        color: #0f172a;
-    }
-
-    .footer-logo span { color: var(--primary); }
-
-    .footer-links { display: flex; gap: 30px; }
-    .footer-links a {
-        text-decoration: none;
-        color: #64748b;
-        font-size: 0.85rem;
-        font-weight: 600;
-        transition: 0.3s;
-    }
-    .footer-links a:hover { color: var(--primary); }
-
-    .cta-final {
-        background: #f8fafc;
-        border-radius: 40px;
-        padding: 60px;
-        text-align: center;
-        margin-bottom: 80px;
-        border: 1px solid #f1f5f9;
-    }
-
-    .cta-final h2 { font-size: 2.5rem; font-weight: 900; margin-bottom: 20px; }
-
-    .copyright {
-        display: flex;
-        justify-content: space-between;
-        color: #94a3b8;
-        font-size: 0.75rem;
-        border-top: 1px solid #f1f5f9;
-        padding-top: 40px;
-    }
+    
 </style>
 
 <footer class="clean-footer">

@@ -23,6 +23,13 @@ templates = Jinja2Templates(directory="templates")
 def serve_archgen(request: Request):
     return templates.TemplateResponse("ArchGen.html", {"request": request})
 
+@app.get("/Register")
+def serve_register(request: Request):
+    return templates.TemplateResponse("Signup.html", {"request": request})
+@app.get("/Login")
+def serve_login(request: Request):
+    return templates.TemplateResponse("Login.html", {"request": request})
+
 @app.get("/")
 def serve_index(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
