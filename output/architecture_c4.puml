@@ -1,0 +1,24 @@
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+LAYOUT_WITH_LEGEND()
+System_Boundary(system, "ELearningManagementSystem") {
+  Container(UserService, "User Service", "Service", "Handles user registration, authentication, and profile management.")
+  Container(CourseService, "Course Service", "Service", "Manages courses, lessons, and course enrollments.")
+  Container(VideoStreamingService, "Video Streaming Service", "Service", "Streams video lectures to students.")
+  Container(ProgressTrackingService, "Progress Tracking Service", "Service", "Tracks student progress and grades.")
+  Container(NotificationService, "Notification Service", "Service", "Sends notifications to students and instructors.")
+  ContainerDb(DatabaseService, "Database Service", "Database", "Manages data storage and retrieval for the E-Learning Management System.")
+}
+Rel(UserService, CourseService, "event", "Async")
+Rel(UserService, ProgressTrackingService, "event", "Async")
+Rel(CourseService, VideoStreamingService, "call", "Sync")
+Rel(CourseService, ProgressTrackingService, "event", "Async")
+Rel(VideoStreamingService, NotificationService, "event", "Async")
+Rel(ProgressTrackingService, NotificationService, "event", "Async")
+Rel(NotificationService, DatabaseService, "call", "Sync")
+Rel(CourseService, DatabaseService, "call", "Sync")
+Rel(UserService, DatabaseService, "call", "Sync")
+Rel(ProgressTrackingService, DatabaseService, "call", "Sync")
+Rel(VideoStreamingService, DatabaseService, "call", "Sync")
+Rel(NotificationService, DatabaseService, "call", "Sync")
+@enduml

@@ -1,0 +1,22 @@
+@startuml
+autonumber
+actor User
+participant "User Service" as UserService
+participant "Course Service" as CourseService
+participant "Video Streaming Service" as VideoStreamingService
+participant "Progress Tracking Service" as ProgressTrackingService
+participant "Notification Service" as NotificationService
+participant "Database Service" as DatabaseService
+UserService ->> CourseService : User enrolled in a course
+UserService ->> ProgressTrackingService : User started a course
+CourseService -> VideoStreamingService : Course content requested
+CourseService ->> ProgressTrackingService : User completed a lesson
+VideoStreamingService ->> NotificationService : Video playback started
+ProgressTrackingService ->> NotificationService : User progress updated
+NotificationService -> DatabaseService : Notification sent
+CourseService -> DatabaseService : Course data updated
+UserService -> DatabaseService : User data updated
+ProgressTrackingService -> DatabaseService : Progress data updated
+VideoStreamingService -> DatabaseService : Video streaming data updated
+NotificationService -> DatabaseService : Notification data updated
+@enduml

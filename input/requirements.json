@@ -1,0 +1,20 @@
+{
+  "system_name": "ELearningManagementSystem",
+  "architecture_style": "Microservices Architecture",
+  "functional_requirements": [
+    "User registration and authentication",
+    "Manage courses and lessons",
+    "Enroll students in courses",
+    "Stream video lectures",
+    "Track student progress and grades",
+    "Send notifications to students and instructors"
+  ],
+  "non_functional_requirements": {
+    "scalability": "High",
+    "availability": "High",
+    "latency": "Medium",
+    "reliability": "High",
+    "consistency": "Eventual",
+    "security": "High"
+  }
+}

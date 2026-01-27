@@ -1,145 +1,122 @@
-from fastapi import FastAPI, UploadFile, File, Request
-from fastapi.responses import HTMLResponse
-from fastapi.staticfiles import StaticFiles
-from fastapi.templating import Jinja2Templates
-from huggingface_hub import InferenceClient
-import fitz  # PyMuPDF
 import json
-import os
-import re
+import subprocess
+from fastapi import FastAPI, Request
+from adl.json_to_process_view import convert_to_process_view
+from fastapi.responses import FileResponse
+from adl.json_to_dfd_context import convert_to_dfd_context
+from report_generator import generate_report
+from fastapi.templating import Jinja2Templates
+from adl.json_to_deployment_view import convert_to_deployment_view
 
-MAX_CHARS = 12000 
-# ----------------------------
+from adl.json_to_c4_plantuml import convert_to_c4_plantuml
+from adl.ai_engine import ai_generate_architecture
+from adl.json_to_context_view import convert_to_context_view
+from adl.json_to_acme import convert_to_acme
+
 
 app = FastAPI()
-
-# static + templates
-app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
 
-# ensure uploads folder exists
-os.makedirs("uploads", exist_ok=True)
 
-# huggingface client
-client = InferenceClient(
-    model=MODEL_NAME,
-    token=HF_API_KEY,
-    timeout=120
-)
+# ---------------- UI ----------------
+@app.get("/ArchitectureGenerator")
+def serve_archgen(request: Request):
+    return templates.TemplateResponse("ArchGen.html", {"request": request})
 
+@app.get("/Register")
+def serve_register(request: Request):
+    return templates.TemplateResponse("Signup.html", {"request": request})
+@app.get("/Login")
+def serve_login(request: Request):
+    return templates.TemplateResponse("Login.html", {"request": request})
 
-def extract_text_from_pdf(file_path):
-    text = ""
-    with fitz.open(file_path) as pdf:
-        for page in pdf:
-            text += page.get_text()
-    return text
-
-
-@app.get("/", response_class=HTMLResponse)
-def index(request: Request):
+@app.get("/")
+def serve_index(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
 
+# ================= AI ENGINE WRAPPERS =================
+@app.get("/generate")
+def generate_architecture():
 
-@app.post("/upload_srs/")
-async def upload_srs(file: UploadFile = File(...)):
-    filename = file.filename
-    safe_path = os.path.join("uploads", filename)
+    with open("input/requirements.json", "r", encoding="utf-8") as f:
+        requirements = json.load(f)
 
-    # save uploaded PDF
-    with open(safe_path, "wb") as f:
-        f.write(await file.read())
+    arch = ai_generate_architecture(
+    requirements["system_name"],
+    requirements["functional_requirements"],
+    requirements["non_functional_requirements"],
+    requirements["architecture_style"]
+    )
 
-    # extract raw text
-    text = extract_text_from_pdf(safe_path)
-    text = text[:MAX_CHARS]
+    with open("output/architecture.adl.json", "w", encoding="utf-8") as f:
+        json.dump(arch, f, indent=2)
 
 
- # after extracting and trimming text
-    # after extracting and trimming text
-    prompt = f"""
-You are an expert software analyst.
+    with open("output/architecture.validation.json", "w", encoding="utf-8") as f:
+        json.dump(arch["critique"], f, indent=2)
 
-Your task is to extract both Functional and Non-Functional Requirements from the following SRS text.
 
-Return ONLY a single clean JSON object with this exact structure:
+    acme = convert_to_acme(arch)
+    with open("output/architecture.acme", "w", encoding="utf-8") as f:
+        f.write(acme)
 
-{{
-  "functional": [
-    {{
-      "title": "<exact title as it appears in the SRS (do not modify or paraphrase)>",
-      "description": "<exact sentence(s) copied verbatim from the SRS (no changes)>",
-      "source": {{ "page": <page_number_if_known_or_null>, "start_index": <character_index_or_null> }}
-    }}
-  ],
-  "non_functional": [
-    {{
-      "title": "<exact title as it appears in the SRS (do not create new or paraphrased titles)>",
-      "description": "<professionally reworded version using 'shall', 'must', 'should', 'may', or 'can' depending on importance>",
-      "source": {{ "page": <page_number_if_known_or_null>, "start_index": <character_index_or_null> }}
-    }}
-  ]
-}}
+    # ---- C4 PlantUML ----
+    c4_puml = convert_to_c4_plantuml(arch)
+    with open("output/architecture_c4.puml", "w", encoding="utf-8") as f:
+        f.write(c4_puml)
 
-RULES:
-1. Functional requirements → copy both title and description verbatim from the SRS (no changes at all).
-2. Non-functional requirements → 
-   - Rephrase the description professionally, 
-   - Use one of these modal verbs to indicate importance:
-     - "must" → critical requirement
-     - "shall" → mandatory standard requirement
-     - "should" → recommended requirement
-     - "may" → optional feature
-     - "can" → possible capability
-   - Keep the title identical to what appears in the SRS (no renaming or paraphrasing).
-   - Output exactly the same number of non-functional requirements as identified in the SRS (no adding or guessing new ones).
-3. Do not invent or infer any requirement that is not explicitly in the text.
-4. Each description must be grammatically correct, concise, and faithful to the original meaning.
-5. If page or index are unknown, set them to null.
-6. The output must be valid JSON only — no explanations or commentary outside the JSON.
+    # ---- Context View ----
+    context_puml = convert_to_context_view(arch)
 
-SRS Text:
-{text}
-"""
+    with open("output/context_view.puml", "w", encoding="utf-8") as f:
+       f.write(context_puml)
 
-    
+    # ---- DFD Context View (Level 0) ----
+    dfd_puml = convert_to_dfd_context(arch)
 
-    try:
-        response = client.chat.completions.create(
-            model=MODEL_NAME,
-            max_tokens=1500,
-            temperature=0.1,
-            response_format={"type": "json_object"},  # ✅ Force pure JSON
-            messages=[
-               
-                {"role": "user", "content": prompt}
-            ]
-        )
-        output_text = response.choices[0].message["content"]
+    with open("output/dfd_context.puml", "w", encoding="utf-8") as f:
+       f.write(dfd_puml)
 
-    except Exception as e:
-        return {"error": "Model request failed", "exception": str(e)}
+    # ---- Process View ----
+    process_puml = convert_to_process_view(arch)
 
-    # ✅ Parse JSON safely
-    try:
-        json_match = re.search(r'\{[\s\S]*\}', output_text)
-        if not json_match:
-            raise ValueError("No valid JSON detected")
-        json_text = json_match.group(0)
-        parsed = json.loads(json_text)
+    with open("output/process_view.puml", "w", encoding="utf-8") as f:
+       f.write(process_puml)
 
-        # Save results
-        with open("requirements_detailed.json", "w", encoding="utf-8") as f:
-            json.dump(parsed, f, indent=2, ensure_ascii=False)
-        # optional: save each category separately
-        with open("functional_requirements.json", "w", encoding="utf-8") as f:
-            json.dump(parsed.get("functional", []), f, indent=2, ensure_ascii=False)
-        with open("non_functional_requirements.json", "w", encoding="utf-8") as f:
-            json.dump(parsed.get("non_functional", []), f, indent=2, ensure_ascii=False)
 
-        return parsed
-    except Exception as e:
-        # save raw for debugging
-        with open("requirements_raw.txt", "w", encoding="utf-8") as f:
-            f.write(output_text)
-        return {"error": "Failed to parse JSON from model output", "raw_output": output_text, "exception": str(e)}
+    # ---- Physical View (Deployment Diagram) ----
+    deployment_puml = convert_to_deployment_view(arch)
+
+    with open("output/deployment_view.puml", "w", encoding="utf-8") as f:
+      f.write(deployment_puml)
+    subprocess.run([
+    r"C:\Program Files\Java\jdk-21\bin\java.exe",
+    "-jar",
+    "plantuml.jar",
+    "-tpng",
+    "output/architecture_c4.puml",
+    "output/dfd_context.puml",
+    "output/context_view.puml",
+    "output/process_view.puml",
+    "output/deployment_view.puml"
+], check=True)
+
+
+
+    # ---- Generate PDF automatically ----
+    pdf_path = generate_report()
+
+    return FileResponse(
+        path=pdf_path,
+        filename="architecture_report.pdf",
+        media_type="application/pdf"
+    )
+
+# ---------------- Download PDF Report ----------------
+@app.get("/download-report")
+def download_report():
+    return FileResponse(
+        path="output/architecture_report.pdf",
+        filename="architecture_report.pdf",
+        media_type="application/pdf"
+    )
