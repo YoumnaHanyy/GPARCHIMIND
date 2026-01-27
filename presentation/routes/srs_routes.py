@@ -1,6 +1,7 @@
 from fastapi import APIRouter, UploadFile, File
 from fastapi.responses import JSONResponse
 import os
+import traceback
 
 from application.extraction.extraction_service import process_srs
 from ai.inference.predict_type_level import predict_and_save_nfr
@@ -9,6 +10,7 @@ from application.extraction.binary_service import execute_binary_method
 from application.extraction.weighted_service import execute_weighted_method
 from application.extraction.nfr_stats_service import compute_nfr_statistics
 from application.extraction.functional_service import execute_functional_method
+from application.extraction.hybrid_service import execute_hybrid_method
 
 
 from infrastructure.repositories.weighted_repository import save_weighted_result
@@ -69,6 +71,15 @@ async def extract_srs(file: UploadFile = File(...)):
                                      must_norm=must_norm,
                                      importance=importance
                                     )
+        
+        hybrid_result = execute_hybrid_method(
+                        project_id,
+                        functional_result,
+                        ordinal_result,
+                        binary_result,
+                        weighted_result
+        )
+
         save_weighted_result(project_id, weighted_result)
         # 6️⃣ response للـ UI
         return {
@@ -77,11 +88,20 @@ async def extract_srs(file: UploadFile = File(...)):
             "functional_method": functional_result,
             "ordinal_method": ordinal_result["result"],
             "binary_method": binary_result,
-            "weighted_method": weighted_result   # ✅  # 👈
+            "weighted_method": weighted_result,
+               "hybrid_method": hybrid_result
         }
 
     except Exception as e:
-        return JSONResponse(
-            status_code=500,
-            content={"error": str(e)}
+       tb = traceback.extract_tb(e.__traceback__)
+       last_trace = tb[-1]  # آخر مكان وقع فيه الغلط
+
+       return JSONResponse(
+          status_code=500,
+          content={
+            "error": str(e),
+            "file": os.path.relpath(last_trace.filename),
+            "line": last_trace.lineno,
+            "code": last_trace.line
+          }
         )

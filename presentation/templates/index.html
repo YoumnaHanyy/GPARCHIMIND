@@ -122,156 +122,193 @@
   const resultBox = document.getElementById("processResult");
   const errorBox = document.getElementById("errorMessage");
 
-  // Tabs
+  /* =======================
+     Tabs handling
+  ======================= */
   document.getElementById("resultTabs").onclick = e => {
     if (!e.target.dataset.tab) return;
 
-    document.querySelectorAll(".nav-link").forEach(n => n.classList.remove("active"));
+    document.querySelectorAll(".nav-link").forEach(n =>
+      n.classList.remove("active")
+    );
     e.target.classList.add("active");
 
-    document.querySelectorAll(".result-section").forEach(s => s.classList.remove("active"));
-    document.getElementById("section-" + e.target.dataset.tab).classList.add("active");
+    document.querySelectorAll(".result-section").forEach(s =>
+      s.classList.remove("active")
+    );
+    document
+      .getElementById("section-" + e.target.dataset.tab)
+      .classList.add("active");
   };
+
+  /* =======================
+     RENDER FUNCTIONS
+  ======================= */
+
+  function renderExtraction(data) {
+    let html = "<h5 class='section-header'>1- Functional Requirements</h5>";
+
+    (data.functional || []).forEach((fr, idx) => {
+      html += `
+        <div class="mb-3">
+          <div class="req-title">${String.fromCharCode(97 + idx)}. ${fr.title}</div>
+          <div class="req-desc">${fr.description}</div>
+        </div>
+      `;
+    });
+
+    html += "<hr/><h5 class='section-header'>2- Non-Functional Requirements</h5>";
+
+    (data.nfr_predictions || []).forEach((nfr, idx) => {
+      html += `
+        <div class="mb-3">
+          <div class="req-title">${String.fromCharCode(97 + idx)}. ${nfr.predicted_type}</div>
+          <div class="req-desc">${nfr.description}</div>
+        </div>
+      `;
+    });
+
+    return html;
+  }
+
+  function renderFunctional(data) {
+    if (!data || !data.top_architectures)
+      return "<p class='text-muted'>No functional results.</p>";
+
+    let html = "<h5 class='section-header'>Functional Architecture Method</h5>";
+
+    data.top_architectures.forEach((item, idx) => {
+      html += `
+        <div class="mb-4">
+          <div class="req-title">
+            ${idx + 1}. ${item.Architecture.replace("_", " ").toUpperCase()}
+          </div>
+          <div class="req-desc"><strong>Score:</strong> ${item.Score}</div>
+          <div class="req-desc">${item.Reason}</div>
+        </div>
+      `;
+    });
+
+    return html;
+  }
+
+  function renderOrdinal(data) {
+    if (!data || data.length === 0)
+      return "<p class='text-muted'>No ordinal results available.</p>";
+
+    let html = "<h5 class='section-header'>Ordinal Method</h5>";
+
+    data.forEach((item, idx) => {
+      html += `
+        <div class="mb-3">
+          <div class="req-title">${idx + 1}. ${item.architecture}</div>
+          <div class="req-desc">
+            Matched NFRs: <strong>${item.matched_nfrs}</strong>
+          </div>
+        </div>
+      `;
+    });
+
+    return html;
+  }
+
+  function renderBinary(data) {
+    if (!data || !data.top_architectures)
+      return "<p class='text-muted'>No binary results available.</p>";
+
+    let html = "<h5 class='section-header'>Binary Method</h5>";
+
+    data.top_architectures.forEach((item, idx) => {
+      html += `
+        <div class="mb-3">
+          <div class="req-title">${idx + 1}. ${item.architecture}</div>
+          <div class="req-desc">
+            Score: <strong>${item.score}</strong>
+          </div>
+        </div>
+      `;
+    });
+
+    return html;
+  }
+
+  function renderWeighted(data) {
+    if (!data || !data.top_architectures)
+      return "<p class='text-muted'>No weighted results available.</p>";
+
+    let html = "<h5 class='section-header'>Weighted Score Method</h5>";
+
+    data.top_architectures.forEach((item, idx) => {
+      html += `
+        <div class="mb-3">
+          <div class="req-title">${idx + 1}. ${item.Architecture}</div>
+          <div class="req-desc">
+            Score: <strong>${item.Score}</strong>
+          </div>
+        </div>
+      `;
+    });
+
+    return html;
+  }
+
+  function renderHybrid(data) {
+    if (!data || data.length === 0)
+      return "<p class='text-muted'>No hybrid results available.</p>";
+
+    let html = "<h5 class='section-header'>Hybrid Method – Final Decision</h5>";
+
+    data.forEach((item, idx) => {
+      html += `
+        <div class="mb-4">
+          <div class="req-title">
+            ${idx + 1}. ${item.Architecture.replace("_", " ").toUpperCase()}
+          </div>
+          <div class="req-desc">
+            <strong>Final Score:</strong> ${item.FinalScore}%
+          </div>
+          <div class="req-desc text-muted">
+            Aggregated from Functional, Ordinal, Binary, and Weighted methods.
+          </div>
+        </div>
+      `;
+    });
+
+    return html;
+  }
+
+  /* =======================
+     SHOW RESULTS
+  ======================= */
 
   function showResults(data) {
     loading.style.display = "none";
-    errorBox.innerHTML = "";
     resultNav.style.display = "block";
     resultBox.style.display = "block";
+    errorBox.innerHTML = "";
 
-    // ---------- Functional Requirements ----------
-let frHtml = "<h5 class='section-header'>1- Functional Requirements</h5>";
+    document.getElementById("section-extraction").innerHTML =
+      renderExtraction(data);
 
-(data.functional || []).forEach((fr, idx) => {
-  frHtml += `
-    <div class="mb-3">
-      <div class="req-title">${String.fromCharCode(97 + idx)}. ${fr.title}</div>
-      <div class="req-desc">${fr.description}</div>
-    </div>
-  `;
-});
+    document.getElementById("section-functional").innerHTML =
+      renderFunctional(data.functional_method);
 
-// ---------- Non-Functional Requirements ----------
-let nfrHtml = "<h5 class='section-header'>2- Non-Functional Requirements</h5>";
+    document.getElementById("section-ordinal").innerHTML =
+      renderOrdinal(data.ordinal_method);
 
-(data.nfr_predictions || []).forEach((nfr, idx) => {
-  nfrHtml += `
-    <div class="mb-3">
-      <div class="req-title">${String.fromCharCode(97 + idx)}. ${nfr.predicted_type}</div>
-      <div class="req-desc">${nfr.description}</div>
-    </div>
-  `;
-});
+    document.getElementById("section-binary").innerHTML =
+      renderBinary(data.binary_method);
 
-document.getElementById("section-extraction").innerHTML =
-  frHtml + "<hr/>" + nfrHtml;
+    document.getElementById("section-weighted").innerHTML =
+      renderWeighted(data.weighted_method);
 
-function renderFunctional(data) {
-  if (!data || !data.top_architectures) {
-    return "<p class='text-muted'>No functional results.</p>";
+    document.getElementById("section-hybrid").innerHTML =
+      renderHybrid(data.hybrid_method);
   }
 
-  let html = "<h5 class='section-header'>Functional Architecture Method</h5>";
-
-  data.top_architectures.forEach((item, idx) => {
-    html += `
-      <div class="mb-4">
-        <div class="req-title">
-          ${idx + 1}. ${item.Architecture.replace("_", " ").toUpperCase()}
-        </div>
-
-        <div class="req-desc">
-          <strong>Score:</strong> ${item.Score}
-        </div>
-
-        <div class="req-desc">
-          ${item.Reason}
-        </div>
-      </div>
-    `;
-  });
-
-  return html;
-}
-
-
-document.getElementById("section-functional").innerHTML =
-  renderFunctional(data.functional_method);
-
-    function renderOrdinal(ordinalData) {
-  if (!ordinalData || ordinalData.length === 0) {
-    return "<p class='text-muted'>No ordinal results available.</p>";
-  }
-
-  let html = "<h5 class='section-header'>Ordinal Method – Top Architectures</h5>";
-
-  ordinalData.forEach((item, idx) => {
-    html += `
-      <div class="mb-3">
-        <div class="req-title">${idx + 1}. ${item.architecture}</div>
-        <div class="req-desc">
-          Matched NFRs: <strong>${item.matched_nfrs}</strong>
-        </div>
-      </div>
-    `;
-  });
-
-  return html;
-}
-
-document.getElementById("section-ordinal").innerHTML =
-  renderOrdinal(data.ordinal_method);
-
-   function renderBinary(binaryData) {
-  if (!binaryData || !binaryData.top_architectures) {
-    return "<p class='text-muted'>No binary results available.</p>";
-  }
-
-  let html = "<h5 class='section-header'>Binary Method – Top Architectures</h5>";
-
-  binaryData.top_architectures.forEach((item, idx) => {
-    html += `
-      <div class="mb-3">
-        <div class="req-title">${idx + 1}. ${item.architecture}</div>
-        <div class="req-desc">
-          Score: <strong>${item.score}</strong>
-        </div>
-      </div>
-    `;
-  });
-
-  return html;
-}
-function renderWeighted(weightedData) {
-  if (!weightedData || !weightedData.top_architectures) {
-    return "<p class='text-muted'>No weighted results available.</p>";
-  }
-
-  let html = "<h5 class='section-header'>Weighted Score Method – Top Architectures</h5>";
-
-  weightedData.top_architectures.forEach((item, idx) => {
-    html += `
-      <div class="mb-3">
-        <div class="req-title">${idx + 1}. ${item.Architecture}</div>
-        <div class="req-desc">
-          Score: <strong>${item.Score}</strong>
-        </div>
-      </div>
-    `;
-  });
-
-  return html;
-}
-
-document.getElementById("section-binary").innerHTML =
-  renderBinary(data.binary_method);
-
-document.getElementById("section-weighted").innerHTML =
-  renderWeighted(data.weighted_method);
-
-document.getElementById("section-hybrid").innerHTML =
-  "<p class='text-muted'>Hybrid method not implemented yet.</p>";
-}
+  /* =======================
+     FORM SUBMIT
+  ======================= */
 
   form.onsubmit = async e => {
     e.preventDefault();
@@ -290,35 +327,40 @@ document.getElementById("section-hybrid").innerHTML =
     fd.append("file", fileInput.files[0]);
 
     try {
-const res = await fetch("/extract", { method: "POST", body: fd });
-const text = await res.text();
+      const res = await fetch("/extract", { method: "POST", body: fd });
+      const data = await res.json();
 
-let data;
-try {
-  data = JSON.parse(text);
-} catch (e) {
-  throw text;
-}
-
-if (data.error) {
-  throw data.details || data.error;
-}
-
+      if (data.error) throw data;
 
       showResults(data);
-
     } catch (err) {
-      loading.style.display = "none";
-    errorBox.innerHTML = `
-  <div class="alert alert-danger">
-    <strong>Processing failed</strong><br/>
-    <pre>${err}</pre>
-  </div>
-`;
+  loading.style.display = "none";
 
-    }
+  let msg = err.error || err;
+
+  let details = "";
+  if (err.file) {
+    details = `
+      <hr/>
+      <strong>File:</strong> ${err.file}<br/>
+      <strong>Line:</strong> ${err.line}<br/>
+      <strong>Code:</strong>
+      <pre>${err.code}</pre>
+    `;
+  }
+
+  errorBox.innerHTML = `
+    <div class="alert alert-danger">
+      <strong>Processing failed</strong><br/>
+      <pre>${msg}</pre>
+      ${details}
+    </div>
+  `;
+}
+
   };
 </script>
+
 
 </body>
 </html>

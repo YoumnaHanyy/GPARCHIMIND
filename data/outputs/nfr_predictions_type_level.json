@@ -1,26 +1,38 @@
 [
   {
+    "title": "Standards Compliance",
+    "description": "The system MUST comply with industry standards for text-to-video generation.",
+    "predicted_type": "LF",
+    "predicted_level": "High"
+  },
+  {
+    "title": "Hardware Limitations",
+    "description": "The system MUST be able to handle high GPU-intensive processes.",
+    "predicted_type": "SC",
+    "predicted_level": "High"
+  },
+  {
+    "title": "Performance",
+    "description": "The system SHOULD be able to generate videos in a timely manner.",
+    "predicted_type": "PE",
+    "predicted_level": "Low"
+  },
+  {
     "title": "Security",
-    "description": "The system MUST ensure the confidentiality, integrity, and availability of user data.",
+    "description": "The system MUST ensure the security and integrity of user data.",
     "predicted_type": "SE",
     "predicted_level": "High"
   },
   {
-    "title": "Accuracy",
-    "description": "The system MUST provide accurate job recommendations based on user input.",
+    "title": "Usability",
+    "description": "The system MUST be user-friendly and easy to navigate.",
     "predicted_type": "US",
     "predicted_level": "High"
   },
   {
-    "title": "Usability",
-    "description": "The system SHOULD be user-friendly and provide a seamless user experience.",
-    "predicted_type": "US",
-    "predicted_level": "Low"
-  },
-  {
-    "title": "Response time",
-    "description": "The system MUST respond within a reasonable time frame to user input.",
-    "predicted_type": "PE",
+    "title": "Scalability",
+    "description": "The system MUST be able to handle a large number of users and requests.",
+    "predicted_type": "SC",
     "predicted_level": "High"
   }
 ]
