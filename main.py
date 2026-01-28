@@ -55,6 +55,31 @@ def home(request: Request):
         {"request": request}
     )
 
+
+
+
+@app.get("/Login", response_class=HTMLResponse)
+def login(request: Request):
+    return templates.TemplateResponse(
+        "login.html",
+        {"request": request}
+    )
+
+
+@app.get("/Dashboard", response_class=HTMLResponse)
+def dashboard(request: Request):
+    return templates.TemplateResponse(
+        "dashboard.html",
+        {"request": request}
+    )
+
+
+@app.get("/Signup", response_class=HTMLResponse)
+def signup(request: Request):
+    return templates.TemplateResponse(
+        "Signup.html",
+        {"request": request}
+    )
 # ============================================================
 # API Routes
 # ============================================================

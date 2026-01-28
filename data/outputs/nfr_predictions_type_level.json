@@ -1,56 +1,58 @@
 [
   {
     "title": "Scalability",
-    "description": "The system must be able to accommodate a large number of users and provide a seamless experience.",
+    "description": "The system must be able to accommodate a large number of users and adapt to changing demands.",
     "predicted_type": "SC",
+    "predicted_type_label": "Scalability",
     "predicted_level": "High"
   },
   {
     "title": "Usability",
-    "description": "The system must be user-friendly and accessible for individuals with Dyslexia.",
+    "description": "The system must be user-friendly and accessible to individuals with Dyslexia.",
     "predicted_type": "US",
-    "predicted_level": "High"
-  },
-  {
-    "title": "Adaptability",
-    "description": "The system must be adaptable to the needs of individuals with Dyslexia.",
-    "predicted_type": "US",
-    "predicted_level": "High"
-  },
-  {
-    "title": "Integration",
-    "description": "The system must be integrated into existing educational practices.",
-    "predicted_type": "US",
-    "predicted_level": "High"
-  },
-  {
-    "title": "Security",
-    "description": "The system must ensure the security and confidentiality of user data.",
-    "predicted_type": "SE",
+    "predicted_type_label": "Usability",
     "predicted_level": "High"
   },
   {
     "title": "Performance",
-    "description": "The system must provide a fast and responsive experience for users.",
+    "description": "The system must be able to process user data efficiently and provide timely responses.",
     "predicted_type": "PE",
+    "predicted_type_label": "Performance",
+    "predicted_level": "High"
+  },
+  {
+    "title": "Security",
+    "description": "The system must ensure the confidentiality, integrity, and availability of user data.",
+    "predicted_type": "SE",
+    "predicted_type_label": "Security",
+    "predicted_level": "High"
+  },
+  {
+    "title": "Accessibility",
+    "description": "The system must be accessible to users with disabilities and follow accessibility guidelines.",
+    "predicted_type": "US",
+    "predicted_type_label": "Usability",
+    "predicted_level": "High"
+  },
+  {
+    "title": "Data Privacy",
+    "description": "The system must comply with data privacy regulations and ensure the secure storage and processing of user data.",
+    "predicted_type": "SE",
+    "predicted_type_label": "Security",
+    "predicted_level": "High"
+  },
+  {
+    "title": "Interoperability",
+    "description": "The system must be able to integrate with other systems and tools to provide a seamless user experience.",
+    "predicted_type": "US",
+    "predicted_type_label": "Usability",
     "predicted_level": "High"
   },
   {
     "title": "Reliability",
-    "description": "The system must be reliable and provide a consistent experience for users.",
-    "predicted_type": "US",
-    "predicted_level": "High"
-  },
-  {
-    "title": "Maintainability",
-    "description": "The system must be easy to maintain and update.",
-    "predicted_type": "MN",
-    "predicted_level": "High"
-  },
-  {
-    "title": "Testability",
-    "description": "The system must be easy to test and validate.",
-    "predicted_type": "US",
+    "description": "The system must be able to operate reliably and consistently, with minimal downtime.",
+    "predicted_type": "PE",
+    "predicted_type_label": "Performance",
     "predicted_level": "High"
   }
 ]

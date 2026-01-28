@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>ARCHIMIND | Light Blueprint</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+
+<style>
+:root {
+    --primary: #10b981;
+    --primary-soft: rgba(16, 185, 129, 0.08);
+    --dark: #0f172a;
+    --bg-light: #f8fafc;
+    --blueprint-line: rgba(16, 185, 129, 0.12);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background:
+        radial-gradient(circle at 15% 20%, rgba(16,185,129,0.12) 0%, transparent 45%),
+        radial-gradient(circle at 85% 80%, rgba(16,185,129,0.10) 0%, transparent 50%),
+        #f8fafc;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ✅ LOGIN-SIZED CONTAINER */
+.main-layout {
+    width: 90%;
+    max-width: 980px;
+    min-height: 560px;
+    display: flex;
+    background: white;
+    border-radius: 36px;
+    border: 1px solid #e2e8f0;
+    box-shadow:
+        0 40px 100px -20px rgba(15, 23, 42, 0.08),
+        0 0 0 12px rgba(16,185,129,.06);
+    overflow: hidden;
+}
+
+/* LEFT */
+.auth-side {
+    flex: 1;
+    padding: 50px;
+    border-right: 1px solid #f1f5f9;
+}
+
+.logo {
+    font-weight: 800;
+    font-size: 1.1rem;
+    margin-bottom: 45px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.logo i { color: var(--primary); }
+
+h1 {
+    font-size: 2.6rem;
+    line-height: 1.1;
+    letter-spacing: -1.8px;
+    margin-bottom: 15px;
+}
+p {
+    color: #64748b;
+    margin-bottom: 35px;
+}
+
+.input-container { margin-bottom: 18px; }
+.input-container label {
+    font-size: 0.7rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    display: block;
+    color: #94a3b8;
+    letter-spacing: 1px;
+}
+
+.input-field {
+    width: 100%;
+    padding: 16px 22px;
+    border-radius: 14px;
+    border: 2px solid #f1f5f9;
+    background: #f8fafc;
+}
+.input-field:focus {
+    outline: none;
+    border-color: var(--primary);
+    background: white;
+    box-shadow: 0 10px 25px var(--primary-soft);
+}
+
+.btn-primary {
+    width: 100%;
+    padding: 18px;
+    border-radius: 16px;
+    border: none;
+    background: var(--dark);
+    color: white;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 10px;
+}
+.btn-primary:hover {
+    background: var(--primary);
+    transform: translateY(-2px);
+}
+
+/* RIGHT */
+.visual-side {
+    flex: 1.2;
+    position: relative;
+    background: #fdfdfd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* GRID */
+.grid-bg {
+    position: absolute;
+    inset: 0;
+    background-image:
+        linear-gradient(var(--blueprint-line) 1px, transparent 1px),
+        linear-gradient(90deg, var(--blueprint-line) 1px, transparent 1px);
+    background-size: 36px 36px;
+}
+
+.engine-core {
+    width: 420px;
+    background: white;
+    border: 2px solid var(--dark);
+    border-radius: 22px;
+    padding: 22px;
+    box-shadow: 12px 12px 0 var(--primary-soft);
+    position: relative;
+    z-index: 2;
+}
+
+.engine-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 18px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.module-box {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    padding: 14px;
+    border-radius: 12px;
+    margin-bottom: 10px;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.module-icon {
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    display: grid;
+    place-items: center;
+    background: white;
+    color: var(--primary);
+}
+
+.module-text h4 {
+    font-family: 'JetBrains Mono';
+    font-size: 0.75rem;
+}
+.module-text p {
+    font-size: 0.65rem;
+    color: #94a3b8;
+}
+
+/* SCANNER */
+.scanner {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: var(--primary);
+    animation: scanLight 4s infinite linear;
+    opacity: .4;
+}
+@keyframes scanLight {
+    from { top: 0; }
+    to { top: 100%; }
+}
+
+@media (max-width: 900px) {
+    .visual-side { display: none; }
+    .main-layout { max-width: 500px; }
+}
+</style>
+</head>
+
+<body>
+
+<div class="main-layout">
+
+    <div class="auth-side">
+        <div class="logo"><i class="fas fa-microchip"></i> ARCHIMIND</div>
+        <h1>Sustainable<br>Systems.</h1>
+        <p>Your workspace for AI-driven architectural integrity.</p>
+
+        <div class="input-container">
+            <label>Full Name</label>
+            <input class="input-field" placeholder="Architect Name">
+        </div>
+
+        <div class="input-container">
+            <label>Work Email</label>
+            <input class="input-field" placeholder="name@firm.com">
+        </div>
+
+        <div class="input-container">
+            <label>Clearance Level</label>
+            <input class="input-field" placeholder="Senior Architect">
+        </div>
+
+        <button class="btn-primary">Initialize Console</button>
+    </div>
+
+    <div class="visual-side">
+        <div class="grid-bg"></div>
+
+        <div class="engine-core">
+            <div class="scanner"></div>
+
+            <div class="engine-header">
+                <span style="font-family:JetBrains Mono;font-size:.7rem;">ENGINE_STATUS: ONLINE</span>
+                <span style="font-family:JetBrains Mono;font-size:.7rem;color:#cbd5e1;">REF_099X</span>
+            </div>
+
+            <div class="module-box">
+                <div class="module-icon"><i class="fas fa-search"></i></div>
+                <div class="module-text">
+                    <h4>SRS_PARSER</h4>
+                    <p>Mapping requirements</p>
+                </div>
+            </div>
+
+            <div class="module-box" style="border-left:4px solid var(--primary);">
+                <div class="module-icon" style="background:var(--primary);color:white;">
+                    <i class="fas fa-microchip"></i>
+                </div>
+                <div class="module-text">
+                    <h4>MCDM_CORE</h4>
+                    <p style="color:var(--primary);font-weight:700;">Architecture Optimized</p>
+                </div>
+            </div>
+
+            <div class="module-box">
+                <div class="module-icon"><i class="fas fa-file-export"></i></div>
+                <div class="module-text">
+                    <h4>ADL_EXPORT</h4>
+                    <p>Blueprint generated</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>
