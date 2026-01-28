@@ -1,0 +1,65 @@
+[
+  {
+    "title": "The system must detect the user's face using the YOLOv5 model.",
+    "description": "The system uses contours detection to detect the borders of objects, Gaussian blur to mute image noise, Background Subtraction (BS) to separate the moving parts, and Histogram Equalization for image contrast optimization.",
+    "source": {
+      "page": 6,
+      "start_index": 1
+    },
+    "project_id": 2
+  },
+  {
+    "title": "The system must recognize gestures.",
+    "description": "The system uses threading for concurrent execution of tasks within a single process and multiprocessing for parallel execution of tasks across multiple processes.",
+    "source": {
+      "page": 7,
+      "start_index": 1
+    },
+    "project_id": 2
+  },
+  {
+    "title": "The system must track the user's hand.",
+    "description": "The system uses Background Subtraction (BS) to separate the moving parts.",
+    "source": {
+      "page": 6,
+      "start_index": 2
+    },
+    "project_id": 2
+  },
+  {
+    "title": "The system must support single-hand interaction.",
+    "description": "The system excludes multiple-hand interaction.",
+    "source": {
+      "page": 7,
+      "start_index": 2
+    },
+    "project_id": 2
+  },
+  {
+    "title": "The system must allow users to customize actions for specific gestures.",
+    "description": "The system uses the YOLOv5 model for face detection.",
+    "source": {
+      "page": 6,
+      "start_index": 3
+    },
+    "project_id": 2
+  },
+  {
+    "title": "The system must enable real-time collaboration.",
+    "description": "The system supports interactions on the projected surface.",
+    "source": {
+      "page": 8,
+      "start_index": 1
+    },
+    "project_id": 2
+  },
+  {
+    "title": "The system must have low-latency.",
+    "description": "The system analyzes gestures and reflects the corresponding action on the projected surface.",
+    "source": {
+      "page": 8,
+      "start_index": 2
+    },
+    "project_id": 2
+  }
+]

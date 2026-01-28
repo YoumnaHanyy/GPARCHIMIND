@@ -1,0 +1,37 @@
+[
+  {
+    "title": "The system must be cost-effective.",
+    "description": "The system must be affordable to many and have a competitive price compared to other systems in the market.",
+    "predicted_type": "US",
+    "predicted_type_label": "Usability",
+    "predicted_level": "High"
+  },
+  {
+    "title": "The system must be flexible.",
+    "description": "The system must work effectively in different places and environments.",
+    "predicted_type": "PO",
+    "predicted_type_label": "Portability",
+    "predicted_level": "High"
+  },
+  {
+    "title": "The system must have a user-friendly interface.",
+    "description": "The system must be easy to use and have interactive features.",
+    "predicted_type": "US",
+    "predicted_type_label": "Usability",
+    "predicted_level": "High"
+  },
+  {
+    "title": "The system must be secure.",
+    "description": "The system must store user account information securely.",
+    "predicted_type": "SE",
+    "predicted_type_label": "Security",
+    "predicted_level": "High"
+  },
+  {
+    "title": "The system must be scalable.",
+    "description": "The system must support multiple users and interactions.",
+    "predicted_type": "SC",
+    "predicted_type_label": "Scalability",
+    "predicted_level": "High"
+  }
+]

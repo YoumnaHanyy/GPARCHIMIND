@@ -1,0 +1,1291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ArchiMind | AI Architectural Intelligence</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #059669;
+            --primary-light: #ecfdf5;
+            --bg: #ffffff;
+            --surface: #f1f5f9;
+            --text-main: #0f172a;
+            --text-dim: #64748b;
+            --border: #e2e8f0;
+            --terminal-bg: #1e293b;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { background: var(--bg); color: var(--text-main); overflow-x: hidden; perspective: 1500px; }
+
+        /* --- 3D CODE BACKGROUND --- */
+        .code-bg {
+            position: absolute; top: 0; left: 0; width: 100%; height: 200%;
+            font-family: 'Fira Code', monospace; font-size: 14px;
+            color: rgba(5, 150, 105, 0.1); white-space: pre; pointer-events: none; z-index: -1;
+            transform: rotateX(20deg) rotateZ(-5deg); animation: float-up 100s linear infinite;
+        }
+        @keyframes float-up { from { transform: rotateX(20deg) rotateZ(-5deg) translateY(0); } to { transform: rotateX(20deg) rotateZ(-5deg) translateY(-50%); } }
+
+        nav { 
+            padding: 1.2rem 8%; display: flex; justify-content: space-between; align-items: center; 
+            position: fixed; width: 100%; top: 0; z-index: 1000; backdrop-filter: blur(20px);
+            background: rgba(255, 255, 255, 0.8); border-bottom: 1px solid var(--border);
+        }
+
+        /* --- HERO SECTION --- */
+        header { 
+            position: relative; padding: 100px 8% 140px;
+            display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center;
+        }
+
+        h1 { font-size: 4.8rem; font-weight: 800; letter-spacing: -4px; color: var(--text-main); line-height: 0.95; }
+        h1 span { color: var(--primary); }
+        .hero-description { color: var(--text-dim); max-width: 500px; font-size: 1.2rem; line-height: 1.6; margin: 30px 0; }
+
+        /* --- 3D STACKED DIAGRAM --- */
+        .diagram-container {
+            position: relative; width: 100%; height: 500px;
+            transform-style: preserve-3d; transition: transform 0.1s ease-out;
+            display: flex; justify-content: center; align-items: center;
+        }
+
+        .layer {
+            position: absolute; width: 320px; height: 180px;
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border: 2px solid var(--primary);
+            border-radius: 20px;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+            transform: rotateX(50deg) rotateZ(-25deg);
+            transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        /* Layer Depth Spacing */
+        .layer-1 { transform: rotateX(50deg) rotateZ(-25deg) translateZ(120px); border-color: #10b981; }
+        .layer-2 { transform: rotateX(50deg) rotateZ(-25deg) translateZ(0px); border-color: #3b82f6; }
+        .layer-3 { transform: rotateX(50deg) rotateZ(-25deg) translateZ(-120px); border-color: #6366f1; }
+
+        .layer i { font-size: 2.5rem; color: var(--primary); margin-bottom: 10px; }
+        .layer span { font-weight: 800; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; }
+        .layer-2 i { color: #3b82f6; }
+        .layer-3 i { color: #6366f1; }
+
+        /* Scanning Beam */
+        .scanner {
+            position: absolute; width: 400px; height: 2px;
+            background: linear-gradient(90deg, transparent, var(--primary), transparent);
+            box-shadow: 0 0 20px var(--primary);
+            transform: rotateX(50deg) rotateZ(-25deg);
+            animation: scan 4s ease-in-out infinite;
+            z-index: 10;
+        }
+        @keyframes scan { 0%, 100% { transform: rotateX(50deg) rotateZ(-25deg) translateZ(-150px); opacity: 0; } 50% { transform: rotateX(50deg) rotateZ(-25deg) translateZ(150px); opacity: 1; } }
+
+        .btn-main {
+            padding: 18px 45px; background: var(--text-main); color: white; border-radius: 14px;
+            font-weight: 700; text-decoration: none; display: inline-block; transition: 0.3s;
+            border: none; cursor: pointer; font-size: 1rem; box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        .btn-main:hover { background: var(--primary); transform: translateY(-5px); }
+
+        /* --- ENGINE SECTION --- */
+        .engine-section { padding: 120px 8%; background: var(--surface); border-top: 1px solid var(--border); }
+        .engine-container { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+        .decision-box {
+            background: white; padding: 40px; border-radius: 32px; border: 1px solid var(--border);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.05); transform-style: preserve-3d;
+        }
+        .adl-terminal {
+            background: var(--terminal-bg); border-radius: 20px; padding: 25px; 
+            font-family: 'Fira Code', monospace; font-size: 0.9rem; color: #38bdf8;
+            height: 320px; overflow: hidden;
+        }
+        .cursor { border-left: 8px solid var(--primary); animation: blink 1s infinite; margin-left: 5px; }
+        @keyframes blink { 50% { opacity: 0; }}
+    
+    .clean-footer {
+        padding: 80px 8% 40px;
+        background: #ffffff;
+        border-top: 1px solid #f1f5f9;
+    }
+
+    .footer-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 60px;
+    }
+
+    .footer-logo {
+        font-size: 1.5rem;
+        font-weight: 900;
+        letter-spacing: -1px;
+        color: #0f172a;
+    }
+
+    .footer-logo span { color: var(--primary); }
+
+    .footer-links { display: flex; gap: 30px; }
+    .footer-links a {
+        text-decoration: none;
+        color: #64748b;
+        font-size: 0.85rem;
+        font-weight: 600;
+        transition: 0.3s;
+    }
+    .footer-links a:hover { color: var(--primary); }
+
+    .cta-final {
+        background: #f8fafc;
+        border-radius: 40px;
+        padding: 60px;
+        text-align: center;
+        margin-bottom: 80px;
+        border: 1px solid #f1f5f9;
+    }
+
+    .cta-final h2 { font-size: 2.5rem; font-weight: 900; margin-bottom: 20px; }
+
+    .copyright {
+        display: flex;
+        justify-content: space-between;
+        color: #94a3b8;
+        font-size: 0.75rem;
+        border-top: 1px solid #f1f5f9;
+        padding-top: 40px;
+    }
+     .engine-section { 
+        padding: 120px 8%; 
+        background: #fafafa; 
+        position: relative;
+        overflow: hidden;
+    }
+
+    .engine-container {
+        display: grid;
+        grid-template-columns: 0.9fr 1.1fr;
+        gap: 60px;
+        align-items: center;
+        background: white;
+        padding: 60px;
+        border-radius: 50px;
+        box-shadow: 0 40px 100px rgba(0,0,0,0.03);
+        border: 1px solid #f1f5f9;
+    }
+
+    /* Left Side - Decision Box */
+    .decision-box {
+        background: #ffffff;
+        padding: 40px;
+        border-radius: 30px;
+        border-left: 6px solid var(--primary);
+        box-shadow: 0 15px 35px rgba(0,0,0,0.02);
+        transition: 0.4s;
+    }
+
+    .status-ping {
+        display: inline-block;
+        width: 10px; height: 10px;
+        background: var(--primary);
+        border-radius: 50%;
+        margin-right: 10px;
+        box-shadow: 0 0 10px var(--primary);
+        animation: ping-pulse 1.5s infinite;
+    }
+
+    @keyframes ping-pulse {
+        0% { transform: scale(1); opacity: 1; }
+        100% { transform: scale(2.5); opacity: 0; }
+    }
+
+    /* Right Side - The Terminal */
+    .visual-content { position: relative; }
+
+    .adl-terminal {
+        background: #0f172a; /* Dark Slate for Contrast */
+        border-radius: 24px;
+        padding: 30px;
+        font-family: 'Fira Code', monospace;
+        color: #94a3b8;
+        font-size: 0.9rem;
+        box-shadow: 0 30px 60px rgba(15, 23, 42, 0.2);
+        height: 350px;
+        overflow: hidden;
+        position: relative;
+        border: 1px solid #1e293b;
+    }
+
+    /* Top bar buttons */
+    .terminal-header {
+        position: absolute; top: 0; left: 0; width: 100%;
+        padding: 12px 20px; background: #1e293b;
+        display: flex; gap: 8px; align-items: center;
+    }
+    .dot { width: 10px; height: 10px; border-radius: 50%; }
+    .red { background: #ff5f56; } .yellow { background: #ffbd2e; } .green { background: #27c93f; }
+
+    #adl-content {
+        margin-top: 25px;
+        line-height: 1.6;
+        color: #38bdf8; /* Futuristic Cyan */
+    }
+
+    .cursor {
+        display: inline-block;
+        width: 8px; height: 18px;
+        background: #38bdf8;
+        margin-left: 5px;
+        animation: blink 1s infinite;
+    }
+
+    @keyframes blink { 50% { opacity: 0; } }
+
+    /* The "AI Brain" Glow */
+    .brain-glow {
+        position: absolute; top: -50%; right: -50%;
+        width: 100%; height: 100%;
+        background: radial-gradient(circle, rgba(5, 150, 105, 0.05) 0%, transparent 70%);
+        pointer-events: none;
+    }
+
+        .workflow-section { 
+        padding: 120px 8%; 
+        background: #ffffff; 
+        position: relative;
+        overflow: hidden;
+    }
+
+    /* Background Abstract Glows */
+    .workflow-section::before {
+        content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+        background: radial-gradient(circle at 10% 20%, rgba(5, 150, 105, 0.03) 0%, transparent 50%);
+        pointer-events: none;
+    }
+
+    .workflow-title { 
+        text-align: center; font-size: 3.5rem; font-weight: 900; 
+        margin-bottom: 120px; letter-spacing: -3px; color: #0f172a;
+    }
+
+    .timeline-container {
+        display: flex; justify-content: space-between; position: relative; padding-top: 40px;
+    }
+
+    /* EL KHAT (The Energy Track) */
+    .pipeline-track {
+        position: absolute; top: 80px; left: 0; width: 100%; height: 4px;
+        background: #f1f5f9; z-index: 1; border-radius: 20px;
+    }
+
+    /* THE PULSE (The Energy Ball) */
+    .pulse-dot {
+        position: absolute; width: 20px; height: 20px;
+        background: var(--primary); border-radius: 50%;
+        top: -8px; left: 0;
+        box-shadow: 0 0 20px var(--primary), 0 0 40px var(--primary);
+        animation: pipeline-flow 5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+        z-index: 5;
+    }
+
+    @keyframes pipeline-flow {
+        0% { left: 0%; opacity: 0; transform: scale(0.5); }
+        10% { opacity: 1; transform: scale(1); }
+        90% { opacity: 1; transform: scale(1); }
+        100% { left: 100%; opacity: 0; transform: scale(0.5); }
+    }
+
+    .step-card {
+        position: relative; z-index: 2; width: 23%; transition: all 0.5s ease;
+        padding: 20px; border-radius: 30px; border: 1px solid transparent;
+    }
+
+    /* Glass Effect on Hover */
+    .step-card:hover {
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(10px);
+        border-color: #f1f5f9;
+        box-shadow: 0 30px 60px rgba(0,0,0,0.05);
+        transform: translateY(-15px);
+    }
+
+    .step-icon {
+        width: 85px; height: 85px; background: white; 
+        border: 2px solid #f1f5f9; border-radius: 24px; /* Squircle icon */
+        display: flex; align-items: center; justify-content: center;
+        margin: 0 auto 30px; font-size: 1.6rem; transition: 0.5s;
+        color: #94a3b8; position: relative; z-index: 10;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.02);
+    }
+
+    .step-card:hover .step-icon {
+        border-color: var(--primary); color: white;
+        background: var(--primary);
+        transform: rotate(10deg);
+        box-shadow: 0 15px 30px rgba(5, 150, 105, 0.3);
+    }
+
+    .phase-tag {
+        font-size: 0.65rem; font-weight: 800; text-transform: uppercase;
+        padding: 5px 15px; border-radius: 50px; margin-bottom: 20px;
+        display: inline-block; letter-spacing: 1px;
+    }
+
+    .p1 { background: #fee2e2; color: #ef4444; }
+    .p2 { background: #fef3c7; color: #f59e0b; }
+    .p3 { background: #ede9fe; color: #8b5cf6; }
+    .p4 { background: #dcfce7; color: #22c55e; }
+
+    .step-content { text-align: left; }
+    .step-content h4 { font-size: 1.25rem; margin-bottom: 15px; font-weight: 800; color: #0f172a; }
+    
+    .phase-details { list-style: none; padding: 0; margin: 0 0 20px 0; }
+    .phase-details li {
+        font-size: 0.85rem; color: #64748b; margin-bottom: 10px;
+        display: flex; align-items: flex-start; line-height: 1.5;
+    }
+
+    /* Custom Check Icons */
+    .phase-details li::before {
+        content: '\f058'; font-family: "Font Awesome 5 Free"; font-weight: 900;
+        margin-right: 10px; color: var(--primary); font-size: 0.9rem;
+    }
+
+    .tech-badges-container { display: flex; flex-wrap: wrap; gap: 6px; }
+
+    .tech-badge {
+        font-family: 'Fira Code', monospace; font-size: 0.6rem;
+        background: #f1f5f9; padding: 4px 10px; border-radius: 8px;
+        color: #475569; font-weight: 700; border: 1px solid transparent;
+        transition: 0.3s;
+    }
+
+    .step-card:hover .tech-badge {
+        background: #ffffff; border-color: var(--primary); color: var(--primary);
+    }
+
+     .live-eval-section {
+        padding: 100px 8%;
+        background: #ffffff;
+        font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    .eval-container {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 40px;
+        margin-top: 60px;
+    }
+
+    .eval-module {
+        background: #f8fafc;
+        border-radius: 24px;
+        padding: 35px;
+        border: 1px solid #e2e8f0;
+        text-align: left;
+        position: relative;
+    }
+
+    .module-label {
+        display: inline-block;
+        padding: 6px 12px;
+        background: white;
+        border-radius: 8px;
+        font-size: 0.7rem;
+        font-weight: 800;
+        color: var(--primary);
+        border: 1px solid #e2e8f0;
+        margin-bottom: 20px;
+    }
+
+    .eval-title { font-size: 1.5rem; font-weight: 800; color: #0f172a; margin-bottom: 10px; }
+    .eval-subtitle { font-size: 0.9rem; color: #64748b; margin-bottom: 30px; }
+
+    /* --- DYNAMIC DATA VISUALS --- */
+    .data-display {
+        background: #0f172a;
+        border-radius: 16px;
+        padding: 20px;
+        font-family: 'Fira Code', monospace;
+        color: #38bdf8;
+        font-size: 0.85rem;
+        min-height: 140px;
+        box-shadow: inset 0 2px 10px rgba(0,0,0,0.2);
+    }
+
+    /* 1. Functional: Loading & Extraction */
+    .loader-bar {
+        width: 100%; height: 4px; background: #1e293b; border-radius: 10px; margin-top: 15px; position: relative; overflow: hidden;
+    }
+    .loader-progress {
+        position: absolute; width: 60%; height: 100%; background: var(--primary); animation: progress-move 2s infinite linear;
+    }
+    @keyframes progress-move { from { left: -100%; } to { left: 100%; } }
+
+    /* 2. Binary: 0/1 Flip */
+    .binary-row { display: flex; justify-content: space-between; margin-bottom: 8px; padding-bottom: 4px; border-bottom: 1px solid #1e293b; }
+    .status-bit { font-weight: 800; animation: bit-flip 1s infinite alternate; }
+    @keyframes bit-flip { from { color: #ef4444; } to { color: #22c55e; } }
+
+    /* 3. Ordinal: Med/High Toggles */
+    .rank-tag {
+        padding: 2px 8px; border-radius: 4px; font-size: 0.7rem; margin-left: 10px;
+        background: #334155; color: white;
+    }
+    .high { color: #22c55e; border: 1px solid #22c55e; }
+    .med { color: #f59e0b; border: 1px solid #f59e0b; }
+
+    /* 4. Weighted: Floating Percentages */
+    .weight-val { color: #a78bfa; font-weight: 700; }
+
+    .bridge-section { padding: 100px 8%; background: #ffffff; position: relative; }
+    
+    .bridge-grid { 
+        display: grid; 
+        grid-template-columns: 1fr 1fr; 
+        gap: 60px; 
+        align-items: center;
+        border: 1px solid #f1f5f9;
+        padding: 60px;
+        border-radius: 40px;
+        background: linear-gradient(to bottom right, #ffffff, #f8fafc);
+    }
+
+    /* Comparison Box */
+    .bias-box {
+        background: #fff1f2; /* Light red for human bias */
+        padding: 25px;
+        border-radius: 20px;
+        margin-bottom: 20px;
+        border-left: 5px solid #ef4444;
+    }
+
+    .objective-box {
+        background: #f0fdf4; /* Light green for AI objectivity */
+        padding: 25px;
+        border-radius: 20px;
+        border-left: 5px solid #22c55e;
+    }
+
+    .bridge-icon {
+        font-size: 2.5rem;
+        color: var(--primary);
+        margin-bottom: 20px;
+        display: block;
+    }
+
+    .versus-badge {
+        background: #0f172a;
+        color: white;
+        padding: 5px 15px;
+        border-radius: 10px;
+        font-size: 0.7rem;
+        font-weight: 900;
+        display: inline-block;
+        margin: 10px 0;
+    }
+    .bridge-visual-container {
+        position: relative;
+        padding: 40px;
+        background: radial-gradient(circle at center, #f8fafc 0%, #ffffff 100%);
+        border-radius: 40px;
+        overflow: hidden;
+    }
+
+    /* Floating Glow behind the logic engine */
+    .logic-glow {
+        position: absolute;
+        top: 50%; left: 50%;
+        transform: translate(-50%, -50%);
+        width: 200px; height: 200px;
+        background: var(--primary);
+        filter: blur(80px);
+        opacity: 0.1;
+        z-index: 1;
+    }
+
+    .node-stack {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0;
+        position: relative;
+        z-index: 2;
+    }
+
+    .glass-node {
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(226, 232, 240, 0.5);
+        padding: 20px 35px;
+        border-radius: 20px;
+        box-shadow: 0 15px 35px rgba(0,0,0,0.03);
+        width: 280px;
+        transition: 0.4s ease;
+    }
+
+    .glass-node:hover {
+        transform: translateY(-5px);
+        border-color: var(--primary);
+        background: white;
+    }
+
+    .node-label {
+        font-size: 0.65rem;
+        font-weight: 800;
+        letter-spacing: 1.5px;
+        color: #94a3b8;
+        text-transform: uppercase;
+        margin-bottom: 5px;
+        display: block;
+    }
+
+    .node-value {
+        font-size: 1rem;
+        font-weight: 800;
+        color: #0f172a;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    /* The Animated Connector */
+    .connector-path {
+        height: 60px;
+        width: 2px;
+        background: #f1f5f9;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .connector-path::after {
+        content: '';
+        position: absolute;
+        top: -100%;
+        left: 0;
+        width: 100%;
+        height: 50%;
+        background: linear-gradient(to bottom, transparent, var(--primary), transparent);
+        animation: flow-down 2s infinite linear;
+    }
+
+    @keyframes flow-down {
+        0% { top: -100%; }
+        100% { top: 200%; }
+    }
+
+    /* The Center Orb (The Engine) */
+    .mcdm-engine-orb {
+        width: 90px;
+        height: 90px;
+        background: #0f172a;
+        border-radius: 24px; /* Squircle */
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        box-shadow: 0 20px 40px rgba(15, 23, 42, 0.2);
+        position: relative;
+        transform: rotate(-5deg);
+        transition: 0.5s;
+    }
+
+    .mcdm-engine-orb:hover {
+        transform: rotate(0deg) scale(1.1);
+        background: var(--primary);
+    }
+
+    .mcdm-engine-orb i {
+        font-size: 1.8rem;
+        margin-bottom: 5px;
+    }
+
+    .mcdm-engine-orb span {
+        font-size: 0.55rem;
+        font-weight: 900;
+        letter-spacing: 1px;
+    }
+
+      .blueprint-light {
+        padding: 120px 8%;
+        background: #ffffff;
+        color: #0f172a;
+    }
+
+    .canvas-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 60px;
+        align-items: center;
+    }
+
+    /* --- The Clean Code Editor --- */
+    .editor-mockup {
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 24px;
+        overflow: hidden;
+        box-shadow: 0 30px 60px rgba(0,0,0,0.05);
+    }
+
+    .editor-head {
+        background: #f1f5f9;
+        padding: 15px 25px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid #e2e8f0;
+    }
+
+    .editor-tabs { display: flex; gap: 10px; }
+    .tab { font-size: 0.7rem; font-weight: 700; color: #64748b; background: white; padding: 5px 12px; border-radius: 6px; border: 1px solid #e2e8f0; }
+    .tab.active { border-color: var(--primary); color: var(--primary); }
+
+    .editor-body {
+        padding: 30px;
+        font-family: 'Fira Code', monospace;
+        font-size: 0.9rem;
+        color: #334155;
+        line-height: 1.7;
+    }
+
+    /* --- The Result Files --- */
+    .output-card {
+        padding: 25px;
+        background: white;
+        border: 1px solid #f1f5f9;
+        border-radius: 20px;
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        transition: 0.4s;
+    }
+
+    .output-card:hover {
+        border-color: var(--primary);
+        box-shadow: 0 10px 30px rgba(16, 185, 129, 0.1);
+        transform: translateX(10px);
+    }
+
+    .icon-box {
+        width: 50px; height: 50px;
+        background: #f0fdf4;
+        color: var(--primary);
+        border-radius: 12px;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 1.2rem;
+    }
+
+    .blueprint-tag-light {
+        font-weight: 800; font-size: 0.75rem; color: var(--primary);
+        text-transform: uppercase; letter-spacing: 2px;
+        display: block; margin-bottom: 15px;
+    }
+    #code-window {
+    transition: opacity 0.3s ease-in-out;
+}
+
+.tab {
+    cursor: pointer;
+    user-select: none;
+    transition: 0.3s;
+}
+
+.tab:hover:not(.active) {
+    background: #e2e8f0;
+}
+.file-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+    color: #334155;
+    cursor: pointer;
+}
+.file-item:hover { color: var(--primary); }
+
+.editor-mockup {
+    min-width: 500px;
+    background: white;
+}
+/* Add this to your style block */
+#adl-view span[style*="color: #059669"] {
+    cursor: pointer;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    opacity: 0.8;
+}
+
+#adl-view span[style*="color: #059669"]:hover {
+    opacity: 1;
+    background: rgba(5, 150, 105, 0.05);
+}
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="logo" style="font-weight: 800; font-size: 1.5rem;"><i class="fas fa-microchip"></i>Archi<span>Mind</span></div>
+        <div style="display: flex; gap: 35px; align-items: center;">
+            <a href="#" style="color: var(--text-dim); text-decoration: none; font-weight: 600;">Explore</a>
+            <a href="/Login" style="color: var(--text-dim); text-decoration: none; font-weight: 600;">Login</a>
+            <a href="/Signup" class="btn-main" style="padding: 10px 25px; font-size: 0.85rem;">Sign Up</a>
+        </div>
+    </nav>
+
+    <header>
+        <div class="code-bg" id="code-stream"></div>
+        
+        <div class="hero-text">
+            <div style="background: var(--primary-light); color: var(--primary); padding: 6px 15px; border-radius: 50px; display: inline-block; font-weight: 800; font-size: 0.7rem; margin-bottom: 20px;">AI ARCHITECTURE ENGINE</div>
+            <h1>Smarter Architecture.Less Rework.<span>Sustainable Software</span></h1>
+            <p class="hero-description">“An intelligent assistant that bridges requirements and architecture by recommending sustainable architectural styles, generating formal ADL blueprints, and structuring clean, maintainable MVC foundations for long-term software longevity.”</p>
+            <a href="/Dashboard" class="btn-main">Generate Blueprint</a>
+        </div>
+
+        <div class="diagram-container" id="diagram">
+            <div class="scanner"></div>
+            <div class="layer layer-1">
+                <i class="fas fa-network-wired"></i>
+                <span>ADL Blueprint</span>
+            </div>
+            <div class="layer layer-2">
+                <i class="fas fa-cubes"></i>
+                <span>Architecture Style Selector</span>
+            </div>
+            <div class="layer layer-3">
+                <i class="fas fa-database"></i>
+                <span>Code Skeleton generation</span>
+            </div>
+        </div>
+    </header>
+
+
+<section class="engine-section">
+    <div class="brain-glow"></div>
+    
+    <div class="engine-container">
+        <div class="text-content">
+            <h2 style="font-size: 3.2rem; font-weight: 900; margin-bottom: 25px; letter-spacing: -3px; line-height: 1;">
+                Style Selection <br><span style="color: var(--primary);">Real-time Engine</span>
+            </h2>
+            
+            <p style="color: #64748b; font-size: 1.1rem; margin-bottom: 40px;">
+                MCDM framework processes 150+ architectural combinations to select the optimal blueprint for your NFRs.
+            </p>
+
+            <div class="decision-box">
+                <div style="display: flex; align-items: center; margin-bottom: 15px;">
+                    <span class="status-ping"></span>
+                    <span style="color: var(--primary); font-weight: 800; font-size: 0.75rem; letter-spacing: 1.5px;">SYSTEM COMPUTING...</span>
+                </div>
+                <h3 id="chosen-style" style="font-size: 2.2rem; margin-bottom: 15px; font-weight: 800; color: #0f172a;">Microservices</h3>
+                <p id="style-desc" style="color: #64748b; line-height: 1.6;">
+                    Chosen for high scalability and independent module deployment based on your extracted Quality Attributes.
+                </p>
+            </div>
+        </div>
+
+        <div class="visual-content">
+            <div class="adl-terminal">
+                <div class="terminal-header">
+                    <div class="dot red"></div>
+                    <div class="dot yellow"></div>
+                    <div class="dot green"></div>
+                    <span style="font-size: 0.7rem; color: #64748b; margin-left: 10px; font-weight: 700;">blueprint.adl — ArchiMind Console</span>
+                </div>
+                <div id="adl-content">
+                    // Generating Formal ADL... <br>
+                    <span style="color: #a78bfa;">Style</span>: Microservices; <br>
+                    <span style="color: #a78bfa;">Components</span>: { Auth, Order, Inventory }; <br>
+                    <span style="color: #a78bfa;">Connectors</span>: { REST, EventBus }; <br>
+                    <span style="color: #22c55e;">// Consistency Check: PASS</span> <br>
+                    <span style="color: #f59e0b;">// Traceability: Verified (94.2%)</span>
+                </div><span class="cursor"></span>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+<style>
+    /* --- THE ULTIMATE NEURAL PIPELINE --- */
+
+</style>
+
+<section class="workflow-section">
+    <h2 class="workflow-title">The ArchiMind Lifecycle</h2>
+    
+    <div class="timeline-container">
+        <div class="pipeline-track">
+            <div class="pulse-dot"></div>
+        </div>
+
+        <div class="step-card">
+            <div class="step-icon"><i class="fas fa-file-upload"></i></div>
+            <center><div class="phase-tag p1">Phase 1: Capture</div></center>
+            <div class="step-content">
+                <h4>Requirement Analysis</h4>
+                <ul class="phase-details">
+                    <li>Upload of SRS documentation</li>
+                    <li>Functional & NFR extract</li>
+                    <li>Verification of SRS</li>
+                </ul>
+                <div class="tech-badges-container">
+                    <span class="tech-badge">BERT CLASSIFIER</span>
+                    <span class="tech-badge">NLP</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="step-card">
+            <div class="step-icon"><i class="fas fa-brain"></i></div>
+            <center><div class="phase-tag p2">Phase 2: Logic</div></center>
+            <div class="step-content">
+                <h4>AI Recommendation</h4>
+                <ul class="phase-details">
+                   
+                    <li>Binary & Ordinal Evaluation</li>
+                    <li>Weighted Style Scoring</li>
+                     <li>Multi-Criteria Decision Making</li>
+                </ul>
+                <div class="tech-badges-container">
+                    <span class="tech-badge">MCDM ENGINE</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="step-card">
+            <div class="step-icon"><i class="fas fa-shield-alt"></i></div>
+            <center><div class="phase-tag p3">Phase 3: Formal</div></center>
+            <div class="step-content">
+                <h4>ADL Verification</h4>
+                <ul class="phase-details">
+                    <li>ADL Blueprint Generation</li>
+                    <li>Consistency Checking</li>
+                    <li>Formal Asset Validation</li>
+                </ul>
+                <div class="tech-badges-container">
+                    <span class="tech-badge">FORMAL ASSET</span>
+                    <span class="tech-badge">VERIFIED</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="step-card">
+            <div class="step-icon"><i class="fas fa-seedling"></i></div>
+            <center><div class="phase-tag p4">Phase 4: Output</div></center>
+            <div class="step-content">
+                <h4>Sustainable Support</h4>
+                <ul class="phase-details">
+                    <li>Module Decomposition</li>
+                    <li>Pattern Suggestion (MVC)</li>
+                    <li>Code Skeleton Generation</li>
+                </ul>
+                <div class="tech-badges-container">
+                    <span class="tech-badge">MVC SKELETON</span>
+                    <span class="tech-badge">CLEAN CODE</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<style>
+   
+</style>
+
+<section class="live-eval-section">
+    <center>
+        <h2 style="font-size: 3rem; font-weight: 900; letter-spacing: -2px;">Systematic Selection Logic</h2>
+        <p style="color: #64748b; margin-top: 10px;">The exact mathematical process our AI uses to coose your architecture style.</p>
+    </center>
+
+    <div class="eval-container">
+        <div class="eval-module">
+            <span class="module-label">METHOD 01</span>
+            <h3 class="eval-title">Functional Analysis</h3>
+            <p class="eval-subtitle">Extracting system behaviors from SRS documentation.</p>
+            <div class="data-display">
+                <div style="color: #94a3b8;">> Extracting entities...</div>
+                <div style="margin-top: 10px;">[User_Auth] <span style="color: var(--primary);">FOUND</span></div>
+                <div>[Payment_Gateway] <span style="color: var(--primary);">FOUND</span></div>
+                <div class="loader-bar"><div class="loader-progress"></div></div>
+            </div>
+        </div>
+
+        <div class="eval-module">
+            <span class="module-label">METHOD 02</span>
+            <h3 class="eval-title">Binary Constraint Filter</h3>
+            <p class="eval-subtitle">Checking non-negotiable NFR compliance (Yes/No).</p>
+            <div class="data-display">
+                <div class="binary-row"><span>Scalability:</span> <span class="status-bit">1</span></div>
+                <div class="binary-row"><span>Performance:</span> <span class="status-bit" style="animation-delay: 0.5s;">0</span></div>
+                <div class="binary-row"><span>Security:</span> <span class="status-bit">1</span></div>
+                <div style="color: #64748b; font-size: 0.7rem; margin-top: 5px;">// 1 = Style Compatible, 0 = Rejected</div>
+            </div>
+        </div>
+
+        <div class="eval-module">
+            <span class="module-label">METHOD 03</span>
+            <h3 class="eval-title">Ordinal Ranking</h3>
+            <p class="eval-subtitle">Categorizing NFR priority (High, Medium, Low).</p>
+            <div class="data-display">
+                <div style="margin-bottom: 10px;">
+                    <div>Availability: <span class="rank-tag high">HIGH</span></div>
+                    <div style="margin-top: 8px;">Cost Efficiency: <span class="rank-tag med">MEDIUM</span></div>
+                    <div style="margin-top: 8px;">Security: <span class="rank-tag high">HIGH</span></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="eval-module">
+            <span class="module-label">METHOD 04</span>
+            <h3 class="eval-title">Weighted Scoring</h3>
+            <p class="eval-subtitle">Calculating final style score based on importance.</p>
+            <div class="data-display">
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <div style="height: 10px; width: 70%; background: #1e293b; border-radius: 5px;">
+                        <div style="height: 100%; width: 85%; background: #a78bfa; border-radius: 5px;"></div>
+                    </div>
+                    <span class="weight-val">8.5/10</span>
+                </div>
+                <div style="margin-top: 15px; font-size: 0.75rem;">
+                    Style: Microservices -> <span style="color: #22c55e;">Match: 94.2%</span><br>
+                    Style: Monolithic -> <span style="color: #ef4444;">Match: 41.0%</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+<style>
+    
+</style>
+
+<section class="bridge-section">
+    <div class="bridge-grid">
+        <div>
+            <i class="fas fa-random bridge-icon"></i>
+            <h2 style="font-size: 2.5rem; font-weight: 900; letter-spacing: -1.5px; margin-bottom: 20px;">
+                Bridging the <span style="color: var(--primary);">Architectural Gap</span>
+            </h2>
+            <p style="color: #64748b; margin-bottom: 30px; line-height: 1.6;">
+                Manual architecture often suffers from **Human Bias** and "Gut Feeling," leading to a disconnect between what the business needs and what the code actually does.
+            </p>
+
+            <div class="bias-box">
+                <strong style="color: #991b1b; display: block; margin-bottom: 5px;">Traditional Architect</strong>
+                <p style="font-size: 0.9rem; color: #b91c1c;">Subjective choices, technology bias, and manual traceability gaps.</p>
+            </div>
+
+            <center><div class="versus-badge">VS</div></center>
+
+            <div class="objective-box">
+                <strong style="color: #166534; display: block; margin-bottom: 5px;">ArchiMind AI</strong>
+                <p style="font-size: 0.9rem; color: #15803d;">Mathematical MCDM evaluation, BERT-based extraction, and 100% objective mapping.</p>
+            </div>
+        </div>
+
+        <div class="bridge-visual-container">
+            <div class="logic-glow"></div>
+            
+            <div class="node-stack">
+                <div class="glass-node">
+                    <span class="node-label">Input Source</span>
+                    <div class="node-value">
+                        <i class="fas fa-file-code" style="color: #64748b;"></i>
+                        SRS Requirements
+                    </div>
+                </div>
+
+                <div class="connector-path"></div>
+
+                <div class="mcdm-engine-orb">
+                    <i class="fas fa-shield-virus"></i>
+                    <span>MCDM</span>
+                </div>
+
+                <div class="connector-path"></div>
+
+                <div class="glass-node" style="border-color: var(--primary-light);">
+                    <span class="node-label">Output Target</span>
+                    <div class="node-value">
+                        <i class="fas fa-cubes" style="color: var(--primary);"></i>
+                        Verified Code Skeleton<br>
+                        ADL Blueprint
+                        Architecture report
+
+                    </div>
+                </div>
+
+                <p style="margin-top: 30px; font-size: 0.75rem; color: #94a3b8; font-weight: 600; text-align: center;">
+                    <i class="fas fa-lock" style="margin-right: 5px;"></i>
+                    Zero-Bias Mathematical Mapping Enabled
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+<style>
+  
+</style>
+
+<section class="blueprint-light">
+    <div class="canvas-grid">
+        <div class="canvas-text">
+            <span class="blueprint-tag-light">Final Deliverables</span>
+            <h2 style="font-size: 3.5rem; font-weight: 900; letter-spacing: -2px; line-height: 1;">
+                From Specs to <br> <span style="color: var(--primary);">Clean Code.</span>
+            </h2>
+            <p style="color: #64748b; margin: 25px 0 40px; font-size: 1.1rem; line-height: 1.6;">
+                ArchiMind doesn't just suggest a style; it provides the formal ADL documentation and a production-ready MVC skeleton, ensuring your architecture is documented and ready for development.
+            </p>
+
+            <div class="output-card">
+                <div class="icon-box"><i class="fas fa-file-signature"></i></div>
+                <div>
+                    <h4 style="font-weight: 800;">ADL Blueprint/Architetcure Report</h4>
+                    <p style="font-size: 0.8rem; color: #94a3b8;">Formal architecture description and component mapping.</p>
+                </div>
+            </div>
+
+            <div class="output-card">
+                <div class="icon-box"><i class="fas fa-folder-tree"></i></div>
+                <div>
+                    <h4 style="font-weight: 800;">MVC Skeleton</h4>
+                    <p style="font-size: 0.8rem; color: #94a3b8;">Auto-generated folder structure with clean code foundations.</p>
+                </div>
+            </div>
+        </div>
+
+       <div class="editor-mockup">
+    <div class="editor-head">
+        <div class="editor-tabs">
+            <div class="tab active" id="tab-adl" onclick="switchTab('adl')">blueprint.adl</div>
+            <div class="tab" id="tab-js" onclick="switchTab('js')">Project Structure</div>
+        </div>
+        <div style="font-size: 0.75rem; color: #94a3b8;"><i class="fas fa-check-all"></i> Ready to Export</div>
+    </div>
+    
+    <div class="editor-body" id="code-window" style="display: flex; padding: 0; min-height: 300px;">
+    </div>
+</section>
+<style>
+    
+</style>
+
+<footer class="clean-footer">
+    <div class="cta-final">
+        <h2 style="letter-spacing: -2px;">Ready to build <span style="color: var(--primary);">for longevity?</span></h2>
+        <p style="color: #64748b; margin-bottom: 30px; font-size: 1.1rem;">Join the next generation of architects using AI-driven sustainability logic.</p>
+        <button class="btn-main">Get Started Now</button>
+    </div>
+
+    <div class="footer-content">
+        <div class="footer-logo">Archi<span>Mind</span></div>
+        <div class="footer-links">
+            <a href="#">Methodology</a>
+            <a href="#">ADL Specs</a>
+            <a href="#">MCDM Engine</a>
+            <a href="#">Documentation</a>
+        </div>
+    </div>
+
+    <div class="copyright">
+        <div>© 2024 ArchiMind AI. All rights reserved.</div>
+        <div style="font-weight: 800; color: #64748b;">
+            Built with Precision by <span style="color: var(--primary);">Architects for Architects</span>
+        </div>
+    </div>
+</footer>
+    <script>
+
+const structureHTML = `
+    <div style="width: 200px; background: #f1f5f9; border-right: 1px solid #e2e8f0; padding: 20px; font-size: 0.8rem;">
+        <div style="color: #64748b; font-weight: 800; margin-bottom: 15px; font-size: 0.65rem;">EXPLORER</div>
+        <div class="file-item"><i class="fas fa-folder-open" style="color: #3b82f6;"></i> src</div>
+        <div class="file-item" style="margin-left: 15px;"><i class="fas fa-folder" style="color: #3b82f6;"></i> controllers</div>
+        <div class="file-item" style="margin-left: 15px;"><i class="fas fa-folder" style="color: #3b82f6;"></i> models</div>
+        <div class="file-item" style="margin-left: 15px;"><i class="fab fa-js" style="color: #f59e0b;"></i> app.js</div>
+        <div class="file-item"><i class="fas fa-file-code" style="color: #94a3b8;"></i> package.json</div>
+    </div>
+    <div style="flex: 1; padding: 30px;">
+        <div style="color: #64748b; font-size: 0.75rem; margin-bottom: 10px;">// Generated MVC Bootstrapper</div>
+        <span style="color: #be185d;">const</span> app = require(<span style="color: #059669;">'express'</span>)();<br>
+        <span style="color: #be185d;">const</span> routes = require(<span style="color: #059669;">'./routes'</span>);<br><br>
+        app.use(<span style="color: #059669;">'/v1'</span>, routes);<br>
+        app.listen(<span style="color: #0369a1;">8080</span>);
+    </div>
+`;
+const detailedADL = `
+    <div id="adl-view" style="padding: 30px; width: 100%; font-family: 'Fira Code', monospace; line-height: 1.6;">
+        <div style="margin-bottom: 15px;">
+            <span style="color: #be185d;">Architecture</span> <span style="color: #0369a1;">Sustainable_App_v1</span> {
+        </div>
+
+        <div style="padding-left: 20px;">
+            <span style="color: #be185d;">Style:</span> <span style="color: #059669;">Microservices</span>; <span style="color: #94a3b8; font-size: 0.8rem;">// Pattern Selected via MCDM</span>
+        </div>
+
+        <div style="padding-left: 20px; margin-top: 15px; color: #64748b;">// Structural Components</div>
+        <div style="padding-left: 20px;">
+            <span style="color: #be185d;">Component</span> <span style="color: #0369a1;">Order_Service</span> { type: "Compute", instances: 3 };
+        </div>
+        <div style="padding-left: 20px;">
+            <span style="color: #be185d;">Component</span> <span style="color: #0369a1;">User_DB</span> { type: "Storage", engine: "NoSQL" };
+        </div>
+
+        <div style="padding-left: 20px; margin-top: 15px; color: #64748b;">// Connector Definitions</div>
+        <div style="padding-left: 20px;">
+            <span style="color: #be185d;">Connector</span> <span style="color: #0369a1;">Secure_gRPC</span> { protocol: "HTTP/2", auth: "mTLS" };
+        </div>
+
+        <div style="padding-left: 20px; margin-top: 15px; color: #64748b;">// Logical Relationships</div>
+        <div style="padding-left: 20px;">
+            <span style="color: #0369a1;">Order_Service</span> <span style="color: #be185d;">binds_to</span> <span style="color: #0369a1;">Secure_gRPC</span>;
+        </div>
+
+        <div style="padding-left: 20px; margin-top: 15px; color: #64748b;">// 4+1 View Model Mapping</div>
+        <div style="padding-left: 20px; color: #059669;">
+            [Logical_View] -> diagrams/logical_arch.svg <br>
+            [Development_View] -> models/component_diagram.puml <br>
+            [Process_View] -> sequence/auth_flow.svg
+        </div>
+
+        <div style="margin-top: 15px;">}</div>
+    </div>
+`;
+function switchTab(type) {
+    const window = document.getElementById('code-window');
+    const adlTab = document.getElementById('tab-adl');
+    const jsTab = document.getElementById('tab-js');
+
+    if(type === 'js') {
+        jsTab.classList.add('active');
+        adlTab.classList.remove('active');
+        window.innerHTML = structureHTML;
+    } else {
+        adlTab.classList.add('active');
+        jsTab.classList.remove('active');
+        window.innerHTML = detailedADL;
+    }
+}
+switchTab('adl');
+        // 1. Mouse Parallax for the 3D Diagram
+
+        const diagram = document.getElementById('diagram');
+
+        document.addEventListener('mousemove', (e) => {
+
+            let x = (window.innerWidth / 2 - e.pageX) / 30;
+
+            let y = (window.innerHeight / 2 - e.pageY) / 30;
+
+            diagram.style.transform = `rotateY(${x}deg) rotateX(${y}deg)`;
+
+        });
+
+
+
+        // 2. Typing effect for terminal
+
+        const lines = [
+
+            "Recommend best design patterns",
+
+            "Module Decomposition",
+
+
+            "Code Skeleton Generation",
+
+           "//Architecture report is ready for export..."
+
+        ];
+
+        let lineIdx = 0;
+
+        function type() {
+
+            if (lineIdx < lines.length) {
+
+                const div = document.createElement('div');
+
+                div.style.marginBottom = "8px";
+
+                div.textContent = "> " + lines[lineIdx];
+
+                document.getElementById('adl-content').appendChild(div);
+
+                lineIdx++;
+
+                setTimeout(type, 1000);
+
+            }
+
+        }
+
+
+
+        // 3. Style Rotation
+
+        const styles = [
+
+            { name: "Clean Monolith", desc: "Best for rapid startups." },
+
+            { name: "Hexagonal Core", desc: "Decoupled logic for longevity." },
+
+            { name: "Event-Driven", desc: "For high-scale async systems." }
+
+        ];
+
+        let styleIdx = 0;
+
+        function rotateStyles() {
+
+            const nameEl = document.getElementById('chosen-style');
+
+            nameEl.style.opacity = 0;
+
+            setTimeout(() => {
+
+                nameEl.innerText = styles[styleIdx].name;
+
+                document.getElementById('style-desc').innerText = styles[styleIdx].desc;
+
+                nameEl.style.opacity = 1;
+
+                styleIdx = (styleIdx + 1) % styles.length;
+
+            }, 500);
+
+        }
+
+
+
+        window.onload = () => {
+
+            type();
+
+            setInterval(rotateStyles, 3000);
+
+            const code = `COMPONENT ArchiMind { PORT in; ASSET formal; } `.repeat(80);
+
+            document.getElementById('code-stream').innerText = code;
+
+        };
+
+    </script>
+
+</body>
+</html>

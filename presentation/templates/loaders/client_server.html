@@ -1,0 +1,205 @@
+<style>
+    :root {
+      --accent-main: #10b981;
+      --char-stroke: #2d3436;
+      --bg: #ffffff;
+    }
+
+    body {
+      margin: 0;
+      height: 100vh;
+      background: var(--bg);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      font-family: 'Space Grotesk', sans-serif;
+    }
+
+    /* ===== THE STAGE ===== */
+    .stage {
+      position: relative;
+      width: 700px;
+      height: 250px;
+      border-bottom: 3px solid var(--char-stroke);
+      display: flex;
+      align-items: flex-end;
+      overflow: hidden;
+    }
+
+    /* ===== CHARACTER DESIGN (Based on image_905592.png) ===== */
+    .char-base {
+      position: relative;
+      width: 70px;
+      height: 100px;
+      background: white;
+      border: 3px solid var(--char-stroke);
+      border-radius: 2px 14px 2px 2px;
+      box-shadow: 6px 6px 0 rgba(0,0,0,0.05);
+    }
+
+    /* The 3D Top Edge from the sketch */
+    .char-base::after {
+      content: '';
+      position: absolute;
+      top: -10px;
+      left: 6px;
+      width: 100%;
+      height: 8px;
+      background: #fff;
+      border: 3px solid var(--char-stroke);
+      border-bottom: none;
+      transform: skewX(-45deg);
+      border-radius: 2px 2px 0 0;
+    }
+
+    .scribble-content {
+      padding: 10px;
+      font-size: 20px;
+      line-height: 0.6;
+      color: #7d5fff; /* Using the purple scribble color from image_2fa11f.png */
+      text-align: center;
+    }
+
+    /* Organic Legs */
+    .leg {
+      position: absolute;
+      width: 4px;
+      height: 25px;
+      background: var(--char-stroke);
+      bottom: -28px;
+      border-radius: 0 0 10px 10px;
+    }
+    .leg-l { left: 18px; }
+    .leg-r { right: 18px; }
+
+    /* ===== SERVER STATION ===== */
+    .server-station {
+      position: absolute;
+      right: 80px;
+      bottom: 0;
+      z-index: 10;
+    }
+
+    .desk {
+      width: 120px;
+      height: 60px;
+      border: 3px solid var(--char-stroke);
+      border-bottom: none;
+      background: white;
+      position: relative;
+    }
+
+    .server-body {
+      margin-left: 25px;
+      margin-bottom: -3px;
+    }
+
+    .stamp-arm {
+      position: absolute;
+      width: 40px;
+      height: 5px;
+      background: var(--char-stroke);
+      left: -30px;
+      top: 40px;
+      transform-origin: right center;
+      animation: stampTrigger 3s infinite ease-in-out;
+    }
+    /* The Stamp Head */
+    .stamp-arm::before {
+      content: '';
+      position: absolute;
+      left: -5px;
+      top: -10px;
+      width: 14px;
+      height: 12px;
+      background: var(--char-stroke);
+      border-radius: 2px;
+    }
+
+    @keyframes stampTrigger {
+      0%, 45%, 75%, 100% { transform: rotate(0deg); }
+      55%, 65% { transform: rotate(35deg); }
+    }
+
+    /* ===== CLIENT QUEUE ===== */
+    .client-unit {
+      position: absolute;
+      left: -100px;
+      bottom: 0;
+      animation: queueMove 3s infinite linear;
+    }
+
+    .client1 { animation-delay: 0s; }
+    .client2 { animation-delay: 1.5s; }
+
+    @keyframes queueMove {
+      0% { left: -100px; }
+      35% { left: 380px; } /* Arrives at desk */
+      70% { left: 380px; } /* Waits for stamp */
+      100% { left: 800px; } /* Leaves */
+    }
+
+    /* The Paper REQ */
+    .paper-req {
+      position: absolute;
+      width: 25px;
+      height: 32px;
+      border: 2px solid var(--char-stroke);
+      background: white;
+      top: 30px;
+      right: -20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 8px;
+      font-weight: bold;
+      animation: paperProcess 3s infinite;
+    }
+
+    @keyframes paperProcess {
+      0%, 58% { background: white; border-color: var(--char-stroke); color: black; transform: scale(1); }
+      62%, 100% { background: var(--accent-main); border-color: var(--accent-main); color: white; transform: scale(1.1); }
+    }
+
+    .loader-info {
+      text-align: center;
+      margin-top: 60px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="stage">
+    
+    <div class="server-station">
+      <div class="char-base server-body">
+        <div class="scribble-content">〰️<br>〰️<br>〰️</div>
+        <div class="stamp-arm"></div>
+        <div class="leg leg-l"></div><div class="leg leg-r"></div>
+      </div>
+      <div class="desk"></div>
+    </div>
+
+    <div class="client-unit client1">
+      <div class="char-base">
+        <div class="scribble-content">〰️<br>〰️<br>〰️</div>
+        <div class="paper-req">REQ</div>
+        <div class="leg leg-l"></div><div class="leg leg-r"></div>
+      </div>
+    </div>
+
+    <div class="client-unit client2">
+      <div class="char-base">
+        <div class="scribble-content">〰️<br>〰️<br>〰️</div>
+        <div class="paper-req">REQ</div>
+        <div class="leg leg-l"></div><div class="leg leg-r"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="loader-info">
+    <h2 style="margin-bottom: 5px;">Client-Server Station</h2>
+    <p style="color: #636e72; margin-top: 0;">Server is stamping and authorizing requests...</p>
+  </div>

@@ -1,0 +1,47 @@
+[
+  {
+    "title": "The system must be cost-effective.",
+    "description": "The system must be affordable to many and have a competitive price compared to other systems in the market.",
+    "source": {
+      "page": 8,
+      "start_index": 1
+    },
+    "project_id": 2
+  },
+  {
+    "title": "The system must be flexible.",
+    "description": "The system must work effectively in different places and environments.",
+    "source": {
+      "page": 6,
+      "start_index": 1
+    },
+    "project_id": 2
+  },
+  {
+    "title": "The system must have a user-friendly interface.",
+    "description": "The system must be easy to use and have interactive features.",
+    "source": {
+      "page": 3,
+      "start_index": 1
+    },
+    "project_id": 2
+  },
+  {
+    "title": "The system must be secure.",
+    "description": "The system must store user account information securely.",
+    "source": {
+      "page": 8,
+      "start_index": 3
+    },
+    "project_id": 2
+  },
+  {
+    "title": "The system must be scalable.",
+    "description": "The system must support multiple users and interactions.",
+    "source": {
+      "page": 8,
+      "start_index": 4
+    },
+    "project_id": 2
+  }
+]

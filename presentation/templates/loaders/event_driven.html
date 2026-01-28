@@ -1,0 +1,205 @@
+<style>
+    :root {
+      --bg: #ffffff;
+      --accent: #10b981;
+      --ink: #2d3436;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        radial-gradient(#e5e7eb 1.2px, transparent 1.2px);
+      background-size: 30px 30px;
+      font-family: 'Space Grotesk', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    /* ---------------- CHARACTER ---------------- */
+    .character-container {
+      position: relative;
+      width: 90px;
+      height: 140px;
+      margin: 0 40px;
+      transition: 0.5s ease;
+    }
+
+    .file-body {
+      width: 100%;
+      height: 100px;
+      background: white;
+      border: 3px solid var(--ink);
+      border-radius: 6px 18px 6px 6px;
+      box-shadow: 8px 8px 0 rgba(0,0,0,0.05);
+    }
+
+    .scribbles {
+      margin-top: 18px;
+      text-align: center;
+      font-size: 18px;
+      line-height: 0.8;
+      color: var(--ink);
+      font-family: cursive;
+    }
+
+    .limb {
+      position: absolute;
+      border: 3px solid var(--ink);
+      border-top: none;
+      border-left: none;
+    }
+
+    .arm-l { width: 22px; height: 35px; left: -28px; top: 25px; transform: rotate(40deg); }
+    .arm-r { width: 22px; height: 35px; right: -18px; top: 25px; transform: rotate(-40deg); }
+
+    .leg-l { width: 14px; height: 30px; bottom: 0px; left: 20px; border-left: 3px solid var(--ink); }
+    .leg-r { width: 14px; height: 30px; bottom: 0px; right: 20px; border-left: 3px solid var(--ink); }
+
+    /* ---------------- STATES ---------------- */
+    .sleeping {
+      filter: grayscale(1);
+      opacity: 0.6;
+    }
+
+    .zzz {
+      position: absolute;
+      top: -25px;
+      right: -10px;
+      color: var(--accent);
+      font-weight: bold;
+      animation: zzz 2.5s infinite;
+    }
+
+    .label {
+      position: absolute;
+      bottom: -55px;
+      width: 100%;
+      text-align: center;
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    /* ---------------- BELL ---------------- */
+    .bell {
+      position: absolute;
+      top: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 2.5rem;
+      color: #f1c40f;
+      display: none;
+    }
+
+    /* ---------------- ANIMATIONS ---------------- */
+    @keyframes zzz {
+      0% { transform: translate(0,0) scale(0.5); opacity: 0; }
+      50% { opacity: 1; }
+      100% { transform: translate(20px,-40px) scale(1.2); opacity: 0; }
+    }
+
+    @keyframes bellRing {
+      0%,100% { transform: translateX(-50%) rotate(0); }
+      25% { transform: translateX(-50%) rotate(20deg); }
+      50% { transform: translateX(-50%) rotate(-20deg); }
+      75% { transform: translateX(-50%) rotate(20deg); }
+    }
+
+    @keyframes work {
+      0% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
+      100% { transform: translateY(0); }
+    }
+
+    /* ---------------- LAYOUT ---------------- */
+    .stage {
+      text-align: center;
+    }
+
+    h2 {
+      margin-top: 30px;
+      font-weight: 700;
+    }
+
+    p {
+      color: #64748b;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="stage">
+  <div style="height:260px; position:relative; display:flex; justify-content:center; align-items:end;">
+
+    <div class="bell" id="bell">
+      <i class="bi bi-bell-fill"></i>
+    </div>
+
+    <div class="character-container sleeping" id="consumer">
+      <div class="zzz" id="zzz">Zzz</div>
+
+      <div class="file-body">
+        <div class="scribbles">〰️<br>〰️<br>〰️</div>
+      </div>
+
+      <div class="limb arm-l"></div>
+      <div class="limb arm-r"></div>
+      <div class="limb leg-l"></div>
+      <div class="limb leg-r"></div>
+
+      <div class="label">Consumer</div>
+    </div>
+  </div>
+
+  <h2 id="title">Event-Driven Architecture</h2>
+  <p id="desc">Waiting for event trigger…</p>
+</div>
+
+<script>
+  const bell = document.getElementById("bell");
+  const consumer = document.getElementById("consumer");
+  const zzz = document.getElementById("zzz");
+  const title = document.getElementById("title");
+  const desc = document.getElementById("desc");
+
+  function sleepState() {
+    // Consumer sleeping
+    bell.style.display = "none";
+    bell.style.animation = "none";
+
+    consumer.classList.add("sleeping");
+    consumer.style.animation = "none";
+
+    zzz.style.display = "block";
+
+    title.innerText = "Event-Driven Architecture";
+    desc.innerText = "Waiting for event trigger…";
+
+    // After sleeping → event arrives
+    setTimeout(eventArrives, 2000);
+  }
+
+  function eventArrives() {
+    // Bell rings
+    bell.style.display = "block";
+    bell.style.animation = "bellRing 0.6s infinite";
+
+    // Wake up consumer
+    setTimeout(() => {
+      zzz.style.display = "none";
+      consumer.classList.remove("sleeping");
+      consumer.style.animation = "work 0.3s infinite";
+
+      title.innerText = "Event Captured!";
+      desc.innerText = "Consumer is processing the event…";
+    }, 1000);
+
+    // Finish work → sleep again
+    setTimeout(sleepState, 3000);
+  }
+
+  // Start loop
+  sleepState();
+</script>
