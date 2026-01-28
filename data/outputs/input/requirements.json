@@ -1,0 +1,21 @@
+{
+  "system_name": "LibraryManagementSystem",
+  "architecture_style": "Microservices Architecture",
+  "functional_requirements": [
+    "User registration and authentication",
+    "Manage library members",
+    "Catalog books and authors",
+    "Search and browse books",
+    "Borrow and return books",
+    "Track borrowing history",
+    "Send due date notifications"
+  ],
+  "non_functional_requirements": {
+    "scalability": "Medium",
+    "availability": "High",
+    "latency": "Medium",
+    "reliability": "High",
+    "consistency": "Strong",
+    "security": "Medium"
+  }
+}

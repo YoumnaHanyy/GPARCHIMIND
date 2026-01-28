@@ -1,0 +1,46 @@
+@startuml
+!theme plain
+left to right direction
+node "Client" {
+  component "User"
+}
+node "Kubernetes Ingress" {
+  component "Ingress Controller"
+}
+node "User Service Pod" {
+  component "User Service"
+}
+node "Member Service Pod" {
+  component "Member Service"
+}
+node "Catalog Service Pod" {
+  component "Catalog Service"
+}
+node "Search Service Pod" {
+  component "Search Service"
+}
+node "Borrowing Service Pod" {
+  component "Borrowing Service"
+}
+node "History Service Pod" {
+  component "History Service"
+}
+node "Notification Service Pod" {
+  component "Notification Service"
+}
+"User" --> "Ingress Controller" : TCP/IP
+"Ingress Controller" --> "API Gateway Pod" : HTTP/HTTPS
+"User" --> "Ingress Controller"
+"Ingress Controller" --> "API Gateway Pod"
+"API Gateway Pod" --> "User Service Pod"
+"API Gateway Pod" --> "Member Service Pod"
+"API Gateway Pod" --> "Catalog Service Pod"
+"API Gateway Pod" --> "Search Service Pod"
+"API Gateway Pod" --> "Borrowing Service Pod"
+"API Gateway Pod" --> "History Service Pod"
+"API Gateway Pod" --> "Notification Service Pod"
+node "Secondary Region" {
+  component "Replica Services"
+}
+"Ingress Controller" --> "Secondary Region" : failover
+@enduml

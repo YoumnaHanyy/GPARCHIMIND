@@ -1,0 +1,9 @@
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
+LAYOUT_WITH_LEGEND()
+Person(User, "End User", "Uses the system")
+System(SystemA, "LibraryManagementSystem", "System under design")
+System_Ext(NotificationService, "Notification Service", "External notification system")
+Rel(SystemA, NotificationService, "Sends notifications via")
+Rel(User, SystemA, "Uses")
+@enduml

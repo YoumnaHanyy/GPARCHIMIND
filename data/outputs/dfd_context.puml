@@ -1,0 +1,14 @@
+@startuml
+left to right direction
+skinparam rectangle {
+  BackgroundColor LightGray
+  BorderColor Black
+}
+skinparam package {
+  BackgroundColor White
+}
+rectangle "End User" <<external>>
+rectangle "LibraryManagementSystem" <<process>>
+"End User" --> "LibraryManagementSystem" : Requests / Inputs
+"LibraryManagementSystem" --> "End User" : Responses / Results
+@enduml

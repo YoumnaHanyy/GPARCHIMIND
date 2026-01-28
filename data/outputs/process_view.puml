@@ -1,0 +1,19 @@
+@startuml
+autonumber
+actor User
+participant "User Service" as UserService
+participant "Member Service" as MemberService
+participant "Catalog Service" as CatalogService
+participant "Search Service" as SearchService
+participant "Borrowing Service" as BorrowingService
+participant "History Service" as HistoryService
+participant "Notification Service" as NotificationService
+UserService ->> MemberService : Create Member
+UserService -> CatalogService : Fetch Catalog Data
+MemberService -> CatalogService : Fetch Member Catalog Data
+CatalogService ->> SearchService : Index Catalog Data
+SearchService ->> BorrowingService : Search for Book
+BorrowingService -> HistoryService : Record Borrowing
+BorrowingService ->> NotificationService : Send Due Date Notification
+HistoryService -> NotificationService : Fetch Borrowing History
+@enduml

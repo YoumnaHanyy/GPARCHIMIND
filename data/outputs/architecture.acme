@@ -1,0 +1,99 @@
+System LibraryManagementSystem {
+  Property view : String = "runtime";
+  Property architectureStyle : String = "Microservices Architecture";
+  Property source : String = "AI";
+  Component UserService = new Component {
+    Port in;
+    Port out;
+    Property responsibility : String = "Handle user registration and authentication";
+    Property state : String = "stateless";
+    Property scaling : String = "horizontal";
+  }
+  Component MemberService = new Component {
+    Port in;
+    Port out;
+    Property responsibility : String = "Manage library members";
+    Property state : String = "stateless";
+    Property scaling : String = "horizontal";
+  }
+  Component CatalogService = new Component {
+    Port in;
+    Port out;
+    Property responsibility : String = "Catalog books and authors";
+    Property state : String = "stateless";
+    Property scaling : String = "horizontal";
+  }
+  Component SearchService = new Component {
+    Port in;
+    Port out;
+    Property responsibility : String = "Search and browse books";
+    Property state : String = "stateless";
+    Property scaling : String = "horizontal";
+  }
+  Component BorrowingService = new Component {
+    Port in;
+    Port out;
+    Property responsibility : String = "Borrow and return books";
+    Property state : String = "stateless";
+    Property scaling : String = "horizontal";
+  }
+  Component HistoryService = new Component {
+    Port in;
+    Port out;
+    Property responsibility : String = "Track borrowing history";
+    Property state : String = "stateless";
+    Property scaling : String = "horizontal";
+  }
+  Component NotificationService = new Component {
+    Port in;
+    Port out;
+    Property responsibility : String = "Send due date notifications";
+    Property state : String = "stateless";
+    Property scaling : String = "horizontal";
+  }
+  Attachment UserService.out to MemberService.in {
+    Property delivery : String = "at-least-once";
+    Property ordering : Boolean = false;
+    Property backpressure : String = "bounded";
+  }
+  Attachment UserService.out to CatalogService.in {
+    Property delivery : String = "at-least-once";
+    Property ordering : Boolean = true;
+    Property backpressure : String = "bounded";
+  }
+  Attachment MemberService.out to CatalogService.in {
+    Property delivery : String = "at-least-once";
+    Property ordering : Boolean = true;
+    Property backpressure : String = "bounded";
+  }
+  Attachment CatalogService.out to SearchService.in {
+    Property delivery : String = "at-least-once";
+    Property ordering : Boolean = true;
+    Property backpressure : String = "bounded";
+  }
+  Attachment SearchService.out to BorrowingService.in {
+    Property delivery : String = "at-least-once";
+    Property ordering : Boolean = false;
+    Property backpressure : String = "bounded";
+  }
+  Attachment BorrowingService.out to HistoryService.in {
+    Property delivery : String = "at-least-once";
+    Property ordering : Boolean = true;
+    Property backpressure : String = "bounded";
+  }
+  Attachment BorrowingService.out to NotificationService.in {
+    Property delivery : String = "at-least-once";
+    Property ordering : Boolean = false;
+    Property backpressure : String = "bounded";
+  }
+  Attachment HistoryService.out to NotificationService.in {
+    Property delivery : String = "at-least-once";
+    Property ordering : Boolean = true;
+    Property backpressure : String = "bounded";
+  }
+  Property resilience_pattern : String = "Retry, CircuitBreaker";
+  Property delivery : String = "at-least-once";
+  Property ordering : Boolean = false;
+  Property authentication : String = "service-to-service";
+  Property authorization : String = "RBAC";
+}
