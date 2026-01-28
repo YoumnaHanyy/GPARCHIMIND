@@ -1,0 +1,17 @@
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+LAYOUT_WITH_LEGEND()
+System_Boundary(system, "AbsoluteGuaranteedSuccessSystem") {
+  Container(UserService, "User Service", "Service", "Manages user data and publishes user events")
+  Container(OrderService, "Order Service", "Service", "Manages order data and publishes order events")
+  Container(PaymentService, "Payment Service", "Service", "Manages payment data and publishes payment events")
+  Container(NotificationService, "Notification Service", "Service", "Subscribes to user and order events to send notifications")
+  Container(ReportingService, "Reporting Service", "Service", "Subscribes to order and payment events to generate reports")
+}
+Rel(UserService, NotificationService, "event", "Async")
+Rel(OrderService, NotificationService, "event", "Async")
+Rel(OrderService, ReportingService, "event", "Async")
+Rel(PaymentService, ReportingService, "event", "Async")
+Rel(UserService, OrderService, "call", "Sync")
+Rel(OrderService, PaymentService, "call", "Sync")
+@enduml

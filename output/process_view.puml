@@ -1,0 +1,17 @@
+@startuml
+autonumber
+actor User
+participant "User Service" as UserService
+participant "Order Service" as OrderService
+participant "Payment Service" as PaymentService
+participant "Notification Service" as NotificationService
+participant "Reporting Service" as ReportingService
+UserService ->> OrderService : Publish user data
+OrderService ->> PaymentService : Publish order data
+PaymentService ->> ReportingService : Publish payment event
+OrderService ->> ReportingService : Publish order event
+UserService ->> NotificationService : Publish user event
+OrderService ->> NotificationService : Publish order event
+NotificationService ->> NotificationService : Send notification
+ReportingService ->> ReportingService : Generate report
+@enduml

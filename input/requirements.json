@@ -1,0 +1,10 @@
+{
+  "system_name": "SelfLoopSystem",
+  "architecture_style": "Microservices",
+  "functional_requirements": [
+    "Order Service must call itself to validate orders"
+  ],
+  "non_functional_requirements": {
+    "scalability": "Low"
+  }
+}

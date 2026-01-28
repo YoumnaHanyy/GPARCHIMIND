@@ -1,0 +1,179 @@
+{
+  "system": "AbsoluteGuaranteedSuccessSystem",
+  "style": "Microservices",
+  "source": "AI",
+  "decisions": [
+    {
+      "name": "Use asynchronous event-based messaging for communication between services",
+      "rationale": "To ensure scalability, availability, and modifiability, services should not depend on a central coordinator and manage their own state independently."
+    },
+    {
+      "name": "Publish user events by User Service",
+      "rationale": "To enable Notification Service to react to user events without direct dependencies."
+    },
+    {
+      "name": "Publish order events by Order Service",
+      "rationale": "To enable Notification Service and Reporting Service to react to order events without direct dependencies."
+    },
+    {
+      "name": "Publish payment events by Payment Service",
+      "rationale": "To enable Reporting Service to react to payment events without direct dependencies."
+    },
+    {
+      "name": "Subscribe to user and order events by Notification Service",
+      "rationale": "To enable Notification Service to react to user and order events without direct dependencies."
+    },
+    {
+      "name": "Subscribe to order and payment events by Reporting Service",
+      "rationale": "To enable Reporting Service to react to order and payment events without direct dependencies."
+    },
+    {
+      "name": "Avoid synchronous requests between services",
+      "rationale": "To ensure scalability, availability, and modifiability."
+    },
+    {
+      "name": "Each service manages its own state independently",
+      "rationale": "To ensure scalability, availability, and modifiability."
+    },
+    {
+      "name": "Services react to events without direct dependencies",
+      "rationale": "To ensure scalability, availability, and modifiability."
+    }
+  ],
+  "production_intents": {
+    "deployment": {
+      "scaling": "horizontal",
+      "availability": "multi-region"
+    },
+    "security": {
+      "authentication": "service-to-service",
+      "authorization": "RBAC"
+    },
+    "resilience": {
+      "patterns": [
+        "Retry",
+        "CircuitBreaker"
+      ],
+      "delivery": "at-least-once",
+      "ordering": false
+    }
+  },
+  "components": [
+    {
+      "name": "User Service",
+      "responsibility": "Manages user data and publishes user events"
+    },
+    {
+      "name": "Order Service",
+      "responsibility": "Manages order data and publishes order events"
+    },
+    {
+      "name": "Payment Service",
+      "responsibility": "Manages payment data and publishes payment events"
+    },
+    {
+      "name": "Notification Service",
+      "responsibility": "Subscribes to user and order events to send notifications"
+    },
+    {
+      "name": "Reporting Service",
+      "responsibility": "Subscribes to order and payment events to generate reports"
+    }
+  ],
+  "relationships": [
+    {
+      "source": "User Service",
+      "target": "Notification Service",
+      "type": "event-flow"
+    },
+    {
+      "source": "Order Service",
+      "target": "Notification Service",
+      "type": "event-flow"
+    },
+    {
+      "source": "Order Service",
+      "target": "Reporting Service",
+      "type": "event-flow"
+    },
+    {
+      "source": "Payment Service",
+      "target": "Reporting Service",
+      "type": "event-flow"
+    },
+    {
+      "source": "User Service",
+      "target": "Order Service",
+      "type": "data-flow"
+    },
+    {
+      "source": "Order Service",
+      "target": "Payment Service",
+      "type": "data-flow"
+    }
+  ],
+  "runtime_flow": [
+    {
+      "from": "User Service",
+      "to": "Order Service",
+      "action": "Publish user data",
+      "mode": "async"
+    },
+    {
+      "from": "Order Service",
+      "to": "Payment Service",
+      "action": "Publish order data",
+      "mode": "async"
+    },
+    {
+      "from": "Payment Service",
+      "to": "Reporting Service",
+      "action": "Publish payment event",
+      "mode": "async"
+    },
+    {
+      "from": "Order Service",
+      "to": "Reporting Service",
+      "action": "Publish order event",
+      "mode": "async"
+    },
+    {
+      "from": "User Service",
+      "to": "Notification Service",
+      "action": "Publish user event",
+      "mode": "async"
+    },
+    {
+      "from": "Order Service",
+      "to": "Notification Service",
+      "action": "Publish order event",
+      "mode": "async"
+    },
+    {
+      "from": "Notification Service",
+      "to": "Notification Service",
+      "action": "Send notification",
+      "mode": "async"
+    },
+    {
+      "from": "Reporting Service",
+      "to": "Reporting Service",
+      "action": "Generate report",
+      "mode": "async"
+    }
+  ],
+  "critique": [
+    {
+      "id": 1,
+      "description": "The system's eventual consistency model may impact reliability and consistency.",
+      "severity": "Medium",
+      "category": "Consistency"
+    },
+    {
+      "id": 2,
+      "description": "The relationships between services may impact availability and modifiability.",
+      "severity": "Low",
+      "category": "Availability"
+    }
+  ]
+}

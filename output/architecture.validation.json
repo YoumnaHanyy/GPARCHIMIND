@@ -1,0 +1,14 @@
+[
+  {
+    "id": 1,
+    "description": "The system's eventual consistency model may impact reliability and consistency.",
+    "severity": "Medium",
+    "category": "Consistency"
+  },
+  {
+    "id": 2,
+    "description": "The relationships between services may impact availability and modifiability.",
+    "severity": "Low",
+    "category": "Availability"
+  }
+]

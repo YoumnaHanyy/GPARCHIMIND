@@ -1,0 +1,79 @@
+=================================
+ARCHITECTURE REPORT
+=================================
+
+1. REQUIREMENTS
+---------------------------------
+{
+  "system_name": "SimpleInventoryService",
+  "architecture_style": "Layered Architecture",
+  "functional_requirements": [
+    "Add products",
+    "Update product quantity",
+    "View product list"
+  ],
+  "non_functional_requirements": {
+    "scalability": "Low",
+    "availability": "Medium",
+    "latency": "Low",
+    "reliability": "Medium"
+  }
+}
+
+3. ARCHITECTURE (ACME ADL)
+---------------------------------
+System SimpleInventoryService {
+  Property view : String = "runtime";
+  Component ProductService = new Component {
+    Port in;
+    Port out;
+    Property responsibility : String = "Handles product related operations";
+    Property state : String = "stateless";
+    Property scaling : String = "horizontal";
+  }
+  Component ProductRepository = new Component {
+    Port in;
+    Port out;
+    Property responsibility : String = "Stores and retrieves product data";
+    Property state : String = "stateless";
+    Property scaling : String = "horizontal";
+  }
+  Component ProductController = new Component {
+    Port in;
+    Port out;
+    Property responsibility : String = "Handles HTTP requests and calls Product Service";
+    Property state : String = "stateless";
+    Property scaling : String = "horizontal";
+  }
+  Component InventoryServiceAPI = new Component {
+    Port in;
+    Port out;
+    Property responsibility : String = "Exposes API endpoints for client interactions";
+    Property state : String = "stateless";
+    Property scaling : String = "horizontal";
+  }
+  Attachment ProductController.out to ProductService.in {
+    Property delivery : String = "at-least-once";
+    Property ordering : Boolean = true;
+    Property backpressure : String = "bounded";
+  }
+  Attachment ProductService.out to ProductRepository.in {
+    Property delivery : String = "at-least-once";
+    Property ordering : Boolean = true;
+    Property backpressure : String = "bounded";
+  }
+  Attachment ProductController.out to InventoryServiceAPI.in {
+    Property delivery : String = "at-least-once";
+    Property ordering : Boolean = false;
+    Property backpressure : String = "bounded";
+  }
+  Property resilience_pattern : String = "Retry + CircuitBreaker";
+  Property failure_isolation : Boolean = true;
+  Property authentication : String = "service-to-service";
+  Property authorization : String = "RBAC";
+  Property encryption : String = "in-transit";
+  Property constraint_scalability : String = "Low";
+  Property constraint_availability : String = "Medium";
+  Property constraint_latency : String = "Low";
+  Property constraint_reliability : String = "Medium";
+}

@@ -1,0 +1,75 @@
+System AbsoluteGuaranteedSuccessSystem {
+  Property view : String = "runtime";
+  Property architectureStyle : String = "Microservices";
+  Property source : String = "AI";
+  Component UserService = new Component {
+    Port in;
+    Port out;
+    Property responsibility : String = "Manages user data and publishes user events";
+    Property state : String = "stateless";
+    Property scaling : String = "horizontal";
+  }
+  Component OrderService = new Component {
+    Port in;
+    Port out;
+    Property responsibility : String = "Manages order data and publishes order events";
+    Property state : String = "stateless";
+    Property scaling : String = "horizontal";
+  }
+  Component PaymentService = new Component {
+    Port in;
+    Port out;
+    Property responsibility : String = "Manages payment data and publishes payment events";
+    Property state : String = "stateless";
+    Property scaling : String = "horizontal";
+  }
+  Component NotificationService = new Component {
+    Port in;
+    Port out;
+    Property responsibility : String = "Subscribes to user and order events to send notifications";
+    Property state : String = "stateless";
+    Property scaling : String = "horizontal";
+  }
+  Component ReportingService = new Component {
+    Port in;
+    Port out;
+    Property responsibility : String = "Subscribes to order and payment events to generate reports";
+    Property state : String = "stateless";
+    Property scaling : String = "horizontal";
+  }
+  Attachment UserService.out to NotificationService.in {
+    Property delivery : String = "at-least-once";
+    Property ordering : Boolean = false;
+    Property backpressure : String = "bounded";
+  }
+  Attachment OrderService.out to NotificationService.in {
+    Property delivery : String = "at-least-once";
+    Property ordering : Boolean = false;
+    Property backpressure : String = "bounded";
+  }
+  Attachment OrderService.out to ReportingService.in {
+    Property delivery : String = "at-least-once";
+    Property ordering : Boolean = false;
+    Property backpressure : String = "bounded";
+  }
+  Attachment PaymentService.out to ReportingService.in {
+    Property delivery : String = "at-least-once";
+    Property ordering : Boolean = false;
+    Property backpressure : String = "bounded";
+  }
+  Attachment UserService.out to OrderService.in {
+    Property delivery : String = "at-least-once";
+    Property ordering : Boolean = true;
+    Property backpressure : String = "bounded";
+  }
+  Attachment OrderService.out to PaymentService.in {
+    Property delivery : String = "at-least-once";
+    Property ordering : Boolean = true;
+    Property backpressure : String = "bounded";
+  }
+  Property resilience_pattern : String = "Retry, CircuitBreaker";
+  Property delivery : String = "at-least-once";
+  Property ordering : Boolean = false;
+  Property authentication : String = "service-to-service";
+  Property authorization : String = "RBAC";
+}

@@ -1,0 +1,38 @@
+@startuml
+!theme plain
+left to right direction
+node "Client" {
+  component "User"
+}
+node "Kubernetes Ingress" {
+  component "Ingress Controller"
+}
+node "User Service Pod" {
+  component "User Service"
+}
+node "Order Service Pod" {
+  component "Order Service"
+}
+node "Payment Service Pod" {
+  component "Payment Service"
+}
+node "Notification Service Pod" {
+  component "Notification Service"
+}
+node "Reporting Service Pod" {
+  component "Reporting Service"
+}
+"User" --> "Ingress Controller" : TCP/IP
+"Ingress Controller" --> "API Gateway Pod" : HTTP/HTTPS
+"User" --> "Ingress Controller"
+"Ingress Controller" --> "API Gateway Pod"
+"API Gateway Pod" --> "User Service Pod"
+"API Gateway Pod" --> "Order Service Pod"
+"API Gateway Pod" --> "Payment Service Pod"
+"API Gateway Pod" --> "Notification Service Pod"
+"API Gateway Pod" --> "Reporting Service Pod"
+node "Secondary Region" {
+  component "Replica Services"
+}
+"Ingress Controller" --> "Secondary Region" : failover
+@enduml

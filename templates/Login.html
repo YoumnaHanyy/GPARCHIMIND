@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>ARCHIMIND | Login</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+
+<style>
+:root{
+    --emerald:#10b981;
+    --emerald-soft:#ecfdf5;
+    --slate:#0f172a;
+    --muted:#64748b;
+}
+
+/* RESET */
+*{box-sizing:border-box;margin:0;padding:0;}
+body{
+    font-family:'Plus Jakarta Sans',sans-serif;
+    background:
+        radial-gradient(circle at 20% 20%, #ecfdf5 0%, transparent 40%),
+        radial-gradient(circle at 80% 80%, #f0fdf4 0%, transparent 45%),
+        #fff;
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:var(--slate);
+}
+
+/* LAYOUT */
+.container{
+    width:90%;
+    max-width:1100px;
+    display:grid;
+    grid-template-columns:1fr 1.2fr;
+    gap:70px;
+    align-items:center;
+}
+
+/* LEFT */
+.brand{
+    display:flex;align-items:center;gap:10px;
+    font-weight:800;
+    color:var(--emerald);
+    margin-bottom:45px;
+}
+
+h1{
+    font-size:3rem;
+    line-height:1.05;
+    letter-spacing:-1.8px;
+    margin-bottom:18px;
+}
+p{
+    color:var(--muted);
+    font-size:1.05rem;
+    line-height:1.6;
+    margin-bottom:40px;
+}
+
+.input-box{
+    background:#f8fafc;
+    border:1px solid #e2e8f0;
+    padding:16px 20px;
+    border-radius:18px;
+    display:flex;
+    gap:14px;
+    align-items:center;
+    margin-bottom:16px;
+}
+.input-box i{color:#cbd5e1;}
+.input-box input{
+    border:none;background:transparent;
+    outline:none;width:100%;
+}
+
+/* BUTTON */
+.btn{
+    width:100%;
+    padding:18px;
+    border-radius:18px;
+    border:none;
+    background:linear-gradient(135deg,var(--slate),#020617);
+    color:#fff;
+    font-weight:700;
+    cursor:pointer;
+}
+
+/* RIGHT */
+.visual{
+    position:relative;
+    padding:50px;
+    border-radius:44px;
+    background:
+        linear-gradient(transparent 23px, rgba(16,185,129,.05) 24px),
+        linear-gradient(90deg, transparent 23px, rgba(16,185,129,.05) 24px),
+        var(--emerald-soft);
+    background-size:24px 24px;
+}
+
+.flow{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:22px;
+}
+
+/* CARD */
+.flow-card{
+    width:100%;
+    background:#fff;
+    border-radius:18px;
+    padding:16px 20px;
+    display:flex;
+    gap:16px;
+    align-items:flex-start; /* ⭐ FIX */
+    box-shadow:0 15px 30px rgba(0,0,0,.06);
+    border:1px solid rgba(16,185,129,.12);
+    transition:.4s ease;
+}
+
+/* ICON */
+.icon{
+    width:44px;
+    height:44px;
+    border-radius:12px;
+    display:grid;
+    place-items:center;
+    background:var(--emerald-soft);
+    color:var(--emerald);
+    font-size:1rem;
+    flex-shrink:0;
+    margin-top:2px; /* ⭐ ALIGN BASELINE */
+}
+
+/* TEXT */
+.text-wrap{
+    display:flex;
+    flex-direction:column;
+    gap:4px;
+}
+
+.flow-card h4{
+    font-size:.95rem;
+    font-weight:800;
+    line-height:1.2;
+}
+.flow-card p{
+    font-size:.8rem;
+    line-height:1.4;
+    color:#94a3b8;
+    margin:0;
+}
+
+/* FOCUS */
+.flow-card.focus{
+    border:2px solid var(--emerald);
+    transform:scale(1.02);
+    box-shadow:
+        0 0 0 5px rgba(16,185,129,.15),
+        0 25px 45px rgba(0,0,0,.1);
+}
+.flow-card.focus .icon{
+    background:var(--emerald);
+    color:#fff;
+    animation:pulse 1.8s infinite;
+}
+
+@keyframes pulse{
+    0%{box-shadow:0 0 0 0 rgba(16,185,129,.6);}
+    70%{box-shadow:0 0 0 12px rgba(16,185,129,0);}
+    100%{box-shadow:0 0 0 0 rgba(16,185,129,0);}
+}
+
+/* LINE */
+.line{
+    width:2px;
+    height:32px;
+    background:linear-gradient(to bottom,var(--emerald),transparent);
+    position:relative;
+}
+.line::after{
+    content:'';
+    position:absolute;
+    top:0;left:-3px;
+    width:7px;height:7px;
+    border-radius:50%;
+    background:var(--emerald);
+    animation:flow 2.2s infinite;
+}
+@keyframes flow{
+    0%{top:0;opacity:0;}
+    40%{opacity:1;}
+    100%{top:100%;opacity:0;}
+}
+
+/* BADGE */
+.badge{
+    position:absolute;
+    right:-24px;
+    bottom:50px;
+    background:var(--slate);
+    color:#fff;
+    padding:10px 20px;
+    border-radius:14px;
+    font-size:.65rem;
+    font-weight:800;
+    transform:rotate(-6deg);
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- LEFT -->
+    <div>
+        <div class="brand"><i class="fas fa-leaf"></i> ARCHIMIND</div>
+        <h1>Sustainable<br>Architect.</h1>
+        <p>Transforming complex requirements into long-lasting, eco-efficient software blueprints.</p>
+
+        <div class="input-box">
+            <i class="far fa-envelope"></i>
+            <input placeholder="Architect ID">
+        </div>
+
+        <div class="input-box">
+            <i class="fas fa-lock"></i>
+            <input type="password" placeholder="Security Token">
+        </div>
+
+        <button class="btn">Enter Workspace</button>
+    </div>
+
+    <!-- RIGHT -->
+    <div class="visual">
+        <div class="flow">
+
+            <div class="flow-card">
+                <div class="icon"><i class="fas fa-align-left"></i></div>
+                <div class="text-wrap">
+                    <h4>Requirements</h4>
+                    <p>Functional & Non-functional inputs</p>
+                </div>
+            </div>
+
+            <div class="line"></div>
+
+            <div class="flow-card">
+                <div class="icon"><i class="fas fa-brain"></i></div>
+                <div class="text-wrap">
+                    <h4>AI Reasoning Engine</h4>
+                    <p>Architectural style & trade-offs</p>
+                </div>
+            </div>
+
+            <div class="line"></div>
+
+            <div class="flow-card">
+                <div class="icon"><i class="fas fa-file-signature"></i></div>
+                <div class="text-wrap">
+                    <h4>ADL Blueprint</h4>
+                    <p>Sustainable & verifiable output</p>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="badge">ZERO-DEBT ENGINE</div>
+    </div>
+
+</div>
+
+<script>
+const cards = document.querySelectorAll('.flow-card');
+let index = 0;
+
+function moveFocus(){
+    cards.forEach(c => c.classList.remove('focus'));
+    cards[index].classList.add('focus');
+    index = (index + 1) % cards.length;
+}
+
+moveFocus();
+setInterval(moveFocus, 2500);
+</script>
+
+</body>
+</html>
