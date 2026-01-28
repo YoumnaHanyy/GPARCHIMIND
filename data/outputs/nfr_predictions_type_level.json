@@ -1,37 +1,23 @@
 [
   {
-    "title": "The system must be cost-effective.",
-    "description": "The system must be affordable to many and have a competitive price compared to other systems in the market.",
+    "title": "Competitive price.",
+    "description": "The system must be priced competitively, costing less than other touch projectors in the market, and enabling users to run the system with their available hardware (PC-Camera-projector) with no hardware limitations at all.",
     "predicted_type": "US",
     "predicted_type_label": "Usability",
     "predicted_level": "High"
   },
   {
-    "title": "The system must be flexible.",
-    "description": "The system must work effectively in different places and environments.",
-    "predicted_type": "PO",
-    "predicted_type_label": "Portability",
-    "predicted_level": "High"
-  },
-  {
-    "title": "The system must have a user-friendly interface.",
-    "description": "The system must be easy to use and have interactive features.",
-    "predicted_type": "US",
-    "predicted_type_label": "Usability",
-    "predicted_level": "High"
-  },
-  {
-    "title": "The system must be secure.",
-    "description": "The system must store user account information securely.",
-    "predicted_type": "SE",
-    "predicted_type_label": "Security",
-    "predicted_level": "High"
-  },
-  {
-    "title": "The system must be scalable.",
-    "description": "The system must support multiple users and interactions.",
+    "title": "Real-time collaboration.",
+    "description": "The system must support real-time collaboration by enabling interactions on the projected surface, fostering collaborative environments for business or educational purposes.",
     "predicted_type": "SC",
     "predicted_type_label": "Scalability",
+    "predicted_level": "High"
+  },
+  {
+    "title": "Low-latency.",
+    "description": "The system must analyze gestures and reflect the corresponding action on the projected surface in real-time, with minimal latency.",
+    "predicted_type": "PE",
+    "predicted_type_label": "Performance",
     "predicted_level": "High"
   }
 ]

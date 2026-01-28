@@ -9,7 +9,10 @@ def generate_report():
     PROJECT_ROOT = BASE_DIR.parents[3]
 
 
-    input_req = PROJECT_ROOT/ "data" /"outputs"/ "input" / "requirements.json"
+    requirements_file = PROJECT_ROOT / "data" / "outputs" / "input" / "requirements.json"
+    frs_file = PROJECT_ROOT / "data" / "outputs" / "functional_requirements.json"
+    nfrs_file = PROJECT_ROOT / "data" / "outputs" / "non_functional_requirements.json"
+
     acme_file = PROJECT_ROOT / "data" / "outputs" / "architecture.acme"
 
     context_diagram = PROJECT_ROOT / "data" / "outputs" / "context_view.png"
@@ -99,18 +102,38 @@ def generate_report():
     # ---------- Requirements ----------
     section("1. System Requirements")
 
-    with open(input_req, "r", encoding="utf-8") as f:
-        req = json.load(f)
+    # ---- Load system info ----
+    with open(requirements_file, "r", encoding="utf-8") as f:
+      req = json.load(f)
 
-    paragraph(f"System Name: {req.get('system_name')}")
-    paragraph(f"Architecture Style: {req.get('architecture_style')}")
+    system_name = req.get("system_name")
+    architecture_style = req.get("architecture_style")
+
+# ---- Load FRs ----
+    with open(frs_file, "r", encoding="utf-8") as f:
+      functional_requirements = json.load(f)
+
+# ---- Load NFRs ----
+    with open(nfrs_file, "r", encoding="utf-8") as f:
+     non_functional_requirements = json.load(f)
+
+    paragraph(f"System Name: {system_name}")
+    paragraph(f"Architecture Style: {architecture_style}")
 
     section("Functional Requirements")
-    bullet_list(req.get("functional_requirements", []))
+    bullet_list([fr["title"] for fr in functional_requirements])
 
     section("Non-Functional Requirements")
-    nfrs = req.get("non_functional_requirements", {})
-    bullet_list([f"{k.capitalize()}: {v}" for k, v in nfrs.items()])
+
+    for nfr in non_functional_requirements:
+    # Title as bullet
+     paragraph(f"- {nfr['title']}")
+     paragraph(f"      Description: {nfr['description']}")
+
+
+
+
+
 
     # ---------- ACME ----------
     section("2. Formal Architecture Specification (ACME ADL)")

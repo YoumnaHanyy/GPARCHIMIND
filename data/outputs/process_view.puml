@@ -2,15 +2,17 @@
 autonumber
 actor User
 participant "Face Detection Module" as FaceDetectionModule
+participant "Hand Movement Detection Module" as HandMovementDetectionModule
 participant "Gesture Recognition Module" as GestureRecognitionModule
+participant "Face Recognition Module" as FaceRecognitionModule
 participant "Hand Tracking Module" as HandTrackingModule
-participant "Interaction Module" as InteractionModule
-participant "Real-time Collaboration Module" as RealtimeCollaborationModule
-participant "Latency Reduction Module" as LatencyReductionModule
-FaceDetectionModule ->> HandTrackingModule : Send face detection data
-HandTrackingModule -> GestureRecognitionModule : Trigger gesture recognition
-GestureRecognitionModule ->> InteractionModule : Send recognized gesture data
-InteractionModule -> RealtimeCollaborationModule : Trigger real-time collaboration
-RealtimeCollaborationModule ->> LatencyReductionModule : Send collaboration data
-LatencyReductionModule -> RealtimeCollaborationModule : Reflect action on projected surface
+participant "Single-Hand Interaction Module" as SingleHandInteractionModule
+participant "Customizable Gesture Module" as CustomizableGestureModule
+FaceDetectionModule -> FaceRecognitionModule : Send face detection result
+HandMovementDetectionModule -> HandTrackingModule : Send hand movement detection result
+HandMovementDetectionModule ->> GestureRecognitionModule : Trigger gesture recognition
+GestureRecognitionModule ->> SingleHandInteractionModule : Trigger single-hand interaction
+GestureRecognitionModule ->> CustomizableGestureModule : Trigger gesture customization
+HandTrackingModule -> SingleHandInteractionModule : Send hand tracking result
+CustomizableGestureModule ->> SingleHandInteractionModule : Trigger single-hand interaction with customized gesture
 @enduml

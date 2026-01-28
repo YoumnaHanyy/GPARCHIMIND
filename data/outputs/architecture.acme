@@ -5,73 +5,85 @@ System LibraryManagementSystem {
   Component FaceDetectionModule = new Component {
     Port in;
     Port out;
-    Property responsibility : String = "Detect the user's face using the YOLOv5 model, contours detection, Gaussian blur, Background Subtraction (BS), and Histogram Equalization.";
+    Property responsibility : String = "Detect the user's face using the YOLOv5 model, and use contours detection, Gaussian blur, Background Subtraction (BS), and Histogram Equalization for image processing.";
+    Property state : String = "stateless";
+    Property scaling : String = "horizontal";
+  }
+  Component HandMovementDetectionModule = new Component {
+    Port in;
+    Port out;
+    Property responsibility : String = "Detect the user's hand movement using Background Subtraction (BS), and use contours detection, Gaussian blur, and Histogram Equalization for image processing.";
     Property state : String = "stateless";
     Property scaling : String = "horizontal";
   }
   Component GestureRecognitionModule = new Component {
     Port in;
     Port out;
-    Property responsibility : String = "Recognize gestures using threading for concurrent execution of tasks within a single process and multiprocessing for parallel execution of tasks across multiple processes.";
+    Property responsibility : String = "Recognize gestures using contours detection, Gaussian blur, Background Subtraction (BS), and Histogram Equalization for image processing.";
+    Property state : String = "stateless";
+    Property scaling : String = "horizontal";
+  }
+  Component FaceRecognitionModule = new Component {
+    Port in;
+    Port out;
+    Property responsibility : String = "Recognize faces using contours detection, Gaussian blur, Background Subtraction (BS), and Histogram Equalization for image processing.";
     Property state : String = "stateless";
     Property scaling : String = "horizontal";
   }
   Component HandTrackingModule = new Component {
     Port in;
     Port out;
-    Property responsibility : String = "Track the user's hand using Background Subtraction (BS) to separate the moving parts.";
+    Property responsibility : String = "Track hands using contours detection, Gaussian blur, Background Subtraction (BS), and Histogram Equalization for image processing.";
     Property state : String = "stateless";
     Property scaling : String = "horizontal";
   }
-  Component InteractionModule = new Component {
+  Component Single-HandInteractionModule = new Component {
     Port in;
     Port out;
-    Property responsibility : String = "Support single-hand interaction, exclude multiple-hand interaction, and allow users to customize actions for specific gestures.";
+    Property responsibility : String = "Support single-hand interaction using contours detection, Gaussian blur, Background Subtraction (BS), and Histogram Equalization for image processing.";
     Property state : String = "stateless";
     Property scaling : String = "horizontal";
   }
-  Component Real-timeCollaborationModule = new Component {
+  Component CustomizableGestureModule = new Component {
     Port in;
     Port out;
-    Property responsibility : String = "Enable real-time collaboration by supporting interactions on the projected surface.";
+    Property responsibility : String = "Allow users to customize actions for specific gestures using contours detection, Gaussian blur, Background Subtraction (BS), and Histogram Equalization for image processing.";
     Property state : String = "stateless";
     Property scaling : String = "horizontal";
   }
-  Component LatencyReductionModule = new Component {
-    Port in;
-    Port out;
-    Property responsibility : String = "Analyze gestures and reflect the corresponding action on the projected surface with low-latency.";
-    Property state : String = "stateless";
-    Property scaling : String = "horizontal";
-  }
-  Attachment FaceDetectionModule.out to HandTrackingModule.in {
+  Attachment FaceDetectionModule.out to FaceRecognitionModule.in {
     Property delivery : String = "at-least-once";
     Property ordering : Boolean = true;
     Property backpressure : String = "bounded";
   }
-  Attachment HandTrackingModule.out to GestureRecognitionModule.in {
+  Attachment HandMovementDetectionModule.out to HandTrackingModule.in {
+    Property delivery : String = "at-least-once";
+    Property ordering : Boolean = true;
+    Property backpressure : String = "bounded";
+  }
+  Attachment HandMovementDetectionModule.out to GestureRecognitionModule.in {
     Property delivery : String = "at-least-once";
     Property ordering : Boolean = false;
     Property backpressure : String = "bounded";
   }
-  Attachment GestureRecognitionModule.out to InteractionModule.in {
-    Property delivery : String = "at-least-once";
-    Property ordering : Boolean = true;
-    Property backpressure : String = "bounded";
-  }
-  Attachment InteractionModule.out to Real-timeCollaborationModule.in {
+  Attachment GestureRecognitionModule.out to Single-HandInteractionModule.in {
     Property delivery : String = "at-least-once";
     Property ordering : Boolean = false;
     Property backpressure : String = "bounded";
   }
-  Attachment Real-timeCollaborationModule.out to LatencyReductionModule.in {
+  Attachment GestureRecognitionModule.out to CustomizableGestureModule.in {
+    Property delivery : String = "at-least-once";
+    Property ordering : Boolean = false;
+    Property backpressure : String = "bounded";
+  }
+  Attachment HandTrackingModule.out to Single-HandInteractionModule.in {
     Property delivery : String = "at-least-once";
     Property ordering : Boolean = true;
     Property backpressure : String = "bounded";
   }
-  Attachment LatencyReductionModule.out to Real-timeCollaborationModule.in {
+  Attachment CustomizableGestureModule.out to Single-HandInteractionModule.in {
     Property delivery : String = "at-least-once";
-    Property ordering : Boolean = true;
+    Property ordering : Boolean = false;
     Property backpressure : String = "bounded";
   }
   Property resilience_pattern : String = "Retry, CircuitBreaker";

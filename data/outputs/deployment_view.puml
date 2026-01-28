@@ -10,20 +10,23 @@ node "Kubernetes Ingress" as IngressController {
 node "Face Detection Module Pod" as FaceDetectionModulePod {
   component "Face Detection Module"
 }
+node "Hand Movement Detection Module Pod" as HandMovementDetectionModulePod {
+  component "Hand Movement Detection Module"
+}
 node "Gesture Recognition Module Pod" as GestureRecognitionModulePod {
   component "Gesture Recognition Module"
+}
+node "Face Recognition Module Pod" as FaceRecognitionModulePod {
+  component "Face Recognition Module"
 }
 node "Hand Tracking Module Pod" as HandTrackingModulePod {
   component "Hand Tracking Module"
 }
-node "Interaction Module Pod" as InteractionModulePod {
-  component "Interaction Module"
+node "Single-Hand Interaction Module Pod" as SingleHandInteractionModulePod {
+  component "Single-Hand Interaction Module"
 }
-node "Real-time Collaboration Module Pod" as RealtimeCollaborationModulePod {
-  component "Real-time Collaboration Module"
-}
-node "Latency Reduction Module Pod" as LatencyReductionModulePod {
-  component "Latency Reduction Module"
+node "Customizable Gesture Module Pod" as CustomizableGestureModulePod {
+  component "Customizable Gesture Module"
 }
 Client --> IngressController : HTTP
 node "Secondary Region" as SecondaryRegion {

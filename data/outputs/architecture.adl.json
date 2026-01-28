@@ -4,52 +4,32 @@
   "source": "AI",
   "decisions": [
     {
-      "name": "Face detection using YOLOv5 model",
-      "rationale": "The system uses contours detection to detect the borders of objects, Gaussian blur to mute image noise, Background Subtraction (BS) to separate the moving parts, and Histogram Equalization for image contrast optimization."
+      "name": "Use YOLOv5 model for face detection.",
+      "rationale": "It is a state-of-the-art model for object detection and can accurately detect faces in real-time."
     },
     {
-      "name": "Gesture recognition using threading and multiprocessing",
-      "rationale": "The system uses threading for concurrent execution of tasks within a single process and multiprocessing for parallel execution of tasks across multiple processes."
+      "name": "Use Background Subtraction (BS) for hand movement detection.",
+      "rationale": "It is a widely used technique for separating moving objects from the background and can accurately detect hand movements."
     },
     {
-      "name": "Hand tracking using Background Subtraction (BS)",
-      "rationale": "The system uses Background Subtraction (BS) to separate the moving parts."
+      "name": "Use contours detection for gesture recognition.",
+      "rationale": "It is a widely used technique for detecting the borders of objects and can accurately recognize gestures."
     },
     {
-      "name": "Single-hand interaction",
-      "rationale": "The system excludes multiple-hand interaction."
+      "name": "Use Histogram Equalization for image contrast optimization.",
+      "rationale": "It is a widely used technique for improving image contrast and can enhance the accuracy of face and hand detection."
     },
     {
-      "name": "Customizable actions for specific gestures",
-      "rationale": "The system uses the YOLOv5 model for face detection."
+      "name": "Implement real-time collaboration.",
+      "rationale": "It is a key feature of the system and enables users to interact with each other in real-time."
     },
     {
-      "name": "Real-time collaboration",
-      "rationale": "The system supports interactions on the projected surface."
+      "name": "Minimize latency.",
+      "rationale": "It is crucial for the system to analyze gestures and reflect the corresponding action on the projected surface in real-time with minimal latency."
     },
     {
-      "name": "Low-latency",
-      "rationale": "The system analyzes gestures and reflects the corresponding action on the projected surface."
-    },
-    {
-      "name": "Cost-effective",
-      "rationale": "The system must be affordable to many and have a competitive price compared to other systems in the market."
-    },
-    {
-      "name": "Flexible",
-      "rationale": "The system must work effectively in different places and environments."
-    },
-    {
-      "name": "User-friendly interface",
-      "rationale": "The system must be easy to use and have interactive features."
-    },
-    {
-      "name": "Secure",
-      "rationale": "The system must store user account information securely."
-    },
-    {
-      "name": "Scalable",
-      "rationale": "The system must support multiple users and interactions."
+      "name": "Pricing competitive with other touch projectors.",
+      "rationale": "It is essential for the system to be priced competitively to attract users and enable them to run the system with their available hardware."
     }
   ],
   "production_intents": {
@@ -73,98 +53,164 @@
   "components": [
     {
       "name": "Face Detection Module",
-      "responsibility": "Detect the user's face using the YOLOv5 model, contours detection, Gaussian blur, Background Subtraction (BS), and Histogram Equalization."
+      "responsibility": "Detect the user's face using the YOLOv5 model, and use contours detection, Gaussian blur, Background Subtraction (BS), and Histogram Equalization for image processing."
+    },
+    {
+      "name": "Hand Movement Detection Module",
+      "responsibility": "Detect the user's hand movement using Background Subtraction (BS), and use contours detection, Gaussian blur, and Histogram Equalization for image processing."
     },
     {
       "name": "Gesture Recognition Module",
-      "responsibility": "Recognize gestures using threading for concurrent execution of tasks within a single process and multiprocessing for parallel execution of tasks across multiple processes."
+      "responsibility": "Recognize gestures using contours detection, Gaussian blur, Background Subtraction (BS), and Histogram Equalization for image processing."
+    },
+    {
+      "name": "Face Recognition Module",
+      "responsibility": "Recognize faces using contours detection, Gaussian blur, Background Subtraction (BS), and Histogram Equalization for image processing."
     },
     {
       "name": "Hand Tracking Module",
-      "responsibility": "Track the user's hand using Background Subtraction (BS) to separate the moving parts."
+      "responsibility": "Track hands using contours detection, Gaussian blur, Background Subtraction (BS), and Histogram Equalization for image processing."
     },
     {
-      "name": "Interaction Module",
-      "responsibility": "Support single-hand interaction, exclude multiple-hand interaction, and allow users to customize actions for specific gestures."
+      "name": "Single-Hand Interaction Module",
+      "responsibility": "Support single-hand interaction using contours detection, Gaussian blur, Background Subtraction (BS), and Histogram Equalization for image processing."
     },
     {
-      "name": "Real-time Collaboration Module",
-      "responsibility": "Enable real-time collaboration by supporting interactions on the projected surface."
-    },
-    {
-      "name": "Latency Reduction Module",
-      "responsibility": "Analyze gestures and reflect the corresponding action on the projected surface with low-latency."
+      "name": "Customizable Gesture Module",
+      "responsibility": "Allow users to customize actions for specific gestures using contours detection, Gaussian blur, Background Subtraction (BS), and Histogram Equalization for image processing."
     }
   ],
   "relationships": [
     {
       "source": "Face Detection Module",
+      "target": "Face Recognition Module",
+      "type": "data-flow"
+    },
+    {
+      "source": "Hand Movement Detection Module",
       "target": "Hand Tracking Module",
       "type": "data-flow"
     },
     {
-      "source": "Hand Tracking Module",
+      "source": "Hand Movement Detection Module",
       "target": "Gesture Recognition Module",
       "type": "event-flow"
     },
     {
       "source": "Gesture Recognition Module",
-      "target": "Interaction Module",
-      "type": "data-flow"
-    },
-    {
-      "source": "Interaction Module",
-      "target": "Real-time Collaboration Module",
+      "target": "Single-Hand Interaction Module",
       "type": "event-flow"
     },
     {
-      "source": "Real-time Collaboration Module",
-      "target": "Latency Reduction Module",
+      "source": "Gesture Recognition Module",
+      "target": "Customizable Gesture Module",
+      "type": "event-flow"
+    },
+    {
+      "source": "Hand Tracking Module",
+      "target": "Single-Hand Interaction Module",
       "type": "data-flow"
     },
     {
-      "source": "Latency Reduction Module",
-      "target": "Real-time Collaboration Module",
-      "type": "feedback-flow"
+      "source": "Customizable Gesture Module",
+      "target": "Single-Hand Interaction Module",
+      "type": "event-flow"
     }
   ],
   "runtime_flow": [
     {
       "from": "Face Detection Module",
+      "to": "Face Recognition Module",
+      "action": "Send face detection result",
+      "mode": "sync"
+    },
+    {
+      "from": "Hand Movement Detection Module",
       "to": "Hand Tracking Module",
-      "action": "Send face detection data",
+      "action": "Send hand movement detection result",
+      "mode": "sync"
+    },
+    {
+      "from": "Hand Movement Detection Module",
+      "to": "Gesture Recognition Module",
+      "action": "Trigger gesture recognition",
+      "mode": "async"
+    },
+    {
+      "from": "Gesture Recognition Module",
+      "to": "Single-Hand Interaction Module",
+      "action": "Trigger single-hand interaction",
+      "mode": "async"
+    },
+    {
+      "from": "Gesture Recognition Module",
+      "to": "Customizable Gesture Module",
+      "action": "Trigger gesture customization",
       "mode": "async"
     },
     {
       "from": "Hand Tracking Module",
-      "to": "Gesture Recognition Module",
-      "action": "Trigger gesture recognition",
+      "to": "Single-Hand Interaction Module",
+      "action": "Send hand tracking result",
       "mode": "sync"
     },
     {
-      "from": "Gesture Recognition Module",
-      "to": "Interaction Module",
-      "action": "Send recognized gesture data",
+      "from": "Customizable Gesture Module",
+      "to": "Single-Hand Interaction Module",
+      "action": "Trigger single-hand interaction with customized gesture",
       "mode": "async"
-    },
-    {
-      "from": "Interaction Module",
-      "to": "Real-time Collaboration Module",
-      "action": "Trigger real-time collaboration",
-      "mode": "sync"
-    },
-    {
-      "from": "Real-time Collaboration Module",
-      "to": "Latency Reduction Module",
-      "action": "Send collaboration data",
-      "mode": "async"
-    },
-    {
-      "from": "Latency Reduction Module",
-      "to": "Real-time Collaboration Module",
-      "action": "Reflect action on projected surface",
-      "mode": "sync"
     }
   ],
-  "critique": []
+  "critique": [
+    {
+      "component": "Face Detection Module",
+      "issue": "The YOLOv5 model may not be suitable for real-time face detection, which could impact the system's low-latency requirement.",
+      "nfr": "Low-latency"
+    },
+    {
+      "component": "Hand Movement Detection Module",
+      "issue": "The use of Background Subtraction (BS) may not be effective in dynamic environments, which could impact the system's real-time collaboration requirement.",
+      "nfr": "Real-time collaboration"
+    },
+    {
+      "component": "Gesture Recognition Module",
+      "issue": "The use of contours detection, Gaussian blur, Background Subtraction (BS), and Histogram Equalization may not be sufficient for recognizing complex gestures, which could impact the system's customizable gesture requirement.",
+      "nfr": "Customizable Gesture"
+    },
+    {
+      "component": "Face Recognition Module",
+      "issue": "The use of contours detection, Gaussian blur, Background Subtraction (BS), and Histogram Equalization may not be sufficient for recognizing faces in varying lighting conditions, which could impact the system's real-time collaboration requirement.",
+      "nfr": "Real-time collaboration"
+    },
+    {
+      "component": "Hand Tracking Module",
+      "issue": "The use of contours detection, Gaussian blur, Background Subtraction (BS), and Histogram Equalization may not be sufficient for tracking hands in dynamic environments, which could impact the system's real-time collaboration requirement.",
+      "nfr": "Real-time collaboration"
+    },
+    {
+      "component": "Single-Hand Interaction Module",
+      "issue": "The system may not be able to support single-hand interaction in scenarios where the user's hand is partially occluded, which could impact the system's real-time collaboration requirement.",
+      "nfr": "Real-time collaboration"
+    },
+    {
+      "component": "Customizable Gesture Module",
+      "issue": "The system may not be able to support customizable gestures in scenarios where the user's hand is moving rapidly, which could impact the system's low-latency requirement.",
+      "nfr": "Low-latency"
+    },
+    {
+      "relationship": "Face Detection Module -> Face Recognition Module",
+      "issue": "The data flow from the Face Detection Module to the Face Recognition Module may not be sufficient to support real-time face recognition, which could impact the system's low-latency requirement.",
+      "nfr": "Low-latency"
+    },
+    {
+      "relationship": "Hand Movement Detection Module -> Hand Tracking Module",
+      "issue": "The data flow from the Hand Movement Detection Module to the Hand Tracking Module may not be sufficient to support real-time hand tracking, which could impact the system's real-time collaboration requirement.",
+      "nfr": "Real-time collaboration"
+    },
+    {
+      "relationship": "Hand Movement Detection Module -> Gesture Recognition Module",
+      "issue": "The event flow from the Hand Movement Detection Module to the Gesture Recognition Module may not be sufficient to support real-time gesture recognition, which could impact the system's low-latency requirement.",
+      "nfr": "Low-latency"
+    }
+  ]
 }

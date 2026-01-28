@@ -1,1 +1,52 @@
-[]
+[
+  {
+    "component": "Face Detection Module",
+    "issue": "The YOLOv5 model may not be suitable for real-time face detection, which could impact the system's low-latency requirement.",
+    "nfr": "Low-latency"
+  },
+  {
+    "component": "Hand Movement Detection Module",
+    "issue": "The use of Background Subtraction (BS) may not be effective in dynamic environments, which could impact the system's real-time collaboration requirement.",
+    "nfr": "Real-time collaboration"
+  },
+  {
+    "component": "Gesture Recognition Module",
+    "issue": "The use of contours detection, Gaussian blur, Background Subtraction (BS), and Histogram Equalization may not be sufficient for recognizing complex gestures, which could impact the system's customizable gesture requirement.",
+    "nfr": "Customizable Gesture"
+  },
+  {
+    "component": "Face Recognition Module",
+    "issue": "The use of contours detection, Gaussian blur, Background Subtraction (BS), and Histogram Equalization may not be sufficient for recognizing faces in varying lighting conditions, which could impact the system's real-time collaboration requirement.",
+    "nfr": "Real-time collaboration"
+  },
+  {
+    "component": "Hand Tracking Module",
+    "issue": "The use of contours detection, Gaussian blur, Background Subtraction (BS), and Histogram Equalization may not be sufficient for tracking hands in dynamic environments, which could impact the system's real-time collaboration requirement.",
+    "nfr": "Real-time collaboration"
+  },
+  {
+    "component": "Single-Hand Interaction Module",
+    "issue": "The system may not be able to support single-hand interaction in scenarios where the user's hand is partially occluded, which could impact the system's real-time collaboration requirement.",
+    "nfr": "Real-time collaboration"
+  },
+  {
+    "component": "Customizable Gesture Module",
+    "issue": "The system may not be able to support customizable gestures in scenarios where the user's hand is moving rapidly, which could impact the system's low-latency requirement.",
+    "nfr": "Low-latency"
+  },
+  {
+    "relationship": "Face Detection Module -> Face Recognition Module",
+    "issue": "The data flow from the Face Detection Module to the Face Recognition Module may not be sufficient to support real-time face recognition, which could impact the system's low-latency requirement.",
+    "nfr": "Low-latency"
+  },
+  {
+    "relationship": "Hand Movement Detection Module -> Hand Tracking Module",
+    "issue": "The data flow from the Hand Movement Detection Module to the Hand Tracking Module may not be sufficient to support real-time hand tracking, which could impact the system's real-time collaboration requirement.",
+    "nfr": "Real-time collaboration"
+  },
+  {
+    "relationship": "Hand Movement Detection Module -> Gesture Recognition Module",
+    "issue": "The event flow from the Hand Movement Detection Module to the Gesture Recognition Module may not be sufficient to support real-time gesture recognition, which could impact the system's low-latency requirement.",
+    "nfr": "Low-latency"
+  }
+]
