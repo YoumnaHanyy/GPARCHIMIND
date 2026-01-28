@@ -7,8 +7,8 @@ skinparam rectangle {
 skinparam package {
   BackgroundColor White
 }
-rectangle "End User" <<external>>
-rectangle "LibraryManagementSystem" <<process>>
-"End User" --> "LibraryManagementSystem" : Requests / Inputs
-"LibraryManagementSystem" --> "End User" : Responses / Results
+rectangle "EndUser" as EndUser <<external>>
+rectangle "LibraryManagementSystem" as LibraryManagementSystem <<process>>
+EndUser --> LibraryManagementSystem : Requests / Inputs
+LibraryManagementSystem --> EndUser : Responses / Results
 @enduml

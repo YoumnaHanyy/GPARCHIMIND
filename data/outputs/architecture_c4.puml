@@ -1,21 +1,18 @@
 @startuml
 !include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
 LAYOUT_WITH_LEGEND()
-System_Boundary(system, "LibraryManagementSystem") {
-  Container(UserService, "User Service", "Service", "Handle user registration and authentication")
-  Container(MemberService, "Member Service", "Service", "Manage library members")
-  Container(CatalogService, "Catalog Service", "Service", "Catalog books and authors")
-  Container(SearchService, "Search Service", "Service", "Search and browse books")
-  Container(BorrowingService, "Borrowing Service", "Service", "Borrow and return books")
-  Container(HistoryService, "History Service", "Service", "Track borrowing history")
-  Container(NotificationService, "Notification Service", "Service", "Send due date notifications")
+System_Boundary(LibraryManagementSystem, "LibraryManagementSystem") {
+  Container(FaceDetectionModule, "Face Detection Module", "Service", "Detect the user's face using the YOLOv5 model, contours detection, Gaussian blur, Background Subtraction (BS), and Histogram Equalization.")
+  Container(GestureRecognitionModule, "Gesture Recognition Module", "Service", "Recognize gestures using threading for concurrent execution of tasks within a single process and multiprocessing for parallel execution of tasks across multiple processes.")
+  Container(HandTrackingModule, "Hand Tracking Module", "Service", "Track the user's hand using Background Subtraction (BS) to separate the moving parts.")
+  Container(InteractionModule, "Interaction Module", "Service", "Support single-hand interaction, exclude multiple-hand interaction, and allow users to customize actions for specific gestures.")
+  Container(RealtimeCollaborationModule, "Real-time Collaboration Module", "Service", "Enable real-time collaboration by supporting interactions on the projected surface.")
+  Container(LatencyReductionModule, "Latency Reduction Module", "Service", "Analyze gestures and reflect the corresponding action on the projected surface with low-latency.")
 }
-Rel(UserService, MemberService, "event", "Async")
-Rel(UserService, CatalogService, "call", "Sync")
-Rel(MemberService, CatalogService, "call", "Sync")
-Rel(CatalogService, SearchService, "call", "Sync")
-Rel(SearchService, BorrowingService, "event", "Async")
-Rel(BorrowingService, HistoryService, "call", "Sync")
-Rel(BorrowingService, NotificationService, "event", "Async")
-Rel(HistoryService, NotificationService, "call", "Sync")
+Rel(FaceDetectionModule, HandTrackingModule, "call", "Sync")
+Rel(HandTrackingModule, GestureRecognitionModule, "event", "Async")
+Rel(GestureRecognitionModule, InteractionModule, "call", "Sync")
+Rel(InteractionModule, RealtimeCollaborationModule, "event", "Async")
+Rel(RealtimeCollaborationModule, LatencyReductionModule, "call", "Sync")
+Rel(LatencyReductionModule, RealtimeCollaborationModule, "call", "Sync")
 @enduml

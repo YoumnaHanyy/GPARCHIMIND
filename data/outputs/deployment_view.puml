@@ -4,43 +4,30 @@ left to right direction
 node "Client" {
   component "User"
 }
-node "Kubernetes Ingress" {
+node "Kubernetes Ingress" as IngressController {
   component "Ingress Controller"
 }
-node "User Service Pod" {
-  component "User Service"
+node "Face Detection Module Pod" as FaceDetectionModulePod {
+  component "Face Detection Module"
 }
-node "Member Service Pod" {
-  component "Member Service"
+node "Gesture Recognition Module Pod" as GestureRecognitionModulePod {
+  component "Gesture Recognition Module"
 }
-node "Catalog Service Pod" {
-  component "Catalog Service"
+node "Hand Tracking Module Pod" as HandTrackingModulePod {
+  component "Hand Tracking Module"
 }
-node "Search Service Pod" {
-  component "Search Service"
+node "Interaction Module Pod" as InteractionModulePod {
+  component "Interaction Module"
 }
-node "Borrowing Service Pod" {
-  component "Borrowing Service"
+node "Real-time Collaboration Module Pod" as RealtimeCollaborationModulePod {
+  component "Real-time Collaboration Module"
 }
-node "History Service Pod" {
-  component "History Service"
+node "Latency Reduction Module Pod" as LatencyReductionModulePod {
+  component "Latency Reduction Module"
 }
-node "Notification Service Pod" {
-  component "Notification Service"
-}
-"User" --> "Ingress Controller" : TCP/IP
-"Ingress Controller" --> "API Gateway Pod" : HTTP/HTTPS
-"User" --> "Ingress Controller"
-"Ingress Controller" --> "API Gateway Pod"
-"API Gateway Pod" --> "User Service Pod"
-"API Gateway Pod" --> "Member Service Pod"
-"API Gateway Pod" --> "Catalog Service Pod"
-"API Gateway Pod" --> "Search Service Pod"
-"API Gateway Pod" --> "Borrowing Service Pod"
-"API Gateway Pod" --> "History Service Pod"
-"API Gateway Pod" --> "Notification Service Pod"
-node "Secondary Region" {
+Client --> IngressController : HTTP
+node "Secondary Region" as SecondaryRegion {
   component "Replica Services"
 }
-"Ingress Controller" --> "Secondary Region" : failover
+IngressController --> SecondaryRegion : failover
 @enduml

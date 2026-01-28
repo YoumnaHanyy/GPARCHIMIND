@@ -2,91 +2,74 @@ System LibraryManagementSystem {
   Property view : String = "runtime";
   Property architectureStyle : String = "Microservices Architecture";
   Property source : String = "AI";
-  Component UserService = new Component {
+  Component FaceDetectionModule = new Component {
     Port in;
     Port out;
-    Property responsibility : String = "Handle user registration and authentication";
+    Property responsibility : String = "Detect the user's face using the YOLOv5 model, contours detection, Gaussian blur, Background Subtraction (BS), and Histogram Equalization.";
     Property state : String = "stateless";
     Property scaling : String = "horizontal";
   }
-  Component MemberService = new Component {
+  Component GestureRecognitionModule = new Component {
     Port in;
     Port out;
-    Property responsibility : String = "Manage library members";
+    Property responsibility : String = "Recognize gestures using threading for concurrent execution of tasks within a single process and multiprocessing for parallel execution of tasks across multiple processes.";
     Property state : String = "stateless";
     Property scaling : String = "horizontal";
   }
-  Component CatalogService = new Component {
+  Component HandTrackingModule = new Component {
     Port in;
     Port out;
-    Property responsibility : String = "Catalog books and authors";
+    Property responsibility : String = "Track the user's hand using Background Subtraction (BS) to separate the moving parts.";
     Property state : String = "stateless";
     Property scaling : String = "horizontal";
   }
-  Component SearchService = new Component {
+  Component InteractionModule = new Component {
     Port in;
     Port out;
-    Property responsibility : String = "Search and browse books";
+    Property responsibility : String = "Support single-hand interaction, exclude multiple-hand interaction, and allow users to customize actions for specific gestures.";
     Property state : String = "stateless";
     Property scaling : String = "horizontal";
   }
-  Component BorrowingService = new Component {
+  Component Real-timeCollaborationModule = new Component {
     Port in;
     Port out;
-    Property responsibility : String = "Borrow and return books";
+    Property responsibility : String = "Enable real-time collaboration by supporting interactions on the projected surface.";
     Property state : String = "stateless";
     Property scaling : String = "horizontal";
   }
-  Component HistoryService = new Component {
+  Component LatencyReductionModule = new Component {
     Port in;
     Port out;
-    Property responsibility : String = "Track borrowing history";
+    Property responsibility : String = "Analyze gestures and reflect the corresponding action on the projected surface with low-latency.";
     Property state : String = "stateless";
     Property scaling : String = "horizontal";
   }
-  Component NotificationService = new Component {
-    Port in;
-    Port out;
-    Property responsibility : String = "Send due date notifications";
-    Property state : String = "stateless";
-    Property scaling : String = "horizontal";
+  Attachment FaceDetectionModule.out to HandTrackingModule.in {
+    Property delivery : String = "at-least-once";
+    Property ordering : Boolean = true;
+    Property backpressure : String = "bounded";
   }
-  Attachment UserService.out to MemberService.in {
+  Attachment HandTrackingModule.out to GestureRecognitionModule.in {
     Property delivery : String = "at-least-once";
     Property ordering : Boolean = false;
     Property backpressure : String = "bounded";
   }
-  Attachment UserService.out to CatalogService.in {
+  Attachment GestureRecognitionModule.out to InteractionModule.in {
     Property delivery : String = "at-least-once";
     Property ordering : Boolean = true;
     Property backpressure : String = "bounded";
   }
-  Attachment MemberService.out to CatalogService.in {
-    Property delivery : String = "at-least-once";
-    Property ordering : Boolean = true;
-    Property backpressure : String = "bounded";
-  }
-  Attachment CatalogService.out to SearchService.in {
-    Property delivery : String = "at-least-once";
-    Property ordering : Boolean = true;
-    Property backpressure : String = "bounded";
-  }
-  Attachment SearchService.out to BorrowingService.in {
+  Attachment InteractionModule.out to Real-timeCollaborationModule.in {
     Property delivery : String = "at-least-once";
     Property ordering : Boolean = false;
     Property backpressure : String = "bounded";
   }
-  Attachment BorrowingService.out to HistoryService.in {
+  Attachment Real-timeCollaborationModule.out to LatencyReductionModule.in {
     Property delivery : String = "at-least-once";
     Property ordering : Boolean = true;
     Property backpressure : String = "bounded";
   }
-  Attachment BorrowingService.out to NotificationService.in {
-    Property delivery : String = "at-least-once";
-    Property ordering : Boolean = false;
-    Property backpressure : String = "bounded";
-  }
-  Attachment HistoryService.out to NotificationService.in {
+  Attachment LatencyReductionModule.out to Real-timeCollaborationModule.in {
     Property delivery : String = "at-least-once";
     Property ordering : Boolean = true;
     Property backpressure : String = "bounded";

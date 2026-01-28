@@ -1,19 +1,16 @@
 @startuml
 autonumber
 actor User
-participant "User Service" as UserService
-participant "Member Service" as MemberService
-participant "Catalog Service" as CatalogService
-participant "Search Service" as SearchService
-participant "Borrowing Service" as BorrowingService
-participant "History Service" as HistoryService
-participant "Notification Service" as NotificationService
-UserService ->> MemberService : Create Member
-UserService -> CatalogService : Fetch Catalog Data
-MemberService -> CatalogService : Fetch Member Catalog Data
-CatalogService ->> SearchService : Index Catalog Data
-SearchService ->> BorrowingService : Search for Book
-BorrowingService -> HistoryService : Record Borrowing
-BorrowingService ->> NotificationService : Send Due Date Notification
-HistoryService -> NotificationService : Fetch Borrowing History
+participant "Face Detection Module" as FaceDetectionModule
+participant "Gesture Recognition Module" as GestureRecognitionModule
+participant "Hand Tracking Module" as HandTrackingModule
+participant "Interaction Module" as InteractionModule
+participant "Real-time Collaboration Module" as RealtimeCollaborationModule
+participant "Latency Reduction Module" as LatencyReductionModule
+FaceDetectionModule ->> HandTrackingModule : Send face detection data
+HandTrackingModule -> GestureRecognitionModule : Trigger gesture recognition
+GestureRecognitionModule ->> InteractionModule : Send recognized gesture data
+InteractionModule -> RealtimeCollaborationModule : Trigger real-time collaboration
+RealtimeCollaborationModule ->> LatencyReductionModule : Send collaboration data
+LatencyReductionModule -> RealtimeCollaborationModule : Reflect action on projected surface
 @enduml

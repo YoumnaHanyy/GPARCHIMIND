@@ -1,17 +1,1 @@
-[
-  {
-    "id": 1,
-    "description": "Cascading failures due to event-flow relationships between services could impact the overall availability of the system.",
-    "category": "availability"
-  },
-  {
-    "id": 2,
-    "description": "Data inconsistencies due to data-flow relationships between services could impact the overall reliability and consistency of the system.",
-    "category": "reliability"
-  },
-  {
-    "id": 3,
-    "description": "Inconsistent state across components due to event-flow relationships between services could impact the overall consistency of the system.",
-    "category": "consistency"
-  }
-]
+[]

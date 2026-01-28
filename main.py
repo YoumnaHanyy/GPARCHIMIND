@@ -13,6 +13,7 @@ from ai.ai_engine import ai_generate_architecture
 from ai.json_to_context_view import convert_to_context_view
 from application.extraction.adl.json_to_acme import convert_to_acme
 import os
+from pathlib import Path
 import subprocess
 import json
 from application.extraction.srs_extractor import SRSExtractor
@@ -73,14 +74,27 @@ def home(request: Request):
 @app.get("/generate")
 def generate_architecture():
 
+    BASE_DIR = Path(__file__).resolve().parent
+    PROJECT_ROOT = BASE_DIR.parents[0]  # لو main.py في root
+
+    # -------- load system info --------
     with open("data/outputs/input/requirements.json", "r", encoding="utf-8") as f:
         requirements = json.load(f)
 
+    # -------- load FRs --------
+    with open("data/outputs/functional_requirements.json", "r", encoding="utf-8") as f:
+        functional_requirements = json.load(f)
+
+    # -------- load NFRs --------
+    with open("data/outputs/non_functional_requirements.json", "r", encoding="utf-8") as f:
+        non_functional_requirements = json.load(f)
+
+    # -------- generate architecture --------
     arch = ai_generate_architecture(
-    requirements["system_name"],
-    requirements["functional_requirements"],
-    requirements["non_functional_requirements"],
-    requirements["architecture_style"]
+        requirements["system_name"],
+        functional_requirements,
+        non_functional_requirements,
+        requirements["architecture_style"]
     )
 
     with open("data/outputs/architecture.adl.json", "w", encoding="utf-8") as f:
@@ -144,6 +158,7 @@ def generate_architecture():
     "data/outputs/process_view.puml",
     "data/outputs/deployment_view.puml"
 ], check=True)
+
 
 
 

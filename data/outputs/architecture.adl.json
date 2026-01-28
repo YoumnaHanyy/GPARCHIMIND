@@ -4,32 +4,52 @@
   "source": "AI",
   "decisions": [
     {
-      "name": "Use a service registry for service discovery",
-      "rationale": "To ensure scalability and availability, use a service registry to manage service instances and enable dynamic service discovery."
+      "name": "Face detection using YOLOv5 model",
+      "rationale": "The system uses contours detection to detect the borders of objects, Gaussian blur to mute image noise, Background Subtraction (BS) to separate the moving parts, and Histogram Equalization for image contrast optimization."
     },
     {
-      "name": "Implement load balancing for each service",
-      "rationale": "To achieve high availability and medium latency, implement load balancing for each service to distribute incoming traffic and prevent any single point of failure."
+      "name": "Gesture recognition using threading and multiprocessing",
+      "rationale": "The system uses threading for concurrent execution of tasks within a single process and multiprocessing for parallel execution of tasks across multiple processes."
     },
     {
-      "name": "Use a message broker for communication between services",
-      "rationale": "To ensure strong consistency and high reliability, use a message broker to enable asynchronous communication between services and decouple them from each other."
+      "name": "Hand tracking using Background Subtraction (BS)",
+      "rationale": "The system uses Background Subtraction (BS) to separate the moving parts."
     },
     {
-      "name": "Implement authentication and authorization for each service",
-      "rationale": "To ensure medium security, implement authentication and authorization for each service to restrict access to authorized users and prevent unauthorized access."
+      "name": "Single-hand interaction",
+      "rationale": "The system excludes multiple-hand interaction."
     },
     {
-      "name": "Use a database with strong consistency for critical data",
-      "rationale": "To ensure strong consistency and high reliability, use a database with strong consistency for critical data such as user information and borrowing history."
+      "name": "Customizable actions for specific gestures",
+      "rationale": "The system uses the YOLOv5 model for face detection."
     },
     {
-      "name": "Use a caching layer for read-heavy operations",
-      "rationale": "To achieve medium latency and high availability, use a caching layer for read-heavy operations such as searching and browsing books to reduce the load on the database."
+      "name": "Real-time collaboration",
+      "rationale": "The system supports interactions on the projected surface."
     },
     {
-      "name": "Implement a notification service for due date notifications",
-      "rationale": "To ensure high reliability and strong consistency, implement a notification service to send due date notifications to library members and decouple it from the borrowing service."
+      "name": "Low-latency",
+      "rationale": "The system analyzes gestures and reflects the corresponding action on the projected surface."
+    },
+    {
+      "name": "Cost-effective",
+      "rationale": "The system must be affordable to many and have a competitive price compared to other systems in the market."
+    },
+    {
+      "name": "Flexible",
+      "rationale": "The system must work effectively in different places and environments."
+    },
+    {
+      "name": "User-friendly interface",
+      "rationale": "The system must be easy to use and have interactive features."
+    },
+    {
+      "name": "Secure",
+      "rationale": "The system must store user account information securely."
+    },
+    {
+      "name": "Scalable",
+      "rationale": "The system must support multiple users and interactions."
     }
   ],
   "production_intents": {
@@ -52,141 +72,99 @@
   },
   "components": [
     {
-      "name": "User Service",
-      "responsibility": "Handle user registration and authentication"
+      "name": "Face Detection Module",
+      "responsibility": "Detect the user's face using the YOLOv5 model, contours detection, Gaussian blur, Background Subtraction (BS), and Histogram Equalization."
     },
     {
-      "name": "Member Service",
-      "responsibility": "Manage library members"
+      "name": "Gesture Recognition Module",
+      "responsibility": "Recognize gestures using threading for concurrent execution of tasks within a single process and multiprocessing for parallel execution of tasks across multiple processes."
     },
     {
-      "name": "Catalog Service",
-      "responsibility": "Catalog books and authors"
+      "name": "Hand Tracking Module",
+      "responsibility": "Track the user's hand using Background Subtraction (BS) to separate the moving parts."
     },
     {
-      "name": "Search Service",
-      "responsibility": "Search and browse books"
+      "name": "Interaction Module",
+      "responsibility": "Support single-hand interaction, exclude multiple-hand interaction, and allow users to customize actions for specific gestures."
     },
     {
-      "name": "Borrowing Service",
-      "responsibility": "Borrow and return books"
+      "name": "Real-time Collaboration Module",
+      "responsibility": "Enable real-time collaboration by supporting interactions on the projected surface."
     },
     {
-      "name": "History Service",
-      "responsibility": "Track borrowing history"
-    },
-    {
-      "name": "Notification Service",
-      "responsibility": "Send due date notifications"
+      "name": "Latency Reduction Module",
+      "responsibility": "Analyze gestures and reflect the corresponding action on the projected surface with low-latency."
     }
   ],
   "relationships": [
     {
-      "source": "User Service",
-      "target": "Member Service",
+      "source": "Face Detection Module",
+      "target": "Hand Tracking Module",
+      "type": "data-flow"
+    },
+    {
+      "source": "Hand Tracking Module",
+      "target": "Gesture Recognition Module",
       "type": "event-flow"
     },
     {
-      "source": "User Service",
-      "target": "Catalog Service",
+      "source": "Gesture Recognition Module",
+      "target": "Interaction Module",
       "type": "data-flow"
     },
     {
-      "source": "Member Service",
-      "target": "Catalog Service",
-      "type": "data-flow"
-    },
-    {
-      "source": "Catalog Service",
-      "target": "Search Service",
-      "type": "data-flow"
-    },
-    {
-      "source": "Search Service",
-      "target": "Borrowing Service",
+      "source": "Interaction Module",
+      "target": "Real-time Collaboration Module",
       "type": "event-flow"
     },
     {
-      "source": "Borrowing Service",
-      "target": "History Service",
+      "source": "Real-time Collaboration Module",
+      "target": "Latency Reduction Module",
       "type": "data-flow"
     },
     {
-      "source": "Borrowing Service",
-      "target": "Notification Service",
-      "type": "event-flow"
-    },
-    {
-      "source": "History Service",
-      "target": "Notification Service",
-      "type": "data-flow"
+      "source": "Latency Reduction Module",
+      "target": "Real-time Collaboration Module",
+      "type": "feedback-flow"
     }
   ],
   "runtime_flow": [
     {
-      "from": "User Service",
-      "to": "Member Service",
-      "action": "Create Member",
+      "from": "Face Detection Module",
+      "to": "Hand Tracking Module",
+      "action": "Send face detection data",
       "mode": "async"
     },
     {
-      "from": "User Service",
-      "to": "Catalog Service",
-      "action": "Fetch Catalog Data",
+      "from": "Hand Tracking Module",
+      "to": "Gesture Recognition Module",
+      "action": "Trigger gesture recognition",
       "mode": "sync"
     },
     {
-      "from": "Member Service",
-      "to": "Catalog Service",
-      "action": "Fetch Member Catalog Data",
+      "from": "Gesture Recognition Module",
+      "to": "Interaction Module",
+      "action": "Send recognized gesture data",
+      "mode": "async"
+    },
+    {
+      "from": "Interaction Module",
+      "to": "Real-time Collaboration Module",
+      "action": "Trigger real-time collaboration",
       "mode": "sync"
     },
     {
-      "from": "Catalog Service",
-      "to": "Search Service",
-      "action": "Index Catalog Data",
+      "from": "Real-time Collaboration Module",
+      "to": "Latency Reduction Module",
+      "action": "Send collaboration data",
       "mode": "async"
     },
     {
-      "from": "Search Service",
-      "to": "Borrowing Service",
-      "action": "Search for Book",
-      "mode": "async"
-    },
-    {
-      "from": "Borrowing Service",
-      "to": "History Service",
-      "action": "Record Borrowing",
-      "mode": "sync"
-    },
-    {
-      "from": "Borrowing Service",
-      "to": "Notification Service",
-      "action": "Send Due Date Notification",
-      "mode": "async"
-    },
-    {
-      "from": "History Service",
-      "to": "Notification Service",
-      "action": "Fetch Borrowing History",
+      "from": "Latency Reduction Module",
+      "to": "Real-time Collaboration Module",
+      "action": "Reflect action on projected surface",
       "mode": "sync"
     }
   ],
-  "critique": [
-    {
-      "id": 1,
-      "description": "Cascading failures due to event-flow relationships between services could impact the overall availability of the system.",
-      "category": "availability"
-    },
-    {
-      "id": 2,
-      "description": "Data inconsistencies due to data-flow relationships between services could impact the overall reliability and consistency of the system.",
-      "category": "reliability"
-    },
-    {
-      "id": 3,
-      "description": "Inconsistent state across components due to event-flow relationships between services could impact the overall consistency of the system.",
-      "category": "consistency"
-    }
-  ]
+  "critique": []
 }

@@ -1,32 +1,57 @@
+import re
+
+def alias_of(name: str) -> str:
+    return re.sub(r'[^a-zA-Z0-9_]', '', name)
+
+
 def convert_to_context_view(arch):
     lines = []
     lines.append("@startuml")
     lines.append("!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml")
     lines.append("LAYOUT_WITH_LEGEND()")
 
-    # 🔥 system is now a string
     system_name = arch["system"]
+    system_alias = alias_of(system_name)
 
     # ---- Actor ----
-    lines.append('Person(User, "End User", "Uses the system")')
+    user_alias = "UserActor"
+    lines.append(f'Person({user_alias}, "End User", "Uses the system")')
 
     # ---- System ----
-    lines.append(f'System(SystemA, "{system_name}", "System under design")')
+    lines.append(f'System({system_alias}, "{system_name}", "System under design")')
 
-    # ---- External Systems (inferred from components) ----
+    # ---- External Systems (derived from components) ----
+    declared_ext = set()
+
     for c in arch.get("components", []):
         lname = c["name"].lower()
 
-        if "payment" in lname:
-            lines.append('System_Ext(PaymentGateway, "Payment Gateway", "External payment processor")')
-            lines.append('Rel(SystemA, PaymentGateway, "Processes payments via")')
+        if "payment" in lname and "payment" not in declared_ext:
+            ext_name = "Payment Gateway"
+            ext_alias = alias_of(ext_name)
+            declared_ext.add("payment")
 
-        if "notification" in lname:
-            lines.append('System_Ext(NotificationService, "Notification Service", "External notification system")')
-            lines.append('Rel(SystemA, NotificationService, "Sends notifications via")')
+            lines.append(
+                f'System_Ext({ext_alias}, "{ext_name}", "External payment processor")'
+            )
+            lines.append(
+                f'Rel({system_alias}, {ext_alias}, "Processes payments via")'
+            )
+
+        if "notification" in lname and "notification" not in declared_ext:
+            ext_name = "Notification Service"
+            ext_alias = alias_of(ext_name)
+            declared_ext.add("notification")
+
+            lines.append(
+                f'System_Ext({ext_alias}, "{ext_name}", "External notification system")'
+            )
+            lines.append(
+                f'Rel({system_alias}, {ext_alias}, "Sends notifications via")'
+            )
 
     # ---- User Interaction ----
-    lines.append('Rel(User, SystemA, "Uses")')
+    lines.append(f'Rel({user_alias}, {system_alias}, "Uses")')
 
     lines.append("@enduml")
     return "\n".join(lines)

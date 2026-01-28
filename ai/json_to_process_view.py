@@ -1,10 +1,14 @@
+import re
+
+def alias_of(name: str) -> str:
+    clean = re.sub(r'[^a-zA-Z0-9_]', '', name)
+    return clean if clean else "Comp"
+
+
 def convert_to_process_view(adl):
     lines = []
     lines.append("@startuml")
     lines.append("autonumber")
-
-    print("PROCESS VIEW ADL KEYS:", adl.keys())
-    print("RUNTIME FLOW:", adl.get("runtime_flow"))
 
     # Actor
     lines.append("actor User")
@@ -12,7 +16,7 @@ def convert_to_process_view(adl):
     components = adl.get("components", [])
     runtime_flow = adl.get("runtime_flow", [])
 
-    # لو مفيش runtime_flow نعمل fallback رسم بسيط
+    # -------- Fallback --------
     if not runtime_flow:
         lines.append("participant API")
         lines.append("participant Service")
@@ -22,18 +26,24 @@ def convert_to_process_view(adl):
         lines.append("@enduml")
         return "\n".join(lines)
 
-    # Participants من components
+    # -------- Participants --------
+    alias_map = {}
+
     for c in components:
         name = c["name"]
-        alias = name.replace(" ", "")
+        alias = alias_of(name)
+        alias_map[name] = alias
         lines.append(f'participant "{name}" as {alias}')
 
-    # Runtime flow
+    # -------- Runtime Flow --------
     for step in runtime_flow:
-        src = step["from"].replace(" ", "")
-        dst = step["to"].replace(" ", "")
+        src_name = step["from"]
+        dst_name = step["to"]
         action = step["action"]
         mode = step.get("mode", "sync")
+
+        src = alias_map.get(src_name, alias_of(src_name))
+        dst = alias_map.get(dst_name, alias_of(dst_name))
 
         if mode == "async":
             lines.append(f'{src} ->> {dst} : {action}')
