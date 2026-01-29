@@ -927,7 +927,7 @@
       return "<p class='text-muted'>No Final Recommendation Available.</p>";
     }
 
-    let html = "<h5 class='section-header'>Final Recommendation</h5>";
+    let html = "<h5 class='section-header'>Top Recommended Architectures</h5>";
     html += "<p class='text-muted mb-4'>Aggregated from Functional, Ordinal, Binary, and Weighted methods.</p>";
 
     data.hybrid_method.forEach((item, idx) => {
@@ -978,9 +978,9 @@
 
     html += `
       <div class="mt-4">
-        <a href="/generate" class="btn btn-success btn-sm me-2">
-          <i class="bi bi-download me-1"></i> Download Report
-        </a>
+       <button class="btn btn-success btn-sm me-2" onclick="generateADL()">
+  <i class="bi bi-download me-1"></i> Generate ADL Blueprint
+</button>
         <button class="btn btn-outline-success btn-sm">
           <i class="bi bi-file-code me-1"></i> Generate Code Skeleton
         </button>
@@ -994,6 +994,44 @@
      TAB RENDERING
   ======================= */
 
+async function generateADL() {
+    // 1. Show Loading Animation
+    document.getElementById('resultContent').classList.add('hidden');
+    const loading = document.getElementById('loadingMessage');
+    loading.classList.remove('hidden');
+    startLoadingAnimation();
+
+    try {
+        // 2. Fetch el file mn el server (Dynamic wait)
+        const response = await fetch("/generate");
+        
+        if (!response.ok) throw new Error("Server error");
+
+        // 3. Ne7awel el response le "Blob" (Binary Large Object)
+        const blob = await response.blob();
+        
+        // 4. Ne3mel link "fake" 3ashan n-trigger el download
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = "ADL_Blueprint.pdf"; // aw el esm eli t7ebih
+        document.body.appendChild(a);
+        a.click();
+        
+        // 5. Cleanup
+        window.URL.revokeObjectURL(url);
+        a.remove();
+
+    } catch (err) {
+        console.error("Download failed:", err);
+        alert("Something went wrong while generating the report.");
+    } finally {
+        // 6. El Loading haye2f hna awel ma el sater bta3 el 'await' ykhallas
+        stopLoadingAnimation();
+        loading.classList.add('hidden');
+        document.getElementById('resultContent').classList.remove('hidden');
+    }
+}
   function renderPhase() {
     const data = phaseData[currentPhase];
     

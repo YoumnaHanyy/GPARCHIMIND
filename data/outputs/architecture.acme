@@ -2,88 +2,146 @@ System LibraryManagementSystem {
   Property view : String = "runtime";
   Property architectureStyle : String = "Microservices Architecture";
   Property source : String = "AI";
-  Component FaceDetectionModule = new Component {
+  Component Camera = new Component {
     Port in;
     Port out;
-    Property responsibility : String = "Detect the user's face using the YOLOv5 model, and use contours detection, Gaussian blur, Background Subtraction (BS), and Histogram Equalization for image processing.";
+    Property responsibility : String = "Captures hand gesture commands and the user's facial features as input to the system.";
     Property state : String = "stateless";
     Property scaling : String = "horizontal";
   }
-  Component HandMovementDetectionModule = new Component {
+  Component YOLOv5Model = new Component {
     Port in;
     Port out;
-    Property responsibility : String = "Detect the user's hand movement using Background Subtraction (BS), and use contours detection, Gaussian blur, and Histogram Equalization for image processing.";
+    Property responsibility : String = "Detects the user's face using the YOLOv5 model.";
     Property state : String = "stateless";
     Property scaling : String = "horizontal";
   }
-  Component GestureRecognitionModule = new Component {
+  Component BackgroundSubtraction(BS) = new Component {
     Port in;
     Port out;
-    Property responsibility : String = "Recognize gestures using contours detection, Gaussian blur, Background Subtraction (BS), and Histogram Equalization for image processing.";
+    Property responsibility : String = "Separates the moving parts (e.g., user's hand movement) from the background.";
     Property state : String = "stateless";
     Property scaling : String = "horizontal";
   }
-  Component FaceRecognitionModule = new Component {
+  Component HistogramEqualization = new Component {
     Port in;
     Port out;
-    Property responsibility : String = "Recognize faces using contours detection, Gaussian blur, Background Subtraction (BS), and Histogram Equalization for image processing.";
+    Property responsibility : String = "Optimizes image contrast.";
     Property state : String = "stateless";
     Property scaling : String = "horizontal";
   }
-  Component HandTrackingModule = new Component {
+  Component Threading = new Component {
     Port in;
     Port out;
-    Property responsibility : String = "Track hands using contours detection, Gaussian blur, Background Subtraction (BS), and Histogram Equalization for image processing.";
+    Property responsibility : String = "Enables concurrent execution of tasks within a single process.";
     Property state : String = "stateless";
     Property scaling : String = "horizontal";
   }
-  Component Single-HandInteractionModule = new Component {
+  Component Multiprocessing = new Component {
     Port in;
     Port out;
-    Property responsibility : String = "Support single-hand interaction using contours detection, Gaussian blur, Background Subtraction (BS), and Histogram Equalization for image processing.";
+    Property responsibility : String = "Enables parallel execution of tasks across multiple processes and is beneficial for data-intensive operations.";
     Property state : String = "stateless";
     Property scaling : String = "horizontal";
   }
-  Component CustomizableGestureModule = new Component {
+  Component GestureRecognition = new Component {
     Port in;
     Port out;
-    Property responsibility : String = "Allow users to customize actions for specific gestures using contours detection, Gaussian blur, Background Subtraction (BS), and Histogram Equalization for image processing.";
+    Property responsibility : String = "Recognizes and interprets hand gestures.";
     Property state : String = "stateless";
     Property scaling : String = "horizontal";
   }
-  Attachment FaceDetectionModule.out to FaceRecognitionModule.in {
+  Component FaceRecognition = new Component {
+    Port in;
+    Port out;
+    Property responsibility : String = "Recognizes and identifies the user's face.";
+    Property state : String = "stateless";
+    Property scaling : String = "horizontal";
+  }
+  Component HandTracking = new Component {
+    Port in;
+    Port out;
+    Property responsibility : String = "Tracks the user's hand movements.";
+    Property state : String = "stateless";
+    Property scaling : String = "horizontal";
+  }
+  Component Single-HandInteraction = new Component {
+    Port in;
+    Port out;
+    Property responsibility : String = "Allows the user to interact with the system using a single hand.";
+    Property state : String = "stateless";
+    Property scaling : String = "horizontal";
+  }
+  Component CustomGestureActions = new Component {
+    Port in;
+    Port out;
+    Property responsibility : String = "Customizes the actions for specific gestures.";
+    Property state : String = "stateless";
+    Property scaling : String = "horizontal";
+  }
+  Attachment Camera.out to YOLOv5Model.in {
     Property delivery : String = "at-least-once";
     Property ordering : Boolean = true;
     Property backpressure : String = "bounded";
   }
-  Attachment HandMovementDetectionModule.out to HandTrackingModule.in {
+  Attachment YOLOv5Model.out to BackgroundSubtraction(BS).in {
     Property delivery : String = "at-least-once";
     Property ordering : Boolean = true;
     Property backpressure : String = "bounded";
   }
-  Attachment HandMovementDetectionModule.out to GestureRecognitionModule.in {
-    Property delivery : String = "at-least-once";
-    Property ordering : Boolean = false;
-    Property backpressure : String = "bounded";
-  }
-  Attachment GestureRecognitionModule.out to Single-HandInteractionModule.in {
-    Property delivery : String = "at-least-once";
-    Property ordering : Boolean = false;
-    Property backpressure : String = "bounded";
-  }
-  Attachment GestureRecognitionModule.out to CustomizableGestureModule.in {
-    Property delivery : String = "at-least-once";
-    Property ordering : Boolean = false;
-    Property backpressure : String = "bounded";
-  }
-  Attachment HandTrackingModule.out to Single-HandInteractionModule.in {
+  Attachment BackgroundSubtraction(BS).out to HistogramEqualization.in {
     Property delivery : String = "at-least-once";
     Property ordering : Boolean = true;
     Property backpressure : String = "bounded";
   }
-  Attachment CustomizableGestureModule.out to Single-HandInteractionModule.in {
+  Attachment HistogramEqualization.out to GestureRecognition.in {
+    Property delivery : String = "at-least-once";
+    Property ordering : Boolean = true;
+    Property backpressure : String = "bounded";
+  }
+  Attachment Camera.out to GestureRecognition.in {
     Property delivery : String = "at-least-once";
     Property ordering : Boolean = false;
+    Property backpressure : String = "bounded";
+  }
+  Attachment GestureRecognition.out to HandTracking.in {
+    Property delivery : String = "at-least-once";
+    Property ordering : Boolean = true;
+    Property backpressure : String = "bounded";
+  }
+  Attachment HandTracking.out to Single-HandInteraction.in {
+    Property delivery : String = "at-least-once";
+    Property ordering : Boolean = true;
+    Property backpressure : String = "bounded";
+  }
+  Attachment Single-HandInteraction.out to CustomGestureActions.in {
+    Property delivery : String = "at-least-once";
+    Property ordering : Boolean = true;
+    Property backpressure : String = "bounded";
+  }
+  Attachment Camera.out to FaceRecognition.in {
+    Property delivery : String = "at-least-once";
+    Property ordering : Boolean = false;
+    Property backpressure : String = "bounded";
+  }
+  Attachment FaceRecognition.out to Single-HandInteraction.in {
+    Property delivery : String = "at-least-once";
+    Property ordering : Boolean = true;
+    Property backpressure : String = "bounded";
+  }
+  Attachment BackgroundSubtraction(BS).out to Multiprocessing.in {
+    Property delivery : String = "at-least-once";
+    Property ordering : Boolean = true;
+    Property backpressure : String = "bounded";
+  }
+  Attachment Multiprocessing.out to Threading.in {
+    Property delivery : String = "at-least-once";
+    Property ordering : Boolean = true;
+    Property backpressure : String = "bounded";
+  }
+  Attachment Threading.out to CustomGestureActions.in {
+    Property delivery : String = "at-least-once";
+    Property ordering : Boolean = true;
     Property backpressure : String = "bounded";
   }
   Property resilience_pattern : String = "Retry, CircuitBreaker";

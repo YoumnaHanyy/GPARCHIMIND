@@ -1,18 +1,28 @@
 @startuml
 autonumber
 actor User
-participant "Face Detection Module" as FaceDetectionModule
-participant "Hand Movement Detection Module" as HandMovementDetectionModule
-participant "Gesture Recognition Module" as GestureRecognitionModule
-participant "Face Recognition Module" as FaceRecognitionModule
-participant "Hand Tracking Module" as HandTrackingModule
-participant "Single-Hand Interaction Module" as SingleHandInteractionModule
-participant "Customizable Gesture Module" as CustomizableGestureModule
-FaceDetectionModule -> FaceRecognitionModule : Send face detection result
-HandMovementDetectionModule -> HandTrackingModule : Send hand movement detection result
-HandMovementDetectionModule ->> GestureRecognitionModule : Trigger gesture recognition
-GestureRecognitionModule ->> SingleHandInteractionModule : Trigger single-hand interaction
-GestureRecognitionModule ->> CustomizableGestureModule : Trigger gesture customization
-HandTrackingModule -> SingleHandInteractionModule : Send hand tracking result
-CustomizableGestureModule ->> SingleHandInteractionModule : Trigger single-hand interaction with customized gesture
+participant "Camera" as Camera
+participant "YOLOv5 Model" as YOLOv5Model
+participant "Background Subtraction (BS)" as BackgroundSubtractionBS
+participant "Histogram Equalization" as HistogramEqualization
+participant "Threading" as Threading
+participant "Multiprocessing" as Multiprocessing
+participant "Gesture Recognition" as GestureRecognition
+participant "Face Recognition" as FaceRecognition
+participant "Hand Tracking" as HandTracking
+participant "Single-Hand Interaction" as SingleHandInteraction
+participant "Custom Gesture Actions" as CustomGestureActions
+Camera ->> YOLOv5Model : Capture facial features
+YOLOv5Model -> BackgroundSubtractionBS : Detect face
+BackgroundSubtractionBS -> HistogramEqualization : Enhance image contrast
+HistogramEqualization ->> GestureRecognition : Recognize hand gestures
+Camera ->> GestureRecognition : Capture hand gesture commands
+GestureRecognition -> HandTracking : Track hand movements
+HandTracking -> SingleHandInteraction : Enable single-hand interaction
+SingleHandInteraction -> CustomGestureActions : Customize gesture actions
+Camera ->> FaceRecognition : Capture facial features
+FaceRecognition -> SingleHandInteraction : Enable single-hand interaction
+BackgroundSubtractionBS ->> Multiprocessing : Process background subtraction
+Multiprocessing -> Threading : Enable concurrent execution
+Threading -> CustomGestureActions : Customize gesture actions
 @enduml

@@ -1,23 +1,44 @@
 [
   {
-    "title": "Competitive price.",
-    "description": "The system must be priced competitively, costing less than other touch projectors in the market, and enabling users to run the system with their available hardware (PC-Camera-projector) with no hardware limitations at all.",
+    "title": "Competitive price",
+    "description": "Our optimal goal is the price. After making a competitive analysis we figured out that our system compared to others in the market costs way less than all enabling the users to run the system with their available hardware (PC-Camera-projector) with no hardware limitations at all, and more interactive features that are not available in any traditional touch projector.",
     "predicted_type": "US",
     "predicted_type_label": "Usability",
-    "predicted_level": "High"
+    "predicted_level": "Low"
   },
   {
-    "title": "Real-time collaboration.",
-    "description": "The system must support real-time collaboration by enabling interactions on the projected surface, fostering collaborative environments for business or educational purposes.",
-    "predicted_type": "SC",
-    "predicted_type_label": "Scalability",
-    "predicted_level": "High"
+    "title": "Real-time Collaboration",
+    "description": "Enable real-time collaboration by supporting interactions on the projected surface, fostering collaborative environments for business or educational purposes.",
+    "predicted_type": "US",
+    "predicted_type_label": "Usability",
+    "predicted_level": "Low"
   },
   {
-    "title": "Low-latency.",
-    "description": "The system must analyze gestures and reflect the corresponding action on the projected surface in real-time, with minimal latency.",
+    "title": "Low-Latency",
+    "description": "The system must analyze gestures and reflect the corresponding action on the projected surface in real-time.",
     "predicted_type": "PE",
     "predicted_type_label": "Performance",
     "predicted_level": "High"
+  },
+  {
+    "title": "Scalability",
+    "description": "The system should be able to handle multiple users and devices without compromising performance.",
+    "predicted_type": "SC",
+    "predicted_type_label": "Scalability",
+    "predicted_level": "Low"
+  },
+  {
+    "title": "Usability",
+    "description": "The system should be easy to use and navigate, with an intuitive interface that minimizes user error.",
+    "predicted_type": "US",
+    "predicted_type_label": "Usability",
+    "predicted_level": "Low"
+  },
+  {
+    "title": "Security",
+    "description": "The system should ensure the confidentiality, integrity, and availability of user data and prevent unauthorized access.",
+    "predicted_type": "SE",
+    "predicted_type_label": "Security",
+    "predicted_level": "Low"
   }
 ]

@@ -1,64 +1,82 @@
 [
   {
-    "title": "The system must detect the user's face using the YOLOv5 model.",
-    "description": "The system uses contours detection to detect the borders of objects, Gaussian blur to mute image noise, Background Subtraction (BS) to separate the moving parts, and Histogram Equalization for image contrast optimization.",
+    "title": "The system works as follows: the user connects his PC to the projector and then starts the camera.",
+    "description": "The projected content then is displayed on a flat surface for instance the wall. The camera gives the hand gesture commands and the users’ facial features as input to the system.",
     "source": {
-      "page": 6,
-      "start_index": 1
+      "page": "3.2",
+      "start_index": "System Overview"
     },
     "project_id": 2
   },
   {
-    "title": "The system must detect the user's hand movement using Background Subtraction (BS).",
-    "description": "The system uses contours detection to detect the borders of objects, Gaussian blur to mute image noise, Background Subtraction (BS) to separate the moving parts, and Histogram Equalization for image contrast optimization.",
+    "title": "The system detects the user’s face using the YOLOv5 model.",
+    "description": "For the pre-processing we use contours detection to detect the borders of objects, also Gaussian blur is used to mute the image noise.",
     "source": {
-      "page": 6,
-      "start_index": 2
+      "page": "3.2",
+      "start_index": "System Overview"
     },
     "project_id": 2
   },
   {
-    "title": "The system must recognize gestures.",
-    "description": "The system uses contours detection to detect the borders of objects, Gaussian blur to mute image noise, Background Subtraction (BS) to separate the moving parts, and Histogram Equalization for image contrast optimization.",
+    "title": "The system uses Background Subtraction (BS) to separate the moving parts for example here we mean the user’s hand movement from the background.",
+    "description": "Additionally, Histogram Equalization is used for image contrast optimization.",
     "source": {
-      "page": 6,
-      "start_index": 3
+      "page": "3.2",
+      "start_index": "System Overview"
     },
     "project_id": 2
   },
   {
-    "title": "The system must recognize faces.",
-    "description": "The system uses contours detection to detect the borders of objects, Gaussian blur to mute image noise, Background Subtraction (BS) to separate the moving parts, and Histogram Equalization for image contrast optimization.",
+    "title": "The system uses threading for concurrent execution of tasks within a single process.",
+    "description": "Furthermore, multiprocessing enables parallel execution of tasks across multiple processes and is also beneficial for data-intensive operations.",
     "source": {
-      "page": 6,
-      "start_index": 4
+      "page": "3.2",
+      "start_index": "System Overview"
     },
     "project_id": 2
   },
   {
-    "title": "The system must track hands.",
-    "description": "The system uses contours detection to detect the borders of objects, Gaussian blur to mute image noise, Background Subtraction (BS) to separate the moving parts, and Histogram Equalization for image contrast optimization.",
+    "title": "The system includes Gesture Recognition.",
+    "description": "This is one of the system’s features.",
     "source": {
-      "page": 6,
-      "start_index": 5
+      "page": "3.3",
+      "start_index": "System Scope"
     },
     "project_id": 2
   },
   {
-    "title": "The system must support single-hand interaction.",
-    "description": "The system uses contours detection to detect the borders of objects, Gaussian blur to mute image noise, Background Subtraction (BS) to separate the moving parts, and Histogram Equalization for image contrast optimization.",
+    "title": "The system includes Face Recognition.",
+    "description": "This is one of the system’s features.",
     "source": {
-      "page": 7,
-      "start_index": 1
+      "page": "3.3",
+      "start_index": "System Scope"
     },
     "project_id": 2
   },
   {
-    "title": "The system must allow users to customize actions for specific gestures.",
-    "description": "The system uses contours detection to detect the borders of objects, Gaussian blur to mute image noise, Background Subtraction (BS) to separate the moving parts, and Histogram Equalization for image contrast optimization.",
+    "title": "The system includes Hand Tracking.",
+    "description": "This is one of the system’s features.",
     "source": {
-      "page": 7,
-      "start_index": 2
+      "page": "3.3",
+      "start_index": "System Scope"
+    },
+    "project_id": 2
+  },
+  {
+    "title": "The system includes Single-Hand Interaction.",
+    "description": "This is one of the system’s features.",
+    "source": {
+      "page": "3.3",
+      "start_index": "System Scope"
+    },
+    "project_id": 2
+  },
+  {
+    "title": "The system includes customizing the actions for specific gestures.",
+    "description": "This is one of the system’s features.",
+    "source": {
+      "page": "3.3",
+      "start_index": "System Scope"
     },
     "project_id": 2
   }
