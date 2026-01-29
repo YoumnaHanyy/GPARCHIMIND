@@ -1,91 +1,73 @@
 [
   {
-    "title": "Provide a comprehensive learning support system",
-    "description": "Conduct precise assessments, identify challenges related to reading and working memory, and deliver personalized AI-driven tutoring experiences.",
+    "title": "Script Generator",
+    "description": "Transforms user input into video scripts.",
     "source": {
-      "page": "3.1",
-      "start_index": "1"
+      "page": 10,
+      "start_index": 1
     },
     "project_id": 2
   },
   {
-    "title": "Offer tailored educational interventions",
-    "description": "Provide specialized support for individuals with learning disabilities, specifically focusing on phonological alphabetical awareness in reading disabilities' challenges.",
+    "title": "Video Generator",
+    "description": "Creates videos, including long, short videos and stories based on user provided text or scripts.",
     "source": {
-      "page": "3.1",
-      "start_index": "2"
+      "page": 10,
+      "start_index": 2
     },
     "project_id": 2
   },
   {
-    "title": "Conduct early and accurate diagnostic tools",
-    "description": "Identify reading and working memory challenges to deliver timely and personalized interventions.",
+    "title": "Script Video Editor",
+    "description": "Enables users to edit video content through text inputs.",
     "source": {
-      "page": "3.1",
-      "start_index": "3"
+      "page": 10,
+      "start_index": 3
     },
     "project_id": 2
   },
   {
-    "title": "Deliver personalized AI-driven tutoring experiences",
-    "description": "Use machine learning and natural language processing to create interactive online learning experiences.",
+    "title": "Voice Over",
+    "description": "Allowing users to have a voice over on the videos.",
     "source": {
-      "page": "2.2.1",
-      "start_index": "1"
+      "page": 10,
+      "start_index": 4
     },
     "project_id": 2
   },
   {
-    "title": "Provide a user-friendly interface",
-    "description": "Create a tailored interface for individuals with Dyslexia, enhancing reading, spelling, and memorization aspects like phonological awareness in new languages.",
+    "title": "Background Music",
+    "description": "Library of free music/sounds to be used on the videos.",
     "source": {
-      "page": "1.2",
-      "start_index": "1"
+      "page": 10,
+      "start_index": 5
     },
     "project_id": 2
   },
   {
-    "title": "Streamline the learning process",
-    "description": "Ease the burden on parents and teachers while supporting children's development.",
+    "title": "Captions",
+    "description": "Automatically generates on video captions.",
     "source": {
-      "page": "1.2",
-      "start_index": "2"
+      "page": 10,
+      "start_index": 6
     },
     "project_id": 2
   },
   {
-    "title": "Use machine learning algorithms",
-    "description": "Utilize random forest algorithm for classification and fuzzy neural network for special education of learning-disabled learners.",
+    "title": "Increase the Length of the Video",
+    "description": "Increase video length from the current average to a minimum of three minutes.",
     "source": {
-      "page": "2.1",
-      "start_index": "1"
+      "page": 8,
+      "start_index": 1
     },
     "project_id": 2
   },
   {
-    "title": "Create interactive online learning experiences",
-    "description": "Use videos, dialogue-based exercises, question-answering, diagrams, math exercises, and gamification.",
+    "title": "Implement Advanced Edits for Scripts",
+    "description": "Implement user-friendly script editing functionalities.",
     "source": {
-      "page": "2.1",
-      "start_index": "2"
-    },
-    "project_id": 2
-  },
-  {
-    "title": "Provide continuous availability",
-    "description": "Offer 24/7 access to the learning platform.",
-    "source": {
-      "page": "2.2.1",
-      "start_index": "1"
-    },
-    "project_id": 2
-  },
-  {
-    "title": "Foster student growth",
-    "description": "Encourage reflection on both successful and challenging decisions made during interactive games.",
-    "source": {
-      "page": "2.2.1",
-      "start_index": "2"
+      "page": 9,
+      "start_index": 2
     },
     "project_id": 2
   }

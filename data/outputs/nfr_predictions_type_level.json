@@ -1,58 +1,37 @@
 [
   {
-    "title": "Scalability",
-    "description": "The system must be able to accommodate a large number of users and adapt to changing demands.",
+    "title": "Standards Compliance",
+    "description": "The system MUST comply with industry standards for text-to-video generation.",
+    "predicted_type": "LF",
+    "predicted_type_label": "Load Factor",
+    "predicted_level": "High"
+  },
+  {
+    "title": "Hardware Limitations",
+    "description": "The system MUST be able to handle high GPU-intensive processes.",
     "predicted_type": "SC",
     "predicted_type_label": "Scalability",
     "predicted_level": "High"
   },
   {
-    "title": "Usability",
-    "description": "The system must be user-friendly and accessible to individuals with Dyslexia.",
-    "predicted_type": "US",
-    "predicted_type_label": "Usability",
-    "predicted_level": "High"
-  },
-  {
     "title": "Performance",
-    "description": "The system must be able to process user data efficiently and provide timely responses.",
+    "description": "The system SHOULD be able to generate videos in a reasonable amount of time.",
     "predicted_type": "PE",
     "predicted_type_label": "Performance",
-    "predicted_level": "High"
+    "predicted_level": "Low"
   },
   {
     "title": "Security",
-    "description": "The system must ensure the confidentiality, integrity, and availability of user data.",
+    "description": "The system MUST ensure the security and integrity of user data.",
     "predicted_type": "SE",
     "predicted_type_label": "Security",
     "predicted_level": "High"
   },
   {
-    "title": "Accessibility",
-    "description": "The system must be accessible to users with disabilities and follow accessibility guidelines.",
+    "title": "Usability",
+    "description": "The system MUST be user-friendly and easy to use.",
     "predicted_type": "US",
     "predicted_type_label": "Usability",
-    "predicted_level": "High"
-  },
-  {
-    "title": "Data Privacy",
-    "description": "The system must comply with data privacy regulations and ensure the secure storage and processing of user data.",
-    "predicted_type": "SE",
-    "predicted_type_label": "Security",
-    "predicted_level": "High"
-  },
-  {
-    "title": "Interoperability",
-    "description": "The system must be able to integrate with other systems and tools to provide a seamless user experience.",
-    "predicted_type": "US",
-    "predicted_type_label": "Usability",
-    "predicted_level": "High"
-  },
-  {
-    "title": "Reliability",
-    "description": "The system must be able to operate reliably and consistently, with minimal downtime.",
-    "predicted_type": "PE",
-    "predicted_type_label": "Performance",
     "predicted_level": "High"
   }
 ]

@@ -34,8 +34,9 @@ body {
 /* ✅ LOGIN-SIZED CONTAINER */
 .main-layout {
     width: 90%;
-    max-width: 980px;
-    min-height: 560px;
+    max-width: 1180px;
+    min-height: 460px;
+    max-height: 700px;
     display: flex;
     background: white;
     border-radius: 36px;
@@ -51,27 +52,20 @@ body {
     flex: 1;
     padding: 50px;
     border-right: 1px solid #f1f5f9;
+    margin-top: -40px;   /* ← ده اللي يطلع الجزء كله لفوق */
 }
 
-.logo {
-    font-weight: 800;
-    font-size: 1.1rem;
-    margin-bottom: 45px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-.logo i { color: var(--primary); }
+
 
 h1 {
     font-size: 2.6rem;
     line-height: 1.1;
     letter-spacing: -1.8px;
-    margin-bottom: 15px;
+    margin-bottom: 10px;
 }
 p {
     color: #64748b;
-    margin-bottom: 35px;
+    margin-bottom: 15px;
 }
 
 .input-container { margin-bottom: 18px; }
@@ -79,7 +73,7 @@ p {
     font-size: 0.7rem;
     font-weight: 800;
     text-transform: uppercase;
-    margin-bottom: 8px;
+    margin-bottom: 3px;
     display: block;
     color: #94a3b8;
     letter-spacing: 1px;
@@ -204,6 +198,95 @@ p {
     .visual-side { display: none; }
     .main-layout { max-width: 500px; }
 }
+.top-bar{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    margin-bottom:10px;
+    margin-top:0px;
+}
+
+.back-btn{
+    translate: -40px;
+    width:42px;
+    height:38px;
+    border-radius:50%;
+    border:2px solid var(--primary);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:var(--primary);
+    text-decoration:none;
+    transition:.25s ease;
+}
+
+.back-btn:hover{
+    background:var(--primary);
+    color:#fff;
+}
+.social-divider{
+    display:flex;
+    align-items:center;
+    text-align:center;
+    margin:26px 0 18px;
+    color:#94a3b8;
+    font-size:.85rem;
+}
+.social-divider::before,
+.social-divider::after{
+    content:"";
+    flex:1;
+    height:1px;
+    background:#e2e8f0;
+}
+.social-divider span{padding:0 14px;font-weight:600;}
+
+.social-login{
+    display:flex;
+    justify-content:center;
+    gap:16px;
+}
+
+.social-btn{
+    width:46px;
+    height:46px;
+    border-radius:50%;
+    border:1px solid #e2e8f0;
+    background:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:1.15rem;
+    cursor:pointer;
+    transition:.25s ease;
+}
+.social-btn.google{color:#ea4335;}
+.social-btn.github{color:#111827;}
+.social-btn.apple{color:#000;}
+.social-btn:hover{
+    transform:translateY(-3px);
+    box-shadow:0 12px 25px rgba(0,0,0,.12);
+}
+.login-link{
+    position:relative;
+    color:var(--primary);
+    text-decoration:none;
+    font-weight:800;
+}
+.login-link::after{
+    content:"";
+    position:absolute;
+    left:0;
+    bottom:-3px;
+    width:0%;
+    height:2px;
+    background:var(--primary);
+    transition:width .3s ease;
+}
+.login-link:hover::after{
+    width:100%;
+}
+
 </style>
 </head>
 
@@ -212,9 +295,22 @@ p {
 <div class="main-layout">
 
     <div class="auth-side">
-        <div class="logo"><i class="fas fa-microchip"></i> ARCHIMIND</div>
+        <div class="top-bar">
+    <a href="/" class="back-btn">
+        <i class="fas fa-arrow-left"></i>
+    </a>
+    <div class="brand">
+        <img src="/static/images/Logo_black.png" style="translate: -50px;height: 50px;">
+    </div>
+</div>
+
         <h1>Sustainable<br>Systems.</h1>
         <p>Your workspace for AI-driven architectural integrity.</p>
+        <p style="margin-top:25px; text-align:center; font-weight:700;">
+    Already have an account ?
+    <a href="/Login" class="login-link">Log in</a>
+</p>
+
 
         <div class="input-container">
             <label>Full Name</label>
@@ -227,11 +323,21 @@ p {
         </div>
 
         <div class="input-container">
-            <label>Clearance Level</label>
+            <label>Role</label>
             <input class="input-field" placeholder="Senior Architect">
         </div>
 
         <button class="btn-primary">Initialize Console</button>
+        <div class="social-divider">
+    <span>or sign in with</span>
+</div>
+
+<div class="social-login">
+    <button class="social-btn google"><i class="fab fa-google"></i></button>
+    <button class="social-btn github"><i class="fab fa-github"></i></button>
+    <button class="social-btn apple"><i class="fab fa-apple"></i></button>
+</div>
+
     </div>
 
     <div class="visual-side">

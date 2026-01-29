@@ -10,6 +10,7 @@ NFR_MAP = {
     "Portability": "PO",
     "Operational ": "O",
     "Load Factor": "LF",
+    "Latency": "L",
 }
 
 # Reverse mapping: abbreviation -> full name

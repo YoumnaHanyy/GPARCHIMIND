@@ -1,16 +1,16 @@
-from fastapi import APIRouter, UploadFile, File
+from fastapi import APIRouter, Request, UploadFile, File
 from fastapi.responses import JSONResponse
 import os
 import traceback
 
 from application.extraction.extraction_service import process_srs
 from ai.inference.predict_type_level import predict_and_save_nfr
-from application.extraction.ordinal_service import execute_ordinal_method
-from application.extraction.binary_service import execute_binary_method
-from application.extraction.weighted_service import execute_weighted_method
-from application.extraction.nfr_stats_service import compute_nfr_statistics
-from application.extraction.functional_service import execute_functional_method
-from application.extraction.hybrid_service import execute_hybrid_method
+from service.ordinal_service import execute_ordinal_method
+from service.binary_service import execute_binary_method
+from service.weighted_service import execute_weighted_method
+from service.nfr_stats_service import compute_nfr_statistics
+from service.functional_service import execute_functional_method
+from service.hybrid_service import execute_hybrid_method
 
 
 from infrastructure.repositories.weighted_repository import save_weighted_result
@@ -105,3 +105,7 @@ async def extract_srs(file: UploadFile = File(...)):
             "code": last_trace.line
           }
         )
+@router.post("/logout")
+async def logout(request: Request):
+    request.session.clear()
+    return JSONResponse({"message": "Logged out"})
