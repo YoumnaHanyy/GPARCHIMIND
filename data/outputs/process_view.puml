@@ -1,17 +1,30 @@
 @startuml
 autonumber
 actor User
-participant "Face Detection Module" as FaceDetectionModule
 participant "Gesture Recognition Module" as GestureRecognitionModule
+participant "Face Recognition Module" as FaceRecognitionModule
 participant "Hand Tracking Module" as HandTrackingModule
-participant "Interaction Module" as InteractionModule
-participant "Collaboration Module" as CollaborationModule
+participant "Single-Hand Interaction Module" as SingleHandInteractionModule
+participant "Customization Module" as CustomizationModule
+participant "Real-Time Collaboration Module" as RealTimeCollaborationModule
+participant "Image Processing Module" as ImageProcessingModule
+participant "Background Subtraction Module" as BackgroundSubtractionModule
+participant "Threading Module" as ThreadingModule
+participant "Multiprocessing Module" as MultiprocessingModule
 participant "Latency Optimization Module" as LatencyOptimizationModule
-FaceDetectionModule ->> HandTrackingModule : Detect face and trigger hand tracking
-HandTrackingModule ->> GestureRecognitionModule : Track hand and send gesture data
-GestureRecognitionModule -> InteractionModule : Recognize gesture and trigger interaction
-InteractionModule ->> CollaborationModule : Trigger collaboration and enable real-time interaction
-CollaborationModule ->> LatencyOptimizationModule : Optimize latency for real-time collaboration
-LatencyOptimizationModule -> InteractionModule : Reflect action on projected surface with low-latency
-FaceDetectionModule ->> GestureRecognitionModule : Send face detection data for gesture recognition
+participant "Environmental Adaptation Module" as EnvironmentalAdaptationModule
+GestureRecognitionModule ->> HandTrackingModule : Trigger hand tracking
+HandTrackingModule -> SingleHandInteractionModule : Enable single-hand interaction
+FaceRecognitionModule ->> HandTrackingModule : Trigger hand tracking
+HandTrackingModule ->> ImageProcessingModule : Process hand movement
+ImageProcessingModule ->> BackgroundSubtractionModule : Separate moving parts from background
+BackgroundSubtractionModule -> GestureRecognitionModule : Update gesture recognition
+CustomizationModule -> GestureRecognitionModule : Update gesture recognition
+HandTrackingModule ->> ImageProcessingModule : Process hand movement
+ImageProcessingModule ->> RealTimeCollaborationModule : Enable real-time collaboration
+BackgroundSubtractionModule -> GestureRecognitionModule : Update gesture recognition
+ThreadingModule ->> MultiprocessingModule : Enable parallel execution
+MultiprocessingModule ->> LatencyOptimizationModule : Optimize latency
+LatencyOptimizationModule ->> RealTimeCollaborationModule : Enable real-time collaboration
+EnvironmentalAdaptationModule ->> RealTimeCollaborationModule : Adapt to environment
 @enduml

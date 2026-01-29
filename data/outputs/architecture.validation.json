@@ -1,44 +1,26 @@
 [
   {
-    "component": "Face Detection Module",
-    "relationship": "Hand Tracking Module",
-    "type": "event-flow",
-    "issue": "The Face Detection Module's responsibility includes using the YOLOv5 model, which may require significant computational resources. This could impact the system's cost-effectiveness (NFR: The system shall be cost-effective)."
+    "id": 1,
+    "description": "Missing relationship between Face Recognition Module and Gesture Recognition Module."
   },
   {
-    "component": "Gesture Recognition Module",
-    "relationship": "Interaction Module",
-    "type": "data-flow",
-    "issue": "The Gesture Recognition Module uses threading and multiprocessing for concurrent and parallel execution of tasks. However, this may lead to increased complexity and potential security risks (NFR: The system shall be secure)."
+    "id": 2,
+    "description": "Insufficient security features."
   },
   {
-    "component": "Hand Tracking Module",
-    "relationship": "Gesture Recognition Module",
-    "type": "event-flow",
-    "issue": "The Hand Tracking Module relies on Background Subtraction (BS), which may not perform well in environments with changing lighting conditions. This could impact the system's flexibility (NFR: The system shall be flexible)."
+    "id": 3,
+    "description": "Lack of real-time feedback."
   },
   {
-    "component": "Interaction Module",
-    "relationship": "Collaboration Module",
-    "type": "event-flow",
-    "issue": "The Interaction Module supports single-hand interaction, but excludes multiple-hand interaction. This may limit the system's usability in certain scenarios (NFR: The system shall have a user-friendly interface)."
+    "id": 4,
+    "description": "Inadequate error handling."
   },
   {
-    "component": "Collaboration Module",
-    "relationship": "Latency Optimization Module",
-    "type": "event-flow",
-    "issue": "The Collaboration Module enables real-time collaboration, but the Latency Optimization Module's responsibility is to analyze gestures and reflect the corresponding action on the projected surface with low-latency. However, this may lead to increased latency in certain situations (NFR: The system shall have a competitive price)."
+    "id": 5,
+    "description": "Missing relationship between Image Processing Module and Background Subtraction Module."
   },
   {
-    "component": "Latency Optimization Module",
-    "relationship": "Interaction Module",
-    "type": "event-flow",
-    "issue": "The Latency Optimization Module's responsibility is to optimize latency, but this may require additional computational resources, which could impact the system's cost-effectiveness (NFR: The system shall be cost-effective)."
-  },
-  {
-    "component": "Face Detection Module",
-    "relationship": "Gesture Recognition Module",
-    "type": "event-flow",
-    "issue": "The Face Detection Module's responsibility includes using the YOLOv5 model, which may require significant computational resources. This could impact the system's cost-effectiveness (NFR: The system shall be cost-effective)."
+    "id": 6,
+    "description": "Lack of scalability."
   }
 ]

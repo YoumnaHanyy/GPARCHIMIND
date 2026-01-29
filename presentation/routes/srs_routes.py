@@ -1,6 +1,7 @@
 from fastapi import APIRouter, UploadFile, File
 from fastapi.responses import JSONResponse
 import os
+import uuid
 import traceback
 
 from application.extraction.extraction_service import process_srs
@@ -33,7 +34,7 @@ def clean_object_id(items: list):
 @router.post("/extract")
 async def extract_srs(file: UploadFile = File(...)):
     try:
-        project_id = 2
+        project_id = f"proj_{uuid.uuid4().hex[:8]}"
 
         # 1️⃣ save pdf
         pdf_path = os.path.join(UPLOAD_DIR, "srs.pdf")
@@ -83,6 +84,7 @@ async def extract_srs(file: UploadFile = File(...)):
         save_weighted_result(project_id, weighted_result)
         # 6️⃣ response للـ UI
         return {
+            "project_id": project_id, 
             "functional": clean_object_id(extraction_result["functional"]),
             "nfr_predictions": clean_object_id(predictions),
             "functional_method": functional_result,

@@ -512,6 +512,12 @@
     color: #636e72;
     margin-top: 0;
   }
+
+  .selected-arch {
+  background-color: #e9f7ef;
+  border-left: 4px solid #198754;
+}
+
 </style>
 </head>
 
@@ -962,7 +968,7 @@
     return html;
   }
 
-  function renderFinalReport(data) {
+function renderFinalReport(data) {
     if (!data || !data.hybrid_method || data.hybrid_method.length === 0) {
       return "<p class='text-muted'>No data available for final report.</p>";
     }
@@ -979,22 +985,28 @@
         <p class="mb-0">Final Score: <strong>${topArch.FinalScore}%</strong></p>
       </div>
       
-      <h6 class="mt-4 mb-3">Top 5 Architecture Recommendations:</h6>
+      <h6 class="mt-4 mb-3">Top 5 Architecture Recommendations (Select your preference):</h6>
     `;
 
     data.hybrid_method.forEach((item, idx) => {
+      // Ben-ضيف class 'arch-item' w 'onclick' function
       html += `
-        <div class="d-flex justify-content-between align-items-center mb-2 p-2 border-bottom">
+        <div class="arch-item d-flex justify-content-between align-items-center mb-2 p-3 border-bottom" 
+             onclick="selectArchitecture(this, '${item.Architecture}')">
           <span>${idx + 1}. ${item.Architecture.replace("_", " ").toUpperCase()}</span>
           <span class="badge bg-primary">${item.FinalScore}%</span>
         </div>
       `;
     });
 
+    // El buttons zay ma heya
     html += `
       <div class="mt-4">
-       <button class="btn btn-success btn-sm me-2" onclick="generateADL()">
-  <i class="bi bi-download me-1"></i> Generate ADL Blueprint
+        <button class="btn btn-success btn-sm me-2" onclick="generateADL()">
+          <i class="bi bi-download me-1"></i> Generate ADL Blueprint 
+        </button>
+            <button class="btn btn-primary btn-sm" onclick="saveSelectedArchitecture()">
+  <i class="bi bi-save me-1"></i> Save Selected Architecture
 </button>
         <button class="btn btn-outline-success btn-sm">
           <i class="bi bi-file-code me-1"></i> Generate Code Skeleton
@@ -1002,52 +1014,115 @@
       </div>
     `;
 
+
+
     return html;
+}
+
+
+let selectedArchitecture = null;
+
+function selectArchitecture(el, architecture) {
+  // remove selection from all
+  document.querySelectorAll('.arch-item').forEach(item => {
+    item.classList.remove('selected-arch');
+  });
+
+  // mark selected
+  el.classList.add('selected-arch');
+
+  selectedArchitecture = architecture;
+  console.log("Selected Architecture:", selectedArchitecture);
+}
+
+
+async function saveSelectedArchitecture() {
+  if (!selectedArchitecture) {
+    alert("Please select an architecture first.");
+    return;
   }
+
+  try {
+    const res = await fetch("/api/save-hybrid-result", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        project_id: extractedData.project_id, // لازم يكون موجود
+        selected_architecture: selectedArchitecture,
+        hybrid_result: extractedData.hybrid_method
+      })
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) throw new Error(data.error || "Save failed");
+
+    alert("Architecture saved successfully ✅");
+
+  } catch (err) {
+    console.error(err);
+    alert("Error saving architecture ❌");
+  }
+}
 
   /* =======================
      TAB RENDERING
   ======================= */
 async function generateADL() {
-    // 1. Show Loading
+  console.log("Generate ADL clicked");
+console.log("Project ID:", extractedData?.project_id);
+
     document.getElementById('resultContent').classList.add('hidden');
     const loading = document.getElementById('loadingMessage');
     loading.classList.remove('hidden');
     startLoadingAnimation();
 
     try {
-        // 2. Fetch el file
-        const response = await fetch("/generate");
+        if (!extractedData?.project_id) {
+            alert("Project ID not found. Please extract first.");
+            return;
+        }
+
+        const response = await fetch(`/generate/${extractedData.project_id}`);
         if (!response.ok) throw new Error("Server response was not ok");
 
         const blob = await response.blob();
-        
-        // 3. Create a clean URL for the PDF blob
+
         const pdfUrl = window.URL.createObjectURL(blob);
 
-        // 4. Update el Iframe SRC
         const frame = document.getElementById('reportFrame');
         frame.src = pdfUrl;
 
-        // 5. Open el Modal (Make sure Bootstrap is loaded)
-        const reportModal = new bootstrap.Modal(document.getElementById('reportModal'));
+        const reportModal = new bootstrap.Modal(
+            document.getElementById('reportModal')
+        );
         reportModal.show();
 
-        // 6. Cleanup el memory lma el modal ye2fel
-        document.getElementById('reportModal').addEventListener('hidden.bs.modal', function () {
-            window.URL.revokeObjectURL(pdfUrl);
-        }, { once: true });
+        document
+          .getElementById('reportModal')
+          .addEventListener(
+              'hidden.bs.modal',
+              () => window.URL.revokeObjectURL(pdfUrl),
+              { once: true }
+          );
 
     } catch (err) {
         console.error("Preview Error:", err);
         alert("Msh 2ader a-load el preview. Check el Console!");
     } finally {
-        // 7. Hide Loading
         stopLoadingAnimation();
         loading.classList.add('hidden');
         document.getElementById('resultContent').classList.remove('hidden');
     }
 }
+
+
+
+
+
+
   function renderPhase() {
     const data = phaseData[currentPhase];
     

@@ -1,4 +1,6 @@
-def generate_report():
+from infrastructure.database import db
+
+def generate_report(project_id: str):
     import json
     from pathlib import Path
     from reportlab.lib.pagesizes import A4
@@ -22,6 +24,14 @@ def generate_report():
     deployment_diagram = PROJECT_ROOT / "data" / "outputs" / "deployment_view.png"
 
     pdf_file = PROJECT_ROOT / "data" / "outputs" / "architecture_report.pdf"
+
+
+    hybrid_doc = db.hybrid_method.find_one({"project_id": project_id})
+
+    if not hybrid_doc or not hybrid_doc.get("selected_architecture"):
+     architecture_style = "Not selected"
+    else:
+     architecture_style = hybrid_doc["selected_architecture"].replace("_", " ").title()
 
     c = canvas.Canvas(str(pdf_file), pagesize=A4)
     width, height = A4
@@ -107,7 +117,7 @@ def generate_report():
       req = json.load(f)
 
     system_name = req.get("system_name")
-    architecture_style = req.get("architecture_style")
+    
 
 # ---- Load FRs ----
     with open(frs_file, "r", encoding="utf-8") as f:
@@ -119,6 +129,7 @@ def generate_report():
 
     paragraph(f"System Name: {system_name}")
     paragraph(f"Architecture Style: {architecture_style}")
+
 
     section("Functional Requirements")
     bullet_list([fr["title"] for fr in functional_requirements])

@@ -1,5 +1,5 @@
 from ai.methods.hybrid_method import hybrid_aggregation
-from infrastructure.repositories.hybrid_repository import save_hybrid_result
+
 
 
 def execute_hybrid_method(project_id, functional, ordinal, binary, weighted):
@@ -40,5 +40,5 @@ def execute_hybrid_method(project_id, functional, ordinal, binary, weighted):
         weighted=weighted
     )
 
-    save_hybrid_result(project_id, result)
+    
     return result

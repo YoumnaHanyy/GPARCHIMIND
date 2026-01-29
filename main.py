@@ -1,5 +1,8 @@
 from fastapi import FastAPI, Request, UploadFile, File
 from fastapi.templating import Jinja2Templates
+from fastapi import APIRouter
+from pydantic import BaseModel
+from infrastructure.repositories.hybrid_repository import save_hybrid_result
 from fastapi.staticfiles import StaticFiles
 from ai.json_to_process_view import convert_to_process_view
 from fastapi.responses import FileResponse
@@ -7,12 +10,13 @@ from ai.json_to_dfd_context import convert_to_dfd_context
 from application.extraction.reporting.report_generator import generate_report
 from fastapi.templating import Jinja2Templates
 from ai.json_to_deployment_view import convert_to_deployment_view
-
+from application.extraction.api.hybrid_route import router as hybrid_router
 from ai.json_to_c4_plantuml import convert_to_c4_plantuml
 from ai.ai_engine import ai_generate_architecture
 from ai.json_to_context_view import convert_to_context_view
 from application.extraction.adl.json_to_acme import convert_to_acme
 import os
+from infrastructure.database import db
 from pathlib import Path
 import subprocess
 import json
@@ -36,6 +40,8 @@ app = FastAPI(
     description="AI-driven Architecture Recommendation System",
     version="1.0.0"
 )
+
+app.include_router(hybrid_router)
 UPLOAD_DIR = "uploads"
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 
@@ -71,8 +77,20 @@ def home(request: Request):
 
 
 
-@app.get("/generate")
-def generate_architecture():
+@app.get("/generate/{project_id}")
+def generate_architecture(project_id: str):
+
+    hybrid_doc = db.hybrid_method.find_one({"project_id": project_id})
+
+    if not hybrid_doc or not hybrid_doc.get("selected_architecture"):
+        raise HTTPException(
+            status_code=400,
+            detail="No selected architecture found for this project"
+        )
+    selected_architecture = hybrid_doc["selected_architecture"]
+
+
+
 
     BASE_DIR = Path(__file__).resolve().parent
     PROJECT_ROOT = BASE_DIR.parents[0]  # لو main.py في root
@@ -94,7 +112,7 @@ def generate_architecture():
         requirements["system_name"],
         functional_requirements,
         non_functional_requirements,
-        requirements["architecture_style"]
+        selected_architecture
     )
 
     with open("data/outputs/architecture.adl.json", "w", encoding="utf-8") as f:
@@ -163,7 +181,7 @@ def generate_architecture():
 
 
     # ---- Generate PDF automatically ----
-    pdf_path = generate_report()
+    pdf_path = generate_report(project_id)
 
     return FileResponse(
         path=pdf_path,
@@ -216,6 +234,15 @@ def signup(request: Request):
 
 app.include_router(
     architecture_router,
+    
     prefix="/api",        # 👈 API namespace
     tags=["Architecture"]
 )
+
+app.include_router(
+    hybrid_router,
+    prefix="/api",        # 👈 API namespace
+    tags=["Architecture"]
+)
+
+

@@ -1,47 +1,74 @@
 [
   {
-    "title": "The system shall be cost-effective.",
-    "description": "The system shall be affordable to many and have no hardware limitations.",
-    "source": {
-      "page": 6,
-      "start_index": 1
-    },
-    "project_id": 2
-  },
-  {
-    "title": "The system shall be flexible.",
-    "description": "The system shall work effectively in different places.",
-    "source": {
-      "page": 6,
-      "start_index": 2
-    },
-    "project_id": 2
-  },
-  {
-    "title": "The system shall have a competitive price.",
-    "description": "The system shall cost way less than all other systems in the market.",
+    "title": "The system must have a competitive price.",
+    "description": "The system must have a competitive price. After making a competitive analysis we figured out that our system compared to others in the market costs way less than all enabling the users to run the system with their available hardware (PC-Camera-projector) with no hardware limitations at all, and more interactive features that are not available in any traditional touch projector.",
     "source": {
       "page": 8,
-      "start_index": 1
+      "start_index": 0
     },
-    "project_id": 2
+    "project_id": "proj_f1bbc301"
   },
   {
-    "title": "The system shall have a user-friendly interface.",
-    "description": "The system shall be easy to use and have more interactive features than traditional touch projectors.",
+    "title": "The system must be able to handle multiple users.",
+    "description": "The system must be able to handle multiple users. MUST handle multiple users.",
     "source": {
-      "page": 8,
-      "start_index": 3
+      "page": null,
+      "start_index": null
     },
-    "project_id": 2
+    "project_id": "proj_f1bbc301"
   },
   {
-    "title": "The system shall be secure.",
-    "description": "The system shall store user account information in a secure database.",
+    "title": "The system must be able to handle large amounts of data.",
+    "description": "The system must be able to handle large amounts of data. MUST handle large amounts of data.",
     "source": {
-      "page": 8,
-      "start_index": 4
+      "page": null,
+      "start_index": null
     },
-    "project_id": 2
+    "project_id": "proj_f1bbc301"
+  },
+  {
+    "title": "The system must be able to provide a user-friendly interface.",
+    "description": "The system must be able to provide a user-friendly interface. SHOULD provide a user-friendly interface.",
+    "source": {
+      "page": null,
+      "start_index": null
+    },
+    "project_id": "proj_f1bbc301"
+  },
+  {
+    "title": "The system must be able to provide real-time feedback to the user.",
+    "description": "The system must be able to provide real-time feedback to the user. SHOULD provide real-time feedback to the user.",
+    "source": {
+      "page": null,
+      "start_index": null
+    },
+    "project_id": "proj_f1bbc301"
+  },
+  {
+    "title": "The system must be able to handle errors and exceptions.",
+    "description": "The system must be able to handle errors and exceptions. MUST handle errors and exceptions.",
+    "source": {
+      "page": null,
+      "start_index": null
+    },
+    "project_id": "proj_f1bbc301"
+  },
+  {
+    "title": "The system must be able to provide security features.",
+    "description": "The system must be able to provide security features. SHOULD provide security features.",
+    "source": {
+      "page": null,
+      "start_index": null
+    },
+    "project_id": "proj_f1bbc301"
+  },
+  {
+    "title": "The system must be able to provide scalability.",
+    "description": "The system must be able to provide scalability. SHOULD provide scalability.",
+    "source": {
+      "page": null,
+      "start_index": null
+    },
+    "project_id": "proj_f1bbc301"
   }
 ]
