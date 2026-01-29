@@ -1,55 +1,46 @@
 [
   {
-    "title": "Competitive price",
-    "description": "Our optimal goal is the price. After making a competitive analysis we figured out that our system compared to others in the market costs way less than all enabling the users to run the system with their available hardware (PC-Camera-projector) with no hardware limitations at all, and more interactive features that are not available in any traditional touch projector.",
+    "title": "The system shall be cost-effective.",
+    "description": "The system shall be affordable to many and have no hardware limitations.",
     "source": {
-      "page": "3.5",
-      "start_index": "Objectives"
+      "page": 6,
+      "start_index": 1
     },
     "project_id": 2
   },
   {
-    "title": "Real-time Collaboration",
-    "description": "Enable real-time collaboration by supporting interactions on the projected surface, fostering collaborative environments for business or educational purposes.",
+    "title": "The system shall be flexible.",
+    "description": "The system shall work effectively in different places.",
     "source": {
-      "page": "3.5",
-      "start_index": "Objectives"
+      "page": 6,
+      "start_index": 2
     },
     "project_id": 2
   },
   {
-    "title": "Low-Latency",
-    "description": "The system must analyze gestures and reflect the corresponding action on the projected surface in real-time.",
+    "title": "The system shall have a competitive price.",
+    "description": "The system shall cost way less than all other systems in the market.",
     "source": {
-      "page": "3.5",
-      "start_index": "Objectives"
+      "page": 8,
+      "start_index": 1
     },
     "project_id": 2
   },
   {
-    "title": "Scalability",
-    "description": "The system should be able to handle multiple users and devices without compromising performance.",
+    "title": "The system shall have a user-friendly interface.",
+    "description": "The system shall be easy to use and have more interactive features than traditional touch projectors.",
     "source": {
-      "page": "null",
-      "start_index": "null"
+      "page": 8,
+      "start_index": 3
     },
     "project_id": 2
   },
   {
-    "title": "Usability",
-    "description": "The system should be easy to use and navigate, with an intuitive interface that minimizes user error.",
+    "title": "The system shall be secure.",
+    "description": "The system shall store user account information in a secure database.",
     "source": {
-      "page": "null",
-      "start_index": "null"
-    },
-    "project_id": 2
-  },
-  {
-    "title": "Security",
-    "description": "The system should ensure the confidentiality, integrity, and availability of user data and prevent unauthorized access.",
-    "source": {
-      "page": "null",
-      "start_index": "null"
+      "page": 8,
+      "start_index": 4
     },
     "project_id": 2
   }

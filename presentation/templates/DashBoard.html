@@ -690,6 +690,21 @@
 
 </div>
 
+
+
+<div class="modal fade" id="reportModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-xl modal-dialog-centered">
+    <div class="modal-content" style="border-radius: 15px; overflow: hidden; border: none; box-shadow: 0 10px 30px rgba(0,0,0,0.3);">
+      <div class="modal-header bg-dark text-white border-0">
+        <h5 class="modal-title fw-bold"><i class="bi bi-file-earmark-pdf me-2"></i>ADL Blueprint Preview</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body p-0" style="height: 80vh;">
+        <iframe id="reportFrame" src="" width="100%" height="100%" frameborder="0"></iframe>
+      </div>
+    </div>
+  </div>
+</div>
 <script>
   let currentPhase = 1;
   let extractedData = null;
@@ -993,40 +1008,41 @@
   /* =======================
      TAB RENDERING
   ======================= */
-
 async function generateADL() {
-    // 1. Show Loading Animation
+    // 1. Show Loading
     document.getElementById('resultContent').classList.add('hidden');
     const loading = document.getElementById('loadingMessage');
     loading.classList.remove('hidden');
     startLoadingAnimation();
 
     try {
-        // 2. Fetch el file mn el server (Dynamic wait)
+        // 2. Fetch el file
         const response = await fetch("/generate");
-        
-        if (!response.ok) throw new Error("Server error");
+        if (!response.ok) throw new Error("Server response was not ok");
 
-        // 3. Ne7awel el response le "Blob" (Binary Large Object)
         const blob = await response.blob();
         
-        // 4. Ne3mel link "fake" 3ashan n-trigger el download
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = "ADL_Blueprint.pdf"; // aw el esm eli t7ebih
-        document.body.appendChild(a);
-        a.click();
-        
-        // 5. Cleanup
-        window.URL.revokeObjectURL(url);
-        a.remove();
+        // 3. Create a clean URL for the PDF blob
+        const pdfUrl = window.URL.createObjectURL(blob);
+
+        // 4. Update el Iframe SRC
+        const frame = document.getElementById('reportFrame');
+        frame.src = pdfUrl;
+
+        // 5. Open el Modal (Make sure Bootstrap is loaded)
+        const reportModal = new bootstrap.Modal(document.getElementById('reportModal'));
+        reportModal.show();
+
+        // 6. Cleanup el memory lma el modal ye2fel
+        document.getElementById('reportModal').addEventListener('hidden.bs.modal', function () {
+            window.URL.revokeObjectURL(pdfUrl);
+        }, { once: true });
 
     } catch (err) {
-        console.error("Download failed:", err);
-        alert("Something went wrong while generating the report.");
+        console.error("Preview Error:", err);
+        alert("Msh 2ader a-load el preview. Check el Console!");
     } finally {
-        // 6. El Loading haye2f hna awel ma el sater bta3 el 'await' ykhallas
+        // 7. Hide Loading
         stopLoadingAnimation();
         loading.classList.add('hidden');
         document.getElementById('resultContent').classList.remove('hidden');
@@ -1201,6 +1217,6 @@ async function generateADL() {
     }
   };
 </script>
-
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

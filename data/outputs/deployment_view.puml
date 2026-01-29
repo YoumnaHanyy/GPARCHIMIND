@@ -7,38 +7,23 @@ node "Client" {
 node "Kubernetes Ingress" as IngressController {
   component "Ingress Controller"
 }
-node "Camera Pod" as CameraPod {
-  component "Camera"
+node "Face Detection Module Pod" as FaceDetectionModulePod {
+  component "Face Detection Module"
 }
-node "YOLOv5 Model Pod" as YOLOv5ModelPod {
-  component "YOLOv5 Model"
+node "Gesture Recognition Module Pod" as GestureRecognitionModulePod {
+  component "Gesture Recognition Module"
 }
-node "Background Subtraction (BS) Pod" as BackgroundSubtractionBSPod {
-  component "Background Subtraction (BS)"
+node "Hand Tracking Module Pod" as HandTrackingModulePod {
+  component "Hand Tracking Module"
 }
-node "Histogram Equalization Pod" as HistogramEqualizationPod {
-  component "Histogram Equalization"
+node "Interaction Module Pod" as InteractionModulePod {
+  component "Interaction Module"
 }
-node "Threading Pod" as ThreadingPod {
-  component "Threading"
+node "Collaboration Module Pod" as CollaborationModulePod {
+  component "Collaboration Module"
 }
-node "Multiprocessing Pod" as MultiprocessingPod {
-  component "Multiprocessing"
-}
-node "Gesture Recognition Pod" as GestureRecognitionPod {
-  component "Gesture Recognition"
-}
-node "Face Recognition Pod" as FaceRecognitionPod {
-  component "Face Recognition"
-}
-node "Hand Tracking Pod" as HandTrackingPod {
-  component "Hand Tracking"
-}
-node "Single-Hand Interaction Pod" as SingleHandInteractionPod {
-  component "Single-Hand Interaction"
-}
-node "Custom Gesture Actions Pod" as CustomGestureActionsPod {
-  component "Custom Gesture Actions"
+node "Latency Optimization Module Pod" as LatencyOptimizationModulePod {
+  component "Latency Optimization Module"
 }
 Client --> IngressController : HTTP
 node "Secondary Region" as SecondaryRegion {

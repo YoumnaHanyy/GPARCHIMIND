@@ -1,28 +1,17 @@
 @startuml
 autonumber
 actor User
-participant "Camera" as Camera
-participant "YOLOv5 Model" as YOLOv5Model
-participant "Background Subtraction (BS)" as BackgroundSubtractionBS
-participant "Histogram Equalization" as HistogramEqualization
-participant "Threading" as Threading
-participant "Multiprocessing" as Multiprocessing
-participant "Gesture Recognition" as GestureRecognition
-participant "Face Recognition" as FaceRecognition
-participant "Hand Tracking" as HandTracking
-participant "Single-Hand Interaction" as SingleHandInteraction
-participant "Custom Gesture Actions" as CustomGestureActions
-Camera ->> YOLOv5Model : Capture facial features
-YOLOv5Model -> BackgroundSubtractionBS : Detect face
-BackgroundSubtractionBS -> HistogramEqualization : Enhance image contrast
-HistogramEqualization ->> GestureRecognition : Recognize hand gestures
-Camera ->> GestureRecognition : Capture hand gesture commands
-GestureRecognition -> HandTracking : Track hand movements
-HandTracking -> SingleHandInteraction : Enable single-hand interaction
-SingleHandInteraction -> CustomGestureActions : Customize gesture actions
-Camera ->> FaceRecognition : Capture facial features
-FaceRecognition -> SingleHandInteraction : Enable single-hand interaction
-BackgroundSubtractionBS ->> Multiprocessing : Process background subtraction
-Multiprocessing -> Threading : Enable concurrent execution
-Threading -> CustomGestureActions : Customize gesture actions
+participant "Face Detection Module" as FaceDetectionModule
+participant "Gesture Recognition Module" as GestureRecognitionModule
+participant "Hand Tracking Module" as HandTrackingModule
+participant "Interaction Module" as InteractionModule
+participant "Collaboration Module" as CollaborationModule
+participant "Latency Optimization Module" as LatencyOptimizationModule
+FaceDetectionModule ->> HandTrackingModule : Detect face and trigger hand tracking
+HandTrackingModule ->> GestureRecognitionModule : Track hand and send gesture data
+GestureRecognitionModule -> InteractionModule : Recognize gesture and trigger interaction
+InteractionModule ->> CollaborationModule : Trigger collaboration and enable real-time interaction
+CollaborationModule ->> LatencyOptimizationModule : Optimize latency for real-time collaboration
+LatencyOptimizationModule -> InteractionModule : Reflect action on projected surface with low-latency
+FaceDetectionModule ->> GestureRecognitionModule : Send face detection data for gesture recognition
 @enduml

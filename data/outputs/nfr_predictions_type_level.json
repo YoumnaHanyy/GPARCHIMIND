@@ -1,44 +1,37 @@
 [
   {
-    "title": "Competitive price",
-    "description": "Our optimal goal is the price. After making a competitive analysis we figured out that our system compared to others in the market costs way less than all enabling the users to run the system with their available hardware (PC-Camera-projector) with no hardware limitations at all, and more interactive features that are not available in any traditional touch projector.",
-    "predicted_type": "US",
-    "predicted_type_label": "Usability",
-    "predicted_level": "Low"
+    "title": "The system shall be cost-effective.",
+    "description": "The system shall be affordable to many and have no hardware limitations.",
+    "predicted_type": "PO",
+    "predicted_type_label": "Portability",
+    "predicted_level": "Medium"
   },
   {
-    "title": "Real-time Collaboration",
-    "description": "Enable real-time collaboration by supporting interactions on the projected surface, fostering collaborative environments for business or educational purposes.",
-    "predicted_type": "US",
-    "predicted_type_label": "Usability",
-    "predicted_level": "Low"
-  },
-  {
-    "title": "Low-Latency",
-    "description": "The system must analyze gestures and reflect the corresponding action on the projected surface in real-time.",
-    "predicted_type": "PE",
-    "predicted_type_label": "Performance",
-    "predicted_level": "High"
-  },
-  {
-    "title": "Scalability",
-    "description": "The system should be able to handle multiple users and devices without compromising performance.",
+    "title": "The system shall be flexible.",
+    "description": "The system shall work effectively in different places.",
     "predicted_type": "SC",
     "predicted_type_label": "Scalability",
-    "predicted_level": "Low"
+    "predicted_level": "Medium"
   },
   {
-    "title": "Usability",
-    "description": "The system should be easy to use and navigate, with an intuitive interface that minimizes user error.",
+    "title": "The system shall have a competitive price.",
+    "description": "The system shall cost way less than all other systems in the market.",
+    "predicted_type": "SC",
+    "predicted_type_label": "Scalability",
+    "predicted_level": "Medium"
+  },
+  {
+    "title": "The system shall have a user-friendly interface.",
+    "description": "The system shall be easy to use and have more interactive features than traditional touch projectors.",
     "predicted_type": "US",
     "predicted_type_label": "Usability",
-    "predicted_level": "Low"
+    "predicted_level": "Medium"
   },
   {
-    "title": "Security",
-    "description": "The system should ensure the confidentiality, integrity, and availability of user data and prevent unauthorized access.",
+    "title": "The system shall be secure.",
+    "description": "The system shall store user account information in a secure database.",
     "predicted_type": "SE",
     "predicted_type_label": "Security",
-    "predicted_level": "Low"
+    "predicted_level": "High"
   }
 ]
