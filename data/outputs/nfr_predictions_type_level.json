@@ -1,37 +1,56 @@
 [
   {
-    "title": "The system must be cost-effective.",
-    "description": "The system costs less than all other touch projectors in the market, enabling users to run the system with their available hardware (PC-Camera-projector) with no hardware limitations at all.",
-    "predicted_type": "PO",
-    "predicted_type_label": "Portability",
-    "predicted_level": "Low"
+    "title": "Performance",
+    "description": "The system MUST respond to user requests within a reasonable time frame.",
+    "predicted_type": "PE",
+    "predicted_level": "High"
   },
   {
-    "title": "The system must be accessible to many users.",
-    "description": "The system is designed to be affordable and accessible to many users.",
-    "predicted_type": "US",
-    "predicted_type_label": "Usability",
-    "predicted_level": "Low"
+    "title": "Reliability",
+    "description": "The system MUST be able to recover from failures and maintain data consistency.",
+    "predicted_type": "A",
+    "predicted_level": "High"
   },
   {
-    "title": "The system must be flexible.",
-    "description": "The system can work effectively in different places.",
+    "title": "Security",
+    "description": "The system MUST protect user data and prevent unauthorized access.",
+    "predicted_type": "SE",
+    "predicted_level": "High"
+  },
+  {
+    "title": "Privacy",
+    "description": "The system MUST ensure that user data is handled in accordance with applicable laws and regulations.",
+    "predicted_type": "SE",
+    "predicted_level": "High"
+  },
+  {
+    "title": "Scalability",
+    "description": "The system MUST be able to handle a large number of users and requests without compromising performance.",
     "predicted_type": "SC",
-    "predicted_type_label": "Scalability",
-    "predicted_level": "Medium"
+    "predicted_level": "High"
   },
   {
-    "title": "The system must be secure.",
-    "description": "The system stores account information of the user in an account database.",
-    "predicted_type": "O",
-    "predicted_type_label": "Operational ",
-    "predicted_level": "Low"
-  },
-  {
-    "title": "The system must be user-friendly.",
-    "description": "The system provides an interactive surface controlled remotely with just hand gestures.",
+    "title": "Usability",
+    "description": "The system MUST provide an intuitive and user-friendly interface that is easy to navigate.",
     "predicted_type": "US",
-    "predicted_type_label": "Usability",
-    "predicted_level": "Low"
+    "predicted_level": "High"
+  },
+  {
+    "title": "Maintainability",
+    "description": "The system MUST be designed to be easily maintainable and updatable.",
+    "predicted_type": "MN",
+    "predicted_level": "High"
+  },
+  {
+    "title": "Compatibility",
+    "description": "The system MUST be compatible with a variety of devices and browsers.",
+    "predicted_type": "PO",
+    "predicted_level": "High"
+  },
+  {
+    "title": "Integration",
+    "description": "The system MUST be able to integrate with other systems and services.",
+    "predicted_type": "PO",
+    "predicted_level": "High"
   }
 ]

@@ -1,65 +1,74 @@
 [
   {
-    "title": "The system must detect the user's face using the YOLOv5 model.",
-    "description": "The system uses contours detection to detect the borders of objects, Gaussian blur to mute image noise, Background Subtraction (BS) to separate the moving parts, and Histogram Equalization for image contrast optimization.",
+    "title": "Submit CV",
+    "description": "Applicants can submit their CVs for parsing and analysis.",
     "source": {
-      "page": 6,
-      "start_index": 1
+      "page": "1.1",
+      "start_index": "Introduction"
     },
-    "project_id": "proj_9927b7d0"
+    "project_id": 2
   },
   {
-    "title": "The system must recognize gestures.",
-    "description": "The system uses threading for concurrent execution of tasks within a single process and multiprocessing for parallel execution of tasks across multiple processes.",
+    "title": "View and Edit CV",
+    "description": "Applicants can view and edit their parsed CV.",
     "source": {
-      "page": 7,
-      "start_index": 1
+      "page": "1.1",
+      "start_index": "Introduction"
     },
-    "project_id": "proj_9927b7d0"
+    "project_id": 2
   },
   {
-    "title": "The system must track the user's hand.",
-    "description": "The system uses Background Subtraction (BS) to separate the moving parts.",
+    "title": "Answer Screening Questions",
+    "description": "Applicants are presented with screening questions defined by an expert recruiter.",
     "source": {
-      "page": 6,
-      "start_index": 1
+      "page": "3.5",
+      "start_index": "Objectives"
     },
-    "project_id": "proj_9927b7d0"
+    "project_id": 2
   },
   {
-    "title": "The system must support single-hand interaction.",
-    "description": "The system excludes multiple-hand interaction.",
+    "title": "Get Rating for CV",
+    "description": "Applicants get a rating for their submitted CV based on CV parsing and screening question validation scores.",
     "source": {
-      "page": 7,
-      "start_index": 1
+      "page": "3.5",
+      "start_index": "Objectives"
     },
-    "project_id": "proj_9927b7d0"
+    "project_id": 2
   },
   {
-    "title": "The system must allow users to customize actions for specific gestures.",
-    "description": "The system uses the YOLOv5 model for face detection.",
+    "title": "Parse CV",
+    "description": "The system uses the Python library for parsing the CV and extracting key information such as skills and years of experience.",
     "source": {
-      "page": 6,
-      "start_index": 1
+      "page": "3.2",
+      "start_index": "System Overview"
     },
-    "project_id": "proj_9927b7d0"
+    "project_id": 2
   },
   {
-    "title": "The system must enable real-time collaboration.",
-    "description": "The system supports interactions on the projected surface.",
+    "title": "Compare CV with Job Requirements",
+    "description": "The system uses cosine similarity and Jaccard similarity to assess the alignment between the extracted information from the CV and the job requirements specified by the recruiter.",
     "source": {
-      "page": 8,
-      "start_index": 1
+      "page": "3.3",
+      "start_index": "System Scope"
     },
-    "project_id": "proj_9927b7d0"
+    "project_id": 2
   },
   {
-    "title": "The system must have low-latency.",
-    "description": "The system analyzes gestures and reflects the corresponding action on the projected surface.",
+    "title": "Validate and Score Applicant Responses",
+    "description": "Applicant responses are verified and graded by comparing them to an expert-generated model, and the applicant's answers are validated and scored by ChatGPT.",
     "source": {
-      "page": 8,
-      "start_index": 1
+      "page": "3.5",
+      "start_index": "Objectives"
     },
-    "project_id": "proj_9927b7d0"
+    "project_id": 2
+  },
+  {
+    "title": "Generate Percentage-Based Result",
+    "description": "The system generates a percentage-based result that represents the applicant's overall suitability for the role by averaging CV ranking and screening question validation scores.",
+    "source": {
+      "page": "3.5",
+      "start_index": "Objectives"
+    },
+    "project_id": 2
   }
 ]

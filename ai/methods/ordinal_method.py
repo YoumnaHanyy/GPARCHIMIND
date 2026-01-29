@@ -1,44 +1,101 @@
 import pandas as pd
+import json
+from collections import Counter
 
-def run_ordinal_method(predictions, architecture_data, top_k=5):
-    if not predictions:
-        raise ValueError("No NFR predictions found for Ordinal Method")
 
-    pred_df = pd.DataFrame(predictions)
+# ============================================================
+# 1️⃣ Load Predictions (Type + Level)
+# ============================================================
 
-    # 🔒 Safety check
-    required_pred_cols = {"predicted_type", "predicted_level"}
-    if not required_pred_cols.issubset(pred_df.columns):
-        raise KeyError(
-            f"Prediction data missing required columns: {required_pred_cols}"
-        )
+def load_predictions(prediction_file: str):
+    """
+    Load predicted NFR Type + Level from JSON
+    """
+    with open(prediction_file, "r", encoding="utf-8") as f:
+        data = json.load(f)
 
-    pred_df = pred_df.rename(columns={
-        "predicted_type": "Type",
-        "predicted_level": "Level"
+    return pd.DataFrame(data)
+
+
+# ============================================================
+# 2️⃣ Load Architecture Dataset
+# ============================================================
+
+def load_architecture_dataset(csv_path: str):
+    """
+    Load architecture mapping dataset
+    """
+    df = pd.read_csv(csv_path)
+
+    # Normalize column names
+    df = df.rename(columns={
+        "architecture_style": "Architecture",
+        "architecture style": "Architecture",
+        "architecture": "Architecture"
     })
 
-    arch_df = pd.DataFrame(architecture_data)
+    return df
 
-    # 🔒 Safety check
-    required_arch_cols = {"Type", "Level", "Architecture"}
-    if not required_arch_cols.issubset(arch_df.columns):
-        raise KeyError(
-            f"Architecture dataset missing required columns: {required_arch_cols}"
-        )
 
-    matches = pred_df.merge(
+# ============================================================
+# 3️⃣ Ordinal Scoring Logic
+# ============================================================
+
+def compute_ordinal_scores(pred_df: pd.DataFrame, arch_df: pd.DataFrame):
+    """
+    Count matches of (Type, Level) for each architecture
+    """
+    merged = pred_df.merge(
         arch_df,
         on=["Type", "Level"],
         how="inner"
     )
 
-    if matches.empty:
-        return []
+    scores = Counter(merged["Architecture"])
+    return scores
 
-    style_scores = matches["Architecture"].value_counts().head(top_k)
 
-    return [
-        {"architecture": arch, "matched_nfrs": int(score)}
-        for arch, score in style_scores.items()
+# ============================================================
+# 4️⃣ Run Ordinal Method
+# ============================================================
+
+def run_ordinal_method(
+    prediction_file="nfr_predictions_type_level.json",
+    architecture_dataset="ArchitectureDataset.csv",
+    top_k=5
+):
+    """
+    Main Ordinal Method Runner
+    """
+    pred_df = load_predictions(prediction_file)
+
+    # Rename for safety
+    pred_df = pred_df.rename(columns={
+        "predicted_type": "Type",
+        "predicted_level": "Level"
+    })
+
+    arch_df = load_architecture_dataset(architecture_dataset)
+
+    scores = compute_ordinal_scores(pred_df, arch_df)
+
+    ranked_architectures = [
+        arch for arch, _ in scores.most_common(top_k)
     ]
+
+    return ranked_architectures
+
+
+# ============================================================
+# 5️⃣ Local Testing
+# ============================================================
+
+if __name__ == "__main__":
+    result = run_ordinal_method(
+        prediction_file="nfr_predictions_type_level.json",
+        architecture_dataset="ArchitectureDataset.csv"
+    )
+
+    print("\n=== Ordinal Method – Top Architectures ===")
+    for i, arch in enumerate(result, 1):
+        print(f"{i}. {arch}")

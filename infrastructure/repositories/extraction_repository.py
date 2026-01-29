@@ -53,17 +53,3 @@ class ExtractionRepository:
             "functional": fr_path,
             "non_functional": nfr_path
         }
-    
-    @staticmethod
-    def get_functional(project_id: int):
-        """
-        Read functional requirements from MongoDB
-        (NO extraction, NO LLM)
-        """
-        return list(
-            db.fr_extracted.find(
-                {"project_id": project_id},
-                {"_id": 0}
-            )
-        )
-

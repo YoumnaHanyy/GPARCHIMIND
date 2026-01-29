@@ -3,7 +3,6 @@ import os
 import torch
 from transformers import BertTokenizer, BertForSequenceClassification
 from sklearn.preprocessing import LabelEncoder
-from ai.utils.nfr_mapping import NFR_MAP_REVERSE
 
 # load dataset from MongoDB (for encoders)
 from infrastructure.repositories.nfr_dataset_repository import (
@@ -96,25 +95,12 @@ def predict_and_save_nfr():
     # ===============================
     results = []
     for i, item in enumerate(nfrs):
-
-        pred_type_abbrev = pred_types[i]
-
         results.append({
-    "title": item.get("title"),
-    "description": item.get("description"),
-
-    # 🔒 for DB / logic
-    "predicted_type": pred_type_abbrev,
-
-    # 👀 for UI only
-    "predicted_type_label": NFR_MAP_REVERSE.get(
-        pred_type_abbrev, pred_type_abbrev
-    ),
-
-    "predicted_level": pred_levels[i]
-})
-
-
+            "title": item.get("title"),
+            "description": item.get("description"),
+            "predicted_type": pred_types[i],
+            "predicted_level": pred_levels[i]
+        })
 
 
     # ===============================

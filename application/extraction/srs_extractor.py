@@ -40,32 +40,31 @@ class SRSExtractor:
     # JSON PARSING (LLM SAFE)
     # -------------------------------
     def extract_json_from_model_output(self, output: str) -> Dict:
-        """
-        Robust JSON extraction from LLM output.
-        Handles malformed outputs gracefully.
-        """
-
-        # remove markdown fences
         cleaned = re.sub(r"```json|```", "", output).strip()
 
-        # 1️⃣ Try direct JSON parsing
-        try:
-            return json.loads(cleaned)
-        except Exception:
-            pass
-
-        # 2️⃣ Fallback: extract first valid JSON object
         start = cleaned.find("{")
-        end = cleaned.rfind("}")
+        if start == -1:
+            raise ValueError("No JSON object found in model output")
 
-        if start != -1 and end != -1 and end > start:
-            try:
-                return json.loads(cleaned[start:end + 1])
-            except Exception:
-                pass
+        stack = []
+        in_string = False
 
-        # 3️⃣ Fail safely
-        raise ValueError("LLM returned invalid or unbalanced JSON")
+        for i in range(start, len(cleaned)):
+            ch = cleaned[i]
+
+            if ch == '"' and cleaned[i - 1] != "\\":
+                in_string = not in_string
+
+            if not in_string:
+                if ch == "{":
+                    stack.append("{")
+                elif ch == "}":
+                    stack.pop()
+                    if not stack:
+                        json_text = cleaned[start:i + 1]
+                        return json.loads(json_text)
+
+        raise ValueError("Unbalanced JSON in model output")
 
     # -------------------------------
     # FUNCTIONAL + NON-FUNCTIONAL EXTRACTION
@@ -114,14 +113,7 @@ SRS:
 
         except Exception as e:
             logger.exception("❌ HuggingFace extraction failed")
-
-            # 🔹 Graceful failure (system does NOT crash)
-            return {
-                "functional": [],
-                "non_functional": [],
-                "error": "LLM extraction failed",
-                "details": str(e)
-            }
+            raise RuntimeError(f"LLM extraction failed: {e}")
 
         # -------------------------------
         # SPLIT RESULTS

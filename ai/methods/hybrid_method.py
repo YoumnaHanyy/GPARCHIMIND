@@ -1,140 +1,165 @@
-# ai/methods/hybrid_method.py
+import collections
+
+# ============================================================
+# 1️⃣ Hybrid Configuration
+# ============================================================
+
+DEFAULT_WEIGHTS = {
+    "ordinal": 0.3,
+    "binary": 0.3,
+    "weighted": 0.4
+}
+
+
+# ============================================================
+# 2️⃣ Normalize Scores Helper
+# ============================================================
 
 def normalize_scores(score_dict):
     """
-    Normalize a dict of scores to range [0,1]
+    Normalize scores to range [0,1]
     """
     if not score_dict:
         return {}
 
     max_val = max(score_dict.values()) or 1
-    return {k: v / max_val for k, v in score_dict.items()}
+    return {k: round(v / max_val, 4) for k, v in score_dict.items()}
 
 
-def hybrid_aggregation(functional, ordinal, binary, weighted):
+# ============================================================
+# 3️⃣ Convert Method Outputs to Comparable Scores
+# ============================================================
+
+def scores_from_ordinal(ordinal_result):
     """
-    Combine Functional, Ordinal, Binary, and Weighted methods
-    into one final ranked architecture list.
+    ordinal_result: list of architectures (ranked)
+    Higher rank = higher score
     """
+    scores = {}
+    total = len(ordinal_result)
 
-    final_scores = {}
-    architectures = set()
+    for i, arch in enumerate(ordinal_result):
+        scores[arch] = total - i
 
-    # =====================================================
-    # 1️⃣ Collect architectures safely
-    # =====================================================
+    return normalize_scores(scores)
 
-    # ---- Ordinal ----
-    if isinstance(ordinal, list):
-        for item in ordinal:
-            if isinstance(item, dict) and "Architecture" in item:
-                architectures.add(item["Architecture"])
 
-    # ---- Binary ----
-    if isinstance(binary, list):
-        for item in binary:
-            if isinstance(item, dict) and "architecture" in item:
-                architectures.add(item["architecture"])
+def scores_from_binary(binary_result):
+    """
+    binary_result: output from binary_method.run_binary_method
+    """
+    scores = {}
+    for item in binary_result["top_5_architectures"]:
+        scores[item["architecture"]] = item["score"]
 
-    # ---- Weighted ----
-    if isinstance(weighted, dict):
-        for item in weighted.get("top_architectures", []):
-            if isinstance(item, dict) and "Architecture" in item:
-                architectures.add(item["Architecture"])
+    return normalize_scores(scores)
 
-    # ---- Functional ----
-    functional_scores = {}
-    if isinstance(functional, dict):
-        for a in functional.get("top_architectures", []):
-            if isinstance(a, dict):
-                functional_scores[a["Architecture"]] = a.get("Score", 0)
 
-    # =====================================================
-    # 2️⃣ Max values for normalization
-    # =====================================================
+def scores_from_weighted(weighted_result):
+    """
+    weighted_result: output from weighted method
+    """
+    scores = {}
+    for item in weighted_result["top_architectures"]:
+        scores[item["Architecture"]] = item["Score"]
 
-    max_f = max(functional_scores.values()) if functional_scores else 1
+    return normalize_scores(scores)
 
-    ordinal_values = [
-        a.get("MatchedNFRs", 0)
-        for a in ordinal
-        if isinstance(a, dict)
-    ] if isinstance(ordinal, list) else []
-    max_o = max(ordinal_values) if ordinal_values else 1
 
-    binary_values = [
-        a.get("score", 0)
-        for a in binary
-        if isinstance(a, dict)
-    ] if isinstance(binary, list) else []
-    max_b = max(binary_values) if binary_values else 1
+# ============================================================
+# 4️⃣ Hybrid Score Computation
+# ============================================================
 
-    weighted_values = [
-        a.get("Score", 0)
-        for a in weighted.get("top_architectures", [])
-        if isinstance(a, dict)
-    ] if isinstance(weighted, dict) else []
-    max_w = max(weighted_values) if weighted_values else 1
+def compute_hybrid_scores(
+    ordinal_result,
+    binary_result,
+    weighted_result,
+    weights=DEFAULT_WEIGHTS
+):
+    """
+    Combine all methods into one hybrid ranking
+    """
+    final_scores = collections.defaultdict(float)
 
-    # =====================================================
-    # 3️⃣ Compute final score per architecture
-    # =====================================================
+    ordinal_scores = scores_from_ordinal(ordinal_result)
+    binary_scores = scores_from_binary(binary_result)
+    weighted_scores = scores_from_weighted(weighted_result)
 
-    for arch in architectures:
+    all_architectures = set(
+        list(ordinal_scores.keys()) +
+        list(binary_scores.keys()) +
+        list(weighted_scores.keys())
+    )
 
-        # ---------- Functional ----------
-        raw_f = functional_scores.get(arch, 0)
-        s_f = raw_f / max_f if max_f else 0
+    for arch in all_architectures:
+        final_scores[arch] += weights["ordinal"] * ordinal_scores.get(arch, 0)
+        final_scores[arch] += weights["binary"] * binary_scores.get(arch, 0)
+        final_scores[arch] += weights["weighted"] * weighted_scores.get(arch, 0)
 
-        # ---------- Ordinal (count → score) ----------
-        raw_o = 0
-        if isinstance(ordinal, list):
-            for a in ordinal:
-                if isinstance(a, dict) and a.get("Architecture") == arch:
-                    raw_o = a.get("MatchedNFRs", 0)
-                    break
-        s_o = raw_o / max_o if max_o else 0
-
-        # ---------- Binary ----------
-        raw_b = 0
-        if isinstance(binary, list):
-            for a in binary:
-                if isinstance(a, dict) and a.get("architecture") == arch:
-                    raw_b = a.get("score", 0)
-                    break
-        s_b = raw_b 
-
-        # ---------- Weighted ----------
-        raw_w = 0
-        if isinstance(weighted, dict):
-            for a in weighted.get("top_architectures", []):
-                if isinstance(a, dict) and a.get("Architecture") == arch:
-                    raw_w = a.get("Score", 0)
-                    break
-        s_w = raw_w / max_w if max_w else 0
-
-        # ---------- Final Weighted Sum ----------
-        final_scores[arch] = (
-            0.20 * s_f +
-            0.25 * s_o +
-            0.20 * s_b +
-            0.35 * s_w
-        )
-
-    # =====================================================
-    # 4️⃣ Normalize final scores & return top 5
-    # =====================================================
-
-    final_scores = normalize_scores(final_scores)
+    # Normalize final scores
+    max_score = max(final_scores.values()) or 1
+    final_scores = {
+        k: round(v / max_score, 4) for k, v in final_scores.items()
+    }
 
     return sorted(
-        [
-            {
-                "Architecture": arch,
-                "FinalScore": round(score * 100, 2)
-            }
-            for arch, score in final_scores.items()
-        ],
-        key=lambda x: x["FinalScore"],
+        [{"architecture": k, "score": v} for k, v in final_scores.items()],
+        key=lambda x: x["score"],
         reverse=True
-    )[:5]
+    )
+
+
+# ============================================================
+# 5️⃣ Main Hybrid Method
+# ============================================================
+
+def run_hybrid_method(
+    ordinal_result,
+    binary_result,
+    weighted_result,
+    top_k=5
+):
+    """
+    Final Hybrid Architecture Recommendation
+    """
+    hybrid_scores = compute_hybrid_scores(
+        ordinal_result,
+        binary_result,
+        weighted_result
+    )
+
+    return {
+        "top_5_architectures": hybrid_scores[:top_k],
+        "best_architecture": hybrid_scores[0] if hybrid_scores else None
+    }
+
+
+# ============================================================
+# 6️⃣ Local Testing
+# ============================================================
+
+if __name__ == "__main__":
+
+    # Dummy test data
+    ordinal = ["Layered", "Microservices", "Client-Server"]
+    binary = {
+        "top_5_architectures": [
+            {"architecture": "Layered", "score": 0.8},
+            {"architecture": "Microservices", "score": 0.6}
+        ]
+    }
+    weighted = {
+        "top_architectures": [
+            {"Architecture": "Microservices", "Score": 0.9},
+            {"Architecture": "Layered", "Score": 0.85}
+        ]
+    }
+
+    result = run_hybrid_method(ordinal, binary, weighted)
+
+    print("\n=== Hybrid Top Architectures ===")
+    for r in result["top_5_architectures"]:
+        print(r)
+
+    print("\n=== Best Architecture ===")
+    print(result["best_architecture"])
