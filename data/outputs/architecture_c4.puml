@@ -1,20 +1,14 @@
 @startuml
 !include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
 LAYOUT_WITH_LEGEND()
-System_Boundary(LibraryManagementSystem, "LibraryManagementSystem") {
-  Container(FaceDetectionModule, "Face Detection Module", "Service", "Detect the user's face using the YOLOv5 model, contours detection, Gaussian blur, Background Subtraction (BS), and Histogram Equalization.")
-  Container(GestureRecognitionModule, "Gesture Recognition Module", "Service", "Recognize gestures using threading for concurrent execution of tasks within a single process and multiprocessing for parallel execution of tasks across multiple processes.")
-  Container(HandTrackingModule, "Hand Tracking Module", "Service", "Track the user's hand using Background Subtraction (BS).")
-  Container(InteractionModule, "Interaction Module", "Service", "Support single-hand interaction and exclude multiple-hand interaction.")
-  Container(ActionCustomizationModule, "Action Customization Module", "Service", "Allow users to customize actions for specific gestures using the YOLOv5 model for face detection.")
-  Container(CollaborationModule, "Collaboration Module", "Service", "Enable real-time collaboration and support interactions on the projected surface.")
-  Container(LatencyReductionModule, "Latency Reduction Module", "Service", "Analyze gestures and reflect the corresponding action on the projected surface with low-latency.")
+System_Boundary(ResuFitPrecisionCVMatchingSystem, "ResuFit: Precision CV Matching System") {
+  Container(CVParser, "CV Parser", "Service", "Parse and analyze submitted CVs")
+  Container(CVEditor, "CV Editor", "Service", "Allow applicants to view and edit their parsed CVs")
+  Container(ScreeningQuestionManager, "Screening Question Manager", "Service", "Manage and present screening questions defined by expert recruiters")
+  Container(RatingGenerator, "Rating Generator", "Service", "Generate a percentage-based result for each applicant's CV")
 }
-Rel(FaceDetectionModule, GestureRecognitionModule, "event", "Async")
-Rel(GestureRecognitionModule, HandTrackingModule, "call", "Sync")
-Rel(HandTrackingModule, InteractionModule, "event", "Async")
-Rel(InteractionModule, ActionCustomizationModule, "event", "Async")
-Rel(ActionCustomizationModule, CollaborationModule, "event", "Async")
-Rel(CollaborationModule, LatencyReductionModule, "event", "Async")
-Rel(LatencyReductionModule, InteractionModule, "call", "Sync")
+Rel(CVParser, CVEditor, "call", "Sync")
+Rel(CVEditor, ScreeningQuestionManager, "event", "Async")
+Rel(ScreeningQuestionManager, RatingGenerator, "call", "Sync")
+Rel(CVParser, RatingGenerator, "call", "Sync")
 @enduml

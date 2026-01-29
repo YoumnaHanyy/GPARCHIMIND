@@ -4,33 +4,31 @@ left to right direction
 node "Client" {
   component "User"
 }
-node "Kubernetes Ingress" as IngressController {
+node "Kubernetes Ingress" {
   component "Ingress Controller"
 }
-node "Face Detection Module Pod" as FaceDetectionModulePod {
-  component "Face Detection Module"
+node "CV Parser Pod" {
+  component "CV Parser"
 }
-node "Gesture Recognition Module Pod" as GestureRecognitionModulePod {
-  component "Gesture Recognition Module"
+node "CV Editor Pod" {
+  component "CV Editor"
 }
-node "Hand Tracking Module Pod" as HandTrackingModulePod {
-  component "Hand Tracking Module"
+node "Screening Question Manager Pod" {
+  component "Screening Question Manager"
 }
-node "Interaction Module Pod" as InteractionModulePod {
-  component "Interaction Module"
+node "Rating Generator Pod" {
+  component "Rating Generator"
 }
-node "Action Customization Module Pod" as ActionCustomizationModulePod {
-  component "Action Customization Module"
-}
-node "Collaboration Module Pod" as CollaborationModulePod {
-  component "Collaboration Module"
-}
-node "Latency Reduction Module Pod" as LatencyReductionModulePod {
-  component "Latency Reduction Module"
-}
-Client --> IngressController : HTTP
-node "Secondary Region" as SecondaryRegion {
+"User" --> "Ingress Controller" : TCP/IP
+"Ingress Controller" --> "API Gateway Pod" : HTTP/HTTPS
+"User" --> "Ingress Controller"
+"Ingress Controller" --> "API Gateway Pod"
+"API Gateway Pod" --> "CV Parser Pod"
+"API Gateway Pod" --> "CV Editor Pod"
+"API Gateway Pod" --> "Screening Question Manager Pod"
+"API Gateway Pod" --> "Rating Generator Pod"
+node "Secondary Region" {
   component "Replica Services"
 }
-IngressController --> SecondaryRegion : failover
+"Ingress Controller" --> "Secondary Region" : failover
 @enduml

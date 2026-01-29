@@ -1,55 +1,15 @@
 {
-  "system": "LibraryManagementSystem",
-  "style": "Client server",
+  "system": "ResuFit: Precision CV Matching System",
+  "style": "Microservices",
   "source": "AI",
   "decisions": [
     {
-      "name": "Use YOLOv5 model for face detection.",
-      "rationale": "The system uses contours detection to detect the borders of objects, Gaussian blur to mute image noise, Background Subtraction (BS) to separate the moving parts, and Histogram Equalization for image contrast optimization."
+      "name": "Functional Requirements",
+      "rationale": "The system shall meet the following functional requirements: [{'title': 'Submit CV', 'description': 'Applicants can submit their CVs for parsing and analysis.', 'source': {'page': 16, 'start_index': None}, 'project_id': 'proj_f54beef3'}, {'title': 'View and Edit CV', 'description': 'Applicants can view and edit their parsed CV.', 'source': {'page': 16, 'start_index': None}, 'project_id': 'proj_f54beef3'}, {'title': 'Answer Screening Questions', 'description': 'Applicants are presented with screening questions defined by an expert recruiter.', 'source': {'page': 13, 'start_index': None}, 'project_id': 'proj_f54beef3'}, {'title': 'Get Rating for CV', 'description': 'The system generates a percentage-based result, providing a fair evaluation of each applicant.', 'source': {'page': 13, 'start_index': None}, 'project_id': 'proj_f54beef3'}]"
     },
     {
-      "name": "Use threading for concurrent execution of tasks within a single process and multiprocessing for parallel execution of tasks across multiple processes.",
-      "rationale": "The system recognizes gestures."
-    },
-    {
-      "name": "Use Background Subtraction (BS) to separate the moving parts.",
-      "rationale": "The system tracks the user's hand."
-    },
-    {
-      "name": "Exclude multiple-hand interaction.",
-      "rationale": "The system supports single-hand interaction."
-    },
-    {
-      "name": "Use the YOLOv5 model for face detection.",
-      "rationale": "The system allows users to customize actions for specific gestures."
-    },
-    {
-      "name": "Support interactions on the projected surface.",
-      "rationale": "The system enables real-time collaboration."
-    },
-    {
-      "name": "Analyze gestures and reflect the corresponding action on the projected surface.",
-      "rationale": "The system has low-latency."
-    },
-    {
-      "name": "Cost less than all other touch projectors in the market.",
-      "rationale": "The system must be cost-effective."
-    },
-    {
-      "name": "Be affordable and accessible to many users.",
-      "rationale": "The system must be accessible to many users."
-    },
-    {
-      "name": "Work effectively in different places.",
-      "rationale": "The system must be flexible."
-    },
-    {
-      "name": "Store account information of the user in an account database.",
-      "rationale": "The system must be secure."
-    },
-    {
-      "name": "Provide an interactive surface controlled remotely with just hand gestures.",
-      "rationale": "The system must be user-friendly."
+      "name": "Non-Functional Requirements",
+      "rationale": "The system shall meet the following non-functional requirements: [{'title': 'Performance', 'description': 'The system MUST respond within 2 seconds to user input.', 'source': {'page': 21, 'start_index': None}, 'project_id': 'proj_f54beef3'}, {'title': 'Reliability', 'description': 'The system SHALL be available 99.99% of the time.', 'source': {'page': 21, 'start_index': None}, 'project_id': 'proj_f54beef3'}, {'title': 'Security', 'description': 'The system MUST protect user data and MUST NOT store sensitive information.', 'source': {'page': 21, 'start_index': None}, 'project_id': 'proj_f54beef3'}, {'title': 'Privacy', 'description': 'The system MUST NOT collect or store user data without explicit consent.', 'source': {'page': 21, 'start_index': None}, 'project_id': 'proj_f54beef3'}, {'title': 'Scalability', 'description': 'The system SHOULD be able to handle 1000 concurrent users.', 'source': {'page': 21, 'start_index': None}, 'project_id': 'proj_f54beef3'}, {'title': 'Usability', 'description': 'The system MUST be user-friendly and MUST provide clear instructions.', 'source': {'page': 21, 'start_index': None}, 'project_id': 'proj_f54beef3'}, {'title': 'Maintainability', 'description': 'The system SHOULD be easy to modify and update.', 'source': {'page': 21, 'start_index': None}, 'project_id': 'proj_f54beef3'}, {'title': 'Compatibility', 'description': 'The system MUST be compatible with major web browsers.', 'source': {'page': 22, 'start_index': None}, 'project_id': 'proj_f54beef3'}, {'title': 'Integration', 'description': 'The system MUST integrate with HR module from Odoo ERP software.', 'source': {'page': 22, 'start_index': None}, 'project_id': 'proj_f54beef3'}]"
     }
   ],
   "production_intents": {
@@ -72,112 +32,79 @@
   },
   "components": [
     {
-      "name": "Face Detection Module",
-      "responsibility": "Detect the user's face using the YOLOv5 model, contours detection, Gaussian blur, Background Subtraction (BS), and Histogram Equalization."
+      "name": "CV Parser",
+      "responsibility": "Parse and analyze submitted CVs"
     },
     {
-      "name": "Gesture Recognition Module",
-      "responsibility": "Recognize gestures using threading for concurrent execution of tasks within a single process and multiprocessing for parallel execution of tasks across multiple processes."
+      "name": "CV Editor",
+      "responsibility": "Allow applicants to view and edit their parsed CVs"
     },
     {
-      "name": "Hand Tracking Module",
-      "responsibility": "Track the user's hand using Background Subtraction (BS)."
+      "name": "Screening Question Manager",
+      "responsibility": "Manage and present screening questions defined by expert recruiters"
     },
     {
-      "name": "Interaction Module",
-      "responsibility": "Support single-hand interaction and exclude multiple-hand interaction."
-    },
-    {
-      "name": "Action Customization Module",
-      "responsibility": "Allow users to customize actions for specific gestures using the YOLOv5 model for face detection."
-    },
-    {
-      "name": "Collaboration Module",
-      "responsibility": "Enable real-time collaboration and support interactions on the projected surface."
-    },
-    {
-      "name": "Latency Reduction Module",
-      "responsibility": "Analyze gestures and reflect the corresponding action on the projected surface with low-latency."
+      "name": "Rating Generator",
+      "responsibility": "Generate a percentage-based result for each applicant's CV"
     }
   ],
   "relationships": [
     {
-      "source": "Face Detection Module",
-      "target": "Gesture Recognition Module",
-      "type": "event-flow"
-    },
-    {
-      "source": "Gesture Recognition Module",
-      "target": "Hand Tracking Module",
+      "source": "CV Parser",
+      "target": "CV Editor",
       "type": "data-flow"
     },
     {
-      "source": "Hand Tracking Module",
-      "target": "Interaction Module",
+      "source": "CV Editor",
+      "target": "Screening Question Manager",
       "type": "event-flow"
     },
     {
-      "source": "Interaction Module",
-      "target": "Action Customization Module",
-      "type": "event-flow"
+      "source": "Screening Question Manager",
+      "target": "Rating Generator",
+      "type": "data-flow"
     },
     {
-      "source": "Action Customization Module",
-      "target": "Collaboration Module",
-      "type": "event-flow"
-    },
-    {
-      "source": "Collaboration Module",
-      "target": "Latency Reduction Module",
-      "type": "event-flow"
-    },
-    {
-      "source": "Latency Reduction Module",
-      "target": "Interaction Module",
+      "source": "CV Parser",
+      "target": "Rating Generator",
       "type": "data-flow"
     }
   ],
   "runtime_flow": [
     {
-      "from": "Face Detection Module",
-      "to": "Gesture Recognition Module",
-      "action": "Send face detection result",
+      "from": "CV Parser",
+      "to": "CV Editor",
+      "action": "Parse CV and send data",
       "mode": "async"
     },
     {
-      "from": "Gesture Recognition Module",
-      "to": "Hand Tracking Module",
-      "action": "Send gesture recognition result",
-      "mode": "async"
-    },
-    {
-      "from": "Hand Tracking Module",
-      "to": "Interaction Module",
-      "action": "Notify hand presence",
+      "from": "CV Editor",
+      "to": "Screening Question Manager",
+      "action": "Submit edited CV for screening",
       "mode": "sync"
     },
     {
-      "from": "Interaction Module",
-      "to": "Action Customization Module",
-      "action": "Request action customization",
+      "from": "Screening Question Manager",
+      "to": "Rating Generator",
+      "action": "Send screening questions and CV data",
       "mode": "async"
     },
     {
-      "from": "Action Customization Module",
-      "to": "Collaboration Module",
-      "action": "Send customized action",
+      "from": "CV Parser",
+      "to": "Rating Generator",
+      "action": "Send raw CV data for rating",
       "mode": "async"
     },
     {
-      "from": "Collaboration Module",
-      "to": "Latency Reduction Module",
-      "action": "Request latency reduction",
-      "mode": "async"
+      "from": "Rating Generator",
+      "to": "CV Editor",
+      "action": "Notify of updated rating",
+      "mode": "sync"
     },
     {
-      "from": "Latency Reduction Module",
-      "to": "Interaction Module",
-      "action": "Notify action execution",
+      "from": "Rating Generator",
+      "to": "Screening Question Manager",
+      "action": "Notify of updated rating",
       "mode": "sync"
     }
   ],

@@ -1,10 +1,21 @@
+import os
 from huggingface_hub import InferenceClient
 import json
+from dotenv import load_dotenv
+
+load_dotenv()
 
 
+HF_API_KEY = os.getenv("HF_API_KEY")
+if not HF_API_KEY:
+    raise RuntimeError("HF_API_KEY not found in environment variables")
 
-# ================= LLM CONFIG =================
+MODEL_NAME = "meta-llama/Meta-Llama-3-8B-Instruct"
 
+client = InferenceClient(
+    model=MODEL_NAME,
+    token=HF_API_KEY
+)
 
 # ================= LLM HELPERS =================
 

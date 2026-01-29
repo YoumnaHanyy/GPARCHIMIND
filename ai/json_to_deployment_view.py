@@ -1,31 +1,19 @@
-import re
-
-def alias_of(name: str) -> str:
-    return re.sub(r'[^a-zA-Z0-9_]', '', name)
-
-
 def convert_to_deployment_view(arch):
     lines = []
     lines.append("@startuml")
     lines.append("!theme plain")
     lines.append("left to right direction")
 
-    availability = (
-        arch.get("production_intents", {})
-            .get("deployment", {})
-            .get("availability", "")
-            .lower()
-    )
+    style = arch.get("style", "").lower()
+    availability = arch.get("production_intents", {}).get("deployment", {}).get("availability", "")
 
     # -------- Client --------
-    client_alias = "Client"
-    lines.append(f'node "{client_alias}" {{')
+    lines.append('node "Client" {')
     lines.append('  component "User"')
     lines.append('}')
 
     # -------- Ingress --------
-    ingress_alias = "IngressController"
-    lines.append(f'node "Kubernetes Ingress" as {ingress_alias} {{')
+    lines.append('node "Kubernetes Ingress" {')
     lines.append('  component "Ingress Controller"')
     lines.append('}')
 
@@ -44,64 +32,51 @@ def convert_to_deployment_view(arch):
             app_services.append(c["name"])
 
     # -------- Application Pods --------
-    pod_aliases = {}
-
     for s in app_services:
-        pod_name = f"{s} Pod"
-        pod_alias = alias_of(pod_name)
-        pod_aliases[s] = pod_alias
-
-        lines.append(f'node "{pod_name}" as {pod_alias} {{')
+        lines.append(f'node "{s} Pod" {{')
         lines.append(f'  component "{s}"')
         lines.append('}')
 
     # -------- Broker Pods --------
-    broker_alias = None
-    if broker_services:
-        broker_alias = "MessageBrokerPod"
-        lines.append(f'node "Message Broker Pod" as {broker_alias} {{')
-        for b in broker_services:
-            lines.append(f'  component "{b}"')
+    for b in broker_services:
+        lines.append('node "Message Broker Pod" {')
+        lines.append(f'  component "{b}"')
         lines.append('}')
 
     # -------- Database --------
-    db_alias = None
-    if db_services:
-        db_alias = "DatabaseStatefulSet"
-        lines.append(f'node "Database StatefulSet" as {db_alias} {{')
-        for d in db_services:
-            lines.append(f'  database "{d}"')
+    for d in db_services:
+        lines.append('node "Database StatefulSet" {')
+        lines.append(f'  database "{d}"')
         lines.append('}')
 
     # -------- Connections --------
-    lines.append(f'{client_alias} --> {ingress_alias} : HTTP')
+    lines.append('"User" --> "Ingress Controller" : TCP/IP')
+    lines.append('"Ingress Controller" --> "API Gateway Pod" : HTTP/HTTPS')
+    # API Gateway routes to services
 
-    # Ingress to API Gateway (only if exists)
-    if "API Gateway" in app_services:
-        gw_alias = pod_aliases["API Gateway"]
-        lines.append(f'{ingress_alias} --> {gw_alias} : HTTP')
+   # -------- Connections --------
+    lines.append('"User" --> "Ingress Controller"')
+    lines.append('"Ingress Controller" --> "API Gateway Pod"')
 
-        # Gateway to other services
-        for s, alias in pod_aliases.items():
-            if s != "API Gateway":
-                lines.append(f'{gw_alias} --> {alias}')
+# API Gateway routes to services
+    for s in app_services:
+     if s != "API Gateway":
+        lines.append(f'"API Gateway Pod" --> "{s} Pod"')
 
-    # Services to broker
-    if broker_alias:
-        for alias in pod_aliases.values():
-            lines.append(f'{alias} --> {broker_alias}')
+    for b in broker_services:
+        for s in app_services:
+            lines.append(f'"{s} Pod" --> "Message Broker Pod"')
 
-    # Services to database
-    if db_alias:
-        for alias in pod_aliases.values():
-            lines.append(f'{alias} --> {db_alias}')
+    for d in db_services:
+        for s in app_services:
+            lines.append(f'"{s} Pod" --> "Database StatefulSet"')
 
     # -------- Multi-Region --------
     if "multi" in availability:
-        lines.append('node "Secondary Region" as SecondaryRegion {')
+        lines.append('node "Secondary Region" {')
         lines.append('  component "Replica Services"')
         lines.append('}')
-        lines.append(f'{ingress_alias} --> SecondaryRegion : failover')
+        lines.append('"Ingress Controller" --> "Secondary Region" : failover')
 
     lines.append("@enduml")
     return "\n".join(lines)

@@ -2,6 +2,6 @@
 !include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
 LAYOUT_WITH_LEGEND()
 Person(UserActor, "End User", "Uses the system")
-System(LibraryManagementSystem, "LibraryManagementSystem", "System under design")
-Rel(UserActor, LibraryManagementSystem, "Uses")
+System(ResuFitPrecisionCVMatchingSystem, "ResuFit: Precision CV Matching System", "System under design")
+Rel(UserActor, ResuFitPrecisionCVMatchingSystem, "Uses")
 @enduml

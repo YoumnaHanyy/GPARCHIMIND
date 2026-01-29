@@ -7,8 +7,8 @@ skinparam rectangle {
 skinparam package {
   BackgroundColor White
 }
-rectangle "EndUser" as EndUser <<external>>
-rectangle "LibraryManagementSystem" as LibraryManagementSystem <<process>>
-EndUser --> LibraryManagementSystem : Requests / Inputs
-LibraryManagementSystem --> EndUser : Responses / Results
+rectangle "End User" <<external>>
+rectangle "ResuFit: Precision CV Matching System" <<process>>
+"End User" --> "ResuFit: Precision CV Matching System" : Requests / Inputs
+"ResuFit: Precision CV Matching System" --> "End User" : Responses / Results
 @enduml

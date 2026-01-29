@@ -1,18 +1,14 @@
 @startuml
 autonumber
 actor User
-participant "Face Detection Module" as FaceDetectionModule
-participant "Gesture Recognition Module" as GestureRecognitionModule
-participant "Hand Tracking Module" as HandTrackingModule
-participant "Interaction Module" as InteractionModule
-participant "Action Customization Module" as ActionCustomizationModule
-participant "Collaboration Module" as CollaborationModule
-participant "Latency Reduction Module" as LatencyReductionModule
-FaceDetectionModule ->> GestureRecognitionModule : Send face detection result
-GestureRecognitionModule ->> HandTrackingModule : Send gesture recognition result
-HandTrackingModule -> InteractionModule : Notify hand presence
-InteractionModule ->> ActionCustomizationModule : Request action customization
-ActionCustomizationModule ->> CollaborationModule : Send customized action
-CollaborationModule ->> LatencyReductionModule : Request latency reduction
-LatencyReductionModule -> InteractionModule : Notify action execution
+participant "CV Parser" as CVParser
+participant "CV Editor" as CVEditor
+participant "Screening Question Manager" as ScreeningQuestionManager
+participant "Rating Generator" as RatingGenerator
+CVParser ->> CVEditor : Parse CV and send data
+CVEditor -> ScreeningQuestionManager : Submit edited CV for screening
+ScreeningQuestionManager ->> RatingGenerator : Send screening questions and CV data
+CVParser ->> RatingGenerator : Send raw CV data for rating
+RatingGenerator -> CVEditor : Notify of updated rating
+RatingGenerator -> ScreeningQuestionManager : Notify of updated rating
 @enduml
