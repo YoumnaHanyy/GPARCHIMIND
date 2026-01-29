@@ -4,52 +4,52 @@
   "source": "AI",
   "decisions": [
     {
-      "name": "Use Client-Server Architecture",
-      "rationale": "To meet the functional requirement of enabling real-time collaboration and handling multiple users, a client-server architecture is the most suitable choice."
+      "name": "Use YOLOv5 model for face detection.",
+      "rationale": "The system uses contours detection to detect the borders of objects, Gaussian blur to mute image noise, Background Subtraction (BS) to separate the moving parts, and Histogram Equalization for image contrast optimization."
     },
     {
-      "name": "Implement Gesture Recognition",
-      "rationale": "To meet the functional requirement of including gesture recognition, we will implement a gesture recognition system using machine learning algorithms."
+      "name": "Use threading for concurrent execution of tasks within a single process and multiprocessing for parallel execution of tasks across multiple processes.",
+      "rationale": "The system recognizes gestures."
     },
     {
-      "name": "Use YOLOv5 Model for Face Detection",
-      "rationale": "To meet the functional requirement of detecting the user's face using the YOLOv5 model, we will integrate the YOLOv5 model into our system."
+      "name": "Use Background Subtraction (BS) to separate the moving parts.",
+      "rationale": "The system tracks the user's hand."
     },
     {
-      "name": "Use Background Subtraction for Moving Parts Detection",
-      "rationale": "To meet the functional requirement of separating the moving parts from the background using Background Subtraction (BS), we will implement a background subtraction algorithm."
+      "name": "Exclude multiple-hand interaction.",
+      "rationale": "The system supports single-hand interaction."
     },
     {
-      "name": "Use Histogram Equalization for Image Contrast Optimization",
-      "rationale": "To meet the functional requirement of optimizing the image contrast using Histogram Equalization, we will implement a histogram equalization algorithm."
+      "name": "Use the YOLOv5 model for face detection.",
+      "rationale": "The system allows users to customize actions for specific gestures."
     },
     {
-      "name": "Use Threading for Concurrent Execution",
-      "rationale": "To meet the functional requirement of enabling concurrent execution of tasks within a single process using threading, we will implement a threading system."
+      "name": "Support interactions on the projected surface.",
+      "rationale": "The system enables real-time collaboration."
     },
     {
-      "name": "Use Multiprocessing for Parallel Execution",
-      "rationale": "To meet the functional requirement of enabling parallel execution of tasks across multiple processes using multiprocessing, we will implement a multiprocessing system."
+      "name": "Analyze gestures and reflect the corresponding action on the projected surface.",
+      "rationale": "The system has low-latency."
     },
     {
-      "name": "Implement User-Friendly Interface",
-      "rationale": "To meet the non-functional requirement of providing a user-friendly interface, we will design a user-friendly interface that is easy to use and navigate."
+      "name": "Cost less than all other touch projectors in the market.",
+      "rationale": "The system must be cost-effective."
     },
     {
-      "name": "Implement Real-Time Feedback System",
-      "rationale": "To meet the non-functional requirement of providing real-time feedback to the user, we will implement a real-time feedback system that provides immediate feedback to the user."
+      "name": "Be affordable and accessible to many users.",
+      "rationale": "The system must be accessible to many users."
     },
     {
-      "name": "Implement Error Handling and Exception Handling",
-      "rationale": "To meet the non-functional requirement of handling errors and exceptions, we will implement a robust error handling and exception handling system."
+      "name": "Work effectively in different places.",
+      "rationale": "The system must be flexible."
     },
     {
-      "name": "Implement Security Features",
-      "rationale": "To meet the non-functional requirement of providing security features, we will implement a robust security system that protects user data and prevents unauthorized access."
+      "name": "Store account information of the user in an account database.",
+      "rationale": "The system must be secure."
     },
     {
-      "name": "Implement Scalability Features",
-      "rationale": "To meet the non-functional requirement of providing scalability, we will implement a scalable system that can handle large amounts of data and multiple users."
+      "name": "Provide an interactive surface controlled remotely with just hand gestures.",
+      "rationale": "The system must be user-friendly."
     }
   ],
   "production_intents": {
@@ -72,236 +72,114 @@
   },
   "components": [
     {
-      "name": "Gesture Recognition Module",
-      "responsibility": "Analyze gestures and reflect the corresponding action on the projected surface."
+      "name": "Face Detection Module",
+      "responsibility": "Detect the user's face using the YOLOv5 model, contours detection, Gaussian blur, Background Subtraction (BS), and Histogram Equalization."
     },
     {
-      "name": "Face Recognition Module",
-      "responsibility": "Detect the user's face using the YOLOv5 model."
+      "name": "Gesture Recognition Module",
+      "responsibility": "Recognize gestures using threading for concurrent execution of tasks within a single process and multiprocessing for parallel execution of tasks across multiple processes."
     },
     {
       "name": "Hand Tracking Module",
-      "responsibility": "Track the user's hand movements."
+      "responsibility": "Track the user's hand using Background Subtraction (BS)."
     },
     {
-      "name": "Single-Hand Interaction Module",
-      "responsibility": "Enable single-hand interaction with the projected surface."
+      "name": "Interaction Module",
+      "responsibility": "Support single-hand interaction and exclude multiple-hand interaction."
     },
     {
-      "name": "Customization Module",
-      "responsibility": "Customize the actions for specific gestures."
+      "name": "Action Customization Module",
+      "responsibility": "Allow users to customize actions for specific gestures using the YOLOv5 model for face detection."
     },
     {
-      "name": "Real-Time Collaboration Module",
-      "responsibility": "Enable real-time collaboration by supporting interactions on the projected surface."
+      "name": "Collaboration Module",
+      "responsibility": "Enable real-time collaboration and support interactions on the projected surface."
     },
     {
-      "name": "Image Processing Module",
-      "responsibility": [
-        "Detect the borders of objects using contours detection.",
-        "Mute the image noise using Gaussian blur.",
-        "Separate the moving parts from the background using Background Subtraction (BS).",
-        "Optimize the image contrast using Histogram Equalization."
-      ]
-    },
-    {
-      "name": "Background Subtraction Module",
-      "responsibility": "Separate the moving parts from the background using Background Subtraction (BS)."
-    },
-    {
-      "name": "Threading Module",
-      "responsibility": "Enable concurrent execution of tasks within a single process using threading."
-    },
-    {
-      "name": "Multiprocessing Module",
-      "responsibility": "Enable parallel execution of tasks across multiple processes using multiprocessing."
-    },
-    {
-      "name": "Latency Optimization Module",
-      "responsibility": "Ensure low-latency performance."
-    },
-    {
-      "name": "Environmental Adaptation Module",
-      "responsibility": "Work effectively in different places."
+      "name": "Latency Reduction Module",
+      "responsibility": "Analyze gestures and reflect the corresponding action on the projected surface with low-latency."
     }
   ],
   "relationships": [
     {
+      "source": "Face Detection Module",
+      "target": "Gesture Recognition Module",
+      "type": "event-flow"
+    },
+    {
       "source": "Gesture Recognition Module",
       "target": "Hand Tracking Module",
-      "type": "event-flow"
+      "type": "data-flow"
     },
     {
       "source": "Hand Tracking Module",
-      "target": "Single-Hand Interaction Module",
-      "type": "data-flow"
-    },
-    {
-      "source": "Face Recognition Module",
-      "target": "Hand Tracking Module",
+      "target": "Interaction Module",
       "type": "event-flow"
     },
     {
-      "source": "Hand Tracking Module",
-      "target": "Image Processing Module",
-      "type": "data-flow"
-    },
-    {
-      "source": "Image Processing Module",
-      "target": "Background Subtraction Module",
-      "type": "data-flow"
-    },
-    {
-      "source": "Background Subtraction Module",
-      "target": "Gesture Recognition Module",
-      "type": "data-flow"
-    },
-    {
-      "source": "Customization Module",
-      "target": "Gesture Recognition Module",
-      "type": "data-flow"
-    },
-    {
-      "source": "Real-Time Collaboration Module",
-      "target": "Single-Hand Interaction Module",
+      "source": "Interaction Module",
+      "target": "Action Customization Module",
       "type": "event-flow"
     },
     {
-      "source": "Image Processing Module",
-      "target": "Real-Time Collaboration Module",
-      "type": "data-flow"
-    },
-    {
-      "source": "Threading Module",
-      "target": "Multiprocessing Module",
-      "type": "data-flow"
-    },
-    {
-      "source": "Multiprocessing Module",
-      "target": "Latency Optimization Module",
-      "type": "data-flow"
-    },
-    {
-      "source": "Latency Optimization Module",
-      "target": "Real-Time Collaboration Module",
-      "type": "data-flow"
-    },
-    {
-      "source": "Environmental Adaptation Module",
-      "target": "Real-Time Collaboration Module",
+      "source": "Action Customization Module",
+      "target": "Collaboration Module",
       "type": "event-flow"
+    },
+    {
+      "source": "Collaboration Module",
+      "target": "Latency Reduction Module",
+      "type": "event-flow"
+    },
+    {
+      "source": "Latency Reduction Module",
+      "target": "Interaction Module",
+      "type": "data-flow"
     }
   ],
   "runtime_flow": [
     {
+      "from": "Face Detection Module",
+      "to": "Gesture Recognition Module",
+      "action": "Send face detection result",
+      "mode": "async"
+    },
+    {
       "from": "Gesture Recognition Module",
       "to": "Hand Tracking Module",
-      "action": "Trigger hand tracking",
+      "action": "Send gesture recognition result",
       "mode": "async"
     },
     {
       "from": "Hand Tracking Module",
-      "to": "Single-Hand Interaction Module",
-      "action": "Enable single-hand interaction",
+      "to": "Interaction Module",
+      "action": "Notify hand presence",
       "mode": "sync"
     },
     {
-      "from": "Face Recognition Module",
-      "to": "Hand Tracking Module",
-      "action": "Trigger hand tracking",
+      "from": "Interaction Module",
+      "to": "Action Customization Module",
+      "action": "Request action customization",
       "mode": "async"
     },
     {
-      "from": "Hand Tracking Module",
-      "to": "Image Processing Module",
-      "action": "Process hand movement",
+      "from": "Action Customization Module",
+      "to": "Collaboration Module",
+      "action": "Send customized action",
       "mode": "async"
     },
     {
-      "from": "Image Processing Module",
-      "to": "Background Subtraction Module",
-      "action": "Separate moving parts from background",
+      "from": "Collaboration Module",
+      "to": "Latency Reduction Module",
+      "action": "Request latency reduction",
       "mode": "async"
     },
     {
-      "from": "Background Subtraction Module",
-      "to": "Gesture Recognition Module",
-      "action": "Update gesture recognition",
+      "from": "Latency Reduction Module",
+      "to": "Interaction Module",
+      "action": "Notify action execution",
       "mode": "sync"
-    },
-    {
-      "from": "Customization Module",
-      "to": "Gesture Recognition Module",
-      "action": "Update gesture recognition",
-      "mode": "sync"
-    },
-    {
-      "from": "Hand Tracking Module",
-      "to": "Image Processing Module",
-      "action": "Process hand movement",
-      "mode": "async"
-    },
-    {
-      "from": "Image Processing Module",
-      "to": "Real-Time Collaboration Module",
-      "action": "Enable real-time collaboration",
-      "mode": "async"
-    },
-    {
-      "from": "Background Subtraction Module",
-      "to": "Gesture Recognition Module",
-      "action": "Update gesture recognition",
-      "mode": "sync"
-    },
-    {
-      "from": "Threading Module",
-      "to": "Multiprocessing Module",
-      "action": "Enable parallel execution",
-      "mode": "async"
-    },
-    {
-      "from": "Multiprocessing Module",
-      "to": "Latency Optimization Module",
-      "action": "Optimize latency",
-      "mode": "async"
-    },
-    {
-      "from": "Latency Optimization Module",
-      "to": "Real-Time Collaboration Module",
-      "action": "Enable real-time collaboration",
-      "mode": "async"
-    },
-    {
-      "from": "Environmental Adaptation Module",
-      "to": "Real-Time Collaboration Module",
-      "action": "Adapt to environment",
-      "mode": "async"
     }
   ],
-  "critique": [
-    {
-      "id": 1,
-      "description": "Missing relationship between Face Recognition Module and Gesture Recognition Module."
-    },
-    {
-      "id": 2,
-      "description": "Insufficient security features."
-    },
-    {
-      "id": 3,
-      "description": "Lack of real-time feedback."
-    },
-    {
-      "id": 4,
-      "description": "Inadequate error handling."
-    },
-    {
-      "id": 5,
-      "description": "Missing relationship between Image Processing Module and Background Subtraction Module."
-    },
-    {
-      "id": 6,
-      "description": "Lack of scalability."
-    }
-  ]
+  "critique": []
 }

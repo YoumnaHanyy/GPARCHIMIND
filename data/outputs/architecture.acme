@@ -2,153 +2,88 @@ System LibraryManagementSystem {
   Property view : String = "runtime";
   Property architectureStyle : String = "Client server";
   Property source : String = "AI";
-  Component GestureRecognitionModule = new Component {
+  Component FaceDetectionModule = new Component {
     Port in;
     Port out;
-    Property responsibility : String = "Analyze gestures and reflect the corresponding action on the projected surface.";
+    Property responsibility : String = "Detect the user's face using the YOLOv5 model, contours detection, Gaussian blur, Background Subtraction (BS), and Histogram Equalization.";
     Property state : String = "stateless";
     Property scaling : String = "horizontal";
   }
-  Component FaceRecognitionModule = new Component {
+  Component GestureRecognitionModule = new Component {
     Port in;
     Port out;
-    Property responsibility : String = "Detect the user's face using the YOLOv5 model.";
+    Property responsibility : String = "Recognize gestures using threading for concurrent execution of tasks within a single process and multiprocessing for parallel execution of tasks across multiple processes.";
     Property state : String = "stateless";
     Property scaling : String = "horizontal";
   }
   Component HandTrackingModule = new Component {
     Port in;
     Port out;
-    Property responsibility : String = "Track the user's hand movements.";
+    Property responsibility : String = "Track the user's hand using Background Subtraction (BS).";
     Property state : String = "stateless";
     Property scaling : String = "horizontal";
   }
-  Component Single-HandInteractionModule = new Component {
+  Component InteractionModule = new Component {
     Port in;
     Port out;
-    Property responsibility : String = "Enable single-hand interaction with the projected surface.";
+    Property responsibility : String = "Support single-hand interaction and exclude multiple-hand interaction.";
     Property state : String = "stateless";
     Property scaling : String = "horizontal";
   }
-  Component CustomizationModule = new Component {
+  Component ActionCustomizationModule = new Component {
     Port in;
     Port out;
-    Property responsibility : String = "Customize the actions for specific gestures.";
+    Property responsibility : String = "Allow users to customize actions for specific gestures using the YOLOv5 model for face detection.";
     Property state : String = "stateless";
     Property scaling : String = "horizontal";
   }
-  Component Real-TimeCollaborationModule = new Component {
+  Component CollaborationModule = new Component {
     Port in;
     Port out;
-    Property responsibility : String = "Enable real-time collaboration by supporting interactions on the projected surface.";
+    Property responsibility : String = "Enable real-time collaboration and support interactions on the projected surface.";
     Property state : String = "stateless";
     Property scaling : String = "horizontal";
   }
-  Component ImageProcessingModule = new Component {
+  Component LatencyReductionModule = new Component {
     Port in;
     Port out;
-    Property responsibility : String = "['Detect the borders of objects using contours detection.', 'Mute the image noise using Gaussian blur.', 'Separate the moving parts from the background using Background Subtraction (BS).', 'Optimize the image contrast using Histogram Equalization.']";
+    Property responsibility : String = "Analyze gestures and reflect the corresponding action on the projected surface with low-latency.";
     Property state : String = "stateless";
     Property scaling : String = "horizontal";
   }
-  Component BackgroundSubtractionModule = new Component {
-    Port in;
-    Port out;
-    Property responsibility : String = "Separate the moving parts from the background using Background Subtraction (BS).";
-    Property state : String = "stateless";
-    Property scaling : String = "horizontal";
-  }
-  Component ThreadingModule = new Component {
-    Port in;
-    Port out;
-    Property responsibility : String = "Enable concurrent execution of tasks within a single process using threading.";
-    Property state : String = "stateless";
-    Property scaling : String = "horizontal";
-  }
-  Component MultiprocessingModule = new Component {
-    Port in;
-    Port out;
-    Property responsibility : String = "Enable parallel execution of tasks across multiple processes using multiprocessing.";
-    Property state : String = "stateless";
-    Property scaling : String = "horizontal";
-  }
-  Component LatencyOptimizationModule = new Component {
-    Port in;
-    Port out;
-    Property responsibility : String = "Ensure low-latency performance.";
-    Property state : String = "stateless";
-    Property scaling : String = "horizontal";
-  }
-  Component EnvironmentalAdaptationModule = new Component {
-    Port in;
-    Port out;
-    Property responsibility : String = "Work effectively in different places.";
-    Property state : String = "stateless";
-    Property scaling : String = "horizontal";
+  Attachment FaceDetectionModule.out to GestureRecognitionModule.in {
+    Property delivery : String = "at-least-once";
+    Property ordering : Boolean = false;
+    Property backpressure : String = "bounded";
   }
   Attachment GestureRecognitionModule.out to HandTrackingModule.in {
     Property delivery : String = "at-least-once";
-    Property ordering : Boolean = false;
-    Property backpressure : String = "bounded";
-  }
-  Attachment HandTrackingModule.out to Single-HandInteractionModule.in {
-    Property delivery : String = "at-least-once";
     Property ordering : Boolean = true;
     Property backpressure : String = "bounded";
   }
-  Attachment FaceRecognitionModule.out to HandTrackingModule.in {
+  Attachment HandTrackingModule.out to InteractionModule.in {
     Property delivery : String = "at-least-once";
     Property ordering : Boolean = false;
     Property backpressure : String = "bounded";
   }
-  Attachment HandTrackingModule.out to ImageProcessingModule.in {
-    Property delivery : String = "at-least-once";
-    Property ordering : Boolean = true;
-    Property backpressure : String = "bounded";
-  }
-  Attachment ImageProcessingModule.out to BackgroundSubtractionModule.in {
-    Property delivery : String = "at-least-once";
-    Property ordering : Boolean = true;
-    Property backpressure : String = "bounded";
-  }
-  Attachment BackgroundSubtractionModule.out to GestureRecognitionModule.in {
-    Property delivery : String = "at-least-once";
-    Property ordering : Boolean = true;
-    Property backpressure : String = "bounded";
-  }
-  Attachment CustomizationModule.out to GestureRecognitionModule.in {
-    Property delivery : String = "at-least-once";
-    Property ordering : Boolean = true;
-    Property backpressure : String = "bounded";
-  }
-  Attachment Real-TimeCollaborationModule.out to Single-HandInteractionModule.in {
+  Attachment InteractionModule.out to ActionCustomizationModule.in {
     Property delivery : String = "at-least-once";
     Property ordering : Boolean = false;
     Property backpressure : String = "bounded";
   }
-  Attachment ImageProcessingModule.out to Real-TimeCollaborationModule.in {
-    Property delivery : String = "at-least-once";
-    Property ordering : Boolean = true;
-    Property backpressure : String = "bounded";
-  }
-  Attachment ThreadingModule.out to MultiprocessingModule.in {
-    Property delivery : String = "at-least-once";
-    Property ordering : Boolean = true;
-    Property backpressure : String = "bounded";
-  }
-  Attachment MultiprocessingModule.out to LatencyOptimizationModule.in {
-    Property delivery : String = "at-least-once";
-    Property ordering : Boolean = true;
-    Property backpressure : String = "bounded";
-  }
-  Attachment LatencyOptimizationModule.out to Real-TimeCollaborationModule.in {
-    Property delivery : String = "at-least-once";
-    Property ordering : Boolean = true;
-    Property backpressure : String = "bounded";
-  }
-  Attachment EnvironmentalAdaptationModule.out to Real-TimeCollaborationModule.in {
+  Attachment ActionCustomizationModule.out to CollaborationModule.in {
     Property delivery : String = "at-least-once";
     Property ordering : Boolean = false;
+    Property backpressure : String = "bounded";
+  }
+  Attachment CollaborationModule.out to LatencyReductionModule.in {
+    Property delivery : String = "at-least-once";
+    Property ordering : Boolean = false;
+    Property backpressure : String = "bounded";
+  }
+  Attachment LatencyReductionModule.out to InteractionModule.in {
+    Property delivery : String = "at-least-once";
+    Property ordering : Boolean = true;
     Property backpressure : String = "bounded";
   }
   Property resilience_pattern : String = "Retry, CircuitBreaker";

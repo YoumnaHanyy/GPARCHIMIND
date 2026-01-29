@@ -7,41 +7,26 @@ node "Client" {
 node "Kubernetes Ingress" as IngressController {
   component "Ingress Controller"
 }
+node "Face Detection Module Pod" as FaceDetectionModulePod {
+  component "Face Detection Module"
+}
 node "Gesture Recognition Module Pod" as GestureRecognitionModulePod {
   component "Gesture Recognition Module"
-}
-node "Face Recognition Module Pod" as FaceRecognitionModulePod {
-  component "Face Recognition Module"
 }
 node "Hand Tracking Module Pod" as HandTrackingModulePod {
   component "Hand Tracking Module"
 }
-node "Single-Hand Interaction Module Pod" as SingleHandInteractionModulePod {
-  component "Single-Hand Interaction Module"
+node "Interaction Module Pod" as InteractionModulePod {
+  component "Interaction Module"
 }
-node "Customization Module Pod" as CustomizationModulePod {
-  component "Customization Module"
+node "Action Customization Module Pod" as ActionCustomizationModulePod {
+  component "Action Customization Module"
 }
-node "Real-Time Collaboration Module Pod" as RealTimeCollaborationModulePod {
-  component "Real-Time Collaboration Module"
+node "Collaboration Module Pod" as CollaborationModulePod {
+  component "Collaboration Module"
 }
-node "Image Processing Module Pod" as ImageProcessingModulePod {
-  component "Image Processing Module"
-}
-node "Background Subtraction Module Pod" as BackgroundSubtractionModulePod {
-  component "Background Subtraction Module"
-}
-node "Threading Module Pod" as ThreadingModulePod {
-  component "Threading Module"
-}
-node "Multiprocessing Module Pod" as MultiprocessingModulePod {
-  component "Multiprocessing Module"
-}
-node "Latency Optimization Module Pod" as LatencyOptimizationModulePod {
-  component "Latency Optimization Module"
-}
-node "Environmental Adaptation Module Pod" as EnvironmentalAdaptationModulePod {
-  component "Environmental Adaptation Module"
+node "Latency Reduction Module Pod" as LatencyReductionModulePod {
+  component "Latency Reduction Module"
 }
 Client --> IngressController : HTTP
 node "Secondary Region" as SecondaryRegion {

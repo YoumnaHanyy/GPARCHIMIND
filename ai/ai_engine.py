@@ -6,7 +6,6 @@ import json
 # ================= LLM CONFIG =================
 
 
-
 # ================= LLM HELPERS =================
 
 def ask_llm(prompt: str, temperature=0.2):

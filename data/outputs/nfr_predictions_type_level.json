@@ -1,58 +1,37 @@
 [
   {
-    "title": "The system must have a competitive price.",
-    "description": "The system must have a competitive price. After making a competitive analysis we figured out that our system compared to others in the market costs way less than all enabling the users to run the system with their available hardware (PC-Camera-projector) with no hardware limitations at all, and more interactive features that are not available in any traditional touch projector.",
+    "title": "The system must be cost-effective.",
+    "description": "The system costs less than all other touch projectors in the market, enabling users to run the system with their available hardware (PC-Camera-projector) with no hardware limitations at all.",
+    "predicted_type": "PO",
+    "predicted_type_label": "Portability",
+    "predicted_level": "Low"
+  },
+  {
+    "title": "The system must be accessible to many users.",
+    "description": "The system is designed to be affordable and accessible to many users.",
     "predicted_type": "US",
     "predicted_type_label": "Usability",
+    "predicted_level": "Low"
+  },
+  {
+    "title": "The system must be flexible.",
+    "description": "The system can work effectively in different places.",
+    "predicted_type": "SC",
+    "predicted_type_label": "Scalability",
     "predicted_level": "Medium"
   },
   {
-    "title": "The system must be able to handle multiple users.",
-    "description": "The system must be able to handle multiple users. MUST handle multiple users.",
-    "predicted_type": "SC",
-    "predicted_type_label": "Scalability",
-    "predicted_level": "High"
+    "title": "The system must be secure.",
+    "description": "The system stores account information of the user in an account database.",
+    "predicted_type": "O",
+    "predicted_type_label": "Operational ",
+    "predicted_level": "Low"
   },
   {
-    "title": "The system must be able to handle large amounts of data.",
-    "description": "The system must be able to handle large amounts of data. MUST handle large amounts of data.",
-    "predicted_type": "PE",
-    "predicted_type_label": "Performance",
-    "predicted_level": "High"
-  },
-  {
-    "title": "The system must be able to provide a user-friendly interface.",
-    "description": "The system must be able to provide a user-friendly interface. SHOULD provide a user-friendly interface.",
+    "title": "The system must be user-friendly.",
+    "description": "The system provides an interactive surface controlled remotely with just hand gestures.",
     "predicted_type": "US",
     "predicted_type_label": "Usability",
-    "predicted_level": "High"
-  },
-  {
-    "title": "The system must be able to provide real-time feedback to the user.",
-    "description": "The system must be able to provide real-time feedback to the user. SHOULD provide real-time feedback to the user.",
-    "predicted_type": "PE",
-    "predicted_type_label": "Performance",
-    "predicted_level": "High"
-  },
-  {
-    "title": "The system must be able to handle errors and exceptions.",
-    "description": "The system must be able to handle errors and exceptions. MUST handle errors and exceptions.",
-    "predicted_type": "US",
-    "predicted_type_label": "Usability",
-    "predicted_level": "High"
-  },
-  {
-    "title": "The system must be able to provide security features.",
-    "description": "The system must be able to provide security features. SHOULD provide security features.",
-    "predicted_type": "SE",
-    "predicted_type_label": "Security",
-    "predicted_level": "High"
-  },
-  {
-    "title": "The system must be able to provide scalability.",
-    "description": "The system must be able to provide scalability. SHOULD provide scalability.",
-    "predicted_type": "SC",
-    "predicted_type_label": "Scalability",
-    "predicted_level": "High"
+    "predicted_level": "Low"
   }
 ]

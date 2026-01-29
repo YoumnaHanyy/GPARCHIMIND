@@ -1,30 +1,18 @@
 @startuml
 autonumber
 actor User
+participant "Face Detection Module" as FaceDetectionModule
 participant "Gesture Recognition Module" as GestureRecognitionModule
-participant "Face Recognition Module" as FaceRecognitionModule
 participant "Hand Tracking Module" as HandTrackingModule
-participant "Single-Hand Interaction Module" as SingleHandInteractionModule
-participant "Customization Module" as CustomizationModule
-participant "Real-Time Collaboration Module" as RealTimeCollaborationModule
-participant "Image Processing Module" as ImageProcessingModule
-participant "Background Subtraction Module" as BackgroundSubtractionModule
-participant "Threading Module" as ThreadingModule
-participant "Multiprocessing Module" as MultiprocessingModule
-participant "Latency Optimization Module" as LatencyOptimizationModule
-participant "Environmental Adaptation Module" as EnvironmentalAdaptationModule
-GestureRecognitionModule ->> HandTrackingModule : Trigger hand tracking
-HandTrackingModule -> SingleHandInteractionModule : Enable single-hand interaction
-FaceRecognitionModule ->> HandTrackingModule : Trigger hand tracking
-HandTrackingModule ->> ImageProcessingModule : Process hand movement
-ImageProcessingModule ->> BackgroundSubtractionModule : Separate moving parts from background
-BackgroundSubtractionModule -> GestureRecognitionModule : Update gesture recognition
-CustomizationModule -> GestureRecognitionModule : Update gesture recognition
-HandTrackingModule ->> ImageProcessingModule : Process hand movement
-ImageProcessingModule ->> RealTimeCollaborationModule : Enable real-time collaboration
-BackgroundSubtractionModule -> GestureRecognitionModule : Update gesture recognition
-ThreadingModule ->> MultiprocessingModule : Enable parallel execution
-MultiprocessingModule ->> LatencyOptimizationModule : Optimize latency
-LatencyOptimizationModule ->> RealTimeCollaborationModule : Enable real-time collaboration
-EnvironmentalAdaptationModule ->> RealTimeCollaborationModule : Adapt to environment
+participant "Interaction Module" as InteractionModule
+participant "Action Customization Module" as ActionCustomizationModule
+participant "Collaboration Module" as CollaborationModule
+participant "Latency Reduction Module" as LatencyReductionModule
+FaceDetectionModule ->> GestureRecognitionModule : Send face detection result
+GestureRecognitionModule ->> HandTrackingModule : Send gesture recognition result
+HandTrackingModule -> InteractionModule : Notify hand presence
+InteractionModule ->> ActionCustomizationModule : Request action customization
+ActionCustomizationModule ->> CollaborationModule : Send customized action
+CollaborationModule ->> LatencyReductionModule : Request latency reduction
+LatencyReductionModule -> InteractionModule : Notify action execution
 @enduml

@@ -1,146 +1,65 @@
 [
   {
-    "title": "The system must analyze gestures and reflect the corresponding action on the projected surface.",
-    "description": "The system must analyze gestures and reflect the corresponding action on the projected surface.",
+    "title": "The system must detect the user's face using the YOLOv5 model.",
+    "description": "The system uses contours detection to detect the borders of objects, Gaussian blur to mute image noise, Background Subtraction (BS) to separate the moving parts, and Histogram Equalization for image contrast optimization.",
     "source": {
       "page": 6,
-      "start_index": 0
+      "start_index": 1
     },
-    "project_id": "proj_f1bbc301"
+    "project_id": "proj_9927b7d0"
   },
   {
-    "title": "The system will include gesture recognition.",
-    "description": "The system will include gesture recognition.",
+    "title": "The system must recognize gestures.",
+    "description": "The system uses threading for concurrent execution of tasks within a single process and multiprocessing for parallel execution of tasks across multiple processes.",
     "source": {
       "page": 7,
-      "start_index": 0
+      "start_index": 1
     },
-    "project_id": "proj_f1bbc301"
+    "project_id": "proj_9927b7d0"
   },
   {
-    "title": "The system will include face recognition.",
-    "description": "The system will include face recognition.",
+    "title": "The system must track the user's hand.",
+    "description": "The system uses Background Subtraction (BS) to separate the moving parts.",
+    "source": {
+      "page": 6,
+      "start_index": 1
+    },
+    "project_id": "proj_9927b7d0"
+  },
+  {
+    "title": "The system must support single-hand interaction.",
+    "description": "The system excludes multiple-hand interaction.",
     "source": {
       "page": 7,
-      "start_index": 0
+      "start_index": 1
     },
-    "project_id": "proj_f1bbc301"
+    "project_id": "proj_9927b7d0"
   },
   {
-    "title": "The system will include hand tracking.",
-    "description": "The system will include hand tracking.",
+    "title": "The system must allow users to customize actions for specific gestures.",
+    "description": "The system uses the YOLOv5 model for face detection.",
     "source": {
-      "page": 7,
-      "start_index": 0
+      "page": 6,
+      "start_index": 1
     },
-    "project_id": "proj_f1bbc301"
+    "project_id": "proj_9927b7d0"
   },
   {
-    "title": "The system will include single-hand interaction.",
-    "description": "The system will include single-hand interaction.",
-    "source": {
-      "page": 7,
-      "start_index": 0
-    },
-    "project_id": "proj_f1bbc301"
-  },
-  {
-    "title": "The system will include customizing the actions for specific gestures.",
-    "description": "The system will include customizing the actions for specific gestures.",
-    "source": {
-      "page": 7,
-      "start_index": 0
-    },
-    "project_id": "proj_f1bbc301"
-  },
-  {
-    "title": "The system must enable real-time collaboration by supporting interactions on the projected surface.",
-    "description": "The system must enable real-time collaboration by supporting interactions on the projected surface.",
+    "title": "The system must enable real-time collaboration.",
+    "description": "The system supports interactions on the projected surface.",
     "source": {
       "page": 8,
-      "start_index": 0
+      "start_index": 1
     },
-    "project_id": "proj_f1bbc301"
+    "project_id": "proj_9927b7d0"
   },
   {
     "title": "The system must have low-latency.",
-    "description": "The system must have low-latency.",
+    "description": "The system analyzes gestures and reflects the corresponding action on the projected surface.",
     "source": {
       "page": 8,
-      "start_index": 0
+      "start_index": 1
     },
-    "project_id": "proj_f1bbc301"
-  },
-  {
-    "title": "The system must work effectively in different places.",
-    "description": "The system must work effectively in different places.",
-    "source": {
-      "page": 6,
-      "start_index": 0
-    },
-    "project_id": "proj_f1bbc301"
-  },
-  {
-    "title": "The system must be able to detect the user's face using the YOLOv5 model.",
-    "description": "The system must be able to detect the user's face using the YOLOv5 model.",
-    "source": {
-      "page": 6,
-      "start_index": 0
-    },
-    "project_id": "proj_f1bbc301"
-  },
-  {
-    "title": "The system must be able to detect the borders of objects using contours detection.",
-    "description": "The system must be able to detect the borders of objects using contours detection.",
-    "source": {
-      "page": 6,
-      "start_index": 0
-    },
-    "project_id": "proj_f1bbc301"
-  },
-  {
-    "title": "The system must be able to mute the image noise using Gaussian blur.",
-    "description": "The system must be able to mute the image noise using Gaussian blur.",
-    "source": {
-      "page": 6,
-      "start_index": 0
-    },
-    "project_id": "proj_f1bbc301"
-  },
-  {
-    "title": "The system must be able to separate the moving parts from the background using Background Subtraction (BS).",
-    "description": "The system must be able to separate the moving parts from the background using Background Subtraction (BS).",
-    "source": {
-      "page": 6,
-      "start_index": 0
-    },
-    "project_id": "proj_f1bbc301"
-  },
-  {
-    "title": "The system must be able to optimize the image contrast using Histogram Equalization.",
-    "description": "The system must be able to optimize the image contrast using Histogram Equalization.",
-    "source": {
-      "page": 6,
-      "start_index": 0
-    },
-    "project_id": "proj_f1bbc301"
-  },
-  {
-    "title": "The system must enable concurrent execution of tasks within a single process using threading.",
-    "description": "The system must enable concurrent execution of tasks within a single process using threading.",
-    "source": {
-      "page": 6,
-      "start_index": 0
-    },
-    "project_id": "proj_f1bbc301"
-  },
-  {
-    "title": "The system must enable parallel execution of tasks across multiple processes using multiprocessing.",
-    "description": "The system must enable parallel execution of tasks across multiple processes using multiprocessing.",
-    "source": {
-      "page": 6,
-      "start_index": 0
-    },
-    "project_id": "proj_f1bbc301"
+    "project_id": "proj_9927b7d0"
   }
 ]

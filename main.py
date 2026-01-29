@@ -2,6 +2,11 @@ from fastapi import FastAPI, Request, UploadFile, File
 from fastapi.templating import Jinja2Templates
 from fastapi import APIRouter
 from pydantic import BaseModel
+from fastapi import HTTPException
+from fastapi.responses import StreamingResponse
+import io
+from infrastructure.database import db
+from infrastructure.repositories.ADL_repository import save_architecture_report_pdf
 from infrastructure.repositories.hybrid_repository import save_hybrid_result
 from fastapi.staticfiles import StaticFiles
 from ai.json_to_process_view import convert_to_process_view
@@ -22,7 +27,6 @@ import subprocess
 import json
 from application.extraction.srs_extractor import SRSExtractor
 # Import API routes
-
 from fastapi.responses import HTMLResponse
 from presentation.routes.architecture_routes import router as architecture_router
 from presentation.routes.srs_routes import router as srs_router
@@ -182,7 +186,14 @@ def generate_architecture(project_id: str):
 
     # ---- Generate PDF automatically ----
     pdf_path = generate_report(project_id)
+    
+    with open(pdf_path, "rb") as f:
+     pdf_bytes = f.read()
 
+    save_architecture_report_pdf(
+    project_id=project_id,
+    pdf_bytes=pdf_bytes
+     )
     return FileResponse(
         path=pdf_path,
         filename="architecture_report.pdf",
@@ -246,3 +257,20 @@ app.include_router(
 )
 
 
+ 
+
+@app.get("/api/report/{project_id}")
+def get_report(project_id: str):
+
+    doc = db.architecture_reports.find_one({"project_id": project_id})
+
+    if not doc:
+        raise HTTPException(status_code=404, detail="Report not found")
+
+    return StreamingResponse(
+        io.BytesIO(doc["report_pdf"]),
+        media_type="application/pdf",
+        headers={
+            "Content-Disposition": "inline; filename=architecture_report.pdf"
+        }
+    )
