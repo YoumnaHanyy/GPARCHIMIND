@@ -1,0 +1,83 @@
+[
+  {
+    "title": "Performance",
+    "description": "The system MUST respond to user requests within a reasonable time frame.",
+    "source": {
+      "page": "6.1",
+      "start_index": "Performance"
+    },
+    "project_id": 2
+  },
+  {
+    "title": "Reliability",
+    "description": "The system MUST be able to recover from failures and maintain data consistency.",
+    "source": {
+      "page": "6.2",
+      "start_index": "Reliability"
+    },
+    "project_id": 2
+  },
+  {
+    "title": "Security",
+    "description": "The system MUST protect user data and prevent unauthorized access.",
+    "source": {
+      "page": "6.3",
+      "start_index": "Security"
+    },
+    "project_id": 2
+  },
+  {
+    "title": "Privacy",
+    "description": "The system MUST ensure that user data is handled in accordance with applicable laws and regulations.",
+    "source": {
+      "page": "6.4",
+      "start_index": "Privacy"
+    },
+    "project_id": 2
+  },
+  {
+    "title": "Scalability",
+    "description": "The system MUST be able to handle a large number of users and requests without compromising performance.",
+    "source": {
+      "page": "6.5",
+      "start_index": "Scalability"
+    },
+    "project_id": 2
+  },
+  {
+    "title": "Usability",
+    "description": "The system MUST provide an intuitive and user-friendly interface that is easy to navigate.",
+    "source": {
+      "page": "6.6",
+      "start_index": "Usability"
+    },
+    "project_id": 2
+  },
+  {
+    "title": "Maintainability",
+    "description": "The system MUST be designed to be easily maintainable and updatable.",
+    "source": {
+      "page": "6.7",
+      "start_index": "Maintainability"
+    },
+    "project_id": 2
+  },
+  {
+    "title": "Compatibility",
+    "description": "The system MUST be compatible with a variety of devices and browsers.",
+    "source": {
+      "page": "6.8",
+      "start_index": "Compatibility"
+    },
+    "project_id": 2
+  },
+  {
+    "title": "Integration",
+    "description": "The system MUST be able to integrate with other systems and services.",
+    "source": {
+      "page": "6.9",
+      "start_index": "Integration"
+    },
+    "project_id": 2
+  }
+]

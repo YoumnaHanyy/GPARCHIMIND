@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>ArchiMind — SRS Analyzer</title>
+
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+    body { background-color: #f5f7fa; }
+
+    .result-section {
+      display: none;
+      max-height: 600px;
+      overflow-y: auto;
+      background: #ffffff;
+      padding: 20px;
+      border-radius: 8px;
+      border: 1px solid #dee2e6;
+      font-family: "Segoe UI", Tahoma, sans-serif;
+      white-space: normal;
+    }
+    .result-section.active { display: block; }
+
+    .nav-pills .nav-link { cursor: pointer; }
+
+    /* Requirements Styling */
+    .req-title { font-weight: 600; margin-bottom: 4px; }
+    .req-desc { margin-bottom: 16px; color: #444; }
+    .section-header { margin-top: 10px; margin-bottom: 15px; font-weight: 700; }
+  </style>
+</head>
+
+<body>
+<div class="container py-5">
+
+  <div class="card shadow-sm mx-auto" style="max-width:1200px;">
+    <div class="card-body">
+
+      <h3 class="mb-3">ArchiMind — Upload SRS PDF</h3>
+      <p class="text-muted">
+        Upload an SRS document. The system extracts Functional & Non-Functional Requirements
+        and recommends software architectures using multiple AI-based methods.
+      </p>
+
+      <!-- Upload Form -->
+      <form id="processForm">
+        <div class="mb-3">
+          <input class="form-control" type="file" id="processFileInput" accept=".pdf">
+        </div>
+        <button class="btn btn-primary" type="submit">Process PDF</button>
+      </form>
+
+      <hr>
+
+      <!-- Loading -->
+      <div id="loadingMessage" class="text-center py-4" style="display:none;">
+        <div class="spinner-border text-primary"></div>
+        <p class="mt-3">Processing SRS… please wait</p>
+      </div>
+
+      <!-- Navigation -->
+      <div id="resultNavigation" style="display:none;">
+        <h5 class="mt-4">Results</h5>
+        <ul class="nav nav-pills mb-3" id="resultTabs">
+          <li class="nav-item"><a class="nav-link active" data-tab="extraction">Extraction</a></li>
+          <li class="nav-item"><a class="nav-link" data-tab="functional">Functional</a></li>
+          <li class="nav-item"><a class="nav-link" data-tab="ordinal">Ordinal</a></li>
+          <li class="nav-item"><a class="nav-link" data-tab="binary">Binary</a></li>
+          <li class="nav-item"><a class="nav-link" data-tab="weighted">Weighted</a></li>
+          <li class="nav-item"><a class="nav-link" data-tab="hybrid">Hybrid</a></li>
+        </ul>
+      </div>
+
+      <!-- Results -->
+      <div id="processResult" style="display:none;">
+        <div id="section-extraction" class="result-section active"></div>
+        <div id="section-functional" class="result-section"></div>
+        <div id="section-ordinal" class="result-section"></div>
+        <div id="section-binary" class="result-section"></div>
+        <div id="section-weighted" class="result-section"></div>
+        <div id="section-hybrid" class="result-section"></div>
+      </div>
+
+      <!-- Error -->
+      <div id="errorMessage" class="mt-3"></div>
+
+    </div>
+  </div>
+
+</div>
+
+<script>
+  const form = document.getElementById("processForm");
+  const fileInput = document.getElementById("processFileInput");
+  const loading = document.getElementById("loadingMessage");
+  const resultNav = document.getElementById("resultNavigation");
+  const resultBox = document.getElementById("processResult");
+  const errorBox = document.getElementById("errorMessage");
+
+  // Tabs
+  document.getElementById("resultTabs").onclick = e => {
+    if (!e.target.dataset.tab) return;
+
+    document.querySelectorAll(".nav-link").forEach(n => n.classList.remove("active"));
+    e.target.classList.add("active");
+
+    document.querySelectorAll(".result-section").forEach(s => s.classList.remove("active"));
+    document.getElementById("section-" + e.target.dataset.tab).classList.add("active");
+  };
+
+  function showResults(data) {
+    loading.style.display = "none";
+    errorBox.innerHTML = "";
+    resultNav.style.display = "block";
+    resultBox.style.display = "block";
+
+    // ---------- Functional Requirements ----------
+    let frHtml = "<h5 class='section-header'>1- Functional Requirements</h5>";
+    (data.functional || []).forEach((fr, idx) => {
+      frHtml += `
+        <div class="mb-3">
+          <div class="req-title">${String.fromCharCode(97 + idx)}. ${fr.title || "FR"}</div>
+          <div class="req-desc">${fr.description || ""}</div>
+        </div>
+      `;
+    });
+
+    // ---------- Non-Functional Requirements ----------
+    let nfrHtml = "<h5 class='section-header'>2- Non-Functional Requirements</h5>";
+    (data.nfr_predictions || []).forEach((nfr, idx) => {
+      nfrHtml += `
+        <div class="mb-3">
+          <div class="req-title">${String.fromCharCode(97 + idx)}. ${nfr.predicted_type || "NFR"}</div>
+          <div class="req-desc">${nfr.description || ""}</div>
+        </div>
+      `;
+    });
+
+    document.getElementById("section-extraction").innerHTML = frHtml + "<hr/>" + nfrHtml;
+
+    // Architecture recommendations tabs (raw JSON)
+    const rec = data.architecture_recommendations || {};
+
+    document.getElementById("section-functional").textContent =
+      JSON.stringify(rec.functional_method || {}, null, 2);
+
+    document.getElementById("section-ordinal").textContent =
+      JSON.stringify(rec.ordinal_method || [], null, 2);
+
+    document.getElementById("section-binary").textContent =
+      JSON.stringify(rec.binary_method || [], null, 2);
+
+    document.getElementById("section-weighted").textContent =
+      JSON.stringify(rec.weighted_score_method || {}, null, 2);
+
+    document.getElementById("section-hybrid").textContent =
+      JSON.stringify(rec.hybrid_method || [], null, 2);
+  }
+
+  function showVvFail(data) {
+    loading.style.display = "none";
+    errorBox.innerHTML = "";
+
+    // show only extraction tab with warning
+    resultNav.style.display = "block";
+    resultBox.style.display = "block";
+
+    // force Extraction tab active
+    document.querySelectorAll(".nav-link").forEach(n => n.classList.remove("active"));
+    document.querySelector('[data-tab="extraction"]').classList.add("active");
+    document.querySelectorAll(".result-section").forEach(s => s.classList.remove("active"));
+    document.getElementById("section-extraction").classList.add("active");
+
+    // clear other sections
+    document.getElementById("section-functional").textContent = "";
+    document.getElementById("section-ordinal").textContent = "";
+    document.getElementById("section-binary").textContent = "";
+    document.getElementById("section-weighted").textContent = "";
+    document.getElementById("section-hybrid").textContent = "";
+
+    const hits = (data.vv && data.vv.samples && data.vv.samples.heading_hits) ? data.vv.samples.heading_hits : [];
+
+    document.getElementById("section-extraction").innerHTML = `
+      <div class="alert alert-warning">
+        <strong>V&V Check Failed:</strong> ${data.message || "Invalid SRS."}
+        ${hits.length ? `
+          <hr/>
+          <div><strong>Detected heading hits:</strong></div>
+          <ol class="mb-0">
+            ${hits.map(h => `<li>${h}</li>`).join("")}
+          </ol>
+        ` : `
+          <hr/>
+          <div class="mb-0"><em>No keyword/heading hits were detected.</em></div>
+        `}
+      </div>
+    `;
+  }
+
+  form.onsubmit = async e => {
+    e.preventDefault();
+
+    if (!fileInput.files.length) {
+      alert("Please select a PDF file");
+      return;
+    }
+
+    loading.style.display = "block";
+    resultNav.style.display = "none";
+    resultBox.style.display = "none";
+    errorBox.innerHTML = "";
+
+    const fd = new FormData();
+    fd.append("file", fileInput.files[0]);
+
+    try {
+      const res = await fetch("/extract", { method: "POST", body: fd });
+      const text = await res.text();
+
+      let data;
+      try {
+        data = JSON.parse(text);
+      } catch (err) {
+        throw text; // non-json backend error
+      }
+
+      // V&V gate fail (422)
+      if (res.status === 422 && data.stage === "V&V") {
+        showVvFail(data);
+        return;
+      }
+
+      // backend returned an error object
+      if (data.error) {
+        throw data.details || data.error;
+      }
+
+      showResults(data);
+
+    } catch (err) {
+      loading.style.display = "none";
+      errorBox.innerHTML = `
+        <div class="alert alert-danger">
+          <strong>Processing failed</strong><br/>
+          <pre style="white-space:pre-wrap;margin:0;">${String(err)}</pre>
+        </div>
+      `;
+    }
+  };
+</script>
+
+</body>
+</html>
