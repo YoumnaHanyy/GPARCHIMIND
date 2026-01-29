@@ -1,8 +1,10 @@
+import uuid
 from fastapi import APIRouter, Request, UploadFile, File
 from fastapi.responses import JSONResponse
 import os
 import traceback
 
+from infrastructure.repositories.project_repo import create_project
 from application.extraction.extraction_service import process_srs
 from ai.inference.predict_type_level import predict_and_save_nfr
 from service.ordinal_service import execute_ordinal_method
@@ -11,7 +13,7 @@ from service.weighted_service import execute_weighted_method
 from service.nfr_stats_service import compute_nfr_statistics
 from service.functional_service import execute_functional_method
 from service.hybrid_service import execute_hybrid_method
-
+from infrastructure.repositories.project_repo import update_project_progress
 
 from infrastructure.repositories.weighted_repository import save_weighted_result
 router = APIRouter()
@@ -31,9 +33,13 @@ def clean_object_id(items: list):
 
 
 @router.post("/extract")
-async def extract_srs(file: UploadFile = File(...)):
+async def extract_srs(
+    request: Request,
+    file: UploadFile = File(...)
+):
+
     try:
-        project_id = 2
+        project_id = f"proj_{uuid.uuid4().hex[:8]}"
 
         # 1️⃣ save pdf
         pdf_path = os.path.join(UPLOAD_DIR, "srs.pdf")
@@ -82,7 +88,10 @@ async def extract_srs(file: UploadFile = File(...)):
 
         save_weighted_result(project_id, weighted_result)
         # 6️⃣ response للـ UI
+        user_id = request.session["user"]["id"]   # لازم تكوني مخزّنة id في session
+        create_project(project_id, user_id)
         return {
+            "project_id": project_id,
             "functional": clean_object_id(extraction_result["functional"]),
             "nfr_predictions": clean_object_id(predictions),
             "functional_method": functional_result,
@@ -91,7 +100,7 @@ async def extract_srs(file: UploadFile = File(...)):
             "weighted_method": weighted_result,
                "hybrid_method": hybrid_result
         }
-
+        
     except Exception as e:
        tb = traceback.extract_tb(e.__traceback__)
        last_trace = tb[-1]  # آخر مكان وقع فيه الغلط
@@ -109,3 +118,22 @@ async def extract_srs(file: UploadFile = File(...)):
 async def logout(request: Request):
     request.session.clear()
     return JSONResponse({"message": "Logged out"})
+
+@router.post("/projects/update-progress")
+async def update_progress(request: Request):
+    body = await request.json()
+
+    project_id = body.get("project_id")
+    phase = body.get("phase")
+    progress = body.get("progress")
+
+    if not project_id:
+        return {"error": "project_id missing"}
+
+    update_project_progress(
+        project_id=project_id,
+        progress=progress,
+        phase=phase
+    )
+
+    return {"status": "ok"}

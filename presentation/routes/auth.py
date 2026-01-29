@@ -31,10 +31,12 @@ async def login(
 
         # ✅ Create session with correct field names
         request.session["user"] = {
-            "email": user.get("Email", ""),
-            "role": user.get("Role", "User"),
-            "name": user.get("Fullname", "User")  # This will be mapped to full_name in main.py
-        }
+    "id": str(user["_id"]),   # 🔥 مهم
+    "email": user.get("Email", ""),
+    "role": user.get("Role", "User"),
+    "name": user.get("Fullname", "User")
+}
+
 
         # ✅ Success - redirect to dashboard
         return RedirectResponse(

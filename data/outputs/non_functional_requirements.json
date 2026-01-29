@@ -1,47 +1,47 @@
 [
   {
     "title": "Standards Compliance",
-    "description": "The system MUST comply with industry standards for text-to-video generation.",
+    "description": "MUST comply with industry standards for text-to-video generation.",
     "source": {
       "page": 13,
       "start_index": 1
     },
-    "project_id": 2
+    "project_id": "proj_198b4f72"
   },
   {
     "title": "Hardware Limitations",
-    "description": "The system MUST be able to handle high GPU-intensive processes.",
+    "description": "SHOULD be designed to handle high GPU-intensive processes.",
     "source": {
       "page": 13,
       "start_index": 2
     },
-    "project_id": 2
+    "project_id": "proj_198b4f72"
   },
   {
     "title": "Performance",
-    "description": "The system SHOULD be able to generate videos in a reasonable amount of time.",
+    "description": "SHOULD be able to generate videos in a reasonable amount of time.",
     "source": {
       "page": 13,
       "start_index": 3
     },
-    "project_id": 2
+    "project_id": "proj_198b4f72"
   },
   {
-    "title": "Security",
-    "description": "The system MUST ensure the security and integrity of user data.",
+    "title": "User Experience",
+    "description": "SHOULD provide a user-friendly interface for users to interact with the system.",
+    "source": {
+      "page": 9,
+      "start_index": 2
+    },
+    "project_id": "proj_198b4f72"
+  },
+  {
+    "title": "Scalability",
+    "description": "MAY be designed to handle a large number of users and video requests.",
     "source": {
       "page": 13,
       "start_index": 4
     },
-    "project_id": 2
-  },
-  {
-    "title": "Usability",
-    "description": "The system MUST be user-friendly and easy to use.",
-    "source": {
-      "page": 13,
-      "start_index": 5
-    },
-    "project_id": 2
+    "project_id": "proj_198b4f72"
   }
 ]

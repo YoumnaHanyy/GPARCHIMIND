@@ -1,37 +1,37 @@
 [
   {
     "title": "Standards Compliance",
-    "description": "The system MUST comply with industry standards for text-to-video generation.",
+    "description": "MUST comply with industry standards for text-to-video generation.",
     "predicted_type": "LF",
     "predicted_type_label": "Load Factor",
     "predicted_level": "High"
   },
   {
     "title": "Hardware Limitations",
-    "description": "The system MUST be able to handle high GPU-intensive processes.",
+    "description": "SHOULD be designed to handle high GPU-intensive processes.",
     "predicted_type": "SC",
     "predicted_type_label": "Scalability",
-    "predicted_level": "High"
+    "predicted_level": "Low"
   },
   {
     "title": "Performance",
-    "description": "The system SHOULD be able to generate videos in a reasonable amount of time.",
+    "description": "SHOULD be able to generate videos in a reasonable amount of time.",
     "predicted_type": "PE",
     "predicted_type_label": "Performance",
     "predicted_level": "Low"
   },
   {
-    "title": "Security",
-    "description": "The system MUST ensure the security and integrity of user data.",
-    "predicted_type": "SE",
-    "predicted_type_label": "Security",
-    "predicted_level": "High"
-  },
-  {
-    "title": "Usability",
-    "description": "The system MUST be user-friendly and easy to use.",
+    "title": "User Experience",
+    "description": "SHOULD provide a user-friendly interface for users to interact with the system.",
     "predicted_type": "US",
     "predicted_type_label": "Usability",
-    "predicted_level": "High"
+    "predicted_level": "Low"
+  },
+  {
+    "title": "Scalability",
+    "description": "MAY be designed to handle a large number of users and video requests.",
+    "predicted_type": "SC",
+    "predicted_type_label": "Scalability",
+    "predicted_level": "Medium"
   }
 ]

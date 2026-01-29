@@ -429,6 +429,8 @@ if (!fileInput.files.length) {
 
       // Store extracted data
       extractedData = data;
+      window.currentProjectId = data.project_id;
+
 
       // Stop loading animation
       stopLoadingAnimation();
@@ -509,4 +511,47 @@ function showErrorModal(message) {
   document.getElementById("errorModalMessage").innerText = message;
   const modal = new bootstrap.Modal(document.getElementById("errorModal"));
   modal.show();
+}
+function getProgressValue(phase) {
+  return parseInt(phaseData[phase].pct.replace("%", ""));
+}
+function changePhase(dir) {
+  if (dir === 1 && currentPhase < 3) {
+    currentPhase++;
+
+    // 🔥 update DB
+    syncProjectProgress();
+
+    triggerLoading();
+
+  } else if (dir === -1 && currentPhase > 1) {
+    currentPhase--;
+    renderPhase();
+
+  } else if (dir === 1 && currentPhase === 3) {
+    syncProjectProgress(); // 100%
+    alert("Project Complete! Returning to dashboard.");
+    location.reload();
+  }
+}
+async function syncProjectProgress() {
+  if (!window.currentProjectId) return;
+
+  const progress = getProgressValue(currentPhase);
+
+  try {
+    await fetch("/projects/update-progress", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        project_id: window.currentProjectId,
+        phase: currentPhase,
+        progress: progress
+      })
+    });
+  } catch (e) {
+    console.error("Failed to update project progress", e);
+  }
 }

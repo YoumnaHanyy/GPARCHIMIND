@@ -10,6 +10,7 @@ from presentation.routes.srs_routes import router as srs_router
 from presentation.routes import auth
 from starlette.middleware.sessions import SessionMiddleware
 from dotenv import load_dotenv
+from infrastructure.repositories.project_repo import get_user_projects
 
 load_dotenv()
 
@@ -111,7 +112,9 @@ async def dashboard(request: Request):
             status_code=303
         )
 
-    # ✅ Map session data to template expected format
+    user_id = user_session["id"]          # 🔥
+    projects = get_user_projects(user_id) # 🔥
+
     user = {
         "full_name": user_session.get("name", "User"),
         "email": user_session.get("email", ""),
@@ -119,10 +122,11 @@ async def dashboard(request: Request):
     }
 
     return templates.TemplateResponse(
-        "dashboard.html",
+        "Dashboard.html",
         {
             "request": request,
-            "user": user
+            "user": user,
+            "projects": projects   # 🔥 ده اللي كان ناقص
         }
     )
 
