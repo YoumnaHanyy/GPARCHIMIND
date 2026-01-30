@@ -1,25 +1,15 @@
 @startuml
 autonumber
 actor User
-participant "CV Parser" as CVParser
-participant "Screening Questions Module" as ScreeningQuestionsModule
-participant "Rating and Scoring Module" as RatingandScoringModule
-participant "User Interface Module" as UserInterfaceModule
-participant "Natural Language Processing (NLP) Module" as NaturalLanguageProcessingNLPModule
-participant "Similarity Calculation Module" as SimilarityCalculationModule
-participant "ChatGPT Integration Module" as ChatGPTIntegrationModule
-participant "Recruiter Dashboard Module" as RecruiterDashboardModule
-UserInterfaceModule ->> CVParser : Submit CV for Parsing
-CVParser -> ScreeningQuestionsModule : Trigger Screening Questions
-ScreeningQuestionsModule -> UserInterfaceModule : Present Screening Questions
-UserInterfaceModule ->> ScreeningQuestionsModule : Submit Applicant Responses
-ScreeningQuestionsModule -> RatingandScoringModule : Trigger Rating and Scoring
-CVParser -> RatingandScoringModule : Provide Parsed CV Data
-NaturalLanguageProcessingNLPModule -> RatingandScoringModule : Provide NLP Data
-SimilarityCalculationModule -> RatingandScoringModule : Provide Similarity Calculation Data
-ChatGPTIntegrationModule -> RatingandScoringModule : Provide ChatGPT Score
-RatingandScoringModule -> UserInterfaceModule : Provide Rating Result
-UserInterfaceModule -> RecruiterDashboardModule : Trigger Recruiter Dashboard Update
-ScreeningQuestionsModule -> RecruiterDashboardModule : Trigger Recruiter Dashboard Update
-RatingandScoringModule -> RecruiterDashboardModule : Provide Rating Result
+participant "Submit CV" as SubmitCV
+participant "View and Edit CV" as ViewandEditCV
+participant "Answer Screening Questions" as AnswerScreeningQuestions
+participant "Get Rating for CV" as GetRatingforCV
+SubmitCV ->> ViewandEditCV : Submit CV for parsing and analysis
+ViewandEditCV -> ViewandEditCV : View parsed CV
+ViewandEditCV ->> AnswerScreeningQuestions : Proceed to screening questions
+AnswerScreeningQuestions -> AnswerScreeningQuestions : Answer screening questions
+AnswerScreeningQuestions ->> GetRatingforCV : Submit answers for rating
+GetRatingforCV -> GetRatingforCV : Calculate CV rating
+GetRatingforCV ->> SubmitCV : Update CV for re-parsing
 @enduml

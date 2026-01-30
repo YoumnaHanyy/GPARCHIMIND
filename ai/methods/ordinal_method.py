@@ -1,4 +1,7 @@
 import pandas as pd
+from ai.methods.strategy import ArchitectureAnalysisStrategy
+
+
 
 def run_ordinal_method(predictions, architecture_data, top_k=5):
     if not predictions:
@@ -42,3 +45,8 @@ def run_ordinal_method(predictions, architecture_data, top_k=5):
         {"architecture": arch, "matched_nfrs": int(score)}
         for arch, score in style_scores.items()
     ]
+
+
+class OrdinalMethod(ArchitectureAnalysisStrategy):
+    def run(self, predictions, architecture_data, top_k=5):
+        return run_ordinal_method(predictions, architecture_data, top_k)

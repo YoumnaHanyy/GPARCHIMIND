@@ -1,83 +1,83 @@
 [
   {
     "title": "Performance",
-    "description": "The system must respond to user input within a reasonable time frame.",
+    "description": "The system MUST respond to user input within 2 seconds.",
     "source": {
-      "page": "6.1",
-      "start_index": "21"
+      "page": 6,
+      "start_index": 1
     },
-    "project_id": "proj_23f123d6"
+    "project_id": "proj_d355a776"
   },
   {
     "title": "Reliability",
-    "description": "The system must be able to recover from failures and maintain data integrity.",
+    "description": "The system SHALL be available 99.9% of the time.",
     "source": {
-      "page": "6.2",
-      "start_index": "21"
+      "page": 6,
+      "start_index": 2
     },
-    "project_id": "proj_23f123d6"
+    "project_id": "proj_d355a776"
   },
   {
     "title": "Security",
-    "description": "The system must protect user data and prevent unauthorized access.",
+    "description": "The system MUST protect user data from unauthorized access.",
     "source": {
-      "page": "6.3",
-      "start_index": "21"
+      "page": 6,
+      "start_index": 3
     },
-    "project_id": "proj_23f123d6"
+    "project_id": "proj_d355a776"
   },
   {
     "title": "Privacy",
-    "description": "The system must ensure that user data is not shared without consent.",
+    "description": "The system SHALL ensure that user data is not shared without consent.",
     "source": {
-      "page": "6.4",
-      "start_index": "21"
+      "page": 6,
+      "start_index": 4
     },
-    "project_id": "proj_23f123d6"
+    "project_id": "proj_d355a776"
   },
   {
     "title": "Scalability",
-    "description": "The system must be able to handle a large number of users and requests.",
+    "description": "The system SHOULD be able to handle 1000 concurrent users.",
     "source": {
-      "page": "6.5",
-      "start_index": "21"
+      "page": 6,
+      "start_index": 5
     },
-    "project_id": "proj_23f123d6"
+    "project_id": "proj_d355a776"
   },
   {
     "title": "Usability",
-    "description": "The system must be easy to use and navigate.",
+    "description": "The system MUST be easy to use and navigate.",
     "source": {
-      "page": "6.6",
-      "start_index": "21"
+      "page": 6,
+      "start_index": 6
     },
-    "project_id": "proj_23f123d6"
+    "project_id": "proj_d355a776"
   },
   {
     "title": "Maintainability",
-    "description": "The system must be easy to modify and update.",
+    "description": "The system SHOULD be easy to modify and update.",
     "source": {
-      "page": "6.7",
-      "start_index": "22"
+      "page": 6,
+      "start_index": 7
     },
-    "project_id": "proj_23f123d6"
+    "project_id": "proj_d355a776"
   },
   {
     "title": "Compatibility",
-    "description": "The system must be compatible with different browsers and devices.",
+    "description": "The system MUST be compatible with major web browsers.",
     "source": {
-      "page": "6.8",
-      "start_index": "22"
+      "page": 6,
+      "start_index": 8
     },
-    "project_id": "proj_23f123d6"
+    "project_id": "proj_d355a776"
   },
   {
     "title": "Integration",
-    "description": "The system must be able to integrate with other systems and services.",
+    "description": "The system SHOULD integrate with other HR systems.",
     "source": {
-      "page": "6.9",
-      "start_index": "22"
+      "page": 6,
+      "start_index": 9
     },
-    "project_id": "proj_23f123d6"
+    "project_id": "proj_d355a776"
   }
 ]

@@ -1,131 +1,58 @@
 System ResuFit:PrecisionCVMatchingSystem {
   Property view : String = "runtime";
-  Property architectureStyle : String = "Microservices";
+  Property architectureStyle : String = "Layered (N-Tier)";
   Property source : String = "AI";
-  Component CVParser = new Component {
+  Component SubmitCV = new Component {
     Port in;
     Port out;
-    Property responsibility : String = "Parse CV, Extract Key Information, Compare CV with Job Requirements";
+    Property responsibility : String = "Applicants can submit their CVs for parsing and analysis.";
     Property state : String = "stateless";
     Property scaling : String = "horizontal";
   }
-  Component ScreeningQuestionsModule = new Component {
+  Component ViewandEditCV = new Component {
     Port in;
     Port out;
-    Property responsibility : String = "Present Screening Questions, Validate Applicant Responses, Score Applicant Responses";
+    Property responsibility : String = "Applicants can view and edit their parsed CV.";
     Property state : String = "stateless";
     Property scaling : String = "horizontal";
   }
-  Component RatingandScoringModule = new Component {
+  Component AnswerScreeningQuestions = new Component {
     Port in;
     Port out;
-    Property responsibility : String = "Determine Similarity, Generate Percentage-Based Result";
+    Property responsibility : String = "Applicants are presented with screening questions defined by an expert recruiter.";
     Property state : String = "stateless";
     Property scaling : String = "horizontal";
   }
-  Component UserInterfaceModule = new Component {
+  Component GetRatingforCV = new Component {
     Port in;
     Port out;
-    Property responsibility : String = "Submit CV, View and Edit CV, Answer Screening Questions, Get Rating for CV";
+    Property responsibility : String = "Applicants receive a rating for their CV based on the similarity between the applicant's CV and the job requirements.";
     Property state : String = "stateless";
     Property scaling : String = "horizontal";
   }
-  Component NaturalLanguageProcessing(NLP)Module = new Component {
-    Port in;
-    Port out;
-    Property responsibility : String = "Parse CV, Determine Similarity";
-    Property state : String = "stateless";
-    Property scaling : String = "horizontal";
-  }
-  Component SimilarityCalculationModule = new Component {
-    Port in;
-    Port out;
-    Property responsibility : String = "Calculate Cosine Similarity, Calculate Jaccard Similarity";
-    Property state : String = "stateless";
-    Property scaling : String = "horizontal";
-  }
-  Component ChatGPTIntegrationModule = new Component {
-    Port in;
-    Port out;
-    Property responsibility : String = "Score Applicant Responses";
-    Property state : String = "stateless";
-    Property scaling : String = "horizontal";
-  }
-  Component RecruiterDashboardModule = new Component {
-    Port in;
-    Port out;
-    Property responsibility : String = "Define Job Requirements, View Applicant Responses, View Rating Results";
-    Property state : String = "stateless";
-    Property scaling : String = "horizontal";
-  }
-  Attachment CVParser.out to ScreeningQuestionsModule.in {
+  Attachment SubmitCV.out to ViewandEditCV.in {
     Property delivery : String = "at-least-once";
     Property ordering : Boolean = false;
     Property backpressure : String = "bounded";
   }
-  Attachment CVParser.out to RatingandScoringModule.in {
+  Attachment ViewandEditCV.out to AnswerScreeningQuestions.in {
+    Property delivery : String = "at-least-once";
+    Property ordering : Boolean = false;
+    Property backpressure : String = "bounded";
+  }
+  Attachment AnswerScreeningQuestions.out to GetRatingforCV.in {
     Property delivery : String = "at-least-once";
     Property ordering : Boolean = true;
     Property backpressure : String = "bounded";
   }
-  Attachment ScreeningQuestionsModule.out to RatingandScoringModule.in {
+  Attachment GetRatingforCV.out to SubmitCV.in {
     Property delivery : String = "at-least-once";
     Property ordering : Boolean = false;
     Property backpressure : String = "bounded";
   }
-  Attachment RatingandScoringModule.out to UserInterfaceModule.in {
-    Property delivery : String = "at-least-once";
-    Property ordering : Boolean = true;
-    Property backpressure : String = "bounded";
-  }
-  Attachment UserInterfaceModule.out to CVParser.in {
-    Property delivery : String = "at-least-once";
-    Property ordering : Boolean = false;
-    Property backpressure : String = "bounded";
-  }
-  Attachment UserInterfaceModule.out to ScreeningQuestionsModule.in {
-    Property delivery : String = "at-least-once";
-    Property ordering : Boolean = false;
-    Property backpressure : String = "bounded";
-  }
-  Attachment NaturalLanguageProcessing(NLP)Module.out to RatingandScoringModule.in {
-    Property delivery : String = "at-least-once";
-    Property ordering : Boolean = true;
-    Property backpressure : String = "bounded";
-  }
-  Attachment SimilarityCalculationModule.out to RatingandScoringModule.in {
-    Property delivery : String = "at-least-once";
-    Property ordering : Boolean = true;
-    Property backpressure : String = "bounded";
-  }
-  Attachment ChatGPTIntegrationModule.out to RatingandScoringModule.in {
-    Property delivery : String = "at-least-once";
-    Property ordering : Boolean = true;
-    Property backpressure : String = "bounded";
-  }
-  Attachment UserInterfaceModule.out to ChatGPTIntegrationModule.in {
-    Property delivery : String = "at-least-once";
-    Property ordering : Boolean = false;
-    Property backpressure : String = "bounded";
-  }
-  Attachment UserInterfaceModule.out to RecruiterDashboardModule.in {
-    Property delivery : String = "at-least-once";
-    Property ordering : Boolean = false;
-    Property backpressure : String = "bounded";
-  }
-  Attachment ScreeningQuestionsModule.out to RecruiterDashboardModule.in {
-    Property delivery : String = "at-least-once";
-    Property ordering : Boolean = false;
-    Property backpressure : String = "bounded";
-  }
-  Attachment RatingandScoringModule.out to RecruiterDashboardModule.in {
-    Property delivery : String = "at-least-once";
-    Property ordering : Boolean = true;
-    Property backpressure : String = "bounded";
-  }
-  Property resilience_pattern : String = "Retry, CircuitBreaker";
-  Property delivery : String = "at-least-once";
-  Property ordering : Boolean = false;
-  Property authentication : String = "service-to-service";
+  Property resilience_pattern : String = "Retry";
+  Property delivery : String = "at-most-once";
+  Property ordering : Boolean = true;
+  Property authentication : String = "centralized";
   Property authorization : String = "RBAC";
 }

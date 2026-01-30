@@ -1,4 +1,7 @@
 # ai/methods/weighted_method.py
+from ai.methods.strategy import ArchitectureAnalysisStrategy
+
+
 
 def compute_total_nfr_weight(freq_norm, must_norm, importance):
     total_weight = {}
@@ -11,3 +14,9 @@ def compute_total_nfr_weight(freq_norm, must_norm, importance):
 
     s = sum(total_weight.values()) or 1
     return {k: round(v / s, 4) for k, v in total_weight.items()}
+
+
+
+class WeightedMethod(ArchitectureAnalysisStrategy):
+    def run(self, freq_norm, must_norm, importance):
+        return compute_total_nfr_weight(freq_norm, must_norm, importance)

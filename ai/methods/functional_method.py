@@ -1,3 +1,7 @@
+from ai.methods.strategy import ArchitectureAnalysisStrategy
+
+
+
 def extract_behavior_signals(functional_reqs):
     signals = {
         "user_driven": 0,
@@ -77,3 +81,9 @@ def choose_architecture(functional_reqs):
         ],
         "signals": signals
     }
+
+class FunctionalMethod(ArchitectureAnalysisStrategy):
+    def run(self, functional_requirements):
+        return choose_architecture(functional_requirements)
+
+

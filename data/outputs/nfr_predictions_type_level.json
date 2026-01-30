@@ -1,65 +1,65 @@
 [
   {
     "title": "Performance",
-    "description": "The system must respond to user input within a reasonable time frame.",
+    "description": "The system MUST respond to user input within 2 seconds.",
     "predicted_type": "PE",
     "predicted_type_label": "Performance",
     "predicted_level": "High"
   },
   {
     "title": "Reliability",
-    "description": "The system must be able to recover from failures and maintain data integrity.",
+    "description": "The system SHALL be available 99.9% of the time.",
     "predicted_type": "A",
     "predicted_type_label": "Availability",
     "predicted_level": "High"
   },
   {
     "title": "Security",
-    "description": "The system must protect user data and prevent unauthorized access.",
+    "description": "The system MUST protect user data from unauthorized access.",
     "predicted_type": "SE",
     "predicted_type_label": "Security",
     "predicted_level": "High"
   },
   {
     "title": "Privacy",
-    "description": "The system must ensure that user data is not shared without consent.",
+    "description": "The system SHALL ensure that user data is not shared without consent.",
     "predicted_type": "SE",
     "predicted_type_label": "Security",
     "predicted_level": "High"
   },
   {
     "title": "Scalability",
-    "description": "The system must be able to handle a large number of users and requests.",
+    "description": "The system SHOULD be able to handle 1000 concurrent users.",
     "predicted_type": "SC",
     "predicted_type_label": "Scalability",
-    "predicted_level": "High"
+    "predicted_level": "Low"
   },
   {
     "title": "Usability",
-    "description": "The system must be easy to use and navigate.",
+    "description": "The system MUST be easy to use and navigate.",
     "predicted_type": "US",
     "predicted_type_label": "Usability",
     "predicted_level": "High"
   },
   {
     "title": "Maintainability",
-    "description": "The system must be easy to modify and update.",
+    "description": "The system SHOULD be easy to modify and update.",
     "predicted_type": "MN",
     "predicted_type_label": "Maintainability",
-    "predicted_level": "High"
+    "predicted_level": "Low"
   },
   {
     "title": "Compatibility",
-    "description": "The system must be compatible with different browsers and devices.",
+    "description": "The system MUST be compatible with major web browsers.",
     "predicted_type": "PO",
     "predicted_type_label": "Portability",
     "predicted_level": "High"
   },
   {
     "title": "Integration",
-    "description": "The system must be able to integrate with other systems and services.",
+    "description": "The system SHOULD integrate with other HR systems.",
     "predicted_type": "PO",
     "predicted_type_label": "Portability",
-    "predicted_level": "High"
+    "predicted_level": "Low"
   }
 ]

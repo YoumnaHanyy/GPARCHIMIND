@@ -3,6 +3,8 @@ import pandas as pd
 
 # MongoDB
 from infrastructure.database import db
+from ai.methods.strategy import ArchitectureAnalysisStrategy
+
 
 
 # ============================================================
@@ -130,3 +132,12 @@ if __name__ == "__main__":
 
     print("\n=== Best Architecture ===")
     print(result["best_architecture"])
+
+
+ # ============================================================
+# 7️⃣ Strategy Wrapper
+# ============================================================
+
+class BinaryMethod(ArchitectureAnalysisStrategy):
+    def run(self, binary_vector, top_k=5):
+        return run_binary_method(binary_vector, top_k)

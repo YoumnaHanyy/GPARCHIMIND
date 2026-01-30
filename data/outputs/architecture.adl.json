@@ -1,308 +1,161 @@
 {
   "system": "ResuFit: Precision CV Matching System",
-  "style": "Microservices",
+  "style": "Layered (N-Tier)",
   "source": "AI",
   "decisions": [
     {
-      "name": "Implement Microservices Architecture",
-      "rationale": "To meet the scalability and maintainability requirements, the system should be designed as a collection of microservices, each responsible for a specific business capability."
+      "name": "Implement a layered (N-Tier) architecture for ResuFit: Precision CV Matching System.",
+      "rationale": "To achieve scalability, maintainability, and compatibility, a layered architecture is necessary."
     },
     {
-      "name": "Use Natural Language Processing (NLP) for CV Parsing",
-      "rationale": "To extract key information from CVs, the system should utilize NLP techniques to parse and analyze the CV content."
+      "name": "Use a database that supports concurrent connections to handle 1000 concurrent users.",
+      "rationale": "To meet the scalability requirement, a database that can handle high traffic is necessary."
     },
     {
-      "name": "Implement Cosine Similarity and Jaccard Similarity for Determining Similarity",
-      "rationale": "To determine the alignment between extracted information and job requirements, the system should use cosine similarity and Jaccard similarity algorithms."
+      "name": "Implement user authentication and authorization to protect user data and meet the security requirement.",
+      "rationale": "To protect user data and meet the security requirement, user authentication and authorization must be implemented."
     },
     {
-      "name": "Validate Applicant Responses Using Expert-Generated Model",
-      "rationale": "To ensure the accuracy of applicant responses, the system should verify and grade responses against an expert-generated model."
+      "name": "Use a secure protocol for data transmission, such as HTTPS, to protect user data.",
+      "rationale": "To protect user data, a secure protocol for data transmission must be used."
     },
     {
-      "name": "Score Applicant Responses Using ChatGPT",
-      "rationale": "To provide a quantitative measure of applicant suitability, the system should score responses using ChatGPT."
+      "name": "Implement a user-friendly interface that provides clear instructions to meet the usability requirement.",
+      "rationale": "To meet the usability requirement, a user-friendly interface with clear instructions must be implemented."
     },
     {
-      "name": "Generate Percentage-Based Result for Applicant Suitability",
-      "rationale": "To provide a concise and easy-to-understand measure of applicant suitability, the system should generate a percentage-based result."
+      "name": "Integrate ResuFit with the HR module from Odoo ERP software to meet the integration requirement.",
+      "rationale": "To meet the integration requirement, ResuFit must be integrated with the HR module from Odoo ERP software."
     },
     {
-      "name": "Implement Performance, Reliability, Security, and Usability Features",
-      "rationale": "To meet the non-functional requirements, the system should incorporate features that ensure performance, reliability, security, and usability."
+      "name": "Implement a system for parsing and analyzing CVs to meet the functional requirement of 'Submit CV'.",
+      "rationale": "To meet the functional requirement of 'Submit CV', a system for parsing and analyzing CVs must be implemented."
+    },
+    {
+      "name": "Implement a system for applicants to view and edit their parsed CVs to meet the functional requirement of 'View and Edit CV'.",
+      "rationale": "To meet the functional requirement of 'View and Edit CV', a system for applicants to view and edit their parsed CVs must be implemented."
+    },
+    {
+      "name": "Implement a system for applicants to answer screening questions to meet the functional requirement of 'Answer Screening Questions'.",
+      "rationale": "To meet the functional requirement of 'Answer Screening Questions', a system for applicants to answer screening questions must be implemented."
+    },
+    {
+      "name": "Implement a system for applicants to receive a rating for their CV based on the similarity between the applicant's CV and the job requirements to meet the functional requirement of 'Get Rating for CV'.",
+      "rationale": "To meet the functional requirement of 'Get Rating for CV', a system for applicants to receive a rating for their CV must be implemented."
+    },
+    {
+      "name": "Implement a system for monitoring and logging to meet the reliability requirement.",
+      "rationale": "To meet the reliability requirement, a system for monitoring and logging must be implemented."
+    },
+    {
+      "name": "Implement a system for backup and recovery to meet the maintainability requirement.",
+      "rationale": "To meet the maintainability requirement, a system for backup and recovery must be implemented."
+    },
+    {
+      "name": "Implement a system for testing and quality assurance to meet the compatibility requirement.",
+      "rationale": "To meet the compatibility requirement, a system for testing and quality assurance must be implemented."
     }
   ],
   "production_intents": {
     "deployment": {
-      "scaling": "horizontal",
-      "availability": "multi-region"
+      "scaling": "vertical",
+      "availability": "single-region"
     },
     "security": {
-      "authentication": "service-to-service",
+      "authentication": "centralized",
       "authorization": "RBAC"
     },
     "resilience": {
       "patterns": [
-        "Retry",
-        "CircuitBreaker"
+        "Retry"
       ],
-      "delivery": "at-least-once",
-      "ordering": false
+      "delivery": "at-most-once",
+      "ordering": true
     }
   },
   "components": [
     {
-      "name": "CV Parser",
-      "responsibility": "Parse CV, Extract Key Information, Compare CV with Job Requirements"
+      "name": "Submit CV",
+      "responsibility": "Applicants can submit their CVs for parsing and analysis."
     },
     {
-      "name": "Screening Questions Module",
-      "responsibility": "Present Screening Questions, Validate Applicant Responses, Score Applicant Responses"
+      "name": "View and Edit CV",
+      "responsibility": "Applicants can view and edit their parsed CV."
     },
     {
-      "name": "Rating and Scoring Module",
-      "responsibility": "Determine Similarity, Generate Percentage-Based Result"
+      "name": "Answer Screening Questions",
+      "responsibility": "Applicants are presented with screening questions defined by an expert recruiter."
     },
     {
-      "name": "User Interface Module",
-      "responsibility": "Submit CV, View and Edit CV, Answer Screening Questions, Get Rating for CV"
-    },
-    {
-      "name": "Natural Language Processing (NLP) Module",
-      "responsibility": "Parse CV, Determine Similarity"
-    },
-    {
-      "name": "Similarity Calculation Module",
-      "responsibility": "Calculate Cosine Similarity, Calculate Jaccard Similarity"
-    },
-    {
-      "name": "ChatGPT Integration Module",
-      "responsibility": "Score Applicant Responses"
-    },
-    {
-      "name": "Recruiter Dashboard Module",
-      "responsibility": "Define Job Requirements, View Applicant Responses, View Rating Results"
+      "name": "Get Rating for CV",
+      "responsibility": "Applicants receive a rating for their CV based on the similarity between the applicant's CV and the job requirements."
     }
   ],
   "relationships": [
     {
-      "source": "CV Parser",
-      "target": "Screening Questions Module",
+      "source": "Submit CV",
+      "target": "View and Edit CV",
       "type": "event-flow"
     },
     {
-      "source": "CV Parser",
-      "target": "Rating and Scoring Module",
+      "source": "View and Edit CV",
+      "target": "Answer Screening Questions",
+      "type": "event-flow"
+    },
+    {
+      "source": "Answer Screening Questions",
+      "target": "Get Rating for CV",
       "type": "data-flow"
     },
     {
-      "source": "Screening Questions Module",
-      "target": "Rating and Scoring Module",
+      "source": "Get Rating for CV",
+      "target": "Submit CV",
       "type": "event-flow"
-    },
-    {
-      "source": "Rating and Scoring Module",
-      "target": "User Interface Module",
-      "type": "data-flow"
-    },
-    {
-      "source": "User Interface Module",
-      "target": "CV Parser",
-      "type": "event-flow"
-    },
-    {
-      "source": "User Interface Module",
-      "target": "Screening Questions Module",
-      "type": "event-flow"
-    },
-    {
-      "source": "Natural Language Processing (NLP) Module",
-      "target": "Rating and Scoring Module",
-      "type": "data-flow"
-    },
-    {
-      "source": "Similarity Calculation Module",
-      "target": "Rating and Scoring Module",
-      "type": "data-flow"
-    },
-    {
-      "source": "ChatGPT Integration Module",
-      "target": "Rating and Scoring Module",
-      "type": "data-flow"
-    },
-    {
-      "source": "User Interface Module",
-      "target": "ChatGPT Integration Module",
-      "type": "event-flow"
-    },
-    {
-      "source": "User Interface Module",
-      "target": "Recruiter Dashboard Module",
-      "type": "event-flow"
-    },
-    {
-      "source": "Screening Questions Module",
-      "target": "Recruiter Dashboard Module",
-      "type": "event-flow"
-    },
-    {
-      "source": "Rating and Scoring Module",
-      "target": "Recruiter Dashboard Module",
-      "type": "data-flow"
     }
   ],
   "runtime_flow": [
     {
-      "from": "User Interface Module",
-      "to": "CV Parser",
-      "action": "Submit CV for Parsing",
+      "from": "Submit CV",
+      "to": "View and Edit CV",
+      "action": "Submit CV for parsing and analysis",
       "mode": "async"
     },
     {
-      "from": "CV Parser",
-      "to": "Screening Questions Module",
-      "action": "Trigger Screening Questions",
+      "from": "View and Edit CV",
+      "to": "View and Edit CV",
+      "action": "View parsed CV",
       "mode": "sync"
     },
     {
-      "from": "Screening Questions Module",
-      "to": "User Interface Module",
-      "action": "Present Screening Questions",
-      "mode": "sync"
-    },
-    {
-      "from": "User Interface Module",
-      "to": "Screening Questions Module",
-      "action": "Submit Applicant Responses",
+      "from": "View and Edit CV",
+      "to": "Answer Screening Questions",
+      "action": "Proceed to screening questions",
       "mode": "async"
     },
     {
-      "from": "Screening Questions Module",
-      "to": "Rating and Scoring Module",
-      "action": "Trigger Rating and Scoring",
+      "from": "Answer Screening Questions",
+      "to": "Answer Screening Questions",
+      "action": "Answer screening questions",
       "mode": "sync"
     },
     {
-      "from": "CV Parser",
-      "to": "Rating and Scoring Module",
-      "action": "Provide Parsed CV Data",
+      "from": "Answer Screening Questions",
+      "to": "Get Rating for CV",
+      "action": "Submit answers for rating",
+      "mode": "async"
+    },
+    {
+      "from": "Get Rating for CV",
+      "to": "Get Rating for CV",
+      "action": "Calculate CV rating",
       "mode": "sync"
     },
     {
-      "from": "Natural Language Processing (NLP) Module",
-      "to": "Rating and Scoring Module",
-      "action": "Provide NLP Data",
-      "mode": "sync"
-    },
-    {
-      "from": "Similarity Calculation Module",
-      "to": "Rating and Scoring Module",
-      "action": "Provide Similarity Calculation Data",
-      "mode": "sync"
-    },
-    {
-      "from": "ChatGPT Integration Module",
-      "to": "Rating and Scoring Module",
-      "action": "Provide ChatGPT Score",
-      "mode": "sync"
-    },
-    {
-      "from": "Rating and Scoring Module",
-      "to": "User Interface Module",
-      "action": "Provide Rating Result",
-      "mode": "sync"
-    },
-    {
-      "from": "User Interface Module",
-      "to": "Recruiter Dashboard Module",
-      "action": "Trigger Recruiter Dashboard Update",
-      "mode": "sync"
-    },
-    {
-      "from": "Screening Questions Module",
-      "to": "Recruiter Dashboard Module",
-      "action": "Trigger Recruiter Dashboard Update",
-      "mode": "sync"
-    },
-    {
-      "from": "Rating and Scoring Module",
-      "to": "Recruiter Dashboard Module",
-      "action": "Provide Rating Result",
-      "mode": "sync"
+      "from": "Get Rating for CV",
+      "to": "Submit CV",
+      "action": "Update CV for re-parsing",
+      "mode": "async"
     }
   ],
-  "critique": [
-    {
-      "title": "Performance Issue",
-      "description": "The system may experience performance issues due to high number of requests from the User Interface Module.",
-      "source": {
-        "page": "6.1",
-        "start_index": "21"
-      },
-      "project_id": "proj_23f123d6"
-    },
-    {
-      "title": "Reliability Issue",
-      "description": "The system may not be able to recover from failures in the Natural Language Processing (NLP) Module.",
-      "source": {
-        "page": "6.2",
-        "start_index": "21"
-      },
-      "project_id": "proj_23f123d6"
-    },
-    {
-      "title": "Security Issue",
-      "description": "The system may not protect user data and prevent unauthorized access.",
-      "source": {
-        "page": "6.3",
-        "start_index": "21"
-      },
-      "project_id": "proj_23f123d6"
-    },
-    {
-      "title": "Scalability Issue",
-      "description": "The system may not be able to handle a large number of users and requests.",
-      "source": {
-        "page": "6.5",
-        "start_index": "21"
-      },
-      "project_id": "proj_23f123d6"
-    },
-    {
-      "title": "Usability Issue",
-      "description": "The system may not be easy to use and navigate.",
-      "source": {
-        "page": "6.6",
-        "start_index": "21"
-      },
-      "project_id": "proj_23f123d6"
-    },
-    {
-      "title": "Maintainability Issue",
-      "description": "The system may not be easy to modify and update.",
-      "source": {
-        "page": "6.7",
-        "start_index": "22"
-      },
-      "project_id": "proj_23f123d6"
-    },
-    {
-      "title": "Compatibility Issue",
-      "description": "The system may not be compatible with different browsers and devices.",
-      "source": {
-        "page": "6.8",
-        "start_index": "22"
-      },
-      "project_id": "proj_23f123d6"
-    },
-    {
-      "title": "Integration Issue",
-      "description": "The system may not be able to integrate with other systems and services.",
-      "source": {
-        "page": "6.9",
-        "start_index": "22"
-      },
-      "project_id": "proj_23f123d6"
-    }
-  ]
+  "critique": []
 }

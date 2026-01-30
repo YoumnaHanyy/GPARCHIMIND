@@ -3,7 +3,7 @@ from fastapi.responses import JSONResponse
 import os
 import uuid
 import traceback
-
+from pdfminer.high_level import extract_text
 from application.extraction.extraction_service import process_srs
 from ai.inference.predict_type_level import predict_and_save_nfr
 from service.ordinal_service import execute_ordinal_method
@@ -31,6 +31,31 @@ def clean_object_id(items: list):
     return cleaned
 
 
+
+def strict_srs_verification(pdf_path: str):
+    try:
+        text = extract_text(pdf_path) or ""
+        text = text.lower()
+    except Exception:
+        return {
+            "valid": False,
+            "samples": {
+                "functional_found": False,
+                "non_functional_found": False
+            }
+        }
+
+    has_functional = "functional requirement" in text
+    has_non_functional = "non-functional requirement" in text
+
+    return {
+        "valid": has_functional and has_non_functional,  # 👈 الاتنين لازم
+        "samples": {
+            "functional_found": has_functional,
+            "non_functional_found": has_non_functional
+        }
+    }
+
 @router.post("/extract")
 async def extract_srs(
     request: Request,
@@ -54,6 +79,32 @@ async def extract_srs(
         pdf_path = os.path.join(UPLOAD_DIR, f"{project_id}.pdf")
         with open(pdf_path, "wb") as f:
             f.write(await file.read())
+        # =========================
+        # 🔍 SRS VERIFICATION (INLINE)
+        # =========================
+       # =========================
+# 🔍 SRS VERIFICATION (STRICT)
+# =========================
+       
+        # =========================
+# 🔍 SRS VERIFICATION (STRICT)
+# =========================
+   
+        vv = strict_srs_verification(pdf_path)
+
+        print("🔥 V&V CHECK:", vv)   # debug مهم جدًا
+
+        if not vv["valid"]:
+          return JSONResponse(
+        status_code=422,
+        content={
+            "stage": "V&V",
+            "message": "SRS must contain both Functional and Non-Functional Requirements.",
+            "vv": vv
+        }
+    )
+
+
 
         # =========================
         # 2️⃣ extract FR + NFR

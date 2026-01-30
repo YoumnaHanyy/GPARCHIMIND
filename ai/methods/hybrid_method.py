@@ -1,4 +1,11 @@
-# ai/methods/hybrid_method.py
+
+from ai.methods.functional_method import FunctionalMethod
+from ai.methods.ordinal_method import OrdinalMethod
+from ai.methods.binary_method import BinaryMethod
+from ai.methods.weighted_method import WeightedMethod
+
+
+
 
 def normalize_scores(score_dict):
     """
@@ -138,3 +145,21 @@ def hybrid_aggregation(functional, ordinal, binary, weighted):
         key=lambda x: x["FinalScore"],
         reverse=True
     )[:5]
+
+
+
+class HybridMethod:
+
+    def __init__(self):
+        self.functional = FunctionalMethod()
+        self.ordinal = OrdinalMethod()
+        self.binary = BinaryMethod()
+        self.weighted = WeightedMethod()
+
+    def run(self, functional_data, ordinal_data, binary_data, weighted_data):
+        return hybrid_aggregation(
+            self.functional.run(functional_data),
+            self.ordinal.run(**ordinal_data),
+            self.binary.run(**binary_data),
+            self.weighted.run(**weighted_data)
+        )
