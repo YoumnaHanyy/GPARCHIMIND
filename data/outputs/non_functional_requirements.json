@@ -1,47 +1,83 @@
 [
   {
-    "title": "Standards Compliance",
-    "description": "MUST comply with industry standards for text-to-video generation.",
-    "source": {
-      "page": 13,
-      "start_index": 1
-    },
-    "project_id": "proj_198b4f72"
-  },
-  {
-    "title": "Hardware Limitations",
-    "description": "SHOULD be designed to handle high GPU-intensive processes.",
-    "source": {
-      "page": 13,
-      "start_index": 2
-    },
-    "project_id": "proj_198b4f72"
-  },
-  {
     "title": "Performance",
-    "description": "SHOULD be able to generate videos in a reasonable amount of time.",
+    "description": "The system MUST respond to user input within 2 seconds.",
     "source": {
-      "page": 13,
-      "start_index": 3
+      "page": "6.1",
+      "start_index": "21"
     },
-    "project_id": "proj_198b4f72"
+    "project_id": "proj_deb82ab2"
   },
   {
-    "title": "User Experience",
-    "description": "SHOULD provide a user-friendly interface for users to interact with the system.",
+    "title": "Reliability",
+    "description": "The system SHALL be available 99.9% of the time.",
     "source": {
-      "page": 9,
-      "start_index": 2
+      "page": "6.2",
+      "start_index": "21"
     },
-    "project_id": "proj_198b4f72"
+    "project_id": "proj_deb82ab2"
+  },
+  {
+    "title": "Security",
+    "description": "The system MUST protect user data and MUST NOT store sensitive information.",
+    "source": {
+      "page": "6.3",
+      "start_index": "21"
+    },
+    "project_id": "proj_deb82ab2"
+  },
+  {
+    "title": "Privacy",
+    "description": "The system MUST NOT collect or store user data without consent.",
+    "source": {
+      "page": "6.4",
+      "start_index": "21"
+    },
+    "project_id": "proj_deb82ab2"
   },
   {
     "title": "Scalability",
-    "description": "MAY be designed to handle a large number of users and video requests.",
+    "description": "The system SHOULD be able to handle 1000 concurrent users.",
     "source": {
-      "page": 13,
-      "start_index": 4
+      "page": "6.5",
+      "start_index": "21"
     },
-    "project_id": "proj_198b4f72"
+    "project_id": "proj_deb82ab2"
+  },
+  {
+    "title": "Usability",
+    "description": "The system MUST be user-friendly and MUST provide clear instructions.",
+    "source": {
+      "page": "6.6",
+      "start_index": "21"
+    },
+    "project_id": "proj_deb82ab2"
+  },
+  {
+    "title": "Maintainability",
+    "description": "The system SHOULD be easy to modify and update.",
+    "source": {
+      "page": "6.7",
+      "start_index": "22"
+    },
+    "project_id": "proj_deb82ab2"
+  },
+  {
+    "title": "Compatibility",
+    "description": "The system MUST be compatible with major browsers and MUST NOT have any known bugs.",
+    "source": {
+      "page": "6.8",
+      "start_index": "22"
+    },
+    "project_id": "proj_deb82ab2"
+  },
+  {
+    "title": "Integration",
+    "description": "The system MUST integrate with HR module from Odoo ERP software.",
+    "source": {
+      "page": "3.2",
+      "start_index": "11"
+    },
+    "project_id": "proj_deb82ab2"
   }
 ]

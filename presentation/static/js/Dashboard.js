@@ -234,7 +234,7 @@
       return "<p class='text-muted'>No Final Recommendation Available.</p>";
     }
 
-    let html = "<h5 class='section-header'>Final Recommendation</h5>";
+    let html = "<h5 class='section-header'>Top Recommended Architectures</h5>";
     html += "<p class='text-muted mb-4'>Aggregated from Functional, Ordinal, Binary, and Weighted methods.</p>";
 
     data.hybrid_method.forEach((item, idx) => {
@@ -256,50 +256,202 @@
 
   function renderFinalReport(data) {
     if (!data || !data.hybrid_method || data.hybrid_method.length === 0) {
-      return "<p class='text-muted'>No data available for final report.</p>";
+   return "<p class='text-muted'>No data available for final report.</p>";
     }
 
     const topArch = data.hybrid_method[0];
     
     let html = "<h5 class='section-header'>Final Architecture Recommendation</h5>";
     html += `
-      <div class="alert alert-success border-0">
+     <div class="alert alert-success border-0 shadow-sm">
         <h4 class="alert-heading">
           <i class="bi bi-check-circle-fill me-2"></i>
           Recommended Architecture: ${topArch.Architecture.replace("_", " ").toUpperCase()}
         </h4>
         <p class="mb-0">Final Score: <strong>${topArch.FinalScore}%</strong></p>
       </div>
-      
-      <h6 class="mt-4 mb-3">Top 5 Architecture Recommendations:</h6>
+      <h6 class="mt-4 mb-3 text-secondary">Top 5 Architecture Recommendations (Select your preference):</h6>
     `;
 
     data.hybrid_method.forEach((item, idx) => {
-      html += `
-        <div class="d-flex justify-content-between align-items-center mb-2 p-2 border-bottom">
-          <span>${idx + 1}. ${item.Architecture.replace("_", " ").toUpperCase()}</span>
-          <span class="badge bg-primary">${item.FinalScore}%</span>
-        </div>
-      `;
+       html += `
+        <div class="arch-item d-flex justify-content-between align-items-center mb-2 p-3" 
+             onclick="selectArchitecture(this, '${item.Architecture}')">
+          <span class="fw-medium">${idx + 1}. ${item.Architecture.replace("_", " ").toUpperCase()}</span>
+          <span class="badge rounded-pill bg-primary">${item.FinalScore}%</span>
+        </div>`;
     });
 
     html += `
-      <div class="mt-4">
-        <button class="btn btn-success btn-sm me-2">
-          <i class="bi bi-download me-1"></i> Download Report
-        </button>
-        <button class="btn btn-outline-success btn-sm">
-          <i class="bi bi-file-code me-1"></i> Generate Code Skeleton
-        </button>
-      </div>
-    `;
+      <div class="mt-4 p-3 bg-light rounded-3 d-flex justify-content-between align-items-center">
+        <div>
+            <button id="saveArchBtn" class="btn btn-primary rounded-pill px-4" onclick="saveSelectedArchitecture()">
+                <i class="bi bi-cloud-arrow-up-fill me-2"></i>Confirm & Save Choice
+            </button>
+        </div>
+        <div>
+            <button id="generateBtn" class="btn btn-success rounded-pill px-4 btn-disabled-locked" onclick="generateADL()" disabled>
+                <i class="bi bi-file-earmark-pdf-fill me-2"></i>Generate ADL Blueprint
+                </button>
+            <button id="viewBlueprintBtn" class="btn btn-sm rounded-pill px-3 d-none" onclick="openPreviewModal()">
+      <i class="bi bi-eye-fill me-1"></i> View Your ADL Blueprint
+    </button>
+            </button>
+        </div>
+      </div>`;
 
     return html;
   }
 
+
+let selectedArchitecture = null;
+
+function selectArchitecture(el, architecture) {
+  // remove selection from all
+  document.querySelectorAll('.arch-item').forEach(item => {
+    item.classList.remove('selected-arch');
+  });
+
+  // mark selected
+  el.classList.add('selected-arch');
+
+  selectedArchitecture = architecture;
+  console.log("Selected Architecture:", selectedArchitecture);
+}
+
+
+async function saveSelectedArchitecture() {
+   if (!selectedArchitecture) {
+        alert("Please select an architecture from the list first! 👇");
+        return;
+    }
+
+    const saveBtn = document.getElementById('saveArchBtn');
+    const genBtn = document.getElementById('generateBtn');
+
+    try {
+        saveBtn.innerHTML = `<span class="spinner-border spinner-border-sm me-2"></span> Saving...`;
+        saveBtn.disabled = true;
+
+        const res = await fetch("/api/save-hybrid-result", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                project_id: extractedData.project_id,
+                selected_architecture: selectedArchitecture,
+                hybrid_result: extractedData.hybrid_method
+            })
+        });
+
+        if (!res.ok) throw new Error("Save failed");
+
+        // --- SUCCESS STATE ---
+        saveBtn.classList.replace('btn-primary', 'btn-success');
+        saveBtn.innerHTML = `<i class="bi bi-check-lg me-2"></i>Choice Saved!`;
+        
+        // UNLOCK Generate Button
+        genBtn.disabled = false;
+        genBtn.classList.remove('btn-disabled-locked');
+        genBtn.classList.add('animate-bounce'); // Optional: add a little bounce to get attention
+
+    } catch (err) {
+        console.error(err);
+        saveBtn.classList.replace('btn-primary', 'btn-danger');
+        saveBtn.innerHTML = `<i class="bi bi-x-circle me-2"></i>Error. Try Again?`;
+        saveBtn.disabled = false;
+    }
+}
+
   /* =======================
      TAB RENDERING
   ======================= */
+  let currentPdfUrl = null;
+async function generateADL() {
+   console.log("Generate ADL clicked");
+console.log("Project ID:", extractedData?.project_id);
+
+    // 1. Show Loading Animation
+    document.getElementById('resultContent').classList.add('hidden');
+    const loading = document.getElementById('loadingMessage');
+    loading.classList.remove('hidden');
+    startLoadingAnimation();
+
+    try {
+        if (!extractedData?.project_id) {
+            alert("Project ID not found. Please extract first.");
+            return;
+        }
+
+        const response = await fetch(`/generate/${extractedData.project_id}`);
+        
+          if (!response.ok) throw new Error("Server response was not ok");
+
+        // 3. Ne7awel el response le "Blob" (Binary Large Object)
+        const blob = await response.blob();
+        
+        // 4. Ne3mel link "fake" 3ashan n-trigger el download
+           // 3. Create a clean URL for the PDF blob
+        if (currentPdfUrl) {
+        URL.revokeObjectURL(currentPdfUrl);
+}
+
+        currentPdfUrl = window.URL.createObjectURL(blob);
+        openPreviewModal();
+
+        // --- EL GDEED: Show "View" button w hide "Generate" aw khallihom ganb ba3d ---
+        const viewBtn = document.getElementById('viewBlueprintBtn');
+        if(viewBtn) viewBtn.classList.remove('d-none');
+   
+        // 4. Update el Iframe SRC
+        const frame = document.getElementById('reportFrame');
+        frame.src = pdfUrl;
+
+        // 5. Open el Modal (Make sure Bootstrap is loaded)
+         const reportModal = new bootstrap.Modal(
+            document.getElementById('reportModal')
+        );
+        reportModal.show();
+
+        // 6. Cleanup el memory lma el modal ye2fel
+         document
+          .getElementById('reportModal')
+          .addEventListener(
+              'hidden.bs.modal',
+              () => window.URL.revokeObjectURL(pdfUrl),
+              { once: true }
+          );
+
+    } catch (err) {
+         } finally {
+        // 7. Hide Loading
+        // 6. El Loading haye2f hna awel ma el sater bta3 el 'await' ykhallas
+        stopLoadingAnimation();
+        loading.classList.add('hidden');
+        document.getElementById('resultContent').classList.remove('hidden');
+    }
+}
+const frame = document.getElementById('reportFrame');
+const loader = document.getElementById('modalIframeLoader');
+if (frame) {
+frame.onload = function() {
+        loader.style.display = 'none'; // Ekhfy el spinner
+        frame.style.opacity = '1';    // Fade in el PDF
+    };
+}
+
+function openPreviewModal() {
+    if (!currentPdfUrl) {
+        alert("No blueprint generated yet!");
+        return;
+    }
+    
+    const frame = document.getElementById('reportFrame');
+    frame.src = currentPdfUrl;
+    frame.style.opacity = '1';
+    
+    const reportModal = new bootstrap.Modal(document.getElementById('reportModal'));
+    reportModal.show();
+}
 
   function renderPhase() {
     const data = phaseData[currentPhase];

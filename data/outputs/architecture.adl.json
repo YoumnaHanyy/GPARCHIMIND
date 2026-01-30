@@ -1,0 +1,152 @@
+{
+  "system": "ResuFit: Precision CV Matching System",
+  "style": "Layered (N-Tier)",
+  "source": "AI",
+  "decisions": [
+    {
+      "name": "Functional Requirements",
+      "rationale": "[{'title': 'Submit CV', 'description': 'Applicants can submit their CVs for parsing and analysis.', 'source': {'page': '4.1', 'start_index': '15'}, 'project_id': 'proj_deb82ab2'}, {'title': 'View and Edit CV', 'description': 'Applicants can view and edit their parsed CV.', 'source': {'page': '4.1', 'start_index': '15'}, 'project_id': 'proj_deb82ab2'}, {'title': 'Answer Screening Questions', 'description': 'Applicants are presented with screening questions defined by an expert recruiter.', 'source': {'page': '3.5', 'start_index': '13'}, 'project_id': 'proj_deb82ab2'}, {'title': 'Get Rating for CV', 'description': 'The system generates a percentage-based result, providing a fair evaluation of each applicant.', 'source': {'page': '3.5', 'start_index': '13'}, 'project_id': 'proj_deb82ab2'}]"
+    },
+    {
+      "name": "Non-Functional Requirements",
+      "rationale": "[{'title': 'Performance', 'description': 'The system MUST respond to user input within 2 seconds.', 'source': {'page': '6.1', 'start_index': '21'}, 'project_id': 'proj_deb82ab2'}, {'title': 'Reliability', 'description': 'The system SHALL be available 99.9% of the time.', 'source': {'page': '6.2', 'start_index': '21'}, 'project_id': 'proj_deb82ab2'}, {'title': 'Security', 'description': 'The system MUST protect user data and MUST NOT store sensitive information.', 'source': {'page': '6.3', 'start_index': '21'}, 'project_id': 'proj_deb82ab2'}, {'title': 'Privacy', 'description': 'The system MUST NOT collect or store user data without consent.', 'source': {'page': '6.4', 'start_index': '21'}, 'project_id': 'proj_deb82ab2'}, {'title': 'Scalability', 'description': 'The system SHOULD be able to handle 1000 concurrent users.', 'source': {'page': '6.5', 'start_index': '21'}, 'project_id': 'proj_deb82ab2'}, {'title': 'Usability', 'description': 'The system MUST be user-friendly and MUST provide clear instructions.', 'source': {'page': '6.6', 'start_index': '21'}, 'project_id': 'proj_deb82ab2'}, {'title': 'Maintainability', 'description': 'The system SHOULD be easy to modify and update.', 'source': {'page': '6.7', 'start_index': '22'}, 'project_id': 'proj_deb82ab2'}, {'title': 'Compatibility', 'description': 'The system MUST be compatible with major browsers and MUST NOT have any known bugs.', 'source': {'page': '6.8', 'start_index': '22'}, 'project_id': 'proj_deb82ab2'}, {'title': 'Integration', 'description': 'The system MUST integrate with HR module from Odoo ERP software.', 'source': {'page': '3.2', 'start_index': '11'}, 'project_id': 'proj_deb82ab2'}]"
+    }
+  ],
+  "production_intents": {
+    "deployment": {
+      "scaling": "vertical",
+      "availability": "single-region"
+    },
+    "security": {
+      "authentication": "centralized",
+      "authorization": "RBAC"
+    },
+    "resilience": {
+      "patterns": [
+        "Retry"
+      ],
+      "delivery": "at-most-once",
+      "ordering": true
+    }
+  },
+  "components": [
+    {
+      "name": "CV Parser",
+      "responsibility": "Parse and analyze submitted CVs"
+    },
+    {
+      "name": "CV Editor",
+      "responsibility": "Allow applicants to view and edit their parsed CVs"
+    },
+    {
+      "name": "Screening Question Manager",
+      "responsibility": "Manage and present screening questions to applicants"
+    },
+    {
+      "name": "Rating Generator",
+      "responsibility": "Generate a percentage-based result for each applicant's CV"
+    }
+  ],
+  "relationships": [
+    {
+      "source": "CV Parser",
+      "target": "CV Editor",
+      "type": "data-flow"
+    },
+    {
+      "source": "CV Editor",
+      "target": "Screening Question Manager",
+      "type": "event-flow"
+    },
+    {
+      "source": "Screening Question Manager",
+      "target": "Rating Generator",
+      "type": "data-flow"
+    },
+    {
+      "source": "CV Parser",
+      "target": "Rating Generator",
+      "type": "data-flow"
+    }
+  ],
+  "runtime_flow": [
+    {
+      "from": "CV Parser",
+      "to": "CV Editor",
+      "action": "Parse CV and send data to CV Editor",
+      "mode": "async"
+    },
+    {
+      "from": "CV Editor",
+      "to": "Screening Question Manager",
+      "action": "Request screening questions from Screening Question Manager",
+      "mode": "sync"
+    },
+    {
+      "from": "Screening Question Manager",
+      "to": "Rating Generator",
+      "action": "Send applicant's answers to Rating Generator",
+      "mode": "async"
+    },
+    {
+      "from": "CV Parser",
+      "to": "Rating Generator",
+      "action": "Send parsed CV data to Rating Generator",
+      "mode": "async"
+    },
+    {
+      "from": "Rating Generator",
+      "to": "CV Editor",
+      "action": "Send rating result to CV Editor",
+      "mode": "async"
+    },
+    {
+      "from": "CV Editor",
+      "to": "Applicant",
+      "action": "Display rating result to applicant",
+      "mode": "sync"
+    }
+  ],
+  "critique": [
+    {
+      "component": "CV Parser",
+      "issue": "The CV Parser component may experience performance issues if it is unable to parse complex CVs within the 2-second response time requirement (NFR: Performance).",
+      "nfr": "Performance"
+    },
+    {
+      "component": "CV Editor",
+      "issue": "The CV Editor component may not meet the usability requirement (NFR: Usability) if it does not provide clear instructions for editing parsed CVs.",
+      "nfr": "Usability"
+    },
+    {
+      "component": "Screening Question Manager",
+      "issue": "The Screening Question Manager component may not meet the maintainability requirement (NFR: Maintainability) if it is not easy to modify and update the screening questions.",
+      "nfr": "Maintainability"
+    },
+    {
+      "component": "Rating Generator",
+      "issue": "The Rating Generator component may not meet the scalability requirement (NFR: Scalability) if it is unable to handle a large number of concurrent users and generate ratings efficiently.",
+      "nfr": "Scalability"
+    },
+    {
+      "component": "Rating Generator",
+      "issue": "The Rating Generator component may not meet the reliability requirement (NFR: Reliability) if it is unable to generate accurate ratings consistently.",
+      "nfr": "Reliability"
+    },
+    {
+      "component": "CV Parser",
+      "issue": "The CV Parser component may not meet the security requirement (NFR: Security) if it stores sensitive information about applicants.",
+      "nfr": "Security"
+    },
+    {
+      "component": "Screening Question Manager",
+      "issue": "The Screening Question Manager component may not meet the integration requirement (NFR: Integration) if it does not integrate correctly with the HR module from Odoo ERP software.",
+      "nfr": "Integration"
+    },
+    {
+      "component": "CV Editor",
+      "issue": "The CV Editor component may not meet the compatibility requirement (NFR: Compatibility) if it does not work correctly with major browsers.",
+      "nfr": "Compatibility"
+    }
+  ]
+}

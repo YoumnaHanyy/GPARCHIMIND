@@ -1,0 +1,14 @@
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+LAYOUT_WITH_LEGEND()
+System_Boundary(ResuFitPrecisionCVMatchingSystem, "ResuFit: Precision CV Matching System") {
+  Container(CVParser, "CV Parser", "Service", "Parse and analyze submitted CVs")
+  Container(CVEditor, "CV Editor", "Service", "Allow applicants to view and edit their parsed CVs")
+  Container(ScreeningQuestionManager, "Screening Question Manager", "Service", "Manage and present screening questions to applicants")
+  Container(RatingGenerator, "Rating Generator", "Service", "Generate a percentage-based result for each applicant's CV")
+}
+Rel(CVParser, CVEditor, "call", "Sync")
+Rel(CVEditor, ScreeningQuestionManager, "event", "Async")
+Rel(ScreeningQuestionManager, RatingGenerator, "call", "Sync")
+Rel(CVParser, RatingGenerator, "call", "Sync")
+@enduml
