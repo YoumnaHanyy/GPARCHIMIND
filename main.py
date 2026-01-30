@@ -21,11 +21,22 @@ from ai.ai_engine import ai_generate_architecture
 from ai.json_to_context_view import convert_to_context_view
 from application.extraction.adl.json_to_acme import convert_to_acme
 import os
+from fastapi import FastAPI, Request, UploadFile, File
+from fastapi.templating import Jinja2Templates
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import HTMLResponse, RedirectResponse
+import os
+from service.srs_extractor import SRSExtractor
+from presentation.routes.architecture_routes import router as architecture_router
+from presentation.routes.srs_routes import router as srs_router
+from presentation.routes import auth
+from starlette.middleware.sessions import SessionMiddleware
+from dotenv import load_dotenv
+from infrastructure.repositories.project_repo import get_user_projects
 from infrastructure.database import db
 from pathlib import Path
 import subprocess
 import json
-from application.extraction.srs_extractor import SRSExtractor
 # Import API routes
 from fastapi.responses import HTMLResponse
 from presentation.routes.architecture_routes import router as architecture_router
@@ -45,7 +56,15 @@ app = FastAPI(
     version="1.0.0"
 )
 
+app.add_middleware(
+    SessionMiddleware,
+    secret_key=os.getenv("SECRET_KEY", "super-secret-key-change-this-in-production"),
+    max_age=3600  # 1 hour session timeout
+)
+app.include_router(auth.router)
+
 app.include_router(hybrid_router)
+
 UPLOAD_DIR = "uploads"
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 
@@ -218,23 +237,76 @@ def serve_archgen(request: Request):
     return templates.TemplateResponse("ArchGen.html", {"request": request})
 
 @app.get("/Login", response_class=HTMLResponse)
-def login(request: Request):
+async def login_page(
+    request: Request,
+    error: str = None,
+    logout: str = None
+):
+    """
+    Display login page with optional error message
+    """
+    error_message = None
+    info_message = None
+
+    if error == "invalid":
+        error_message = "Invalid email or password. Please try again."
+    elif error == "server":
+        error_message = "Server error occurred. Please try again later."
+    elif error == "required":
+        error_message = "Please login to access this page."
+
+    if logout == "1":
+        info_message = "Thank you for visiting our website!"
+
+    
     return templates.TemplateResponse(
         "login.html",
-        {"request": request}
+        {
+            "request": request,
+            "error": error_message,
+            "info": info_message
+        }
     )
-
 
 @app.get("/Dashboard", response_class=HTMLResponse)
-def dashboard(request: Request):
+async def dashboard(request: Request):
+    user_session = request.session.get("user")
+
+    if not user_session:
+        return RedirectResponse(
+            url="/Login?error=required",
+            status_code=303
+        )
+
+    user_id = user_session["id"]          # 🔥
+    projects = get_user_projects(user_id) # 🔥
+
+    user = {
+        "full_name": user_session.get("name", "User"),
+        "email": user_session.get("email", ""),
+        "role": user_session.get("role", "User")
+    }
+
     return templates.TemplateResponse(
-        "dashboard.html",
-        {"request": request}
+        "Dashboard.html",
+        {
+            "request": request,
+            "user": user,
+            "projects": projects   # 🔥 ده اللي كان ناقص
+        }
     )
+@app.post("/logout")
+async def logout(request: Request):
+    """
+    Clear session and logout user
+    """
+    request.session.clear()
+    return {"status": "success"}
+
 
 
 @app.get("/Signup", response_class=HTMLResponse)
-def signup(request: Request):
+async def signup(request: Request):
     return templates.TemplateResponse(
         "Signup.html",
         {"request": request}
@@ -243,10 +315,11 @@ def signup(request: Request):
 # API Routes
 # ============================================================
 
+
+
 app.include_router(
     architecture_router,
-    
-    prefix="/api",        # 👈 API namespace
+    prefix="/api",
     tags=["Architecture"]
 )
 
@@ -255,9 +328,6 @@ app.include_router(
     prefix="/api",        # 👈 API namespace
     tags=["Architecture"]
 )
-
-
- 
 
 @app.get("/api/report/{project_id}")
 def get_report(project_id: str):

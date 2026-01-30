@@ -1,83 +1,83 @@
 [
   {
     "title": "Performance",
-    "description": "The system MUST respond within 2 seconds to user input.",
+    "description": "The system must respond to user input within a reasonable time frame.",
     "source": {
-      "page": 21,
-      "start_index": null
+      "page": "6.1",
+      "start_index": "21"
     },
-    "project_id": "proj_f54beef3"
+    "project_id": "proj_23f123d6"
   },
   {
     "title": "Reliability",
-    "description": "The system SHALL be available 99.99% of the time.",
+    "description": "The system must be able to recover from failures and maintain data integrity.",
     "source": {
-      "page": 21,
-      "start_index": null
+      "page": "6.2",
+      "start_index": "21"
     },
-    "project_id": "proj_f54beef3"
+    "project_id": "proj_23f123d6"
   },
   {
     "title": "Security",
-    "description": "The system MUST protect user data and MUST NOT store sensitive information.",
+    "description": "The system must protect user data and prevent unauthorized access.",
     "source": {
-      "page": 21,
-      "start_index": null
+      "page": "6.3",
+      "start_index": "21"
     },
-    "project_id": "proj_f54beef3"
+    "project_id": "proj_23f123d6"
   },
   {
     "title": "Privacy",
-    "description": "The system MUST NOT collect or store user data without explicit consent.",
+    "description": "The system must ensure that user data is not shared without consent.",
     "source": {
-      "page": 21,
-      "start_index": null
+      "page": "6.4",
+      "start_index": "21"
     },
-    "project_id": "proj_f54beef3"
+    "project_id": "proj_23f123d6"
   },
   {
     "title": "Scalability",
-    "description": "The system SHOULD be able to handle 1000 concurrent users.",
+    "description": "The system must be able to handle a large number of users and requests.",
     "source": {
-      "page": 21,
-      "start_index": null
+      "page": "6.5",
+      "start_index": "21"
     },
-    "project_id": "proj_f54beef3"
+    "project_id": "proj_23f123d6"
   },
   {
     "title": "Usability",
-    "description": "The system MUST be user-friendly and MUST provide clear instructions.",
+    "description": "The system must be easy to use and navigate.",
     "source": {
-      "page": 21,
-      "start_index": null
+      "page": "6.6",
+      "start_index": "21"
     },
-    "project_id": "proj_f54beef3"
+    "project_id": "proj_23f123d6"
   },
   {
     "title": "Maintainability",
-    "description": "The system SHOULD be easy to modify and update.",
+    "description": "The system must be easy to modify and update.",
     "source": {
-      "page": 21,
-      "start_index": null
+      "page": "6.7",
+      "start_index": "22"
     },
-    "project_id": "proj_f54beef3"
+    "project_id": "proj_23f123d6"
   },
   {
     "title": "Compatibility",
-    "description": "The system MUST be compatible with major web browsers.",
+    "description": "The system must be compatible with different browsers and devices.",
     "source": {
-      "page": 22,
-      "start_index": null
+      "page": "6.8",
+      "start_index": "22"
     },
-    "project_id": "proj_f54beef3"
+    "project_id": "proj_23f123d6"
   },
   {
     "title": "Integration",
-    "description": "The system MUST integrate with HR module from Odoo ERP software.",
+    "description": "The system must be able to integrate with other systems and services.",
     "source": {
-      "page": 22,
-      "start_index": null
+      "page": "6.9",
+      "start_index": "22"
     },
-    "project_id": "proj_f54beef3"
+    "project_id": "proj_23f123d6"
   }
 ]

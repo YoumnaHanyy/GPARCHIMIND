@@ -2,13 +2,24 @@
 autonumber
 actor User
 participant "CV Parser" as CVParser
-participant "CV Editor" as CVEditor
-participant "Screening Question Manager" as ScreeningQuestionManager
-participant "Rating Generator" as RatingGenerator
-CVParser ->> CVEditor : Parse CV and send data
-CVEditor -> ScreeningQuestionManager : Submit edited CV for screening
-ScreeningQuestionManager ->> RatingGenerator : Send screening questions and CV data
-CVParser ->> RatingGenerator : Send raw CV data for rating
-RatingGenerator -> CVEditor : Notify of updated rating
-RatingGenerator -> ScreeningQuestionManager : Notify of updated rating
+participant "Screening Questions Module" as ScreeningQuestionsModule
+participant "Rating and Scoring Module" as RatingandScoringModule
+participant "User Interface Module" as UserInterfaceModule
+participant "Natural Language Processing (NLP) Module" as NaturalLanguageProcessingNLPModule
+participant "Similarity Calculation Module" as SimilarityCalculationModule
+participant "ChatGPT Integration Module" as ChatGPTIntegrationModule
+participant "Recruiter Dashboard Module" as RecruiterDashboardModule
+UserInterfaceModule ->> CVParser : Submit CV for Parsing
+CVParser -> ScreeningQuestionsModule : Trigger Screening Questions
+ScreeningQuestionsModule -> UserInterfaceModule : Present Screening Questions
+UserInterfaceModule ->> ScreeningQuestionsModule : Submit Applicant Responses
+ScreeningQuestionsModule -> RatingandScoringModule : Trigger Rating and Scoring
+CVParser -> RatingandScoringModule : Provide Parsed CV Data
+NaturalLanguageProcessingNLPModule -> RatingandScoringModule : Provide NLP Data
+SimilarityCalculationModule -> RatingandScoringModule : Provide Similarity Calculation Data
+ChatGPTIntegrationModule -> RatingandScoringModule : Provide ChatGPT Score
+RatingandScoringModule -> UserInterfaceModule : Provide Rating Result
+UserInterfaceModule -> RecruiterDashboardModule : Trigger Recruiter Dashboard Update
+ScreeningQuestionsModule -> RecruiterDashboardModule : Trigger Recruiter Dashboard Update
+RatingandScoringModule -> RecruiterDashboardModule : Provide Rating Result
 @enduml

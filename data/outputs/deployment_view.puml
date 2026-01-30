@@ -10,23 +10,39 @@ node "Kubernetes Ingress" {
 node "CV Parser Pod" {
   component "CV Parser"
 }
-node "CV Editor Pod" {
-  component "CV Editor"
+node "Screening Questions Module Pod" {
+  component "Screening Questions Module"
 }
-node "Screening Question Manager Pod" {
-  component "Screening Question Manager"
+node "Rating and Scoring Module Pod" {
+  component "Rating and Scoring Module"
 }
-node "Rating Generator Pod" {
-  component "Rating Generator"
+node "User Interface Module Pod" {
+  component "User Interface Module"
+}
+node "Natural Language Processing (NLP) Module Pod" {
+  component "Natural Language Processing (NLP) Module"
+}
+node "Similarity Calculation Module Pod" {
+  component "Similarity Calculation Module"
+}
+node "ChatGPT Integration Module Pod" {
+  component "ChatGPT Integration Module"
+}
+node "Recruiter Dashboard Module Pod" {
+  component "Recruiter Dashboard Module"
 }
 "User" --> "Ingress Controller" : TCP/IP
 "Ingress Controller" --> "API Gateway Pod" : HTTP/HTTPS
 "User" --> "Ingress Controller"
 "Ingress Controller" --> "API Gateway Pod"
 "API Gateway Pod" --> "CV Parser Pod"
-"API Gateway Pod" --> "CV Editor Pod"
-"API Gateway Pod" --> "Screening Question Manager Pod"
-"API Gateway Pod" --> "Rating Generator Pod"
+"API Gateway Pod" --> "Screening Questions Module Pod"
+"API Gateway Pod" --> "Rating and Scoring Module Pod"
+"API Gateway Pod" --> "User Interface Module Pod"
+"API Gateway Pod" --> "Natural Language Processing (NLP) Module Pod"
+"API Gateway Pod" --> "Similarity Calculation Module Pod"
+"API Gateway Pod" --> "ChatGPT Integration Module Pod"
+"API Gateway Pod" --> "Recruiter Dashboard Module Pod"
 node "Secondary Region" {
   component "Replica Services"
 }

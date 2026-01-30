@@ -3,36 +3,90 @@
     "title": "Submit CV",
     "description": "Applicants can submit their CVs for parsing and analysis.",
     "source": {
-      "page": 16,
-      "start_index": null
+      "page": "1.1",
+      "start_index": "15"
     },
-    "project_id": "proj_f54beef3"
+    "project_id": "proj_23f123d6"
   },
   {
     "title": "View and Edit CV",
     "description": "Applicants can view and edit their parsed CV.",
     "source": {
-      "page": 16,
-      "start_index": null
+      "page": "1.1",
+      "start_index": "15"
     },
-    "project_id": "proj_f54beef3"
+    "project_id": "proj_23f123d6"
   },
   {
     "title": "Answer Screening Questions",
     "description": "Applicants are presented with screening questions defined by an expert recruiter.",
     "source": {
-      "page": 13,
-      "start_index": null
+      "page": "1.3",
+      "start_index": "12"
     },
-    "project_id": "proj_f54beef3"
+    "project_id": "proj_23f123d6"
   },
   {
     "title": "Get Rating for CV",
-    "description": "The system generates a percentage-based result, providing a fair evaluation of each applicant.",
+    "description": "Applicants receive a rating for their CV based on the similarity between the applicant's CV and the job requirements.",
     "source": {
-      "page": 13,
-      "start_index": null
+      "page": "1.3",
+      "start_index": "12"
     },
-    "project_id": "proj_f54beef3"
+    "project_id": "proj_23f123d6"
+  },
+  {
+    "title": "Parse CV",
+    "description": "The system uses natural language processing (NLP) to parse the CV and extract key information.",
+    "source": {
+      "page": "3.2",
+      "start_index": "11"
+    },
+    "project_id": "proj_23f123d6"
+  },
+  {
+    "title": "Compare CV with Job Requirements",
+    "description": "The system compares the extracted information from the CV with the job requirements specified by the recruiter.",
+    "source": {
+      "page": "3.2",
+      "start_index": "11"
+    },
+    "project_id": "proj_23f123d6"
+  },
+  {
+    "title": "Determine Similarity",
+    "description": "The system uses cosine similarity and Jaccard similarity to determine the alignment between the extracted information and the job requirements.",
+    "source": {
+      "page": "3.2",
+      "start_index": "11"
+    },
+    "project_id": "proj_23f123d6"
+  },
+  {
+    "title": "Validate Applicant Responses",
+    "description": "Applicant responses are verified and graded by comparing them to an expert-generated model.",
+    "source": {
+      "page": "1.3",
+      "start_index": "12"
+    },
+    "project_id": "proj_23f123d6"
+  },
+  {
+    "title": "Score Applicant Responses",
+    "description": "Applicant responses are scored by ChatGPT.",
+    "source": {
+      "page": "1.3",
+      "start_index": "12"
+    },
+    "project_id": "proj_23f123d6"
+  },
+  {
+    "title": "Generate Percentage-Based Result",
+    "description": "The system generates a percentage-based result that represents the applicant's overall suitability for the role.",
+    "source": {
+      "page": "1.3",
+      "start_index": "12"
+    },
+    "project_id": "proj_23f123d6"
   }
 ]

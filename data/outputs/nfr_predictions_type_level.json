@@ -1,63 +1,63 @@
 [
   {
     "title": "Performance",
-    "description": "The system MUST respond within 2 seconds to user input.",
+    "description": "The system must respond to user input within a reasonable time frame.",
     "predicted_type": "PE",
     "predicted_type_label": "Performance",
     "predicted_level": "High"
   },
   {
     "title": "Reliability",
-    "description": "The system SHALL be available 99.99% of the time.",
+    "description": "The system must be able to recover from failures and maintain data integrity.",
     "predicted_type": "A",
     "predicted_type_label": "Availability",
     "predicted_level": "High"
   },
   {
     "title": "Security",
-    "description": "The system MUST protect user data and MUST NOT store sensitive information.",
+    "description": "The system must protect user data and prevent unauthorized access.",
     "predicted_type": "SE",
     "predicted_type_label": "Security",
     "predicted_level": "High"
   },
   {
     "title": "Privacy",
-    "description": "The system MUST NOT collect or store user data without explicit consent.",
+    "description": "The system must ensure that user data is not shared without consent.",
     "predicted_type": "SE",
     "predicted_type_label": "Security",
     "predicted_level": "High"
   },
   {
     "title": "Scalability",
-    "description": "The system SHOULD be able to handle 1000 concurrent users.",
+    "description": "The system must be able to handle a large number of users and requests.",
     "predicted_type": "SC",
     "predicted_type_label": "Scalability",
-    "predicted_level": "Low"
+    "predicted_level": "High"
   },
   {
     "title": "Usability",
-    "description": "The system MUST be user-friendly and MUST provide clear instructions.",
+    "description": "The system must be easy to use and navigate.",
     "predicted_type": "US",
     "predicted_type_label": "Usability",
     "predicted_level": "High"
   },
   {
     "title": "Maintainability",
-    "description": "The system SHOULD be easy to modify and update.",
+    "description": "The system must be easy to modify and update.",
     "predicted_type": "MN",
     "predicted_type_label": "Maintainability",
-    "predicted_level": "Low"
+    "predicted_level": "High"
   },
   {
     "title": "Compatibility",
-    "description": "The system MUST be compatible with major web browsers.",
+    "description": "The system must be compatible with different browsers and devices.",
     "predicted_type": "PO",
     "predicted_type_label": "Portability",
     "predicted_level": "High"
   },
   {
     "title": "Integration",
-    "description": "The system MUST integrate with HR module from Odoo ERP software.",
+    "description": "The system must be able to integrate with other systems and services.",
     "predicted_type": "PO",
     "predicted_type_label": "Portability",
     "predicted_level": "High"

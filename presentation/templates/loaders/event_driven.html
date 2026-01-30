@@ -1,4 +1,4 @@
-<style>
+ <style>
     :root {
       --bg: #ffffff;
       --accent: #10b981;
@@ -153,8 +153,8 @@
     </div>
   </div>
 
-  <h2 id="title">Event-Driven Architecture</h2>
-  <p id="desc">Waiting for event trigger…</p>
+  <h2 id="title">Processing your document… please wait </h2>
+  <p id="desc">In Event-Driven Architecture, the system waits for events and reacts only when an event is triggered</p>
 </div>
 
 <script>
@@ -174,8 +174,8 @@
 
     zzz.style.display = "block";
 
-    title.innerText = "Event-Driven Architecture";
-    desc.innerText = "Waiting for event trigger…";
+    title.innerText = "Processing your document… please wait";
+    desc.innerText = "In Event-Driven Architecture, the system waits for events and reacts only when an event is triggered";
 
     // After sleeping → event arrives
     setTimeout(eventArrives, 2000);
@@ -192,8 +192,8 @@
       consumer.classList.remove("sleeping");
       consumer.style.animation = "work 0.3s infinite";
 
-      title.innerText = "Event Captured!";
-      desc.innerText = "Consumer is processing the event…";
+      title.innerText = "Processing your document… please wait";
+      desc.innerText = "Event is processing…";
     }, 1000);
 
     // Finish work → sleep again

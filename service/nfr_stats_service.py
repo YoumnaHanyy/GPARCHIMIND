@@ -20,13 +20,13 @@ def compute_nfr_statistics(nfr_predictions):
     must_scores = {}
     for item in nfr_predictions:
         nfr = item["predicted_type"]
-        desc = item["description"].lower()
+        desc = item["predicted_level"].lower()
 
-        if "must" in desc:
+        if "High" in desc:
             weight = 3
-        elif "shall" in desc:
+        elif "Medium" in desc:
             weight = 2
-        elif "should" in desc:
+        elif "Low" in desc:
             weight = 1
         else:
             weight = 0.5

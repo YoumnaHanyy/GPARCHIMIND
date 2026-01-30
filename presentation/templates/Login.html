@@ -31,6 +31,82 @@ body{
     color:var(--slate);
 }
 
+/* === BACK TO HOME BUTTON (NEW) === */
+.back-home {
+    position: fixed;
+    top: 28px;
+    left: 28px;
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    background: var(--emerald-soft);
+    border: 2px solid var(--emerald);
+    color: var(--emerald);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    text-decoration: none;
+    z-index: 1000;
+    transition: all 0.25s ease;
+}
+.back-home:hover {
+    background: var(--emerald);
+    color: #fff;
+    transform: translateX(-4px);
+    box-shadow: 0 10px 25px rgba(16,185,129,.35);
+}
+/* === SOCIAL LOGIN === */
+.social-divider{
+    display:flex;
+    align-items:center;
+    text-align:center;
+    margin:26px 0 18px;
+    color:#94a3b8;
+    font-size:.85rem;
+}
+.social-divider::before,
+.social-divider::after{
+    content:"";
+    flex:1;
+    height:1px;
+    background:#e2e8f0;
+}
+.social-divider span{
+    padding:0 14px;
+    font-weight:600;
+}
+
+.social-login{
+    display:flex;
+    justify-content:center;
+    gap:16px;
+}
+
+.social-btn{
+    width:48px;
+    height:48px;
+    border-radius:50%;
+    border:1px solid #e2e8f0;
+    background:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:1.2rem;
+    cursor:pointer;
+    transition:all .25s ease;
+}
+
+/* Providers */
+.social-btn.google{ color:#ea4335; }
+.social-btn.github{ color:#111827; }
+.social-btn.apple{ color:#000; }
+
+.social-btn:hover{
+    transform:translateY(-3px);
+    box-shadow:0 12px 25px rgba(0,0,0,.12);
+}
+
 /* LAYOUT */
 .container{
     width:90%;
@@ -43,10 +119,13 @@ body{
 
 /* LEFT */
 .brand{
-    display:flex;align-items:center;gap:10px;
-    font-weight:800;
-    color:var(--emerald);
-    margin-bottom:45px;
+    display:flex;
+    align-items:center;
+    gap:12px;
+    margin-bottom:0px;
+}
+.brand img{
+    height:32px;
 }
 
 h1{
@@ -62,6 +141,20 @@ p{
     margin-bottom:40px;
 }
 
+/* ERROR ALERT */
+.error-alert{
+    background:#fee2e2;
+    color:#991b1b;
+    padding:14px 18px;
+    border-radius:12px;
+    margin-bottom:20px;
+    font-size:0.9rem;
+    border:1px solid #fecaca;
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
 .input-box{
     background:#f8fafc;
     border:1px solid #e2e8f0;
@@ -74,8 +167,11 @@ p{
 }
 .input-box i{color:#cbd5e1;}
 .input-box input{
-    border:none;background:transparent;
-    outline:none;width:100%;
+    border:none;
+    background:transparent;
+    outline:none;
+    width:100%;
+    font-size:1rem;
 }
 
 /* BUTTON */
@@ -88,7 +184,11 @@ p{
     color:#fff;
     font-weight:700;
     cursor:pointer;
+    font-size:1rem;
+    transition:transform 0.2s ease;
 }
+.btn:hover{transform:translateY(-2px);}
+.btn:active{transform:translateY(0);}
 
 /* RIGHT */
 .visual{
@@ -109,7 +209,6 @@ p{
     gap:22px;
 }
 
-/* CARD */
 .flow-card{
     width:100%;
     background:#fff;
@@ -117,13 +216,12 @@ p{
     padding:16px 20px;
     display:flex;
     gap:16px;
-    align-items:flex-start; /* ⭐ FIX */
+    align-items:flex-start;
     box-shadow:0 15px 30px rgba(0,0,0,.06);
     border:1px solid rgba(16,185,129,.12);
     transition:.4s ease;
 }
 
-/* ICON */
 .icon{
     width:44px;
     height:44px;
@@ -134,10 +232,9 @@ p{
     color:var(--emerald);
     font-size:1rem;
     flex-shrink:0;
-    margin-top:2px; /* ⭐ ALIGN BASELINE */
+    margin-top:2px;
 }
 
-/* TEXT */
 .text-wrap{
     display:flex;
     flex-direction:column;
@@ -147,16 +244,13 @@ p{
 .flow-card h4{
     font-size:.95rem;
     font-weight:800;
-    line-height:1.2;
 }
 .flow-card p{
     font-size:.8rem;
-    line-height:1.4;
     color:#94a3b8;
     margin:0;
 }
 
-/* FOCUS */
 .flow-card.focus{
     border:2px solid var(--emerald);
     transform:scale(1.02);
@@ -175,8 +269,28 @@ p{
     70%{box-shadow:0 0 0 12px rgba(16,185,129,0);}
     100%{box-shadow:0 0 0 0 rgba(16,185,129,0);}
 }
+.signup-link{
+    position: relative;
+    color: var(--emerald);
+    font-weight: 800;
+    text-decoration: none;
+}
 
-/* LINE */
+.signup-link::after{
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -3px;
+    width: 0%;
+    height: 2px;
+    background: var(--emerald);
+    transition: width 0.3s ease;
+}
+
+.signup-link:hover::after{
+    width: 100%;
+}
+    
 .line{
     width:2px;
     height:32px;
@@ -198,7 +312,6 @@ p{
     100%{top:100%;opacity:0;}
 }
 
-/* BADGE */
 .badge{
     position:absolute;
     right:-24px;
@@ -211,30 +324,126 @@ p{
     font-weight:800;
     transform:rotate(-6deg);
 }
+
+@media(max-width:768px){
+    .container{
+        grid-template-columns:1fr;
+        gap:40px;
+    }
+    .visual{display:none;}
+}
+.top-bar{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    margin-bottom:10px;
+    margin-top:0px; /* نزّل اللوجو شوية */
+}
+
+.back-btn{
+    translate: -50px;
+    width:42px;
+    height:38px;
+    border-radius:50%;
+    border:2px solid var(--emerald);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:var(--emerald);
+    text-decoration:none;
+    transition:.25s ease;
+}
+
+.back-btn:hover{
+    background:var(--emerald);
+    color:#fff;
+}
+
 </style>
 </head>
 
 <body>
 
+
 <div class="container">
 
     <!-- LEFT -->
     <div>
-        <div class="brand"><i class="fas fa-leaf"></i> ARCHIMIND</div>
+
+        <div class="top-bar">
+    <a href="/" class="back-btn">
+        <i class="fas fa-arrow-left"></i>
+    </a>
+
+    <div class="brand">
+        <img src="/static/images/Logo_black.png" style="translate: -50px;height: 50px;">
+    </div>
+</div>
+
+
         <h1>Sustainable<br>Architect.</h1>
         <p>Transforming complex requirements into long-lasting, eco-efficient software blueprints.</p>
 
-        <div class="input-box">
-            <i class="far fa-envelope"></i>
-            <input placeholder="Architect ID">
-        </div>
+        <p style="margin-top:-20px; margin-bottom:30px; font-size:0.95rem; text-align:center; font-weight:700;">
+    Don't have an account ?
+    <a href="/Signup" class="signup-link">
+    Sign up
+</a>
 
-        <div class="input-box">
-            <i class="fas fa-lock"></i>
-            <input type="password" placeholder="Security Token">
-        </div>
+</p>
 
-        <button class="btn">Enter Workspace</button>
+{% if info %}
+<div class="error-alert" style="
+    background:#ecfdf5;
+    color:#065f46;
+    border:1px solid #6ee7b7;
+">
+    <i class="fas fa-heart"></i>
+
+    <span>{{ info }}</span>
+</div>
+{% endif %}
+
+        {% if error %}
+        <div class="error-alert">
+            <i class="fas fa-exclamation-circle"></i>
+            <span>{{ error }}</span>
+        </div>
+        {% endif %}
+
+        <form method="post" action="/login">
+            <div class="input-box">
+                <i class="far fa-envelope"></i>
+                <input type="email" name="email" placeholder="Email" required>
+            </div>
+
+            <div class="input-box">
+                <i class="fas fa-lock"></i>
+                <input type="password" name="password" placeholder="Password" required>
+            </div>
+
+            <button type="submit" class="btn">
+                Enter Workspace
+            </button>
+            <!-- SOCIAL LOGIN -->
+<div class="social-divider">
+  <span>or sign in with</span>
+</div>
+
+<div class="social-login">
+  <button class="social-btn google">
+    <i class="fab fa-google"></i>
+  </button>
+  <button class="social-btn github">
+    <i class="fab fa-github"></i>
+  </button>
+  <button class="social-btn apple">
+    <i class="fab fa-apple"></i>
+  </button>
+</div>
+
+        </form>
+
     </div>
 
     <!-- RIGHT -->
@@ -279,13 +488,11 @@ p{
 <script>
 const cards = document.querySelectorAll('.flow-card');
 let index = 0;
-
 function moveFocus(){
     cards.forEach(c => c.classList.remove('focus'));
     cards[index].classList.add('focus');
     index = (index + 1) % cards.length;
 }
-
 moveFocus();
 setInterval(moveFocus, 2500);
 </script>

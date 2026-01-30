@@ -8,616 +8,112 @@
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-
-<style>
-  :root {
-    --studio-bg: #ffffff;
-    --accent-main: #10b981; /* Sustainable Green */
-    --accent-secondary: #06b6d4; /* Cyber Cyan */
-    --nav-dark: #064e3b; /* Deep Forest Green */
-    --glass-bg: rgba(255, 255, 255, 0.75);
-    --stroke: #374151;
-    --scribble: #6366f1;
-  }
-
-  body {
-    background-color: var(--studio-bg);
-    background-image: radial-gradient(#e5e7eb 1.5px, transparent 1.5px);
-    background-size: 30px 30px;
-    font-family: 'Space Grotesk', sans-serif;
-    color: #1f2937;
-    overflow-x: hidden;
-  }
-
-  /* --- THIN NAV BAR --- */
-  .blueprint-header {
-    background: var(--nav-dark);
-    color: white;
-    padding: 12px 0;
-    border-bottom: 3px solid var(--accent-main);
-    margin-bottom: 30px;
-  }
-
-  /* --- ANIMATIONS --- */
-  @keyframes popIn {
-    0% { transform: scale(0.9); opacity: 0; }
-    70% { transform: scale(1.02); opacity: 1; }
-    100% { transform: scale(1); opacity: 1; }
-  }
-
-  @keyframes float {
-    0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-10px); }
-  }
-
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  .animate-pop { animation: popIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
-  
-  /* --- UI COMPONENTS --- */
-  .studio-card {
-    background: var(--glass-bg);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(16, 185, 129, 0.1);
-    border-radius: 24px;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.03);
-  }
-
-  .create-btn {
-    background: linear-gradient(135deg, var(--accent-main), var(--accent-secondary));
-    color: white; border: none; padding: 12px 30px; border-radius: 50px;
-    font-weight: 700; transition: 0.3s; box-shadow: 0 10px 20px rgba(16, 185, 129, 0.2);
-  }
-
-  .create-btn:hover { transform: scale(1.05); color: white; }
-
-  /* --- PROGRESS BAR --- */
-  .progress-wrapper { max-width: 700px; margin: 0 auto 30px; }
-  .progress { height: 6px; background: #e2e8f0; border-radius: 10px; }
-  .progress-bar { background: var(--accent-main); transition: width 0.5s ease; }
-  .phase-tag { font-size: 0.7rem; font-weight: 700; color: var(--accent-main); text-transform: uppercase; }
-
-  /* --- TABS & RESULTS --- */
-  .result-section {
-    background: #f9fafb; 
-    border-left: 5px solid var(--accent-main);
-    border-radius: 0 16px 16px 0; 
-    padding: 25px;
-    font-family: 'JetBrains Mono', monospace; 
-    min-height: 200px;
-    max-height: 600px;
-    overflow-y: auto;
-    white-space: normal;
-  }
-
-  .nav-pills .nav-link {
-    background: transparent; 
-    color: #6b7280; 
-    font-weight: 600; 
-    border-radius: 12px;
-    cursor: pointer;
-  }
-  .nav-pills .nav-link.active {
-    background: rgba(16, 185, 129, 0.1); 
-    color: var(--accent-main);
-  }
-
-  /* --- REQUIREMENTS STYLING --- */
-  .req-title {
-    font-weight: 600;
-    margin-bottom: 8px;
-    color: var(--nav-dark);
-    font-size: 1rem;
-  }
-
-  .req-desc {
-    margin-bottom: 16px;
-    color: #4b5563;
-    line-height: 1.6;
-  }
-
-  .section-header {
-    margin-top: 20px;
-    margin-bottom: 20px;
-    font-weight: 700;
-    color: var(--nav-dark);
-    border-bottom: 2px solid var(--accent-main);
-    padding-bottom: 8px;
-  }
-
-  .hidden { display: none !important; }
-
-  /* --- ERROR STYLING --- */
-  .alert-danger {
-    border-left: 4px solid #dc3545;
-    background: #fff5f5;
-  }
-
-  /* ========================================
-     ARCHITECTURE LOADERS
-  ======================================== */
-
-  .loader-container {
-    min-height: 350px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    animation: fadeIn 0.5s ease;
-  }
-
-  /* === LAYERED LOADER === */
-  @keyframes jitter {
-    0%,100% { transform: translateY(0); }
-    50% { transform: translateY(-3px); }
-  }
-
-  @keyframes legSwing {
-    0%,100% { transform: rotate(-6deg); }
-    50% { transform: rotate(6deg); }
-  }
-
-  @keyframes paperFlow {
-    0% { left: 5%; opacity: 0; transform: scale(0.5); }
-    20%,80% { opacity: 1; transform: scale(1); }
-    100% { left: 90%; opacity: 0; transform: scale(0.5); }
-  }
-
-  .arch-loader {
-    position: relative;
-    width: 800px;
-    height: 300px;
-    display: flex;
-    justify-content: space-around;
-    align-items: flex-end;
-  }
-
-  .file-character {
-    position: relative;
-    width: 90px;
-    height: 120px;
-    background: #fff;
-    border: 4px solid var(--stroke);
-    border-radius: 6px;
-    filter: drop-shadow(6px 6px 0px #f1f5f9); 
-    animation: jitter 0.5s infinite ease-in-out;
-  }
-
-  .file-character::before {
-    content: '~ ~ ~ ~ ~ ~';
-    position: absolute;
-    top: 42px;
-    width: 100%;
-    text-align: center;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--scribble);
-    letter-spacing: -1px;
-  }
-
-  .arm-l, .arm-r {
-    position: absolute;
-    width: 30px;
-    height: 40px;
-    border: 4px solid var(--stroke);
-    top: 35px;
-  }
-
-  .arm-l {
-    left: -26px;
-    border-right: none;
-    border-top: none;
-    border-radius: 0 0 0 30px;
-  }
-
-  .arm-r {
-    right: -26px;
-    border-left: none;
-    border-top: none;
-    border-radius: 0 0 30px 0;
-  }
-
-  .leg-l, .leg-r {
-    position: absolute;
-    width: 16px;
-    height: 30px;
-    border-left: 4px solid var(--stroke);
-    border-bottom: 4px solid var(--stroke);
-    bottom: -34px;
-    transform-origin: top;
-    animation: legSwing 0.4s infinite ease-in-out;
-  }
-
-  .leg-l { left: 26px; }
-  .leg-r { right: 26px; animation-delay: 0.2s; }
-
-  .moving-request {
-    position: absolute;
-    width: 26px;
-    height: 36px;
-    background: #fff;
-    border: 2px solid var(--accent-main);
-    top: 48%;
-    font-size: 9px;
-    font-weight: bold;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    animation: paperFlow 3s infinite linear;
-  }
-
-  .label-tag {
-    position: absolute;
-    bottom: -80px;
-    width: 100%;
-    text-align: center;
-    font-weight: 700;
-    font-size: 14px;
-    color: #064e3b;
-    text-transform: uppercase;
-  }
-
-  /* === CLIENT-SERVER LOADER === */
-  .cs-stage {
-    position: relative;
-    width: 700px;
-    height: 250px;
-    border-bottom: 3px solid var(--stroke);
-    display: flex;
-    align-items: flex-end;
-    overflow: hidden;
-  }
-
-  .char-base {
-    position: relative;
-    width: 70px;
-    height: 100px;
-    background: white;
-    border: 3px solid var(--stroke);
-    border-radius: 2px 14px 2px 2px;
-    box-shadow: 6px 6px 0 rgba(0,0,0,0.05);
-  }
-
-  .char-base::after {
-    content: '';
-    position: absolute;
-    top: -10px;
-    left: 6px;
-    width: 100%;
-    height: 8px;
-    background: #fff;
-    border: 3px solid var(--stroke);
-    border-bottom: none;
-    transform: skewX(-45deg);
-    border-radius: 2px 2px 0 0;
-  }
-
-  .scribble-content {
-    padding: 10px;
-    font-size: 20px;
-    line-height: 0.6;
-    color: #7d5fff;
-    text-align: center;
-  }
-
-  .cs-leg {
-    position: absolute;
-    width: 4px;
-    height: 25px;
-    background: var(--stroke);
-    bottom: -28px;
-    border-radius: 0 0 10px 10px;
-  }
-  .cs-leg-l { left: 18px; }
-  .cs-leg-r { right: 18px; }
-
-  .server-station {
-    position: absolute;
-    right: 80px;
-    bottom: 0;
-    z-index: 10;
-  }
-
-  .desk {
-    width: 120px;
-    height: 60px;
-    border: 3px solid var(--stroke);
-    border-bottom: none;
-    background: white;
-    position: relative;
-  }
-
-  .server-body {
-    margin-left: 25px;
-    margin-bottom: -3px;
-  }
-
-  .stamp-arm {
-    position: absolute;
-    width: 40px;
-    height: 5px;
-    background: var(--stroke);
-    left: -30px;
-    top: 40px;
-    transform-origin: right center;
-    animation: stampTrigger 3s infinite ease-in-out;
-  }
-
-  .stamp-arm::before {
-    content: '';
-    position: absolute;
-    left: -5px;
-    top: -10px;
-    width: 14px;
-    height: 12px;
-    background: var(--stroke);
-    border-radius: 2px;
-  }
-
-  @keyframes stampTrigger {
-    0%, 45%, 75%, 100% { transform: rotate(0deg); }
-    55%, 65% { transform: rotate(35deg); }
-  }
-
-  .client-unit {
-    position: absolute;
-    left: -100px;
-    bottom: 0;
-    animation: queueMove 3s infinite linear;
-  }
-
-  .client1 { animation-delay: 0s; }
-  .client2 { animation-delay: 1.5s; }
-
-  @keyframes queueMove {
-    0% { left: -100px; }
-    35% { left: 380px; }
-    70% { left: 380px; }
-    100% { left: 800px; }
-  }
-
-  .paper-req {
-    position: absolute;
-    width: 25px;
-    height: 32px;
-    border: 2px solid var(--stroke);
-    background: white;
-    top: 30px;
-    right: -20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 8px;
-    font-weight: bold;
-    animation: paperProcess 3s infinite;
-  }
-
-  @keyframes paperProcess {
-    0%, 58% { background: white; border-color: var(--stroke); color: black; transform: scale(1); }
-    62%, 100% { background: var(--accent-main); border-color: var(--accent-main); color: white; transform: scale(1.1); }
-  }
-
-  /* === EVENT-DRIVEN LOADER === */
-  .ed-stage {
-    text-align: center;
-    min-height: 300px;
-  }
-
-  .character-container {
-    position: relative;
-    width: 90px;
-    height: 140px;
-    margin: 0 auto;
-    transition: 0.5s ease;
-  }
-
-  .file-body {
-    width: 100%;
-    height: 100px;
-    background: white;
-    border: 3px solid var(--stroke);
-    border-radius: 6px 18px 6px 6px;
-    box-shadow: 8px 8px 0 rgba(0,0,0,0.05);
-  }
-
-  .scribbles {
-    margin-top: 18px;
-    text-align: center;
-    font-size: 18px;
-    line-height: 0.8;
-    color: var(--stroke);
-    font-family: cursive;
-  }
-
-  .limb {
-    position: absolute;
-    border: 3px solid var(--stroke);
-    border-top: none;
-    border-left: none;
-  }
-
-  .limb.arm-l { width: 22px; height: 35px; left: -28px; top: 25px; transform: rotate(40deg); }
-  .limb.arm-r { width: 22px; height: 35px; right: -18px; top: 25px; transform: rotate(-40deg); }
-  .limb.leg-l { width: 14px; height: 30px; bottom: 0px; left: 20px; border-left: 3px solid var(--stroke); }
-  .limb.leg-r { width: 14px; height: 30px; bottom: 0px; right: 20px; border-left: 3px solid var(--stroke); }
-
-  .sleeping {
-    filter: grayscale(1);
-    opacity: 0.6;
-  }
-
-  .zzz {
-    position: absolute;
-    top: -25px;
-    right: -10px;
-    color: var(--accent-main);
-    font-weight: bold;
-    animation: zzz 2.5s infinite;
-  }
-
-  @keyframes zzz {
-    0% { transform: translate(0,0) scale(0.5); opacity: 0; }
-    50% { opacity: 1; }
-    100% { transform: translate(20px,-40px) scale(1.2); opacity: 0; }
-  }
-
-  .bell {
-    position: absolute;
-    top: 30px;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 2.5rem;
-    color: #f1c40f;
-    display: none;
-  }
-
-  @keyframes bellRing {
-    0%,100% { transform: translateX(-50%) rotate(0); }
-    25% { transform: translateX(-50%) rotate(20deg); }
-    50% { transform: translateX(-50%) rotate(-20deg); }
-    75% { transform: translateX(-50%) rotate(20deg); }
-  }
-
-  @keyframes work {
-    0% { transform: translateY(0); }
-    50% { transform: translateY(-6px); }
-    100% { transform: translateY(0); }
-  }
-
-  .ed-label {
-    position: absolute;
-    bottom: -55px;
-    width: 100%;
-    text-align: center;
-    font-weight: 700;
-    font-size: 14px;
-  }
-
-  .loader-info {
-    text-align: center;
-    margin-top: 40px;
-  }
-
-  .loader-info h5 {
-    margin-bottom: 8px;
-    font-weight: 700;
-    color: var(--nav-dark);
-  }
-
-  .loader-info p {
-    color: #636e72;
-    margin-top: 0;
-  }
-
-/* Architecture Item Styles */
-.arch-item {
-    cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    border-radius: 8px;
-    margin-bottom: 8px;
-    border: 1px solid transparent;
-}
-
-.arch-item:hover {
-    background-color: #f8f9fa;
-    transform: translateX(5px);
-    border-color: #dee2e6;
-}
-
-.selected-arch {
-    background-color: #e9f7ef !important;
-    border-left: 5px solid #198754 !important;
-    box-shadow: 0 2px 8px rgba(25, 135, 84, 0.1);
-}
-
-/* Button Styling */
-#saveArchBtn {
-    transition: all 0.3s ease;
-    font-weight: 600;
-    letter-spacing: 0.5px;
-}
-
-#saveArchBtn:not(:disabled):hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(13, 110, 253, 0.2);
-}
-
-/* Disabled State for Generate Button */
-.btn-disabled-locked {
-    filter: grayscale(1);
-    opacity: 0.6;
-    cursor: not-allowed !important;
-}
-
-/* Custom Modal Overrides */
-#reportModal .modal-content {
-    background: var(--glass-bg);
-    backdrop-filter: blur(15px);
-    -webkit-backdrop-filter: blur(15px);
-    border: 1px solid rgba(255, 255, 255, 0.4);
-    border-radius: 24px;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.2);
-}
-
-#reportModal .modal-header {
-    background: linear-gradient(135deg, var(--nav-dark) 0%, var(--accent-main) 100%);
-    color: white;
-    padding: 1.25rem 1.5rem;
-    border: none;
-}
-
-/* El line elly bey-glow ta7t el header */
-#reportModal .modal-header::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 3px;
-    background: linear-gradient(to right, var(--accent-secondary), var(--scribble));
-}
-
-#reportModal .modal-body {
-    height: 82vh;
-    background: #ffffff; /* 3ashan el PDF yban clear */
-}
-
-#reportModal .btn-close {
-    filter: invert(1) grayscale(1) brightness(2); /* Khalli el close button abyad */
-    transition: transform 0.3s ease;
-}
-
-#reportModal .btn-close:hover {
-    transform: rotate(90deg);
-}
-
-#viewBlueprintBtn {
-    background-color: transparent;
-    border: 2px solid var(--accent-secondary);
-    color: var(--accent-secondary);
-    transition: all 0.3s ease;
-}
-
-#viewBlueprintBtn:hover {
-    background-color: var(--accent-secondary);
-    color: white;
-    box-shadow: 0 0 15px rgba(6, 182, 212, 0.4);
-}
-</style>
+    <link rel="stylesheet" href="/static/css/Dashboard.css">
 </head>
 
 <body>
 
 <header class="blueprint-header">
   <div class="container d-flex justify-content-between align-items-center">
-    <h5 class="fw-bold mb-0"><i class="bi bi-diagram-3-fill me-2"></i>ArchiMind <span style="color: var(--accent-main);">.</span></h5>
-    <button class="btn btn-outline-light btn-sm rounded-pill" onclick="location.reload()">Dashboard</button>
+
+    <!-- LEFT : LOGO -->
+    <div class="brand">
+        <img src="/static/images/Logo_b&w.png" style="height: 60px; width: 140px;">
+    </div>
+
+    <!-- RIGHT : USER + MENU -->
+    <div class="d-flex align-items-center gap-3">
+<div class="dropdown">
+  <button
+    class="btn p-0 border-0 d-flex align-items-center justify-content-center avatar-trigger"
+    data-bs-toggle="dropdown"
+    aria-expanded="false"
+  >
+    <div class="avatar-circle-sm">
+      {{ user['full_name'][0]|upper }}
+    </div>
+  </button>
+
+  <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0 animate-fade-down">
+    <li class="px-3 py-3 bg-light-soft">
+      <div class="d-flex align-items-center gap-3">
+        <div class="avatar-circle-sm">{{ user['full_name'][0]|upper }}</div>
+        <div>
+          <h6 class="mb-0 fw-bold" style="font-size: 0.9rem;">{{ user['full_name'] }}</h6>
+          <small class="text-muted">{{ user['role'] }}</small>
+        </div>
+      </div>
+    </li>
+    <li><hr class="dropdown-divider opacity-50"></li>
+    <li><a class="dropdown-item" href="#"><i class="bi bi-person-gear me-2"></i> Account Settings</a></li>
+    <li><a class="dropdown-item" href="#"><i class="bi bi-shield-check me-2"></i> Security</a></li>
+    <li><hr class="dropdown-divider opacity-50"></li>
+    <li>
+      <a class="dropdown-item text-danger fw-bold" href="#" onclick="logoutAnimated()">
+        <i class="bi bi-box-arrow-right me-2"></i> Log out
+      </a>
+    </li>
+  </ul>
+</div>
+
+<div id="sideMenu" class="side-menu">
+  <div class="side-menu-header">
+    <div class="d-flex align-items-center gap-3">
+      <div class="avatar-circle-lg">
+        {{ user['full_name'][0]|upper }}
+      </div>
+      <div class="user-meta">
+        <h6 class="mb-0 fw-bold">{{ user['full_name'] }}</h6>
+        <small class="text-muted text-uppercase fw-semibold" style="font-size: 0.7rem; letter-spacing: 0.5px;">
+            {{ user['role'] }}
+        </small>
+      </div>
+    </div>
+    <button class="close-menu-btn" onclick="toggleSideMenu()">
+      <i class="bi bi-x-lg"></i>
+    </button>
+  </div>
+
+  <ul class="side-menu-list">
+    <li><i class="bi bi-house-door"></i> Home</li>
+    <li><i class="bi bi-layers"></i> Architectural Patterns</li>
+    <li><i class="bi bi-star"></i> Starred Projects</li>
+    <li><i class="bi bi-bell"></i> Notifications</li>
+    <li><i class="bi bi-gear"></i> Settings</li>
+    <hr class="my-3 opacity-10">
+    <li class="text-danger" onclick="logoutAnimated()"><i class="bi bi-door-open"></i> Logout</li>
+  </ul>
+</div>
+      <!-- SIDE MENU BUTTON -->
+      <button
+        class="btn btn-outline-light rounded-circle"
+        style="width:40px;height:40px;"
+        onclick="toggleSideMenu()"
+      >
+        <i class="bi bi-list fs-5"></i>
+      </button>
+
+    </div>
   </div>
 </header>
+
+<div id="sideMenu" class="side-menu">
+  <div class="side-menu-header">
+    <h6>Project Console</h6>
+    <button class="close-menu-btn" onclick="toggleSideMenu()">✕</button>
+  </div>
+
+  <ul>
+    <li><i class="bi bi-info-circle"></i> Account Info</li>
+    <li><i class="bi bi-gear"></i> Settings</li>
+    <li><i class="bi bi-star"></i> Bookmarked Projects</li>
+    <li><i class="bi bi-question-circle"></i> Technical Documentation</li>
+    <hr class="my-2" style="opacity: 0.1;">
+    <li class="text-danger" onclick="logoutAnimated()"><i class="bi bi-box-arrow-right"></i> Log Out</li>
+  </ul>
+</div>
+
+
 
 <div class="container pb-5">
 
@@ -633,30 +129,92 @@
   </div>
 
   <!-- Dashboard View -->
-  <div id="dashboardView" class="animate-pop">
-    <div class="row g-4">
-      <div class="col-md-4">
-        <div class="studio-card p-5 h-100 text-center d-flex flex-column align-items-center justify-content-center" 
-             style="border: 2px dashed rgba(16,185,129,0.3); cursor:pointer;" onclick="showUploader()">
-          <div class="mb-3 p-3 bg-light rounded-circle" style="animation: float 3s infinite ease-in-out;">
-            <i class="bi bi-diagram-3 fs-1 text-success"></i>
+<div id="dashboardView" class="animate-pop">
+  <div class="row g-4">
+    
+    <div class="col-md-4">
+      <div class="studio-card p-5 h-100 text-center d-flex flex-column align-items-center justify-content-center" 
+           style="border: 2px dashed rgba(16,185,129,0.3); cursor:pointer;" 
+           onclick="showUploader()">
+        <div class="mb-3 p-3 bg-light rounded-circle" style="animation: float 3s infinite ease-in-out;">
+          <i class="bi bi-diagram-3 fs-1 text-success"></i>
+        </div>
+        <h5 class="fw-bold">New Architecture</h5>
+        <p class="small text-muted">Upload SRS PDF to extract requirements and recommend architectures</p>
+        <button class="create-btn mt-2">Start Build</button>
+      </div>
+    </div>
+
+    {% for project in projects %}
+    <div class="col-md-4">
+      <div class="studio-card project-card p-4 h-100 position-relative d-flex flex-column animate-pop">
+        
+        <div class="d-flex justify-content-between align-items-start mb-4">
+          <div class="project-icon-wrapper">
+            <i class="bi bi-file-earmark-code"></i>
           </div>
-          <h5 class="fw-bold">New Architecture</h5>
-          <p class="small text-muted">Upload SRS PDF to extract requirements and recommend architectures</p>
-          <button class="create-btn mt-2">Start Build</button>
+          
+          {% if project.progress == 100 %}
+            <span class="status-badge status-finished animate-pulse">
+              <i class="bi bi-check-circle-fill me-1"></i> Finished
+            </span>
+          {% else %}
+            <span class="status-badge status-progress">
+              In Progress
+            </span>
+          {% endif %}
+        </div>
+        
+        <div class="project-details mb-4">
+          <h5 class="project-title mb-1 text-truncate">{{ project.project_id }}</h5>
+          <p class="project-date text-muted mb-0" style="font-size: 0.85rem;">
+            <i class="bi bi-calendar3 me-2"></i>{{ project.created_at.strftime('%d %b, %Y') }}
+          </p>
+        </div>
+
+        <div class="mt-auto">
+          <div class="d-flex justify-content-between mb-2 small">
+            <span class="fw-medium text-secondary">Progress</span>
+            <span class="fw-bold">{{ project.progress }}%</span>
+          </div>
+          
+          <div class="progress-container mb-4">
+            <div class="progress-bar-fill" 
+                 style="width: 0%;" 
+                 data-width="{{ project.progress|default('0', true) }}">
+            </div>
+          </div>
+          
+          <button class="open-project-btn w-100" onclick="continueProject('{{ project.project_id }}')">
+            Open Project
+          </button>
         </div>
       </div>
     </div>
+    {% endfor %}
+
   </div>
+</div>
 
   <!-- Upload View -->
   <div id="uploadView" class="hidden">
+    
     <div class="row justify-content-center">
       <div class="col-lg-10">
         <div class="studio-card p-5 animate-pop">
           
           <!-- Upload Step -->
-          <div id="step-upload" class="text-center py-4">
+          <div id="step-upload" class="text-center py-4" style="position: relative;">
+            <!-- BACK TO DASHBOARD -->
+            <button type="button"
+              class="back-to-dashboard"
+              onclick="backToDashboard()"
+              data-bs-toggle="tooltip"
+              data-bs-placement="right"
+              title="Back to dashboard">
+              <i class="bi bi-arrow-left"></i>
+            </button>
+
             <h3 class="fw-bold mb-3">Architectural Extraction</h3>
             <p class="text-muted mb-5">Upload SRS document to analyze patterns and suggest sustainable structures.</p>
             <form id="processForm">
@@ -695,8 +253,8 @@
                   </div>
                 </div>
                 <div class="loader-info">
-                  <h5>Analyzing Layered Architecture</h5>
-                  <p>Processing through presentation, business, and data layers...</p>
+                  <h5>Processing your document… please wait</h5>
+                  <p>In Layered Architecture,The request flows through presentation, business, and data layers, where each layer handles a specific responsibility</p>
                 </div>
               </div>
 
@@ -730,8 +288,8 @@
                   </div>
                 </div>
                 <div class="loader-info">
-                  <h5>Client-Server Architecture</h5>
-                  <p>Server is stamping and authorizing requests...</p>
+                  <h5>Processing your document… please wait</h5>
+                  <p>In the Client–Server architecture, clients send requests to a centralized server, which processes them.</p>
                 </div>
               </div>
 
@@ -751,13 +309,13 @@
                       <div class="limb arm-r"></div>
                       <div class="limb leg-l"></div>
                       <div class="limb leg-r"></div>
-                      <div class="ed-label">Consumer</div>
+                      <div class="ed-label">Event</div>
                     </div>
                   </div>
                 </div>
                 <div class="loader-info">
-                  <h5 id="edTitle">Event-Driven Architecture</h5>
-                  <p id="edDesc">Waiting for event trigger…</p>
+                  <h5 id="edTitle">Processing your document… please wait</h5>
+                  <p id="edDesc">In Event-Driven Architecture, the system waits for events and reacts only when an event is triggered</p>
                 </div>
               </div>
             </div>
@@ -767,7 +325,17 @@
           <div id="errorMessage" class="mt-3"></div>
 
           <!-- Result Content -->
-          <div id="resultContent" class="hidden">
+          <div id="resultContent" class="hidden" style="position: relative;">
+            <!-- BACK ARROW FOR EACH PHASE -->
+            <button type="button"
+              class="phase-back-arrow"
+              onclick="backToDashboard()"
+              data-bs-toggle="tooltip"
+              data-bs-placement="right"
+              title="Back to dashboard">
+              <i class="bi bi-arrow-left"></i>
+            </button>
+
             <ul class="nav nav-pills mb-4 justify-content-center border-bottom pb-3" id="dynamicTabs"></ul>
 
             <div id="tabContentBox" class="result-section animate-pop"></div>
@@ -783,6 +351,31 @@
     </div>
   </div>
 
+</div>
+<!-- ERROR MODAL -->
+<div class="modal fade" id="errorModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-sm modal-dialog-centered">
+    <div class="modal-content border-0 shadow-lg" style="border-radius: 20px;">
+      
+      <div class="modal-body text-center p-4">
+        <div class="mb-3">
+          <i class="bi bi-exclamation-circle text-danger" style="font-size: 2.5rem;"></i>
+        </div>
+
+        <h5 class="fw-bold">Upload Failed</h5>
+        <p class="text-muted small mb-4" id="errorModalMessage">
+          Something went wrong with the file. Please try again.
+        </p>
+
+        <button class="btn btn-success w-100 py-2 rounded-pill fw-bold" 
+                data-bs-dismiss="modal" 
+                style="background-color: var(--accent-main); border: none;">
+          Try Again
+        </button>
+      </div>
+
+    </div>
+  </div>
 </div>
 
 
@@ -813,624 +406,31 @@
     </div>
   </div>
 </div>
+
+
+<script src="/static/js/Dashboard.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-  let currentPhase = 1;
-  let extractedData = null;
-
-  const phaseData = {
-    1: { 
-      name: "Requirement Analysis", 
-      pct: "25%", 
-      tabs: ["Functional Requirements", "Non-Functional Requirements"] 
-    },
-    2: { 
-      name: "AI Recommendation", 
-      pct: "66%", 
-      tabs: [
-        "Suggested Architecture",
-        "Functional Method",
-        "Ordinal Method",
-        "Binary Method",
-        "Weighted Method"
-      ] 
-    },
-    3: { 
-      name: "Project Complete", 
-      pct: "100%", 
-      tabs: ["Final Report"] 
-    }
-  };
-
-  function showUploader() {
-    document.getElementById('dashboardView').classList.add('hidden');
-    document.getElementById('uploadView').classList.remove('hidden');
-  }
-
-  /* =======================
-     LOADER SELECTION (ONE RANDOM LOADER)
-  ======================= */
-  const loaders = ['layeredLoader', 'clientServerLoader', 'eventDrivenLoader'];
-
-  function showRandomLoader() {
-    // Hide all loaders
-    loaders.forEach(id => {
-      document.getElementById(id).classList.add('hidden');
-    });
-
-    // Pick one random loader
-    const randomIndex = Math.floor(Math.random() * loaders.length);
-    const selectedLoader = loaders[randomIndex];
-    
-    // Show selected loader
-    document.getElementById(selectedLoader).classList.remove('hidden');
-
-    // Handle event-driven animation
-    if (selectedLoader === 'eventDrivenLoader') {
-      startEventDrivenAnimation();
-    }
-  }
-
-  function startLoadingAnimation() {
-    showRandomLoader();
-  }
-
-  function stopLoadingAnimation() {
-    // Hide all loaders
-    loaders.forEach(id => {
-      document.getElementById(id).classList.add('hidden');
-    });
-  }
-
-  /* =======================
-     EVENT-DRIVEN ANIMATION
-  ======================= */
-  function startEventDrivenAnimation() {
-    const bell = document.getElementById("bell");
-    const consumer = document.getElementById("consumer");
-    const zzz = document.getElementById("zzz");
-    const title = document.getElementById("edTitle");
-    const desc = document.getElementById("edDesc");
-
-    function sleepState() {
-      bell.style.display = "none";
-      bell.style.animation = "none";
-      consumer.classList.add("sleeping");
-      consumer.style.animation = "none";
-      zzz.style.display = "block";
-      title.innerText = "Event-Driven Architecture";
-      desc.innerText = "Waiting for event trigger…";
-      setTimeout(eventArrives, 2000);
-    }
-
-    function eventArrives() {
-      bell.style.display = "block";
-      bell.style.animation = "bellRing 0.6s infinite";
-      setTimeout(() => {
-        zzz.style.display = "none";
-        consumer.classList.remove("sleeping");
-        consumer.style.animation = "work 0.3s infinite";
-        title.innerText = "Event Captured!";
-        desc.innerText = "Consumer is processing the event…";
-      }, 1000);
-      setTimeout(sleepState, 3000);
-    }
-
-    sleepState();
-  }
-
-  /* =======================
-     RENDER FUNCTIONS
-  ======================= */
-
-  function renderFunctionalRequirements(data) {
-    if (!data || !data.functional || data.functional.length === 0) {
-      return "<p class='text-muted'>No functional requirements found.</p>";
-    }
-
-    let html = "<h5 class='section-header'>Functional Requirements</h5>";
-
-    data.functional.forEach((fr, idx) => {
-      html += `
-        <div class="mb-3">
-          <div class="req-title">${String.fromCharCode(97 + idx)}. ${fr.title || 'Untitled'}</div>
-          <div class="req-desc">${fr.description || 'No description'}</div>
-        </div>
-      `;
-    });
-
-    return html;
-  }
-
-  function renderNonFunctionalRequirements(data) {
-    if (!data || !data.nfr_predictions || data.nfr_predictions.length === 0) {
-      return "<p class='text-muted'>No non-functional requirements found.</p>";
-    }
-
-    let html = "<h5 class='section-header'>Non-Functional Requirements</h5>";
-
-    data.nfr_predictions.forEach((nfr, idx) => {
-      html += `
-        <div class="mb-3">
-          <div class="req-title">${String.fromCharCode(97 + idx)}. ${nfr.predicted_type_label || 'Unknown Type'}</div>
-          <div class="req-desc">${nfr.description || 'No description'}</div>
-        </div>
-      `;
-    });
-
-    return html;
-  }
-
-  function renderFunctionalMethod(data) {
-    if (!data || !data.functional_method || !data.functional_method.top_architectures) {
-      return "<p class='text-muted'>No functional method results.</p>";
-    }
-
-    let html = "<h5 class='section-header'>Functional Architecture Method</h5>";
-
-    data.functional_method.top_architectures.forEach((item, idx) => {
-      html += `
-        <div class="mb-4">
-          <div class="req-title">
-            ${idx + 1}. ${item.Architecture.replace("_", " ").toUpperCase()}
-          </div>
-          <div class="req-desc"><strong>Score:</strong> ${item.Score}</div>
-          <div class="req-desc">${item.Reason || 'No reason provided'}</div>
-        </div>
-      `;
-    });
-
-    return html;
-  }
-
-  function renderOrdinalMethod(data) {
-    if (!data || !data.ordinal_method || data.ordinal_method.length === 0) {
-      return "<p class='text-muted'>No ordinal method results available.</p>";
-    }
-
-    let html = "<h5 class='section-header'>Ordinal Method</h5>";
-
-    data.ordinal_method.forEach((item, idx) => {
-      html += `
-        <div class="mb-3">
-          <div class="req-title">${idx + 1}. ${item.architecture}</div>
-          <div class="req-desc">
-            Matched NFRs: <strong>${item.matched_nfrs}</strong>
-          </div>
-        </div>
-      `;
-    });
-
-    return html;
-  }
-
-  function renderBinaryMethod(data) {
-    if (!data || !data.binary_method || !data.binary_method.top_architectures) {
-      return "<p class='text-muted'>No binary method results available.</p>";
-    }
-
-    let html = "<h5 class='section-header'>Binary Method</h5>";
-
-    data.binary_method.top_architectures.forEach((item, idx) => {
-      html += `
-        <div class="mb-3">
-          <div class="req-title">${idx + 1}. ${item.architecture}</div>
-          <div class="req-desc">
-            Score: <strong>${item.score}</strong>
-          </div>
-        </div>
-      `;
-    });
-
-    return html;
-  }
-
-  function renderWeightedMethod(data) {
-    if (!data || !data.weighted_method || !data.weighted_method.top_architectures) {
-      return "<p class='text-muted'>No weighted method results available.</p>";
-    }
-
-    let html = "<h5 class='section-header'>Weighted Score Method</h5>";
-
-    data.weighted_method.top_architectures.forEach((item, idx) => {
-      html += `
-        <div class="mb-3">
-          <div class="req-title">${idx + 1}. ${item.Architecture}</div>
-          <div class="req-desc">
-            Score: <strong>${item.Score}</strong>
-          </div>
-        </div>
-      `;
-    });
-
-    return html;
-  }
-
-  function renderHybridMethod(data) {
-    if (!data || !data.hybrid_method || data.hybrid_method.length === 0) {
-      return "<p class='text-muted'>No Final Recommendation Available.</p>";
-    }
-
-    let html = "<h5 class='section-header'>Top Recommended Architectures</h5>";
-    html += "<p class='text-muted mb-4'>Aggregated from Functional, Ordinal, Binary, and Weighted methods.</p>";
-
-    data.hybrid_method.forEach((item, idx) => {
-      const badge = idx === 0 ? '<span class="badge bg-success ms-2">Recommended</span>' : '';
-      html += `
-        <div class="mb-4">
-          <div class="req-title">
-            ${idx + 1}. ${item.Architecture.replace("_", " ").toUpperCase()} ${badge}
-          </div>
-          <div class="req-desc">
-            <strong>Final Score:</strong> ${item.FinalScore}%
-          </div>
-        </div>
-      `;
-    });
-
-    return html;
-  }
-
-function renderFinalReport(data) {
-    if (!data || !data.hybrid_method || data.hybrid_method.length === 0) {
-        return "<p class='text-muted'>No data available for final report.</p>";
-    }
-
-    const topArch = data.hybrid_method[0];
-    let html = "<h5 class='section-header'>Final Architecture Recommendation</h5>";
-    
-    html += `
-      <div class="alert alert-success border-0 shadow-sm">
-        <h4 class="alert-heading">
-          <i class="bi bi-check-circle-fill me-2"></i>
-          Recommended Architecture: ${topArch.Architecture.replace("_", " ").toUpperCase()}
-        </h4>
-        <p class="mb-0">Final Score: <strong>${topArch.FinalScore}%</strong></p>
-      </div>
-      <h6 class="mt-4 mb-3 text-secondary">Top 5 Architecture Recommendations (Select your preference):</h6>
-    `;
-
-    data.hybrid_method.forEach((item, idx) => {
-        html += `
-        <div class="arch-item d-flex justify-content-between align-items-center mb-2 p-3" 
-             onclick="selectArchitecture(this, '${item.Architecture}')">
-          <span class="fw-medium">${idx + 1}. ${item.Architecture.replace("_", " ").toUpperCase()}</span>
-          <span class="badge rounded-pill bg-primary">${item.FinalScore}%</span>
-        </div>`;
-    });
-
-    html += `
-      <div class="mt-4 p-3 bg-light rounded-3 d-flex justify-content-between align-items-center">
-        <div>
-            <button id="saveArchBtn" class="btn btn-primary rounded-pill px-4" onclick="saveSelectedArchitecture()">
-                <i class="bi bi-cloud-arrow-up-fill me-2"></i>Confirm & Save Choice
-            </button>
-        </div>
-        <div>
-            <button id="generateBtn" class="btn btn-success rounded-pill px-4 btn-disabled-locked" onclick="generateADL()" disabled>
-                <i class="bi bi-file-earmark-pdf-fill me-2"></i>Generate ADL Blueprint
-            </button>
-            <button id="viewBlueprintBtn" class="btn btn-sm rounded-pill px-3 d-none" onclick="openPreviewModal()">
-      <i class="bi bi-eye-fill me-1"></i> View Your ADL Blueprint
-    </button>
-        </div>
-      </div>`;
-
-    return html;
-}
-
-
-let selectedArchitecture = null;
-
-function selectArchitecture(el, architecture) {
-  // remove selection from all
-  document.querySelectorAll('.arch-item').forEach(item => {
-    item.classList.remove('selected-arch');
+document.addEventListener('DOMContentLoaded', function(){
+  document.querySelectorAll('.progress-bar[data-progress]').forEach(function(el){
+    el.style.width = el.getAttribute('data-progress') + '%';
+    el.setAttribute('aria-valuenow', el.getAttribute('data-progress'));
   });
+});
+document.addEventListener('DOMContentLoaded', () => {
+    const bars = document.querySelectorAll('.progress-bar-fill');
 
-  // mark selected
-  el.classList.add('selected-arch');
+    bars.forEach(bar => {
+        const targetWidth = bar.dataset.width + '%'; // 🔥 الصح
+        bar.style.width = '0%';
 
-  selectedArchitecture = architecture;
-  console.log("Selected Architecture:", selectedArchitecture);
-}
+        setTimeout(() => {
+            bar.style.width = targetWidth;
+        }, 200);
+    });
+});
 
-
-async function saveSelectedArchitecture() {
-    if (!selectedArchitecture) {
-        alert("Please select an architecture from the list first! 👇");
-        return;
-    }
-
-    const saveBtn = document.getElementById('saveArchBtn');
-    const genBtn = document.getElementById('generateBtn');
-
-    try {
-        saveBtn.innerHTML = `<span class="spinner-border spinner-border-sm me-2"></span> Saving...`;
-        saveBtn.disabled = true;
-
-        const res = await fetch("/api/save-hybrid-result", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                project_id: extractedData.project_id,
-                selected_architecture: selectedArchitecture,
-                hybrid_result: extractedData.hybrid_method
-            })
-        });
-
-        if (!res.ok) throw new Error("Save failed");
-
-        // --- SUCCESS STATE ---
-        saveBtn.classList.replace('btn-primary', 'btn-success');
-        saveBtn.innerHTML = `<i class="bi bi-check-lg me-2"></i>Choice Saved!`;
-        
-        // UNLOCK Generate Button
-        genBtn.disabled = false;
-        genBtn.classList.remove('btn-disabled-locked');
-        genBtn.classList.add('animate-bounce'); // Optional: add a little bounce to get attention
-
-    } catch (err) {
-        console.error(err);
-        saveBtn.classList.replace('btn-primary', 'btn-danger');
-        saveBtn.innerHTML = `<i class="bi bi-x-circle me-2"></i>Error. Try Again?`;
-        saveBtn.disabled = false;
-    }
-}
-
-  /* =======================
-     TAB RENDERING
-  ======================= */
-  let currentPdfUrl = null;
-async function generateADL() {
-  console.log("Generate ADL clicked");
-console.log("Project ID:", extractedData?.project_id);
-
-    document.getElementById('resultContent').classList.add('hidden');
-    const loading = document.getElementById('loadingMessage');
-    loading.classList.remove('hidden');
-    startLoadingAnimation();
-
-    try {
-        if (!extractedData?.project_id) {
-            alert("Project ID not found. Please extract first.");
-            return;
-        }
-
-        const response = await fetch(`/generate/${extractedData.project_id}`);
-        if (!response.ok) throw new Error("Server response was not ok");
-
-        const blob = await response.blob();
-
-        if (currentPdfUrl) {
-        URL.revokeObjectURL(currentPdfUrl);
-}
-
-        currentPdfUrl = window.URL.createObjectURL(blob);
-        openPreviewModal();
-
-        // --- EL GDEED: Show "View" button w hide "Generate" aw khallihom ganb ba3d ---
-        const viewBtn = document.getElementById('viewBlueprintBtn');
-        if(viewBtn) viewBtn.classList.remove('d-none');
-        const frame = document.getElementById('reportFrame');
-        frame.src = pdfUrl;
-
-        const reportModal = new bootstrap.Modal(
-            document.getElementById('reportModal')
-        );
-        reportModal.show();
-
-        document
-          .getElementById('reportModal')
-          .addEventListener(
-              'hidden.bs.modal',
-              () => window.URL.revokeObjectURL(pdfUrl),
-              { once: true }
-          );
-
-    } catch (err) {
-  
-    } finally {
-        stopLoadingAnimation();
-        loading.classList.add('hidden');
-        document.getElementById('resultContent').classList.remove('hidden');
-    }
-}
-
-// Gowa el generateADL function, add this logic:
-const frame = document.getElementById('reportFrame');
-const loader = document.getElementById('modalIframeLoader');
-
-if (frame) {
-frame.onload = function() {
-        loader.style.display = 'none'; // Ekhfy el spinner
-        frame.style.opacity = '1';    // Fade in el PDF
-    };
-}
-
-function openPreviewModal() {
-    if (!currentPdfUrl) {
-        alert("No blueprint generated yet!");
-        return;
-    }
-    
-    const frame = document.getElementById('reportFrame');
-    frame.src = currentPdfUrl;
-    frame.style.opacity = '1';
-    
-    const reportModal = new bootstrap.Modal(document.getElementById('reportModal'));
-    reportModal.show();
-}
-
-
-  function renderPhase() {
-    const data = phaseData[currentPhase];
-    
-    // Update Progress
-    document.getElementById('progressBar').style.width = data.pct;
-    document.getElementById('phaseLabel').innerText = `Phase ${currentPhase}: ${data.name}`;
-    document.getElementById('phasePercent').innerText = data.pct;
-
-    // Update Tabs
-    const tabContainer = document.getElementById('dynamicTabs');
-    tabContainer.innerHTML = data.tabs.map((t, i) => `
-      <li class="nav-item">
-        <a class="nav-link ${i===0?'active':''}" href="#" onclick="setTab(this, '${t}')">${t}</a>
-      </li>
-    `).join('');
-
-    // Update Buttons
-    document.getElementById('btnPrev').style.visibility = currentPhase === 1 ? 'hidden' : 'visible';
-    document.getElementById('btnNext').innerText = currentPhase === 3 ? "Finish" : "Next Phase";
-
-    // Load initial content
-    setTab(null, data.tabs[0]);
-  }
-
-  function setTab(el, name) {
-    if(el) {
-        document.querySelectorAll('.nav-link').forEach(n => n.classList.remove('active'));
-        el.classList.add('active');
-    }
-    
-    let content = '';
-    
-    if (!extractedData) {
-      content = "<p class='text-muted'>No data available.</p>";
-    } else {
-      switch(name) {
-        case "Functional Requirements":
-          content = renderFunctionalRequirements(extractedData);
-          break;
-        case "Non-Functional Requirements":
-          content = renderNonFunctionalRequirements(extractedData);
-          break;
-        case "Functional Method":
-          content = renderFunctionalMethod(extractedData);
-          break;
-        case "Ordinal Method":
-          content = renderOrdinalMethod(extractedData);
-          break;
-        case "Binary Method":
-          content = renderBinaryMethod(extractedData);
-          break;
-        case "Weighted Method":
-          content = renderWeightedMethod(extractedData);
-          break;
-        case "Suggested Architecture":
-          content = renderHybridMethod(extractedData);
-          break;
-        case "Final Report":
-          content = renderFinalReport(extractedData);
-          break;
-        default:
-          content = `<p class='text-muted'>Rendering ${name} data...</p>`;
-      }
-    }
-    
-    document.getElementById('tabContentBox').innerHTML = content;
-  }
-
-  function changePhase(dir) {
-    if(dir === 1 && currentPhase < 3) {
-        currentPhase++;
-        triggerLoading();
-    } else if (dir === -1 && currentPhase > 1) {
-        currentPhase--;
-        renderPhase();
-    } else if (dir === 1 && currentPhase === 3) {
-        alert("Project Complete! Returning to dashboard.");
-        location.reload();
-    }
-  }
-
-  function triggerLoading() {
-    document.getElementById('resultContent').classList.add('hidden');
-    document.getElementById('loadingMessage').classList.remove('hidden');
-    startLoadingAnimation();
-    
-    setTimeout(() => {
-        stopLoadingAnimation();
-        document.getElementById('loadingMessage').classList.add('hidden');
-        document.getElementById('resultContent').classList.remove('hidden');
-        renderPhase();
-    }, 5000);
-  }
-
-  /* =======================
-     FORM SUBMISSION
-  ======================= */
-
-  document.getElementById('processForm').onsubmit = async (e) => {
-    e.preventDefault();
-
-    const fileInput = document.getElementById('fileIn');
-    const loading = document.getElementById('loadingMessage');
-    const errorBox = document.getElementById('errorMessage');
-
-    if (!fileInput.files.length) {
-      alert("Please select a PDF file");
-      return;
-    }
-
-    // Hide upload step, show loading
-    document.getElementById('step-upload').classList.add('hidden');
-    loading.classList.remove('hidden');
-    errorBox.innerHTML = "";
-
-    // Start loader rotation
-    startLoadingAnimation();
-
-    const fd = new FormData();
-    fd.append("file", fileInput.files[0]);
-
-    try {
-      const res = await fetch("/extract", { method: "POST", body: fd });
-      const data = await res.json();
-
-      if (data.error) throw data;
-
-      // Store extracted data
-      extractedData = data;
-
-      // Stop loading animation
-      stopLoadingAnimation();
-
-      // Show progress and results
-      setTimeout(() => {
-        loading.classList.add('hidden');
-        document.getElementById('progressSection').classList.remove('hidden');
-        document.getElementById('resultContent').classList.remove('hidden');
-        renderPhase();
-      }, 500);
-
-    } catch (err) {
-      stopLoadingAnimation();
-      loading.classList.add('hidden');
-      document.getElementById('step-upload').classList.remove('hidden');
-
-      let msg = err.error || err.message || "Unknown error occurred";
-      let details = "";
-      
-      if (err.file) {
-        details = `
-          <hr/>
-          <strong>File:</strong> ${err.file}<br/>
-          <strong>Line:</strong> ${err.line}<br/>
-          <strong>Code:</strong>
-          <pre>${err.code}</pre>
-        `;
-      }
-
-      errorBox.innerHTML = `
-        <div class="alert alert-danger">
-          <strong><i class="bi bi-exclamation-triangle-fill me-2"></i>Processing failed</strong><br/>
-          <pre class="mb-0 mt-2">${msg}</pre>
-          ${details}
-        </div>
-      `;
-    }
-  };
 </script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
 </body>
 </html>

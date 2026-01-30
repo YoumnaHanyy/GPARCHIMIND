@@ -1,4 +1,4 @@
-from application.extraction.srs_extractor import SRSExtractor
+from service.srs_extractor import SRSExtractor
 
 def process_srs(pdf_path: str, project_id: int, hf_key: str):
     extractor = SRSExtractor(hf_key)

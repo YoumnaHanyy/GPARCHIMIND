@@ -4,12 +4,32 @@
   "source": "AI",
   "decisions": [
     {
-      "name": "Functional Requirements",
-      "rationale": "The system shall meet the following functional requirements: [{'title': 'Submit CV', 'description': 'Applicants can submit their CVs for parsing and analysis.', 'source': {'page': 16, 'start_index': None}, 'project_id': 'proj_f54beef3'}, {'title': 'View and Edit CV', 'description': 'Applicants can view and edit their parsed CV.', 'source': {'page': 16, 'start_index': None}, 'project_id': 'proj_f54beef3'}, {'title': 'Answer Screening Questions', 'description': 'Applicants are presented with screening questions defined by an expert recruiter.', 'source': {'page': 13, 'start_index': None}, 'project_id': 'proj_f54beef3'}, {'title': 'Get Rating for CV', 'description': 'The system generates a percentage-based result, providing a fair evaluation of each applicant.', 'source': {'page': 13, 'start_index': None}, 'project_id': 'proj_f54beef3'}]"
+      "name": "Implement Microservices Architecture",
+      "rationale": "To meet the scalability and maintainability requirements, the system should be designed as a collection of microservices, each responsible for a specific business capability."
     },
     {
-      "name": "Non-Functional Requirements",
-      "rationale": "The system shall meet the following non-functional requirements: [{'title': 'Performance', 'description': 'The system MUST respond within 2 seconds to user input.', 'source': {'page': 21, 'start_index': None}, 'project_id': 'proj_f54beef3'}, {'title': 'Reliability', 'description': 'The system SHALL be available 99.99% of the time.', 'source': {'page': 21, 'start_index': None}, 'project_id': 'proj_f54beef3'}, {'title': 'Security', 'description': 'The system MUST protect user data and MUST NOT store sensitive information.', 'source': {'page': 21, 'start_index': None}, 'project_id': 'proj_f54beef3'}, {'title': 'Privacy', 'description': 'The system MUST NOT collect or store user data without explicit consent.', 'source': {'page': 21, 'start_index': None}, 'project_id': 'proj_f54beef3'}, {'title': 'Scalability', 'description': 'The system SHOULD be able to handle 1000 concurrent users.', 'source': {'page': 21, 'start_index': None}, 'project_id': 'proj_f54beef3'}, {'title': 'Usability', 'description': 'The system MUST be user-friendly and MUST provide clear instructions.', 'source': {'page': 21, 'start_index': None}, 'project_id': 'proj_f54beef3'}, {'title': 'Maintainability', 'description': 'The system SHOULD be easy to modify and update.', 'source': {'page': 21, 'start_index': None}, 'project_id': 'proj_f54beef3'}, {'title': 'Compatibility', 'description': 'The system MUST be compatible with major web browsers.', 'source': {'page': 22, 'start_index': None}, 'project_id': 'proj_f54beef3'}, {'title': 'Integration', 'description': 'The system MUST integrate with HR module from Odoo ERP software.', 'source': {'page': 22, 'start_index': None}, 'project_id': 'proj_f54beef3'}]"
+      "name": "Use Natural Language Processing (NLP) for CV Parsing",
+      "rationale": "To extract key information from CVs, the system should utilize NLP techniques to parse and analyze the CV content."
+    },
+    {
+      "name": "Implement Cosine Similarity and Jaccard Similarity for Determining Similarity",
+      "rationale": "To determine the alignment between extracted information and job requirements, the system should use cosine similarity and Jaccard similarity algorithms."
+    },
+    {
+      "name": "Validate Applicant Responses Using Expert-Generated Model",
+      "rationale": "To ensure the accuracy of applicant responses, the system should verify and grade responses against an expert-generated model."
+    },
+    {
+      "name": "Score Applicant Responses Using ChatGPT",
+      "rationale": "To provide a quantitative measure of applicant suitability, the system should score responses using ChatGPT."
+    },
+    {
+      "name": "Generate Percentage-Based Result for Applicant Suitability",
+      "rationale": "To provide a concise and easy-to-understand measure of applicant suitability, the system should generate a percentage-based result."
+    },
+    {
+      "name": "Implement Performance, Reliability, Security, and Usability Features",
+      "rationale": "To meet the non-functional requirements, the system should incorporate features that ensure performance, reliability, security, and usability."
     }
   ],
   "production_intents": {
@@ -33,80 +53,256 @@
   "components": [
     {
       "name": "CV Parser",
-      "responsibility": "Parse and analyze submitted CVs"
+      "responsibility": "Parse CV, Extract Key Information, Compare CV with Job Requirements"
     },
     {
-      "name": "CV Editor",
-      "responsibility": "Allow applicants to view and edit their parsed CVs"
+      "name": "Screening Questions Module",
+      "responsibility": "Present Screening Questions, Validate Applicant Responses, Score Applicant Responses"
     },
     {
-      "name": "Screening Question Manager",
-      "responsibility": "Manage and present screening questions defined by expert recruiters"
+      "name": "Rating and Scoring Module",
+      "responsibility": "Determine Similarity, Generate Percentage-Based Result"
     },
     {
-      "name": "Rating Generator",
-      "responsibility": "Generate a percentage-based result for each applicant's CV"
+      "name": "User Interface Module",
+      "responsibility": "Submit CV, View and Edit CV, Answer Screening Questions, Get Rating for CV"
+    },
+    {
+      "name": "Natural Language Processing (NLP) Module",
+      "responsibility": "Parse CV, Determine Similarity"
+    },
+    {
+      "name": "Similarity Calculation Module",
+      "responsibility": "Calculate Cosine Similarity, Calculate Jaccard Similarity"
+    },
+    {
+      "name": "ChatGPT Integration Module",
+      "responsibility": "Score Applicant Responses"
+    },
+    {
+      "name": "Recruiter Dashboard Module",
+      "responsibility": "Define Job Requirements, View Applicant Responses, View Rating Results"
     }
   ],
   "relationships": [
     {
       "source": "CV Parser",
-      "target": "CV Editor",
-      "type": "data-flow"
-    },
-    {
-      "source": "CV Editor",
-      "target": "Screening Question Manager",
+      "target": "Screening Questions Module",
       "type": "event-flow"
     },
     {
-      "source": "Screening Question Manager",
-      "target": "Rating Generator",
+      "source": "CV Parser",
+      "target": "Rating and Scoring Module",
       "type": "data-flow"
     },
     {
-      "source": "CV Parser",
-      "target": "Rating Generator",
+      "source": "Screening Questions Module",
+      "target": "Rating and Scoring Module",
+      "type": "event-flow"
+    },
+    {
+      "source": "Rating and Scoring Module",
+      "target": "User Interface Module",
+      "type": "data-flow"
+    },
+    {
+      "source": "User Interface Module",
+      "target": "CV Parser",
+      "type": "event-flow"
+    },
+    {
+      "source": "User Interface Module",
+      "target": "Screening Questions Module",
+      "type": "event-flow"
+    },
+    {
+      "source": "Natural Language Processing (NLP) Module",
+      "target": "Rating and Scoring Module",
+      "type": "data-flow"
+    },
+    {
+      "source": "Similarity Calculation Module",
+      "target": "Rating and Scoring Module",
+      "type": "data-flow"
+    },
+    {
+      "source": "ChatGPT Integration Module",
+      "target": "Rating and Scoring Module",
+      "type": "data-flow"
+    },
+    {
+      "source": "User Interface Module",
+      "target": "ChatGPT Integration Module",
+      "type": "event-flow"
+    },
+    {
+      "source": "User Interface Module",
+      "target": "Recruiter Dashboard Module",
+      "type": "event-flow"
+    },
+    {
+      "source": "Screening Questions Module",
+      "target": "Recruiter Dashboard Module",
+      "type": "event-flow"
+    },
+    {
+      "source": "Rating and Scoring Module",
+      "target": "Recruiter Dashboard Module",
       "type": "data-flow"
     }
   ],
   "runtime_flow": [
     {
-      "from": "CV Parser",
-      "to": "CV Editor",
-      "action": "Parse CV and send data",
-      "mode": "async"
-    },
-    {
-      "from": "CV Editor",
-      "to": "Screening Question Manager",
-      "action": "Submit edited CV for screening",
-      "mode": "sync"
-    },
-    {
-      "from": "Screening Question Manager",
-      "to": "Rating Generator",
-      "action": "Send screening questions and CV data",
+      "from": "User Interface Module",
+      "to": "CV Parser",
+      "action": "Submit CV for Parsing",
       "mode": "async"
     },
     {
       "from": "CV Parser",
-      "to": "Rating Generator",
-      "action": "Send raw CV data for rating",
-      "mode": "async"
-    },
-    {
-      "from": "Rating Generator",
-      "to": "CV Editor",
-      "action": "Notify of updated rating",
+      "to": "Screening Questions Module",
+      "action": "Trigger Screening Questions",
       "mode": "sync"
     },
     {
-      "from": "Rating Generator",
-      "to": "Screening Question Manager",
-      "action": "Notify of updated rating",
+      "from": "Screening Questions Module",
+      "to": "User Interface Module",
+      "action": "Present Screening Questions",
+      "mode": "sync"
+    },
+    {
+      "from": "User Interface Module",
+      "to": "Screening Questions Module",
+      "action": "Submit Applicant Responses",
+      "mode": "async"
+    },
+    {
+      "from": "Screening Questions Module",
+      "to": "Rating and Scoring Module",
+      "action": "Trigger Rating and Scoring",
+      "mode": "sync"
+    },
+    {
+      "from": "CV Parser",
+      "to": "Rating and Scoring Module",
+      "action": "Provide Parsed CV Data",
+      "mode": "sync"
+    },
+    {
+      "from": "Natural Language Processing (NLP) Module",
+      "to": "Rating and Scoring Module",
+      "action": "Provide NLP Data",
+      "mode": "sync"
+    },
+    {
+      "from": "Similarity Calculation Module",
+      "to": "Rating and Scoring Module",
+      "action": "Provide Similarity Calculation Data",
+      "mode": "sync"
+    },
+    {
+      "from": "ChatGPT Integration Module",
+      "to": "Rating and Scoring Module",
+      "action": "Provide ChatGPT Score",
+      "mode": "sync"
+    },
+    {
+      "from": "Rating and Scoring Module",
+      "to": "User Interface Module",
+      "action": "Provide Rating Result",
+      "mode": "sync"
+    },
+    {
+      "from": "User Interface Module",
+      "to": "Recruiter Dashboard Module",
+      "action": "Trigger Recruiter Dashboard Update",
+      "mode": "sync"
+    },
+    {
+      "from": "Screening Questions Module",
+      "to": "Recruiter Dashboard Module",
+      "action": "Trigger Recruiter Dashboard Update",
+      "mode": "sync"
+    },
+    {
+      "from": "Rating and Scoring Module",
+      "to": "Recruiter Dashboard Module",
+      "action": "Provide Rating Result",
       "mode": "sync"
     }
   ],
-  "critique": []
+  "critique": [
+    {
+      "title": "Performance Issue",
+      "description": "The system may experience performance issues due to high number of requests from the User Interface Module.",
+      "source": {
+        "page": "6.1",
+        "start_index": "21"
+      },
+      "project_id": "proj_23f123d6"
+    },
+    {
+      "title": "Reliability Issue",
+      "description": "The system may not be able to recover from failures in the Natural Language Processing (NLP) Module.",
+      "source": {
+        "page": "6.2",
+        "start_index": "21"
+      },
+      "project_id": "proj_23f123d6"
+    },
+    {
+      "title": "Security Issue",
+      "description": "The system may not protect user data and prevent unauthorized access.",
+      "source": {
+        "page": "6.3",
+        "start_index": "21"
+      },
+      "project_id": "proj_23f123d6"
+    },
+    {
+      "title": "Scalability Issue",
+      "description": "The system may not be able to handle a large number of users and requests.",
+      "source": {
+        "page": "6.5",
+        "start_index": "21"
+      },
+      "project_id": "proj_23f123d6"
+    },
+    {
+      "title": "Usability Issue",
+      "description": "The system may not be easy to use and navigate.",
+      "source": {
+        "page": "6.6",
+        "start_index": "21"
+      },
+      "project_id": "proj_23f123d6"
+    },
+    {
+      "title": "Maintainability Issue",
+      "description": "The system may not be easy to modify and update.",
+      "source": {
+        "page": "6.7",
+        "start_index": "22"
+      },
+      "project_id": "proj_23f123d6"
+    },
+    {
+      "title": "Compatibility Issue",
+      "description": "The system may not be compatible with different browsers and devices.",
+      "source": {
+        "page": "6.8",
+        "start_index": "22"
+      },
+      "project_id": "proj_23f123d6"
+    },
+    {
+      "title": "Integration Issue",
+      "description": "The system may not be able to integrate with other systems and services.",
+      "source": {
+        "page": "6.9",
+        "start_index": "22"
+      },
+      "project_id": "proj_23f123d6"
+    }
+  ]
 }
