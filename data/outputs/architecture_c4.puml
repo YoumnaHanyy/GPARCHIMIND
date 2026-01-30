@@ -2,13 +2,20 @@
 !include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
 LAYOUT_WITH_LEGEND()
 System_Boundary(ResuFitPrecisionCVMatchingSystem, "ResuFit: Precision CV Matching System") {
-  Container(SubmitCV, "Submit CV", "Service", "Applicants can submit their CVs for parsing and analysis.")
-  Container(ViewandEditCV, "View and Edit CV", "Service", "Applicants can view and edit their parsed CV.")
-  Container(AnswerScreeningQuestions, "Answer Screening Questions", "Service", "Applicants are presented with screening questions defined by an expert recruiter.")
-  Container(GetRatingforCV, "Get Rating for CV", "Service", "Applicants receive a rating for their CV based on the similarity between the applicant's CV and the job requirements.")
+  Container(CVParser, "CV Parser", "Service", "['Parse CV', 'Extract key information from CV', 'Support for various CV formats']")
+  Container(ScreeningQuestionEngine, "Screening Question Engine", "Service", "['Answer Screening Questions', 'Validate and Score Applicant Responses', 'Compare applicant responses with expert-generated model']")
+  Container(JobMatchingAlgorithm, "Job Matching Algorithm", "Service", "['Compare CV with Job Requirements', 'Calculate cosine similarity and Jaccard similarity', 'Generate percentage-based result']")
+  Container(UserInterface, "User Interface", "Service", "['Submit CV', 'View and Edit CV', 'Present screening questions to applicants', 'Display rating for CV']")
+  Container(RatingEngine, "Rating Engine", "Service", "['Get Rating for CV', 'Calculate rating based on CV and job requirements']")
+  Container(ChatGPTIntegration, "ChatGPT Integration", "Service", "['Validate and Score Applicant Responses', 'Compare applicant responses with expert-generated model']")
 }
-Rel(SubmitCV, ViewandEditCV, "event", "Async")
-Rel(ViewandEditCV, AnswerScreeningQuestions, "event", "Async")
-Rel(AnswerScreeningQuestions, GetRatingforCV, "call", "Sync")
-Rel(GetRatingforCV, SubmitCV, "event", "Async")
+Rel(CVParser, JobMatchingAlgorithm, "call", "Sync")
+Rel(CVParser, RatingEngine, "call", "Sync")
+Rel(CVParser, UserInterface, "event", "Async")
+Rel(ScreeningQuestionEngine, UserInterface, "event", "Async")
+Rel(JobMatchingAlgorithm, UserInterface, "event", "Async")
+Rel(RatingEngine, UserInterface, "event", "Async")
+Rel(UserInterface, ScreeningQuestionEngine, "event", "Async")
+Rel(ScreeningQuestionEngine, ChatGPTIntegration, "call", "Sync")
+Rel(ChatGPTIntegration, RatingEngine, "call", "Sync")
 @enduml

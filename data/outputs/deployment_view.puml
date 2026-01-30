@@ -7,24 +7,36 @@ node "Client" {
 node "Kubernetes Ingress" {
   component "Ingress Controller"
 }
-node "Submit CV Pod" {
-  component "Submit CV"
+node "CV Parser Pod" {
+  component "CV Parser"
 }
-node "View and Edit CV Pod" {
-  component "View and Edit CV"
+node "Screening Question Engine Pod" {
+  component "Screening Question Engine"
 }
-node "Answer Screening Questions Pod" {
-  component "Answer Screening Questions"
+node "Job Matching Algorithm Pod" {
+  component "Job Matching Algorithm"
 }
-node "Get Rating for CV Pod" {
-  component "Get Rating for CV"
+node "User Interface Pod" {
+  component "User Interface"
+}
+node "Rating Engine Pod" {
+  component "Rating Engine"
+}
+node "ChatGPT Integration Pod" {
+  component "ChatGPT Integration"
 }
 "User" --> "Ingress Controller" : TCP/IP
 "Ingress Controller" --> "API Gateway Pod" : HTTP/HTTPS
 "User" --> "Ingress Controller"
 "Ingress Controller" --> "API Gateway Pod"
-"API Gateway Pod" --> "Submit CV Pod"
-"API Gateway Pod" --> "View and Edit CV Pod"
-"API Gateway Pod" --> "Answer Screening Questions Pod"
-"API Gateway Pod" --> "Get Rating for CV Pod"
+"API Gateway Pod" --> "CV Parser Pod"
+"API Gateway Pod" --> "Screening Question Engine Pod"
+"API Gateway Pod" --> "Job Matching Algorithm Pod"
+"API Gateway Pod" --> "User Interface Pod"
+"API Gateway Pod" --> "Rating Engine Pod"
+"API Gateway Pod" --> "ChatGPT Integration Pod"
+node "Secondary Region" {
+  component "Replica Services"
+}
+"Ingress Controller" --> "Secondary Region" : failover
 @enduml

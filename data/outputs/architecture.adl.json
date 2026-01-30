@@ -1,161 +1,231 @@
 {
   "system": "ResuFit: Precision CV Matching System",
-  "style": "Layered (N-Tier)",
+  "style": "Microservices",
   "source": "AI",
   "decisions": [
     {
-      "name": "Implement a layered (N-Tier) architecture for ResuFit: Precision CV Matching System.",
-      "rationale": "To achieve scalability, maintainability, and compatibility, a layered architecture is necessary."
-    },
-    {
-      "name": "Use a database that supports concurrent connections to handle 1000 concurrent users.",
-      "rationale": "To meet the scalability requirement, a database that can handle high traffic is necessary."
-    },
-    {
-      "name": "Implement user authentication and authorization to protect user data and meet the security requirement.",
-      "rationale": "To protect user data and meet the security requirement, user authentication and authorization must be implemented."
-    },
-    {
-      "name": "Use a secure protocol for data transmission, such as HTTPS, to protect user data.",
-      "rationale": "To protect user data, a secure protocol for data transmission must be used."
-    },
-    {
-      "name": "Implement a user-friendly interface that provides clear instructions to meet the usability requirement.",
-      "rationale": "To meet the usability requirement, a user-friendly interface with clear instructions must be implemented."
-    },
-    {
-      "name": "Integrate ResuFit with the HR module from Odoo ERP software to meet the integration requirement.",
-      "rationale": "To meet the integration requirement, ResuFit must be integrated with the HR module from Odoo ERP software."
-    },
-    {
-      "name": "Implement a system for parsing and analyzing CVs to meet the functional requirement of 'Submit CV'.",
-      "rationale": "To meet the functional requirement of 'Submit CV', a system for parsing and analyzing CVs must be implemented."
-    },
-    {
-      "name": "Implement a system for applicants to view and edit their parsed CVs to meet the functional requirement of 'View and Edit CV'.",
-      "rationale": "To meet the functional requirement of 'View and Edit CV', a system for applicants to view and edit their parsed CVs must be implemented."
-    },
-    {
-      "name": "Implement a system for applicants to answer screening questions to meet the functional requirement of 'Answer Screening Questions'.",
-      "rationale": "To meet the functional requirement of 'Answer Screening Questions', a system for applicants to answer screening questions must be implemented."
-    },
-    {
-      "name": "Implement a system for applicants to receive a rating for their CV based on the similarity between the applicant's CV and the job requirements to meet the functional requirement of 'Get Rating for CV'.",
-      "rationale": "To meet the functional requirement of 'Get Rating for CV', a system for applicants to receive a rating for their CV must be implemented."
-    },
-    {
-      "name": "Implement a system for monitoring and logging to meet the reliability requirement.",
-      "rationale": "To meet the reliability requirement, a system for monitoring and logging must be implemented."
-    },
-    {
-      "name": "Implement a system for backup and recovery to meet the maintainability requirement.",
-      "rationale": "To meet the maintainability requirement, a system for backup and recovery must be implemented."
-    },
-    {
-      "name": "Implement a system for testing and quality assurance to meet the compatibility requirement.",
-      "rationale": "To meet the compatibility requirement, a system for testing and quality assurance must be implemented."
+      "name": "...",
+      "rationale": "..."
     }
   ],
   "production_intents": {
     "deployment": {
-      "scaling": "vertical",
-      "availability": "single-region"
+      "scaling": "horizontal",
+      "availability": "multi-region"
     },
     "security": {
-      "authentication": "centralized",
+      "authentication": "service-to-service",
       "authorization": "RBAC"
     },
     "resilience": {
       "patterns": [
-        "Retry"
+        "Retry",
+        "CircuitBreaker"
       ],
-      "delivery": "at-most-once",
-      "ordering": true
+      "delivery": "at-least-once",
+      "ordering": false
     }
   },
   "components": [
     {
-      "name": "Submit CV",
-      "responsibility": "Applicants can submit their CVs for parsing and analysis."
+      "name": "CV Parser",
+      "responsibility": [
+        "Parse CV",
+        "Extract key information from CV",
+        "Support for various CV formats"
+      ]
     },
     {
-      "name": "View and Edit CV",
-      "responsibility": "Applicants can view and edit their parsed CV."
+      "name": "Screening Question Engine",
+      "responsibility": [
+        "Answer Screening Questions",
+        "Validate and Score Applicant Responses",
+        "Compare applicant responses with expert-generated model"
+      ]
     },
     {
-      "name": "Answer Screening Questions",
-      "responsibility": "Applicants are presented with screening questions defined by an expert recruiter."
+      "name": "Job Matching Algorithm",
+      "responsibility": [
+        "Compare CV with Job Requirements",
+        "Calculate cosine similarity and Jaccard similarity",
+        "Generate percentage-based result"
+      ]
     },
     {
-      "name": "Get Rating for CV",
-      "responsibility": "Applicants receive a rating for their CV based on the similarity between the applicant's CV and the job requirements."
+      "name": "User Interface",
+      "responsibility": [
+        "Submit CV",
+        "View and Edit CV",
+        "Present screening questions to applicants",
+        "Display rating for CV"
+      ]
+    },
+    {
+      "name": "Rating Engine",
+      "responsibility": [
+        "Get Rating for CV",
+        "Calculate rating based on CV and job requirements"
+      ]
+    },
+    {
+      "name": "ChatGPT Integration",
+      "responsibility": [
+        "Validate and Score Applicant Responses",
+        "Compare applicant responses with expert-generated model"
+      ]
     }
   ],
   "relationships": [
     {
-      "source": "Submit CV",
-      "target": "View and Edit CV",
-      "type": "event-flow"
-    },
-    {
-      "source": "View and Edit CV",
-      "target": "Answer Screening Questions",
-      "type": "event-flow"
-    },
-    {
-      "source": "Answer Screening Questions",
-      "target": "Get Rating for CV",
+      "source": "CV Parser",
+      "target": "Job Matching Algorithm",
       "type": "data-flow"
     },
     {
-      "source": "Get Rating for CV",
-      "target": "Submit CV",
+      "source": "CV Parser",
+      "target": "Rating Engine",
+      "type": "data-flow"
+    },
+    {
+      "source": "CV Parser",
+      "target": "User Interface",
       "type": "event-flow"
+    },
+    {
+      "source": "Screening Question Engine",
+      "target": "User Interface",
+      "type": "event-flow"
+    },
+    {
+      "source": "Job Matching Algorithm",
+      "target": "User Interface",
+      "type": "event-flow"
+    },
+    {
+      "source": "Rating Engine",
+      "target": "User Interface",
+      "type": "event-flow"
+    },
+    {
+      "source": "User Interface",
+      "target": "Screening Question Engine",
+      "type": "event-flow"
+    },
+    {
+      "source": "Screening Question Engine",
+      "target": "ChatGPT Integration",
+      "type": "data-flow"
+    },
+    {
+      "source": "ChatGPT Integration",
+      "target": "Rating Engine",
+      "type": "data-flow"
     }
   ],
   "runtime_flow": [
     {
-      "from": "Submit CV",
-      "to": "View and Edit CV",
-      "action": "Submit CV for parsing and analysis",
+      "from": "User Interface",
+      "to": "CV Parser",
+      "action": "Submit CV",
       "mode": "async"
     },
     {
-      "from": "View and Edit CV",
-      "to": "View and Edit CV",
-      "action": "View parsed CV",
+      "from": "CV Parser",
+      "to": "Job Matching Algorithm",
+      "action": "Parse CV and send to Job Matching Algorithm",
       "mode": "sync"
     },
     {
-      "from": "View and Edit CV",
-      "to": "Answer Screening Questions",
-      "action": "Proceed to screening questions",
+      "from": "CV Parser",
+      "to": "Rating Engine",
+      "action": "Parse CV and send to Rating Engine",
+      "mode": "sync"
+    },
+    {
+      "from": "Job Matching Algorithm",
+      "to": "User Interface",
+      "action": "Display rating for CV",
       "mode": "async"
     },
     {
-      "from": "Answer Screening Questions",
-      "to": "Answer Screening Questions",
-      "action": "Answer screening questions",
-      "mode": "sync"
-    },
-    {
-      "from": "Answer Screening Questions",
-      "to": "Get Rating for CV",
-      "action": "Submit answers for rating",
+      "from": "Rating Engine",
+      "to": "User Interface",
+      "action": "Display rating for CV",
       "mode": "async"
     },
     {
-      "from": "Get Rating for CV",
-      "to": "Get Rating for CV",
-      "action": "Calculate CV rating",
+      "from": "User Interface",
+      "to": "Screening Question Engine",
+      "action": "Present screening questions to applicants",
+      "mode": "async"
+    },
+    {
+      "from": "Screening Question Engine",
+      "to": "ChatGPT Integration",
+      "action": "Validate and Score Applicant Responses",
       "mode": "sync"
     },
     {
-      "from": "Get Rating for CV",
-      "to": "Submit CV",
-      "action": "Update CV for re-parsing",
+      "from": "ChatGPT Integration",
+      "to": "Rating Engine",
+      "action": "Compare applicant responses with expert-generated model",
+      "mode": "sync"
+    },
+    {
+      "from": "Screening Question Engine",
+      "to": "User Interface",
+      "action": "Present screening questions to applicants",
       "mode": "async"
     }
   ],
-  "critique": []
+  "critique": [
+    {
+      "component": "CV Parser",
+      "issue": "Potential performance bottleneck if slow or inefficient"
+    },
+    {
+      "component": "Job Matching Algorithm",
+      "issue": "Potential performance bottleneck if slow or inefficient"
+    },
+    {
+      "component": "Rating Engine",
+      "issue": "Potential performance bottleneck if slow or inefficient"
+    },
+    {
+      "component": "ChatGPT Integration",
+      "issue": "Potential security risks if not properly integrated"
+    },
+    {
+      "component": "User Interface",
+      "issue": "Potential security risks if not properly secured"
+    },
+    {
+      "component": "CV Parser",
+      "issue": "Potential privacy risks if extracting sensitive information"
+    },
+    {
+      "component": "Job Matching Algorithm",
+      "issue": "Potential scalability issues if bottlenecked"
+    },
+    {
+      "component": "Rating Engine",
+      "issue": "Potential scalability issues if bottlenecked"
+    },
+    {
+      "component": "User Interface",
+      "issue": "Potential usability issues if not properly designed"
+    },
+    {
+      "component": "System",
+      "issue": "Potential maintainability issues due to complex relationships between components"
+    },
+    {
+      "component": "User Interface",
+      "issue": "Potential compatibility issues if not properly designed or implemented"
+    },
+    {
+      "component": "System",
+      "issue": "Potential integration challenges due to ChatGPT Integration component"
+    }
+  ]
 }

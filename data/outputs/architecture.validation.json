@@ -1,1 +1,50 @@
-[]
+[
+  {
+    "component": "CV Parser",
+    "issue": "Potential performance bottleneck if slow or inefficient"
+  },
+  {
+    "component": "Job Matching Algorithm",
+    "issue": "Potential performance bottleneck if slow or inefficient"
+  },
+  {
+    "component": "Rating Engine",
+    "issue": "Potential performance bottleneck if slow or inefficient"
+  },
+  {
+    "component": "ChatGPT Integration",
+    "issue": "Potential security risks if not properly integrated"
+  },
+  {
+    "component": "User Interface",
+    "issue": "Potential security risks if not properly secured"
+  },
+  {
+    "component": "CV Parser",
+    "issue": "Potential privacy risks if extracting sensitive information"
+  },
+  {
+    "component": "Job Matching Algorithm",
+    "issue": "Potential scalability issues if bottlenecked"
+  },
+  {
+    "component": "Rating Engine",
+    "issue": "Potential scalability issues if bottlenecked"
+  },
+  {
+    "component": "User Interface",
+    "issue": "Potential usability issues if not properly designed"
+  },
+  {
+    "component": "System",
+    "issue": "Potential maintainability issues due to complex relationships between components"
+  },
+  {
+    "component": "User Interface",
+    "issue": "Potential compatibility issues if not properly designed or implemented"
+  },
+  {
+    "component": "System",
+    "issue": "Potential integration challenges due to ChatGPT Integration component"
+  }
+]

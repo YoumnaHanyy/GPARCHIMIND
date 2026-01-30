@@ -1,15 +1,19 @@
 @startuml
 autonumber
 actor User
-participant "Submit CV" as SubmitCV
-participant "View and Edit CV" as ViewandEditCV
-participant "Answer Screening Questions" as AnswerScreeningQuestions
-participant "Get Rating for CV" as GetRatingforCV
-SubmitCV ->> ViewandEditCV : Submit CV for parsing and analysis
-ViewandEditCV -> ViewandEditCV : View parsed CV
-ViewandEditCV ->> AnswerScreeningQuestions : Proceed to screening questions
-AnswerScreeningQuestions -> AnswerScreeningQuestions : Answer screening questions
-AnswerScreeningQuestions ->> GetRatingforCV : Submit answers for rating
-GetRatingforCV -> GetRatingforCV : Calculate CV rating
-GetRatingforCV ->> SubmitCV : Update CV for re-parsing
+participant "CV Parser" as CVParser
+participant "Screening Question Engine" as ScreeningQuestionEngine
+participant "Job Matching Algorithm" as JobMatchingAlgorithm
+participant "User Interface" as UserInterface
+participant "Rating Engine" as RatingEngine
+participant "ChatGPT Integration" as ChatGPTIntegration
+UserInterface ->> CVParser : Submit CV
+CVParser -> JobMatchingAlgorithm : Parse CV and send to Job Matching Algorithm
+CVParser -> RatingEngine : Parse CV and send to Rating Engine
+JobMatchingAlgorithm ->> UserInterface : Display rating for CV
+RatingEngine ->> UserInterface : Display rating for CV
+UserInterface ->> ScreeningQuestionEngine : Present screening questions to applicants
+ScreeningQuestionEngine -> ChatGPTIntegration : Validate and Score Applicant Responses
+ChatGPTIntegration -> RatingEngine : Compare applicant responses with expert-generated model
+ScreeningQuestionEngine ->> UserInterface : Present screening questions to applicants
 @enduml

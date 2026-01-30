@@ -18,7 +18,7 @@ def generate_report(project_id: str):
     acme_file = PROJECT_ROOT / "data" / "outputs" / "architecture.acme"
 
     context_diagram = PROJECT_ROOT / "data" / "outputs" / "context_view.png"
-    dfd_context_diagram = PROJECT_ROOT / "data" / "outputs" / "dfd_context.png"
+ 
     container_diagram = PROJECT_ROOT / "data" / "outputs" / "architecture_c4.png"
     process_diagram = PROJECT_ROOT / "data" / "outputs" / "process_view.png"
     deployment_diagram = PROJECT_ROOT / "data" / "outputs" / "deployment_view.png"
@@ -165,7 +165,7 @@ def generate_report(project_id: str):
 
     # ---------- Views ----------
     image_section("3. Context View", context_diagram)
-    image_section("3.1 Data Context View (Level 0 DFD)", dfd_context_diagram)
+    
     image_section("4. Logical View (C4 Container Diagram)", container_diagram)
     image_section("5. Process View (Runtime Interaction)", process_diagram)
     image_section("6. Physical View (Deployment Diagram)", deployment_diagram)
