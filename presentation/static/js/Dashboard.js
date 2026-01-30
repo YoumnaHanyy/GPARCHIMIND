@@ -1,5 +1,14 @@
-  let currentPhase = 1;
-  let extractedData = null;
+// Global state
+let currentPhase = 1;
+let extractedData = null;
+let pendingConfirmation = false; 
+// Add defensive check
+window.addEventListener('DOMContentLoaded', () => {
+  console.log("Dashboard initialized");
+  if (extractedData) {
+    console.log("Project ID:", extractedData.project_id);
+  }
+});
 
   const phaseData = {
     1: { 
@@ -521,18 +530,32 @@ function openPreviewModal() {
     document.getElementById('tabContentBox').innerHTML = content;
   }
 
-  function changePhase(dir) {
-    if(dir === 1 && currentPhase < 3) {
-        currentPhase++;
-        triggerLoading();
-    } else if (dir === -1 && currentPhase > 1) {
-        currentPhase--;
-        renderPhase();
-    } else if (dir === 1 && currentPhase === 3) {
-        alert("Project Complete! Returning to dashboard.");
-        location.reload();
-    }
+function changePhase(dir) {
+
+  if (pendingConfirmation) {
+    new bootstrap.Modal(
+      document.getElementById("warningModal")
+    ).show();
+    return;
   }
+
+  if (dir === 1 && currentPhase < 3) {
+    currentPhase++;
+    syncProjectProgress();
+    triggerLoading();
+
+  } else if (dir === -1 && currentPhase > 1) {
+    currentPhase--;
+    renderPhase();
+
+  } else if (dir === 1 && currentPhase === 3) {
+    syncProjectProgress();
+    alert("Project Complete! Returning to dashboard.");
+    location.reload();
+  }
+}
+
+
 
   function triggerLoading() {
     document.getElementById('resultContent').classList.add('hidden');
@@ -551,79 +574,262 @@ function openPreviewModal() {
      FORM SUBMISSION
   ======================= */
 
-  document.getElementById('processForm').onsubmit = async (e) => {
-    e.preventDefault();
+// ✅ UPDATED: Process Form Submission
+document.getElementById('processForm').onsubmit = async (e) => {
+  e.preventDefault();
 
-    const fileInput = document.getElementById('fileIn');
-    const loading = document.getElementById('loadingMessage');
-    const errorBox = document.getElementById('errorMessage');
-if (!fileInput.files.length) {
-  showErrorModal("Please select a PDF file before continuing.");
-  return;
+  const fileInput = document.getElementById('fileIn');
+  const loading = document.getElementById('loadingMessage');
+  const errorBox = document.getElementById('errorMessage');
+  
+  if (!fileInput.files.length) {
+    showErrorModal("Please select a PDF file before continuing.");
+    return;
+  }
+
+  // Hide upload step, show loading
+  document.getElementById('step-upload').classList.add('hidden');
+  loading.classList.remove('hidden');
+  errorBox.innerHTML = "";
+  startLoadingAnimation();
+
+  const fd = new FormData();
+  fd.append("file", fileInput.files[0]);
+
+  try {
+    const res = await fetch("/extract", { method: "POST", body: fd });
+    const data = await res.json();
+
+    if (data.error) throw data;
+
+    // Store extracted data
+    extractedData = data;
+    window.currentProjectId = data.project_id;
+
+    // Stop loading animation
+    stopLoadingAnimation();
+
+    // ✅ CHECK if confirmation needed
+    if (data.needs_confirmation && data.low_confidence_nfrs.length > 0) {
+      // Show modal, DON'T show results yet
+      pendingConfirmation = true;
+      loading.classList.add('hidden');
+      openNFRConfirmModal(data.low_confidence_nfrs);
+    } else {
+      // No confirmation needed, show results directly
+      showResults();
+    }
+
+  } catch (err) {
+    stopLoadingAnimation();
+    loading.classList.add('hidden');
+    document.getElementById('step-upload').classList.remove('hidden');
+
+    let msg = err.error || err.message || "Unknown error occurred";
+    let friendlyMsg = "Unexpected error occurred. Please try again.";
+
+    if (msg.toLowerCase().includes("pdf")) {
+      friendlyMsg = "Invalid file format. Please upload a valid PDF document.";
+    } else if (msg.toLowerCase().includes("timeout")) {
+      friendlyMsg = "The process took too long. Please try again later.";
+    }
+
+    showErrorModal(friendlyMsg);
+  }
+};
+
+// ✅ NEW: Show results helper
+function showResults() {
+  document.getElementById('loadingMessage').classList.add('hidden');
+  document.getElementById('progressSection').classList.remove('hidden');
+  document.getElementById('resultContent').classList.remove('hidden');
+  renderPhase();
 }
 
-    // Hide upload step, show loading
-    document.getElementById('step-upload').classList.add('hidden');
-    loading.classList.remove('hidden');
-    errorBox.innerHTML = "";
+// ✅ UPDATED: NFR Confirmation Modal
+function openNFRConfirmModal(nfrs) {
+  if (!extractedData || !extractedData.project_id) {
+    console.error("Cannot open NFR modal: project_id not available");
+    showErrorModal("Project ID not found. Please try extracting again.");
+    return;
+  }
 
-    // Start loader rotation
+  const body = document.getElementById("nfrModalBody");
+  body.innerHTML = "";
+
+  nfrs.forEach((nfr, idx) => {
+    body.innerHTML += `
+  <div class="card shadow-sm mb-4 border-0">
+    <div class="card-body">
+
+      <div class="d-flex justify-content-between align-items-start mb-2">
+        <h6 class="fw-bold mb-0">NFR (Low confidence)</h6>
+        <span class="badge bg-danger">
+          ${(nfr.confidence * 100).toFixed(0)}%
+        </span>
+      </div>
+
+      <p class="fw-semibold mb-1">
+        Title: ${nfr.title || "N/A"}
+      </p>
+
+      <p class="text-muted small mb-2">
+        ${nfr.description}
+      </p>
+
+      <p class="small mb-3">
+        <strong>Model guess:</strong>
+        <span class="text-primary">
+          ${nfr.predicted_type_label || "Unknown"}
+        </span>
+        (${(nfr.confidence * 100).toFixed(0)}%)
+      </p>
+
+      <div class="row g-2 align-items-center">
+        <div class="col-12">
+          <select class="form-select nfr-user-choice"
+                  data-desc="${nfr.description}">
+            <option value="">-- Select NFR Type --</option>
+            <option value="A">Availability</option>
+            <option value="FT">Fault Tolerance</option>
+            <option value="L">Latency</option>
+            <option value="LF">Load Factor</option>
+            <option value="MN">Maintainability</option>
+            <option value="FT">Fault Tolerance</option>
+            <option value="O">Operational</option>
+            <option value="PE">Performance</option>
+            <option value="PO">Portability</option>
+            <option value="RE">Reliability</option>
+            <option value="SC">Scalability</option>
+            <option value="SE">Security</option>
+            <option value="MD">Modularity</option>
+            <option value="US">Usability</option>
+            <option value="IN">Interoperability</option>
+            <option value="AC">Accessibility</option>
+            <option value="CO">Compatibility</option>
+          </select>
+        </div>
+      </div>
+
+    </div>
+  </div>
+`;
+
+  });
+
+  new bootstrap.Modal(
+    document.getElementById("nfrConfirmModal")
+  ).show();
+}
+
+// ✅ FIXED: Submit NFR Confirmation with proper error display
+async function submitNFRConfirmation() {
+  if (!extractedData || !extractedData.project_id) {
+    showErrorModal("Project ID is missing. Cannot save feedback.");
+    return;
+  }
+
+  // ✅ Collect user selections
+  const items = [];
+  document.querySelectorAll(".nfr-user-choice").forEach(sel => {
+    items.push({
+      description: sel.dataset.desc,
+      type: sel.value
+    });
+  });
+
+  // ✅ Validate: all NFRs must have a type selected
+  if (items.some(i => !i.type)) {
+    showNfrInlineError("⚠️ Please select a type for all NFRs before continuing.");
+    return;
+  }
+
+  try {
+    /* 1️⃣ Hide error if validation passed */
+    hideNfrInlineError();
+
+    /* 2️⃣ Close NFR modal */
+    const nfrModal = bootstrap.Modal.getInstance(
+      document.getElementById("nfrConfirmModal")
+    );
+    if (nfrModal) {
+      nfrModal.hide();
+    }
+
+    /* 3️⃣ Show loading screen */
+    pendingConfirmation = true;
+
+    document.getElementById('resultContent').classList.add('hidden');
+    document.getElementById('progressSection').classList.add('hidden');
+    document.getElementById('loadingMessage').classList.remove('hidden');
     startLoadingAnimation();
 
-    const fd = new FormData();
-    fd.append("file", fileInput.files[0]);
+    /* 4️⃣ Send confirmation to backend */
+    const response = await fetch("/confirm_nfr", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        project_id: extractedData.project_id,
+        items: items
+      })
+    });
 
-    try {
-      const res = await fetch("/extract", { method: "POST", body: fd });
-      const data = await res.json();
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || "Failed to save confirmation");
+    }
 
-      if (data.error) throw data;
+    const confirmData = await response.json();
 
-      // Store extracted data
-      extractedData = data;
-      window.currentProjectId = data.project_id;
+    /* 5️⃣ Update extractedData with new results */
+    extractedData.nfr_predictions = confirmData.nfr_predictions;
+    extractedData.functional_method = confirmData.functional_method;
+    extractedData.ordinal_method = confirmData.ordinal_method;
+    extractedData.binary_method = confirmData.binary_method;
+    extractedData.weighted_method = confirmData.weighted_method;
+    extractedData.hybrid_method = confirmData.hybrid_method;
 
-
-      // Stop loading animation
+    /* 6️⃣ Short delay for UX */
+    setTimeout(() => {
       stopLoadingAnimation();
+      document.getElementById('loadingMessage').classList.add('hidden');
 
-      // Show progress and results
-      setTimeout(() => {
-        loading.classList.add('hidden');
-        document.getElementById('progressSection').classList.remove('hidden');
-        document.getElementById('resultContent').classList.remove('hidden');
-        renderPhase();
-      }, 500);
+      pendingConfirmation = false;
 
-    } catch (err) {
-      stopLoadingAnimation();
-      loading.classList.add('hidden');
-      document.getElementById('step-upload').classList.remove('hidden');
+      document.getElementById('progressSection').classList.remove('hidden');
+      document.getElementById('resultContent').classList.remove('hidden');
 
-      let msg = err.error || err.message || "Unknown error occurred";
-      let details = "";
-      
-      if (err.file) {
-        details = `
-          <hr/>
-          <strong>File:</strong> ${err.file}<br/>
-          <strong>Line:</strong> ${err.line}<br/>
-          <strong>Code:</strong>
-          <pre>${err.code}</pre>
-        `;
-      }
-      let friendlyMsg = "Unexpected error occurred. Please try again.";
+      renderPhase(); // Show Phase 1 results
+    }, 1200);
 
-if (msg.toLowerCase().includes("pdf")) {
-  friendlyMsg = "Invalid file format. Please upload a valid PDF document.";
-} else if (msg.toLowerCase().includes("timeout")) {
-  friendlyMsg = "The process took too long. Please try again later.";
+  } catch (error) {
+    stopLoadingAnimation();
+    document.getElementById('loadingMessage').classList.add('hidden');
+    pendingConfirmation = false;
+
+    console.error("NFR Confirmation Error:", error);
+    showErrorModal(`Failed to save feedback: ${error.message}`);
+  }
 }
 
-showErrorModal(friendlyMsg);
+// ✅ FIXED: Helper functions for inline error display
+function showNfrInlineError(message) {
+  const box = document.getElementById("nfrInlineError");
+  if (box) {
+    box.innerText = message;
+    box.classList.remove("d-none");
+    
+    // Scroll to error
+    box.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+}
 
-    }
-  };
+function hideNfrInlineError() {
+  const box = document.getElementById("nfrInlineError");
+  if (box) {
+    box.classList.add("d-none");
+  }
+}
 
   function logout() {
     fetch("/logout", {
@@ -660,32 +866,30 @@ showErrorModal(friendlyMsg);
   document.getElementById("dashboardView").classList.remove("hidden");
 }
 function showErrorModal(message) {
+
+  // ✅ اقفلي NFR modal لو مفتوح
+  const nfrModalEl = document.getElementById("nfrConfirmModal");
+  const nfrModalInstance = bootstrap.Modal.getInstance(nfrModalEl);
+
+  if (nfrModalInstance) {
+    nfrModalInstance.hide();
+  }
+
+  // ✅ بعد كده افتحي error modal
   document.getElementById("errorModalMessage").innerText = message;
-  const modal = new bootstrap.Modal(document.getElementById("errorModal"));
-  modal.show();
+
+  const errorModal = new bootstrap.Modal(
+    document.getElementById("errorModal"),
+    { backdrop: "static" }
+  );
+
+  errorModal.show();
 }
+
 function getProgressValue(phase) {
   return parseInt(phaseData[phase].pct.replace("%", ""));
 }
-function changePhase(dir) {
-  if (dir === 1 && currentPhase < 3) {
-    currentPhase++;
 
-    // 🔥 update DB
-    syncProjectProgress();
-
-    triggerLoading();
-
-  } else if (dir === -1 && currentPhase > 1) {
-    currentPhase--;
-    renderPhase();
-
-  } else if (dir === 1 && currentPhase === 3) {
-    syncProjectProgress(); // 100%
-    alert("Project Complete! Returning to dashboard.");
-    location.reload();
-  }
-}
 async function syncProjectProgress() {
   if (!window.currentProjectId) return;
 

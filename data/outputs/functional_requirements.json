@@ -1,38 +1,83 @@
 [
   {
-    "title": "Submit CV",
-    "description": "Applicants can submit their CVs for parsing and analysis.",
+    "title": "System Functions",
+    "description": "The system shall provide the following functions: user login, lecture upload, file to text conversion, text extraction module, question generator, question bank, difficulty level selection.",
     "source": {
-      "page": "4.1",
-      "start_index": "15"
+      "page": 13,
+      "start_index": 0
     },
-    "project_id": "proj_deb82ab2"
+    "project_id": "proj_212c7434"
   },
   {
-    "title": "View and Edit CV",
-    "description": "Applicants can view and edit their parsed CV.",
+    "title": "Detailed Functional Specification",
+    "description": "The system shall have the following detailed functional specifications: user authentication, lecture upload and processing, question generation, question bank management, difficulty level selection, and user interface.",
     "source": {
-      "page": "4.1",
-      "start_index": "15"
+      "page": 16,
+      "start_index": 0
     },
-    "project_id": "proj_deb82ab2"
+    "project_id": "proj_212c7434"
   },
   {
-    "title": "Answer Screening Questions",
-    "description": "Applicants are presented with screening questions defined by an expert recruiter.",
+    "title": "User Login",
+    "description": "The system shall allow users to log in with their credentials and access the system's features.",
     "source": {
-      "page": "3.5",
-      "start_index": "13"
+      "page": 8,
+      "start_index": 0
     },
-    "project_id": "proj_deb82ab2"
+    "project_id": "proj_212c7434"
   },
   {
-    "title": "Get Rating for CV",
-    "description": "The system generates a percentage-based result, providing a fair evaluation of each applicant.",
+    "title": "Lecture Upload",
+    "description": "The system shall allow users to upload lectures in various formats and process them for question generation.",
     "source": {
-      "page": "3.5",
-      "start_index": "13"
+      "page": 8,
+      "start_index": 0
     },
-    "project_id": "proj_deb82ab2"
+    "project_id": "proj_212c7434"
+  },
+  {
+    "title": "File to Text Conversion",
+    "description": "The system shall convert uploaded files to text format for question generation.",
+    "source": {
+      "page": 8,
+      "start_index": 0
+    },
+    "project_id": "proj_212c7434"
+  },
+  {
+    "title": "Text Extraction Module",
+    "description": "The system shall extract relevant text from uploaded files for question generation.",
+    "source": {
+      "page": 9,
+      "start_index": 0
+    },
+    "project_id": "proj_212c7434"
+  },
+  {
+    "title": "Question Generator",
+    "description": "The system shall generate questions based on the extracted text and user input.",
+    "source": {
+      "page": 9,
+      "start_index": 0
+    },
+    "project_id": "proj_212c7434"
+  },
+  {
+    "title": "Question Bank",
+    "description": "The system shall store and manage generated questions for future use.",
+    "source": {
+      "page": 9,
+      "start_index": 0
+    },
+    "project_id": "proj_212c7434"
+  },
+  {
+    "title": "Difficulty Level Selection",
+    "description": "The system shall allow users to select the difficulty level of generated questions.",
+    "source": {
+      "page": 9,
+      "start_index": 0
+    },
+    "project_id": "proj_212c7434"
   }
 ]

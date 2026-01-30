@@ -1,58 +1,125 @@
 System ResuFit:PrecisionCVMatchingSystem {
   Property view : String = "runtime";
-  Property architectureStyle : String = "Layered (N-Tier)";
+  Property architectureStyle : String = "Event-Driven/ Messaging";
   Property source : String = "AI";
-  Component CVParser = new Component {
+  Component AuthenticationService = new Component {
     Port in;
     Port out;
-    Property responsibility : String = "Parse and analyze submitted CVs";
+    Property responsibility : String = "Handles user login and authentication";
     Property state : String = "stateless";
     Property scaling : String = "horizontal";
   }
-  Component CVEditor = new Component {
+  Component LectureProcessor = new Component {
     Port in;
     Port out;
-    Property responsibility : String = "Allow applicants to view and edit their parsed CVs";
+    Property responsibility : String = "Processes uploaded lectures for question generation";
     Property state : String = "stateless";
     Property scaling : String = "horizontal";
   }
-  Component ScreeningQuestionManager = new Component {
+  Component FileConverter = new Component {
     Port in;
     Port out;
-    Property responsibility : String = "Manage and present screening questions to applicants";
+    Property responsibility : String = "Converts uploaded files to text format";
     Property state : String = "stateless";
     Property scaling : String = "horizontal";
   }
-  Component RatingGenerator = new Component {
+  Component TextExtractionModule = new Component {
     Port in;
     Port out;
-    Property responsibility : String = "Generate a percentage-based result for each applicant's CV";
+    Property responsibility : String = "Extracts relevant text from uploaded files for question generation";
     Property state : String = "stateless";
     Property scaling : String = "horizontal";
   }
-  Attachment CVParser.out to CVEditor.in {
-    Property delivery : String = "at-least-once";
-    Property ordering : Boolean = true;
-    Property backpressure : String = "bounded";
+  Component QuestionGenerator = new Component {
+    Port in;
+    Port out;
+    Property responsibility : String = "Generates questions based on extracted text and user input";
+    Property state : String = "stateless";
+    Property scaling : String = "horizontal";
   }
-  Attachment CVEditor.out to ScreeningQuestionManager.in {
+  Component QuestionBankManager = new Component {
+    Port in;
+    Port out;
+    Property responsibility : String = "Stores and manages generated questions for future use";
+    Property state : String = "stateless";
+    Property scaling : String = "horizontal";
+  }
+  Component DifficultyLevelService = new Component {
+    Port in;
+    Port out;
+    Property responsibility : String = "Allows users to select the difficulty level of generated questions";
+    Property state : String = "stateless";
+    Property scaling : String = "horizontal";
+  }
+  Component UserInterface = new Component {
+    Port in;
+    Port out;
+    Property responsibility : String = "Provides a user-friendly interface for users to interact with the system";
+    Property state : String = "stateless";
+    Property scaling : String = "horizontal";
+  }
+  Component QuestionBankDatabase = new Component {
+    Port in;
+    Port out;
+    Property responsibility : String = "Stores and manages generated questions in a database";
+    Property state : String = "stateful";
+    Property scaling : String = "vertical";
+    Property consistency : String = "eventual";
+    Property replication : String = "multi-node";
+  }
+  Attachment AuthenticationService.out to UserInterface.in {
     Property delivery : String = "at-least-once";
     Property ordering : Boolean = false;
     Property backpressure : String = "bounded";
   }
-  Attachment ScreeningQuestionManager.out to RatingGenerator.in {
+  Attachment UserInterface.out to QuestionGenerator.in {
     Property delivery : String = "at-least-once";
     Property ordering : Boolean = true;
     Property backpressure : String = "bounded";
   }
-  Attachment CVParser.out to RatingGenerator.in {
+  Attachment UserInterface.out to DifficultyLevelService.in {
     Property delivery : String = "at-least-once";
     Property ordering : Boolean = true;
     Property backpressure : String = "bounded";
   }
-  Property resilience_pattern : String = "Retry";
-  Property delivery : String = "at-most-once";
-  Property ordering : Boolean = true;
-  Property authentication : String = "centralized";
+  Attachment QuestionGenerator.out to QuestionBankManager.in {
+    Property delivery : String = "at-least-once";
+    Property ordering : Boolean = true;
+    Property backpressure : String = "bounded";
+  }
+  Attachment QuestionGenerator.out to QuestionBankDatabase.in {
+    Property delivery : String = "at-least-once";
+    Property ordering : Boolean = true;
+    Property backpressure : String = "bounded";
+  }
+  Attachment FileConverter.out to TextExtractionModule.in {
+    Property delivery : String = "at-least-once";
+    Property ordering : Boolean = true;
+    Property backpressure : String = "bounded";
+  }
+  Attachment TextExtractionModule.out to QuestionGenerator.in {
+    Property delivery : String = "at-least-once";
+    Property ordering : Boolean = true;
+    Property backpressure : String = "bounded";
+  }
+  Attachment LectureProcessor.out to TextExtractionModule.in {
+    Property delivery : String = "at-least-once";
+    Property ordering : Boolean = true;
+    Property backpressure : String = "bounded";
+  }
+  Attachment DifficultyLevelService.out to QuestionGenerator.in {
+    Property delivery : String = "at-least-once";
+    Property ordering : Boolean = true;
+    Property backpressure : String = "bounded";
+  }
+  Attachment QuestionBankManager.out to QuestionBankDatabase.in {
+    Property delivery : String = "at-least-once";
+    Property ordering : Boolean = true;
+    Property backpressure : String = "bounded";
+  }
+  Property resilience_pattern : String = "Retry, CircuitBreaker";
+  Property delivery : String = "at-least-once";
+  Property ordering : Boolean = false;
+  Property authentication : String = "service-to-service";
   Property authorization : String = "RBAC";
 }

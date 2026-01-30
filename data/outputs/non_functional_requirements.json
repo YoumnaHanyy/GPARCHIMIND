@@ -1,83 +1,65 @@
 [
   {
-    "title": "Performance",
-    "description": "The system MUST respond to user input within 2 seconds.",
-    "source": {
-      "page": "6.1",
-      "start_index": "21"
-    },
-    "project_id": "proj_deb82ab2"
-  },
-  {
-    "title": "Reliability",
-    "description": "The system SHALL be available 99.9% of the time.",
-    "source": {
-      "page": "6.2",
-      "start_index": "21"
-    },
-    "project_id": "proj_deb82ab2"
-  },
-  {
     "title": "Security",
-    "description": "The system MUST protect user data and MUST NOT store sensitive information.",
+    "description": "The system shall ensure secure access to user data and system features, and shall comply with Moodle user roles.",
     "source": {
-      "page": "6.3",
-      "start_index": "21"
+      "page": 19,
+      "start_index": 0
     },
-    "project_id": "proj_deb82ab2"
-  },
-  {
-    "title": "Privacy",
-    "description": "The system MUST NOT collect or store user data without consent.",
-    "source": {
-      "page": "6.4",
-      "start_index": "21"
-    },
-    "project_id": "proj_deb82ab2"
-  },
-  {
-    "title": "Scalability",
-    "description": "The system SHOULD be able to handle 1000 concurrent users.",
-    "source": {
-      "page": "6.5",
-      "start_index": "21"
-    },
-    "project_id": "proj_deb82ab2"
+    "project_id": "proj_212c7434"
   },
   {
     "title": "Usability",
-    "description": "The system MUST be user-friendly and MUST provide clear instructions.",
+    "description": "The system shall provide a user-friendly interface that improves usability and facilitates the creation of comprehensive exams.",
     "source": {
-      "page": "6.6",
-      "start_index": "21"
+      "page": 19,
+      "start_index": 0
     },
-    "project_id": "proj_deb82ab2"
+    "project_id": "proj_212c7434"
   },
   {
-    "title": "Maintainability",
-    "description": "The system SHOULD be easy to modify and update.",
+    "title": "Performance",
+    "description": "The system shall optimize performance to ensure efficient and reliable operation.",
     "source": {
-      "page": "6.7",
-      "start_index": "22"
+      "page": 19,
+      "start_index": 0
     },
-    "project_id": "proj_deb82ab2"
+    "project_id": "proj_212c7434"
   },
   {
     "title": "Compatibility",
-    "description": "The system MUST be compatible with major browsers and MUST NOT have any known bugs.",
+    "description": "The system shall ensure compatibility with various file formats and systems.",
     "source": {
-      "page": "6.8",
-      "start_index": "22"
+      "page": 19,
+      "start_index": 0
     },
-    "project_id": "proj_deb82ab2"
+    "project_id": "proj_212c7434"
   },
   {
-    "title": "Integration",
-    "description": "The system MUST integrate with HR module from Odoo ERP software.",
+    "title": "Scalability",
+    "description": "The system shall be scalable to accommodate increasing user demand and data volume.",
     "source": {
-      "page": "3.2",
-      "start_index": "11"
+      "page": 19,
+      "start_index": 0
     },
-    "project_id": "proj_deb82ab2"
+    "project_id": "proj_212c7434"
+  },
+  {
+    "title": "Reliability",
+    "description": "The system shall ensure reliable operation and minimize downtime.",
+    "source": {
+      "page": 19,
+      "start_index": 0
+    },
+    "project_id": "proj_212c7434"
+  },
+  {
+    "title": "Maintainability",
+    "description": "The system shall be designed for easy maintenance and updates.",
+    "source": {
+      "page": 19,
+      "start_index": 0
+    },
+    "project_id": "proj_212c7434"
   }
 ]

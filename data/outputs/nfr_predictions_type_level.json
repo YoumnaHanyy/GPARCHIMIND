@@ -1,65 +1,65 @@
 [
   {
-    "title": "Performance",
-    "description": "The system MUST respond to user input within 2 seconds.",
-    "predicted_type": "PE",
-    "predicted_type_label": "Performance",
-    "predicted_level": "High"
-  },
-  {
-    "title": "Reliability",
-    "description": "The system SHALL be available 99.9% of the time.",
-    "predicted_type": "A",
-    "predicted_type_label": "Availability",
-    "predicted_level": "High"
-  },
-  {
-    "title": "Security",
-    "description": "The system MUST protect user data and MUST NOT store sensitive information.",
+    "description": "The system shall ensure secure access to user data and system features, and shall comply with Moodle user roles.",
+    "confidence": 0.9868404865264893,
+    "confirmed": false,
+    "predicted_level": "Medium",
     "predicted_type": "SE",
     "predicted_type_label": "Security",
-    "predicted_level": "High"
+    "title": "Security"
   },
   {
-    "title": "Privacy",
-    "description": "The system MUST NOT collect or store user data without consent.",
-    "predicted_type": "SE",
-    "predicted_type_label": "Security",
-    "predicted_level": "High"
-  },
-  {
-    "title": "Scalability",
-    "description": "The system SHOULD be able to handle 1000 concurrent users.",
-    "predicted_type": "SC",
-    "predicted_type_label": "Scalability",
-    "predicted_level": "Low"
-  },
-  {
-    "title": "Usability",
-    "description": "The system MUST be user-friendly and MUST provide clear instructions.",
+    "description": "The system shall provide a user-friendly interface that improves usability and facilitates the creation of comprehensive exams.",
+    "confidence": 0.9286659359931946,
+    "confirmed": false,
+    "predicted_level": "Medium",
     "predicted_type": "US",
     "predicted_type_label": "Usability",
-    "predicted_level": "High"
+    "title": "Usability"
   },
   {
-    "title": "Maintainability",
-    "description": "The system SHOULD be easy to modify and update.",
-    "predicted_type": "MN",
-    "predicted_type_label": "Maintainability",
-    "predicted_level": "Low"
+    "description": "The system shall optimize performance to ensure efficient and reliable operation.",
+    "confidence": 1.0,
+    "confirmed": true,
+    "predicted_level": "High",
+    "predicted_type": "A",
+    "predicted_type_label": "Availability",
+    "title": "Performance"
   },
   {
-    "title": "Compatibility",
-    "description": "The system MUST be compatible with major browsers and MUST NOT have any known bugs.",
+    "description": "The system shall ensure compatibility with various file formats and systems.",
+    "confidence": 1.0,
+    "confirmed": true,
+    "predicted_level": "Medium",
     "predicted_type": "PO",
     "predicted_type_label": "Portability",
-    "predicted_level": "High"
+    "title": "Compatibility"
   },
   {
-    "title": "Integration",
-    "description": "The system MUST integrate with HR module from Odoo ERP software.",
-    "predicted_type": "O",
-    "predicted_type_label": "Operational ",
-    "predicted_level": "High"
+    "description": "The system shall be scalable to accommodate increasing user demand and data volume.",
+    "confidence": 0.9735237956047058,
+    "confirmed": false,
+    "predicted_level": "Medium",
+    "predicted_type": "SC",
+    "predicted_type_label": "Scalability",
+    "title": "Scalability"
+  },
+  {
+    "description": "The system shall ensure reliable operation and minimize downtime.",
+    "confidence": 0.9600065350532532,
+    "confirmed": false,
+    "predicted_level": "High",
+    "predicted_type": "A",
+    "predicted_type_label": "Availability",
+    "title": "Reliability"
+  },
+  {
+    "description": "The system shall be designed for easy maintenance and updates.",
+    "confidence": 0.96364426612854,
+    "confirmed": false,
+    "predicted_level": "Low",
+    "predicted_type": "MN",
+    "predicted_type_label": "Manageability",
+    "title": "Maintainability"
   }
 ]

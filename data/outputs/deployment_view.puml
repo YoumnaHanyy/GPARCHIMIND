@@ -7,24 +7,55 @@ node "Client" {
 node "Kubernetes Ingress" {
   component "Ingress Controller"
 }
-node "CV Parser Pod" {
-  component "CV Parser"
+node "Authentication Service Pod" {
+  component "Authentication Service"
 }
-node "CV Editor Pod" {
-  component "CV Editor"
+node "Lecture Processor Pod" {
+  component "Lecture Processor"
 }
-node "Screening Question Manager Pod" {
-  component "Screening Question Manager"
+node "File Converter Pod" {
+  component "File Converter"
 }
-node "Rating Generator Pod" {
-  component "Rating Generator"
+node "Text Extraction Module Pod" {
+  component "Text Extraction Module"
+}
+node "Question Generator Pod" {
+  component "Question Generator"
+}
+node "Question Bank Manager Pod" {
+  component "Question Bank Manager"
+}
+node "Difficulty Level Service Pod" {
+  component "Difficulty Level Service"
+}
+node "User Interface Pod" {
+  component "User Interface"
+}
+node "Database StatefulSet" {
+  database "Question Bank Database"
 }
 "User" --> "Ingress Controller" : TCP/IP
 "Ingress Controller" --> "API Gateway Pod" : HTTP/HTTPS
 "User" --> "Ingress Controller"
 "Ingress Controller" --> "API Gateway Pod"
-"API Gateway Pod" --> "CV Parser Pod"
-"API Gateway Pod" --> "CV Editor Pod"
-"API Gateway Pod" --> "Screening Question Manager Pod"
-"API Gateway Pod" --> "Rating Generator Pod"
+"API Gateway Pod" --> "Authentication Service Pod"
+"API Gateway Pod" --> "Lecture Processor Pod"
+"API Gateway Pod" --> "File Converter Pod"
+"API Gateway Pod" --> "Text Extraction Module Pod"
+"API Gateway Pod" --> "Question Generator Pod"
+"API Gateway Pod" --> "Question Bank Manager Pod"
+"API Gateway Pod" --> "Difficulty Level Service Pod"
+"API Gateway Pod" --> "User Interface Pod"
+"Authentication Service Pod" --> "Database StatefulSet"
+"Lecture Processor Pod" --> "Database StatefulSet"
+"File Converter Pod" --> "Database StatefulSet"
+"Text Extraction Module Pod" --> "Database StatefulSet"
+"Question Generator Pod" --> "Database StatefulSet"
+"Question Bank Manager Pod" --> "Database StatefulSet"
+"Difficulty Level Service Pod" --> "Database StatefulSet"
+"User Interface Pod" --> "Database StatefulSet"
+node "Secondary Region" {
+  component "Replica Services"
+}
+"Ingress Controller" --> "Secondary Region" : failover
 @enduml

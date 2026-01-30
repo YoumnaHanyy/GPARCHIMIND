@@ -1,152 +1,216 @@
 {
   "system": "ResuFit: Precision CV Matching System",
-  "style": "Layered (N-Tier)",
+  "style": "Event-Driven/ Messaging",
   "source": "AI",
   "decisions": [
     {
-      "name": "Functional Requirements",
-      "rationale": "[{'title': 'Submit CV', 'description': 'Applicants can submit their CVs for parsing and analysis.', 'source': {'page': '4.1', 'start_index': '15'}, 'project_id': 'proj_deb82ab2'}, {'title': 'View and Edit CV', 'description': 'Applicants can view and edit their parsed CV.', 'source': {'page': '4.1', 'start_index': '15'}, 'project_id': 'proj_deb82ab2'}, {'title': 'Answer Screening Questions', 'description': 'Applicants are presented with screening questions defined by an expert recruiter.', 'source': {'page': '3.5', 'start_index': '13'}, 'project_id': 'proj_deb82ab2'}, {'title': 'Get Rating for CV', 'description': 'The system generates a percentage-based result, providing a fair evaluation of each applicant.', 'source': {'page': '3.5', 'start_index': '13'}, 'project_id': 'proj_deb82ab2'}]"
+      "name": "Event-Driven Architecture",
+      "rationale": "To handle various events and messages from different components, ensuring scalability and reliability."
     },
     {
-      "name": "Non-Functional Requirements",
-      "rationale": "[{'title': 'Performance', 'description': 'The system MUST respond to user input within 2 seconds.', 'source': {'page': '6.1', 'start_index': '21'}, 'project_id': 'proj_deb82ab2'}, {'title': 'Reliability', 'description': 'The system SHALL be available 99.9% of the time.', 'source': {'page': '6.2', 'start_index': '21'}, 'project_id': 'proj_deb82ab2'}, {'title': 'Security', 'description': 'The system MUST protect user data and MUST NOT store sensitive information.', 'source': {'page': '6.3', 'start_index': '21'}, 'project_id': 'proj_deb82ab2'}, {'title': 'Privacy', 'description': 'The system MUST NOT collect or store user data without consent.', 'source': {'page': '6.4', 'start_index': '21'}, 'project_id': 'proj_deb82ab2'}, {'title': 'Scalability', 'description': 'The system SHOULD be able to handle 1000 concurrent users.', 'source': {'page': '6.5', 'start_index': '21'}, 'project_id': 'proj_deb82ab2'}, {'title': 'Usability', 'description': 'The system MUST be user-friendly and MUST provide clear instructions.', 'source': {'page': '6.6', 'start_index': '21'}, 'project_id': 'proj_deb82ab2'}, {'title': 'Maintainability', 'description': 'The system SHOULD be easy to modify and update.', 'source': {'page': '6.7', 'start_index': '22'}, 'project_id': 'proj_deb82ab2'}, {'title': 'Compatibility', 'description': 'The system MUST be compatible with major browsers and MUST NOT have any known bugs.', 'source': {'page': '6.8', 'start_index': '22'}, 'project_id': 'proj_deb82ab2'}, {'title': 'Integration', 'description': 'The system MUST integrate with HR module from Odoo ERP software.', 'source': {'page': '3.2', 'start_index': '11'}, 'project_id': 'proj_deb82ab2'}]"
+      "name": "Message Queue",
+      "rationale": "To handle message exchange between components, ensuring reliable and efficient communication."
+    },
+    {
+      "name": "Microservices",
+      "rationale": "To enable the system to scale and handle failures independently."
+    },
+    {
+      "name": "API Gateway",
+      "rationale": "To handle incoming requests and route them to the corresponding microservices."
+    },
+    {
+      "name": "Security",
+      "rationale": "To ensure secure access to user data and system features."
+    },
+    {
+      "name": "Scalability",
+      "rationale": "To handle increasing user demand and data volume."
+    },
+    {
+      "name": "Reliability",
+      "rationale": "To ensure reliable operation and minimize downtime."
+    },
+    {
+      "name": "Maintainability",
+      "rationale": "To enable easy maintenance and updates."
     }
   ],
   "production_intents": {
     "deployment": {
-      "scaling": "vertical",
-      "availability": "single-region"
+      "scaling": "horizontal",
+      "availability": "multi-region"
     },
     "security": {
-      "authentication": "centralized",
+      "authentication": "service-to-service",
       "authorization": "RBAC"
     },
     "resilience": {
       "patterns": [
-        "Retry"
+        "Retry",
+        "CircuitBreaker"
       ],
-      "delivery": "at-most-once",
-      "ordering": true
+      "delivery": "at-least-once",
+      "ordering": false
     }
   },
   "components": [
     {
-      "name": "CV Parser",
-      "responsibility": "Parse and analyze submitted CVs"
+      "name": "Authentication Service",
+      "responsibility": "Handles user login and authentication"
     },
     {
-      "name": "CV Editor",
-      "responsibility": "Allow applicants to view and edit their parsed CVs"
+      "name": "Lecture Processor",
+      "responsibility": "Processes uploaded lectures for question generation"
     },
     {
-      "name": "Screening Question Manager",
-      "responsibility": "Manage and present screening questions to applicants"
+      "name": "File Converter",
+      "responsibility": "Converts uploaded files to text format"
     },
     {
-      "name": "Rating Generator",
-      "responsibility": "Generate a percentage-based result for each applicant's CV"
+      "name": "Text Extraction Module",
+      "responsibility": "Extracts relevant text from uploaded files for question generation"
+    },
+    {
+      "name": "Question Generator",
+      "responsibility": "Generates questions based on extracted text and user input"
+    },
+    {
+      "name": "Question Bank Manager",
+      "responsibility": "Stores and manages generated questions for future use"
+    },
+    {
+      "name": "Difficulty Level Service",
+      "responsibility": "Allows users to select the difficulty level of generated questions"
+    },
+    {
+      "name": "User Interface",
+      "responsibility": "Provides a user-friendly interface for users to interact with the system"
+    },
+    {
+      "name": "Question Bank Database",
+      "responsibility": "Stores and manages generated questions in a database"
     }
   ],
   "relationships": [
     {
-      "source": "CV Parser",
-      "target": "CV Editor",
-      "type": "data-flow"
-    },
-    {
-      "source": "CV Editor",
-      "target": "Screening Question Manager",
+      "source": "Authentication Service",
+      "target": "User Interface",
       "type": "event-flow"
     },
     {
-      "source": "Screening Question Manager",
-      "target": "Rating Generator",
+      "source": "User Interface",
+      "target": "Question Generator",
       "type": "data-flow"
     },
     {
-      "source": "CV Parser",
-      "target": "Rating Generator",
+      "source": "User Interface",
+      "target": "Difficulty Level Service",
+      "type": "data-flow"
+    },
+    {
+      "source": "Question Generator",
+      "target": "Question Bank Manager",
+      "type": "data-flow"
+    },
+    {
+      "source": "Question Generator",
+      "target": "Question Bank Database",
+      "type": "data-flow"
+    },
+    {
+      "source": "File Converter",
+      "target": "Text Extraction Module",
+      "type": "data-flow"
+    },
+    {
+      "source": "Text Extraction Module",
+      "target": "Question Generator",
+      "type": "data-flow"
+    },
+    {
+      "source": "Lecture Processor",
+      "target": "Text Extraction Module",
+      "type": "data-flow"
+    },
+    {
+      "source": "Difficulty Level Service",
+      "target": "Question Generator",
+      "type": "data-flow"
+    },
+    {
+      "source": "Question Bank Manager",
+      "target": "Question Bank Database",
       "type": "data-flow"
     }
   ],
   "runtime_flow": [
     {
-      "from": "CV Parser",
-      "to": "CV Editor",
-      "action": "Parse CV and send data to CV Editor",
+      "from": "User Interface",
+      "to": "Authentication Service",
+      "action": "User login and authentication",
       "mode": "async"
     },
     {
-      "from": "CV Editor",
-      "to": "Screening Question Manager",
-      "action": "Request screening questions from Screening Question Manager",
+      "from": "Authentication Service",
+      "to": "User Interface",
+      "action": "Authentication result",
       "mode": "sync"
     },
     {
-      "from": "Screening Question Manager",
-      "to": "Rating Generator",
-      "action": "Send applicant's answers to Rating Generator",
+      "from": "User Interface",
+      "to": "Question Generator",
+      "action": "Generate question request",
       "mode": "async"
     },
     {
-      "from": "CV Parser",
-      "to": "Rating Generator",
-      "action": "Send parsed CV data to Rating Generator",
+      "from": "User Interface",
+      "to": "Difficulty Level Service",
+      "action": "Difficulty level selection",
       "mode": "async"
     },
     {
-      "from": "Rating Generator",
-      "to": "CV Editor",
-      "action": "Send rating result to CV Editor",
-      "mode": "async"
-    },
-    {
-      "from": "CV Editor",
-      "to": "Applicant",
-      "action": "Display rating result to applicant",
+      "from": "Difficulty Level Service",
+      "to": "Question Generator",
+      "action": "Difficulty level update",
       "mode": "sync"
+    },
+    {
+      "from": "Question Generator",
+      "to": "Question Bank Manager",
+      "action": "Question generation",
+      "mode": "async"
+    },
+    {
+      "from": "Question Generator",
+      "to": "Question Bank Database",
+      "action": "Question storage",
+      "mode": "async"
+    },
+    {
+      "from": "Question Bank Manager",
+      "to": "Question Bank Database",
+      "action": "Question bank update",
+      "mode": "sync"
+    },
+    {
+      "from": "File Converter",
+      "to": "Text Extraction Module",
+      "action": "File conversion",
+      "mode": "async"
+    },
+    {
+      "from": "Text Extraction Module",
+      "to": "Question Generator",
+      "action": "Text extraction",
+      "mode": "sync"
+    },
+    {
+      "from": "Lecture Processor",
+      "to": "Text Extraction Module",
+      "action": "Lecture processing",
+      "mode": "async"
     }
   ],
-  "critique": [
-    {
-      "component": "CV Parser",
-      "issue": "The CV Parser component may experience performance issues if it is unable to parse complex CVs within the 2-second response time requirement (NFR: Performance).",
-      "nfr": "Performance"
-    },
-    {
-      "component": "CV Editor",
-      "issue": "The CV Editor component may not meet the usability requirement (NFR: Usability) if it does not provide clear instructions for editing parsed CVs.",
-      "nfr": "Usability"
-    },
-    {
-      "component": "Screening Question Manager",
-      "issue": "The Screening Question Manager component may not meet the maintainability requirement (NFR: Maintainability) if it is not easy to modify and update the screening questions.",
-      "nfr": "Maintainability"
-    },
-    {
-      "component": "Rating Generator",
-      "issue": "The Rating Generator component may not meet the scalability requirement (NFR: Scalability) if it is unable to handle a large number of concurrent users and generate ratings efficiently.",
-      "nfr": "Scalability"
-    },
-    {
-      "component": "Rating Generator",
-      "issue": "The Rating Generator component may not meet the reliability requirement (NFR: Reliability) if it is unable to generate accurate ratings consistently.",
-      "nfr": "Reliability"
-    },
-    {
-      "component": "CV Parser",
-      "issue": "The CV Parser component may not meet the security requirement (NFR: Security) if it stores sensitive information about applicants.",
-      "nfr": "Security"
-    },
-    {
-      "component": "Screening Question Manager",
-      "issue": "The Screening Question Manager component may not meet the integration requirement (NFR: Integration) if it does not integrate correctly with the HR module from Odoo ERP software.",
-      "nfr": "Integration"
-    },
-    {
-      "component": "CV Editor",
-      "issue": "The CV Editor component may not meet the compatibility requirement (NFR: Compatibility) if it does not work correctly with major browsers.",
-      "nfr": "Compatibility"
-    }
-  ]
+  "critique": []
 }

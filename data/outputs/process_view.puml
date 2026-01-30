@@ -1,14 +1,24 @@
 @startuml
 autonumber
 actor User
-participant "CV Parser" as CVParser
-participant "CV Editor" as CVEditor
-participant "Screening Question Manager" as ScreeningQuestionManager
-participant "Rating Generator" as RatingGenerator
-CVParser ->> CVEditor : Parse CV and send data to CV Editor
-CVEditor -> ScreeningQuestionManager : Request screening questions from Screening Question Manager
-ScreeningQuestionManager ->> RatingGenerator : Send applicant's answers to Rating Generator
-CVParser ->> RatingGenerator : Send parsed CV data to Rating Generator
-RatingGenerator ->> CVEditor : Send rating result to CV Editor
-CVEditor -> Applicant : Display rating result to applicant
+participant "Authentication Service" as AuthenticationService
+participant "Lecture Processor" as LectureProcessor
+participant "File Converter" as FileConverter
+participant "Text Extraction Module" as TextExtractionModule
+participant "Question Generator" as QuestionGenerator
+participant "Question Bank Manager" as QuestionBankManager
+participant "Difficulty Level Service" as DifficultyLevelService
+participant "User Interface" as UserInterface
+participant "Question Bank Database" as QuestionBankDatabase
+UserInterface ->> AuthenticationService : User login and authentication
+AuthenticationService -> UserInterface : Authentication result
+UserInterface ->> QuestionGenerator : Generate question request
+UserInterface ->> DifficultyLevelService : Difficulty level selection
+DifficultyLevelService -> QuestionGenerator : Difficulty level update
+QuestionGenerator ->> QuestionBankManager : Question generation
+QuestionGenerator ->> QuestionBankDatabase : Question storage
+QuestionBankManager -> QuestionBankDatabase : Question bank update
+FileConverter ->> TextExtractionModule : File conversion
+TextExtractionModule -> QuestionGenerator : Text extraction
+LectureProcessor ->> TextExtractionModule : Lecture processing
 @enduml
