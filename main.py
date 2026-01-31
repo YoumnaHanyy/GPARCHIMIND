@@ -390,3 +390,4 @@ def download_validation_report():
             "Content-Disposition": "inline; filename=architecture_validation_report.pdf"
         }
     )
+#comment
