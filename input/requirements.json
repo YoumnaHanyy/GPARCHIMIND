@@ -1,0 +1,16 @@
+{
+  "system_name": "ArchiMind",
+  "architecture_style": "Microservices",
+
+  "functional_requirements": [
+    "Analyze software requirements",
+    "Select optimal architecture",
+    "Generate architecture documentation"
+  ],
+
+  "non_functional_requirements": {
+    "scalability": "High",
+    "maintainability": "High",
+    "performance": "Medium"
+  }
+}
