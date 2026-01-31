@@ -108,7 +108,7 @@ def home(request: Request):
 
 @app.get("/generate/{project_id}")
 def generate_architecture(project_id: str):
-    print("generating endpoint HIT with project_id =", project_id, flush=True)
+    print("/generating endpointttt HIT with project_id =", project_id, flush=True)
 
     # ==========================================================
     # 1. Load selected architecture style
