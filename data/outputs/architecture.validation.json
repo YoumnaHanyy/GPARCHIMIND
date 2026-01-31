@@ -1,50 +1,35 @@
-[
-  {
-    "component": "CV Parser",
-    "issue": "Potential performance bottleneck if slow or inefficient"
+{
+  "status": "SUCCESS",
+  "structural": {
+    "metrics": {
+      "component_count": 4,
+      "relationship_count": 3,
+      "undefined_references": 0,
+      "self_loops": 0,
+      "invalid_relationship_types": 0
+    },
+    "validity_ratio": 1.0,
+    "failed": false
   },
-  {
-    "component": "Job Matching Algorithm",
-    "issue": "Potential performance bottleneck if slow or inefficient"
+  "quality": {
+    "fan_in": {
+      "User Service": 1,
+      "Order Database": 1,
+      "Order Service": 1,
+      "API Gateway": 0
+    },
+    "fan_out": {
+      "User Service": 0,
+      "Order Database": 0,
+      "Order Service": 1,
+      "API Gateway": 2
+    },
+    "centralization_index": 0.25,
+    "risks": []
   },
-  {
-    "component": "Rating Engine",
-    "issue": "Potential performance bottleneck if slow or inefficient"
-  },
-  {
-    "component": "ChatGPT Integration",
-    "issue": "Potential security risks if not properly integrated"
-  },
-  {
-    "component": "User Interface",
-    "issue": "Potential security risks if not properly secured"
-  },
-  {
-    "component": "CV Parser",
-    "issue": "Potential privacy risks if extracting sensitive information"
-  },
-  {
-    "component": "Job Matching Algorithm",
-    "issue": "Potential scalability issues if bottlenecked"
-  },
-  {
-    "component": "Rating Engine",
-    "issue": "Potential scalability issues if bottlenecked"
-  },
-  {
-    "component": "User Interface",
-    "issue": "Potential usability issues if not properly designed"
-  },
-  {
-    "component": "System",
-    "issue": "Potential maintainability issues due to complex relationships between components"
-  },
-  {
-    "component": "User Interface",
-    "issue": "Potential compatibility issues if not properly designed or implemented"
-  },
-  {
-    "component": "System",
-    "issue": "Potential integration challenges due to ChatGPT Integration component"
+  "domain": {
+    "stateless_ratio": 1.0,
+    "state_concentration": 1,
+    "communication_style": "synchronous"
   }
-]
+}

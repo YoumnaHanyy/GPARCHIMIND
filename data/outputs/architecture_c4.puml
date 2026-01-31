@@ -2,20 +2,12 @@
 !include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
 LAYOUT_WITH_LEGEND()
 System_Boundary(ResuFitPrecisionCVMatchingSystem, "ResuFit: Precision CV Matching System") {
-  Container(CVParser, "CV Parser", "Service", "['Parse CV', 'Extract key information from CV', 'Support for various CV formats']")
-  Container(ScreeningQuestionEngine, "Screening Question Engine", "Service", "['Answer Screening Questions', 'Validate and Score Applicant Responses', 'Compare applicant responses with expert-generated model']")
-  Container(JobMatchingAlgorithm, "Job Matching Algorithm", "Service", "['Compare CV with Job Requirements', 'Calculate cosine similarity and Jaccard similarity', 'Generate percentage-based result']")
-  Container(UserInterface, "User Interface", "Service", "['Submit CV', 'View and Edit CV', 'Present screening questions to applicants', 'Display rating for CV']")
-  Container(RatingEngine, "Rating Engine", "Service", "['Get Rating for CV', 'Calculate rating based on CV and job requirements']")
-  Container(ChatGPTIntegration, "ChatGPT Integration", "Service", "['Validate and Score Applicant Responses', 'Compare applicant responses with expert-generated model']")
+  Container(APIGateway, "API Gateway", "REST API", "Route client requests")
+  Container(UserService, "User Service", "Service", "Manage users")
+  Container(OrderService, "Order Service", "Service", "Manage orders")
+  ContainerDb(OrderDatabase, "Order Database", "Database", "Persist order data")
 }
-Rel(CVParser, JobMatchingAlgorithm, "call", "Sync")
-Rel(CVParser, RatingEngine, "call", "Sync")
-Rel(CVParser, UserInterface, "event", "Async")
-Rel(ScreeningQuestionEngine, UserInterface, "event", "Async")
-Rel(JobMatchingAlgorithm, UserInterface, "event", "Async")
-Rel(RatingEngine, UserInterface, "event", "Async")
-Rel(UserInterface, ScreeningQuestionEngine, "event", "Async")
-Rel(ScreeningQuestionEngine, ChatGPTIntegration, "call", "Sync")
-Rel(ChatGPTIntegration, RatingEngine, "call", "Sync")
+Rel(APIGateway, UserService, "call", "Sync")
+Rel(APIGateway, OrderService, "call", "Sync")
+Rel(OrderService, OrderDatabase, "call", "Sync")
 @enduml

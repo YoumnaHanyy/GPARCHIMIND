@@ -1,74 +1,38 @@
 [
   {
-    "title": "Submit CV",
-    "description": "Applicants can submit their CVs for parsing and analysis.",
+    "title": "submitting the CV",
+    "description": "Applicants submit their CVs for parsing and analysis.",
     "source": {
-      "page": "1.1",
+      "page": 16,
       "start_index": null
     },
-    "project_id": "proj_78e58a8e"
+    "project_id": "proj_c88f9f08"
   },
   {
-    "title": "View and Edit CV",
+    "title": "viewing and editing the CV",
     "description": "Applicants can view and edit their parsed CV.",
     "source": {
-      "page": "1.1",
+      "page": 16,
       "start_index": null
     },
-    "project_id": "proj_78e58a8e"
+    "project_id": "proj_c88f9f08"
   },
   {
-    "title": "Answer Screening Questions",
+    "title": "answering screening questions",
     "description": "Applicants are presented with screening questions defined by an expert recruiter.",
     "source": {
-      "page": "1.3",
+      "page": 13,
       "start_index": null
     },
-    "project_id": "proj_78e58a8e"
+    "project_id": "proj_c88f9f08"
   },
   {
-    "title": "Get Rating for CV",
-    "description": "Applicants get a rating for their submitted CV.",
-    "source": {
-      "page": "1.1",
-      "start_index": null
-    },
-    "project_id": "proj_78e58a8e"
-  },
-  {
-    "title": "Parse CV",
-    "description": "The system uses the Python library for parsing the CV and extracting key information.",
-    "source": {
-      "page": "Abstract",
-      "start_index": null
-    },
-    "project_id": "proj_78e58a8e"
-  },
-  {
-    "title": "Compare CV with Job Requirements",
-    "description": "The system uses cosine similarity and Jaccard similarity to assess the alignment between the extracted information from the CV and the job requirements specified by the recruiter.",
-    "source": {
-      "page": "1.3",
-      "start_index": null
-    },
-    "project_id": "proj_78e58a8e"
-  },
-  {
-    "title": "Validate and Score Applicant Responses",
-    "description": "Applicant responses are verified and graded by comparing them to an expert-generated model, and the applicant’s answers are validated and scored by ChatGPT.",
-    "source": {
-      "page": "1.3",
-      "start_index": null
-    },
-    "project_id": "proj_78e58a8e"
-  },
-  {
-    "title": "Generate Percentage-Based Result",
+    "title": "getting a rating for the submitted CV",
     "description": "The system generates a percentage-based result, providing a fair evaluation of each applicant.",
     "source": {
-      "page": "Abstract",
+      "page": 13,
       "start_index": null
     },
-    "project_id": "proj_78e58a8e"
+    "project_id": "proj_c88f9f08"
   }
 ]

@@ -1,83 +1,83 @@
 [
   {
     "title": "Performance",
-    "description": "The system MUST respond to user requests within a reasonable time frame.",
+    "description": "The system MUST respond within a reasonable time frame.",
     "source": {
-      "page": "6.1",
+      "page": 21,
       "start_index": null
     },
-    "project_id": "proj_78e58a8e"
+    "project_id": "proj_c88f9f08"
   },
   {
     "title": "Reliability",
-    "description": "The system MUST be able to recover from failures and maintain data consistency.",
+    "description": "The system SHALL be available at least 99.9% of the time.",
     "source": {
-      "page": "6.2",
+      "page": 21,
       "start_index": null
     },
-    "project_id": "proj_78e58a8e"
+    "project_id": "proj_c88f9f08"
   },
   {
     "title": "Security",
     "description": "The system MUST protect user data and prevent unauthorized access.",
     "source": {
-      "page": "6.3",
+      "page": 21,
       "start_index": null
     },
-    "project_id": "proj_78e58a8e"
+    "project_id": "proj_c88f9f08"
   },
   {
     "title": "Privacy",
-    "description": "The system MUST ensure that user data is handled in accordance with applicable laws and regulations.",
+    "description": "The system SHALL ensure that user data is handled in accordance with applicable laws and regulations.",
     "source": {
-      "page": "6.4",
+      "page": 21,
       "start_index": null
     },
-    "project_id": "proj_78e58a8e"
+    "project_id": "proj_c88f9f08"
   },
   {
     "title": "Scalability",
-    "description": "The system MUST be able to handle a large number of users and requests without compromising performance.",
+    "description": "The system SHOULD be able to handle a large number of users and CVs without a significant decrease in performance.",
     "source": {
-      "page": "6.5",
+      "page": 21,
       "start_index": null
     },
-    "project_id": "proj_78e58a8e"
+    "project_id": "proj_c88f9f08"
   },
   {
     "title": "Usability",
-    "description": "The system MUST provide an intuitive and user-friendly interface that is easy to navigate.",
+    "description": "The system MUST be easy to use and navigate for all users.",
     "source": {
-      "page": "6.6",
+      "page": 21,
       "start_index": null
     },
-    "project_id": "proj_78e58a8e"
+    "project_id": "proj_c88f9f08"
   },
   {
     "title": "Maintainability",
-    "description": "The system MUST be designed to be easily maintained and updated.",
+    "description": "The system SHOULD be easy to modify and update.",
     "source": {
-      "page": "6.7",
+      "page": 21,
       "start_index": null
     },
-    "project_id": "proj_78e58a8e"
+    "project_id": "proj_c88f9f08"
   },
   {
     "title": "Compatibility",
     "description": "The system MUST be compatible with a variety of devices and browsers.",
     "source": {
-      "page": "6.8",
+      "page": 22,
       "start_index": null
     },
-    "project_id": "proj_78e58a8e"
+    "project_id": "proj_c88f9f08"
   },
   {
     "title": "Integration",
-    "description": "The system MUST be able to integrate with other systems and services.",
+    "description": "The system SHOULD be able to integrate with other HR systems and tools.",
     "source": {
-      "page": "6.9",
+      "page": 22,
       "start_index": null
     },
-    "project_id": "proj_78e58a8e"
+    "project_id": "proj_c88f9f08"
   }
 ]

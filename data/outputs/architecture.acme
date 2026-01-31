@@ -1,90 +1,50 @@
 System ResuFit:PrecisionCVMatchingSystem {
   Property view : String = "runtime";
   Property architectureStyle : String = "Microservices";
-  Property source : String = "AI";
-  Component CVParser = new Component {
+  Property source : String = "FALLBACK";
+  Component APIGateway = new Component {
     Port in;
     Port out;
-    Property responsibility : String = "['Parse CV', 'Extract key information from CV', 'Support for various CV formats']";
+    Property responsibility : String = "Route client requests";
+    Property state : String = "stateless";
+    Property scaling : String = "horizontal";
+    Property type : String = "L7";
+    Property healthChecks : Boolean = true;
+  }
+  Component UserService = new Component {
+    Port in;
+    Port out;
+    Property responsibility : String = "Manage users";
     Property state : String = "stateless";
     Property scaling : String = "horizontal";
   }
-  Component ScreeningQuestionEngine = new Component {
+  Component OrderService = new Component {
     Port in;
     Port out;
-    Property responsibility : String = "['Answer Screening Questions', 'Validate and Score Applicant Responses', 'Compare applicant responses with expert-generated model']";
+    Property responsibility : String = "Manage orders";
     Property state : String = "stateless";
     Property scaling : String = "horizontal";
   }
-  Component JobMatchingAlgorithm = new Component {
+  Component OrderDatabase = new Component {
     Port in;
     Port out;
-    Property responsibility : String = "['Compare CV with Job Requirements', 'Calculate cosine similarity and Jaccard similarity', 'Generate percentage-based result']";
-    Property state : String = "stateless";
-    Property scaling : String = "horizontal";
+    Property responsibility : String = "Persist order data";
+    Property state : String = "stateful";
+    Property scaling : String = "vertical";
+    Property consistency : String = "eventual";
+    Property replication : String = "multi-node";
   }
-  Component UserInterface = new Component {
-    Port in;
-    Port out;
-    Property responsibility : String = "['Submit CV', 'View and Edit CV', 'Present screening questions to applicants', 'Display rating for CV']";
-    Property state : String = "stateless";
-    Property scaling : String = "horizontal";
-  }
-  Component RatingEngine = new Component {
-    Port in;
-    Port out;
-    Property responsibility : String = "['Get Rating for CV', 'Calculate rating based on CV and job requirements']";
-    Property state : String = "stateless";
-    Property scaling : String = "horizontal";
-  }
-  Component ChatGPTIntegration = new Component {
-    Port in;
-    Port out;
-    Property responsibility : String = "['Validate and Score Applicant Responses', 'Compare applicant responses with expert-generated model']";
-    Property state : String = "stateless";
-    Property scaling : String = "horizontal";
-  }
-  Attachment CVParser.out to JobMatchingAlgorithm.in {
+  Attachment APIGateway.out to UserService.in {
     Property delivery : String = "at-least-once";
     Property ordering : Boolean = true;
     Property backpressure : String = "bounded";
   }
-  Attachment CVParser.out to RatingEngine.in {
+  Attachment APIGateway.out to OrderService.in {
     Property delivery : String = "at-least-once";
     Property ordering : Boolean = true;
     Property backpressure : String = "bounded";
   }
-  Attachment CVParser.out to UserInterface.in {
-    Property delivery : String = "at-least-once";
-    Property ordering : Boolean = false;
-    Property backpressure : String = "bounded";
-  }
-  Attachment ScreeningQuestionEngine.out to UserInterface.in {
-    Property delivery : String = "at-least-once";
-    Property ordering : Boolean = false;
-    Property backpressure : String = "bounded";
-  }
-  Attachment JobMatchingAlgorithm.out to UserInterface.in {
-    Property delivery : String = "at-least-once";
-    Property ordering : Boolean = false;
-    Property backpressure : String = "bounded";
-  }
-  Attachment RatingEngine.out to UserInterface.in {
-    Property delivery : String = "at-least-once";
-    Property ordering : Boolean = false;
-    Property backpressure : String = "bounded";
-  }
-  Attachment UserInterface.out to ScreeningQuestionEngine.in {
-    Property delivery : String = "at-least-once";
-    Property ordering : Boolean = false;
-    Property backpressure : String = "bounded";
-  }
-  Attachment ScreeningQuestionEngine.out to ChatGPTIntegration.in {
-    Property delivery : String = "at-least-once";
-    Property ordering : Boolean = true;
-    Property backpressure : String = "bounded";
-  }
-  Attachment ChatGPTIntegration.out to RatingEngine.in {
+  Attachment OrderService.out to OrderDatabase.in {
     Property delivery : String = "at-least-once";
     Property ordering : Boolean = true;
     Property backpressure : String = "bounded";

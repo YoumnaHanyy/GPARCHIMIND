@@ -5,6 +5,10 @@ from pydantic import BaseModel
 from fastapi import HTTPException
 from fastapi.responses import StreamingResponse
 import io
+from application.extraction.adl.verification.runner import run_verification
+from application.extraction.adl.verification.verification_report_generator import generate_verification_pdf
+
+import zipfile
 from infrastructure.database import db
 from infrastructure.repositories.ADL_repository import save_architecture_report_pdf
 from infrastructure.repositories.hybrid_repository import save_hybrid_result
@@ -26,6 +30,8 @@ from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse, RedirectResponse
 import os
+from application.extraction.adl.validation.validation_report_generator import generate_validation_pdf
+from application.extraction.adl.validation.runner import run_validation
 from service.srs_extractor import SRSExtractor
 from presentation.routes.architecture_routes import router as architecture_router
 from presentation.routes.srs_routes import router as srs_router
@@ -102,7 +108,11 @@ def home(request: Request):
 
 @app.get("/generate/{project_id}")
 def generate_architecture(project_id: str):
+    print("🔥 /generate endpoint HIT with project_id =", project_id, flush=True)
 
+    # ==========================================================
+    # 1. Load selected architecture style
+    # ==========================================================
     hybrid_doc = db.hybrid_method.find_one({"project_id": project_id})
 
     if not hybrid_doc or not hybrid_doc.get("selected_architecture"):
@@ -110,27 +120,28 @@ def generate_architecture(project_id: str):
             status_code=400,
             detail="No selected architecture found for this project"
         )
+
     selected_architecture = hybrid_doc["selected_architecture"]
 
+    # ==========================================================
+    # 2. Load input data
+    # ==========================================================
+    try:
+        with open("data/outputs/input/requirements.json", encoding="utf-8") as f:
+            requirements = json.load(f)
 
+        with open("data/outputs/functional_requirements.json", encoding="utf-8") as f:
+            functional_requirements = json.load(f)
 
+        with open("data/outputs/non_functional_requirements.json", encoding="utf-8") as f:
+            non_functional_requirements = json.load(f)
 
-    BASE_DIR = Path(__file__).resolve().parent
-    PROJECT_ROOT = BASE_DIR.parents[0]  # لو main.py في root
+    except FileNotFoundError as e:
+        raise HTTPException(status_code=500, detail=f"Missing input file: {e}")
 
-    # -------- load system info --------
-    with open("data/outputs/input/requirements.json", "r", encoding="utf-8") as f:
-        requirements = json.load(f)
-
-    # -------- load FRs --------
-    with open("data/outputs/functional_requirements.json", "r", encoding="utf-8") as f:
-        functional_requirements = json.load(f)
-
-    # -------- load NFRs --------
-    with open("data/outputs/non_functional_requirements.json", "r", encoding="utf-8") as f:
-        non_functional_requirements = json.load(f)
-
-    # -------- generate architecture --------
+    # ==========================================================
+    # 3. Generate architecture
+    # ==========================================================
     arch = ai_generate_architecture(
         requirements["system_name"],
         functional_requirements,
@@ -138,87 +149,111 @@ def generate_architecture(project_id: str):
         selected_architecture
     )
 
+    # ==========================================================
+    # 4. VERIFICATION GATE
+    # ==========================================================
+   # try:
+    #  verification_result = run_verification(arch)
+    #except Exception as e:
+    # raise HTTPException(
+     #   status_code=500,
+      #  detail=f"Verification crashed: {str(e)}"
+    #)
+
+    #verification_result = run_verification(arch)
+
+    #if verification_result["status"] != "VERIFIED":
+     #raise HTTPException(
+      #  status_code=400,
+       # detail="Architecture verification failed. Please fix issues before generating ADL."
+    #)
+
+# Generate verification report ONLY on success (optional)
+   # generate_verification_pdf(verification_result)
+
+
+    # ==========================================================
+    # 5. VALIDATION GATE
+    # ==========================================================
+    # ==========================================================
+# 5. VALIDATION (SUCCESSFUL BUT NOT RETURNED)
+# ==========================================================
+    try:
+     validation_result = run_validation(arch)
+     generate_validation_pdf(validation_result)
+    except Exception as e:
+     print("Validation skipped:", e)
+
+
+    # ==========================================================
+    # 6. Persist architecture outputs
+    # ==========================================================
+    os.makedirs("data/outputs", exist_ok=True)
+
     with open("data/outputs/architecture.adl.json", "w", encoding="utf-8") as f:
         json.dump(arch, f, indent=2)
 
-
     with open("data/outputs/architecture.validation.json", "w", encoding="utf-8") as f:
-        json.dump(arch["critique"], f, indent=2)
+       json.dump(validation_result, f, indent=2)
 
 
     acme = convert_to_acme(arch)
     with open("data/outputs/architecture.acme", "w", encoding="utf-8") as f:
         f.write(acme)
 
-    # ---- C4 PlantUML ----
-    c4_puml = convert_to_c4_plantuml(arch)
-    with open("data/outputs/architecture_c4.puml", "w", encoding="utf-8") as f:
-        f.write(c4_puml)
-
-    # ---- Context View ----
-    context_puml = convert_to_context_view(arch)
-
+    # ==========================================================
+    # 7. Generate PlantUML views
+    # ==========================================================
     with open("data/outputs/context_view.puml", "w", encoding="utf-8") as f:
-       f.write(context_puml)
-
-    # ---- DFD Context View (Level 0) ----
-    dfd_puml = convert_to_dfd_context(arch)
+        f.write(convert_to_context_view(arch))
 
     with open("data/outputs/dfd_context.puml", "w", encoding="utf-8") as f:
-       f.write(dfd_puml)
-
-    # ---- Process View ----
-    process_puml = convert_to_process_view(arch)
+        f.write(convert_to_dfd_context(arch))
 
     with open("data/outputs/process_view.puml", "w", encoding="utf-8") as f:
-       f.write(process_puml)
-
-
-
-    PLANTUML_JAR = os.path.join(
-    os.path.dirname(__file__),
-    "infrastructure",
-    "tools",
-    "plantuml.jar"
-    )
-
-
-    # ---- Physical View (Deployment Diagram) ----
-    deployment_puml = convert_to_deployment_view(arch)
+        f.write(convert_to_process_view(arch))
 
     with open("data/outputs/deployment_view.puml", "w", encoding="utf-8") as f:
-      f.write(deployment_puml)
+        f.write(convert_to_deployment_view(arch))
+
+    with open("data/outputs/architecture_c4.puml", "w", encoding="utf-8") as f:
+        f.write(convert_to_c4_plantuml(arch))
+
+    # ==========================================================
+    # 8. Render diagrams (PlantUML → PNG)
+    # ==========================================================
+    PLANTUML_JAR = os.path.join(
+        os.path.dirname(__file__),
+        "infrastructure",
+        "tools",
+        "plantuml.jar"
+    )
+
     subprocess.run([
-    r"C:\Program Files\Java\jdk-21\bin\java.exe",
-    "-jar",
-    PLANTUML_JAR,
-    "-tpng",
-    "data/outputs/architecture_c4.puml",
-    "data/outputs/dfd_context.puml",
-    "data/outputs/context_view.puml",
-    "data/outputs/process_view.puml",
-    "data/outputs/deployment_view.puml"
-], check=True)
+        r"C:\Program Files\Java\jdk-21\bin\java.exe",
+        "-jar",
+        PLANTUML_JAR,
+        "-tpng",
+        "data/outputs/context_view.puml",
+        "data/outputs/dfd_context.puml",
+        "data/outputs/process_view.puml",
+        "data/outputs/deployment_view.puml",
+        "data/outputs/architecture_c4.puml"
+    ], check=True)
 
-
-
-
-    # ---- Generate PDF automatically ----
+    # ==========================================================
+    # 9. Generate final architecture report
+    # ==========================================================
     pdf_path = generate_report(project_id)
-    
-    with open(pdf_path, "rb") as f:
-     pdf_bytes = f.read()
 
-    save_architecture_report_pdf(
-    project_id=project_id,
-    pdf_bytes=pdf_bytes
-     )
+    # ==========================================================
+    # 10. Return SUCCESS output only
+    # ==========================================================
     return FileResponse(
         path=pdf_path,
         filename="architecture_report.pdf",
         media_type="application/pdf"
     )
-
 
 
 
@@ -342,5 +377,16 @@ def get_report(project_id: str):
         media_type="application/pdf",
         headers={
             "Content-Disposition": "inline; filename=architecture_report.pdf"
+        }
+    )
+
+
+@app.get("/download-validation-report")
+def download_validation_report():
+    return FileResponse(
+        path="data/outputs/architecture_validation_report.pdf",
+        media_type="application/pdf",
+        headers={
+            "Content-Disposition": "inline; filename=architecture_validation_report.pdf"
         }
     )

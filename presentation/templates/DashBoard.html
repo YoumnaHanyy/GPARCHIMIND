@@ -383,32 +383,60 @@
 <div class="modal fade" id="reportModal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-xl modal-dialog-centered">
     <div class="modal-content">
+
       <div class="modal-header position-relative">
         <h5 class="modal-title">
           <i class="bi bi-cpu-fill me-2" style="color: var(--accent-secondary);"></i>
           <span style="letter-spacing: 0.5px;">ADL ARCHITECTURE BLUEPRINT</span>
         </h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        <button type="button"
+                class="btn-close btn-close-white"
+                data-bs-dismiss="modal"
+                aria-label="Close"></button>
       </div>
 
-      <div class="modal-body p-0">
-        <div id="modalIframeLoader" class="position-absolute top-50 start-50 translate-middle text-center">
-            <div class="spinner-border text-success" role="status"></div>
-            <p class="mt-2 text-muted small">Rendering Blueprint...</p>
+      <div class="modal-body p-0 position-relative">
+        <div id="modalIframeLoader"
+             class="position-absolute top-50 start-50 translate-middle text-center">
+          <div class="spinner-border text-success"></div>
+          <p class="mt-2 text-muted small">Rendering Blueprint...</p>
         </div>
-        <iframe id="reportFrame" src="" width="100%" height="100%" frameborder="0" style="display: block; opacity: 0; transition: opacity 0.5s ease;"></iframe>
+
+        <iframe id="reportFrame"
+                src=""
+                width="100%"
+                height="100%"
+                frameborder="0"
+                style="opacity:0; transition: opacity 0.5s ease;">
+        </iframe>
       </div>
 
-      <div class="modal-footer border-0">
-  <button class="btn btn-success px-4 rounded-pill"
+      <!-- ✅ FOOTER -->
+      <div class="modal-footer border-0 d-flex justify-content-between">
+
+        <!-- 👈 Validation Button -->
+        <button
+          type="button"
+          class="btn btn-outline-secondary"
+          onclick="loadValidationReport()">
+          <i class="bi bi-shield-check me-1"></i>
+          View Validation Report
+        </button>
+
+        <!-- Existing button -->
+        <button
+          type="button"
+          class="btn btn-success px-4 rounded-pill"
           onclick="submitNFRConfirmation()">
-    Save & Continue
-  </button>
-</div>
+          Save & Continue
+        </button>
+
+      </div>
 
     </div>
   </div>
 </div>
+
 
 <!-- ✅ FIXED: NFR Confirmation Modal with error div INSIDE -->
 <div class="modal fade" id="nfrConfirmModal"

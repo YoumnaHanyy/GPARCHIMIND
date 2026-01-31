@@ -413,7 +413,7 @@ console.log("Project ID:", extractedData?.project_id);
    
         // 4. Update el Iframe SRC
         const frame = document.getElementById('reportFrame');
-        frame.src = pdfUrl;
+        frame.src = currentPdfUrl;
 
         // 5. Open el Modal (Make sure Bootstrap is loaded)
          const reportModal = new bootstrap.Modal(
@@ -426,7 +426,7 @@ console.log("Project ID:", extractedData?.project_id);
           .getElementById('reportModal')
           .addEventListener(
               'hidden.bs.modal',
-              () => window.URL.revokeObjectURL(pdfUrl),
+              () => window.URL.revokeObjectURL(currentPdfUrl),
               { once: true }
           );
 
@@ -461,6 +461,27 @@ function openPreviewModal() {
     const reportModal = new bootstrap.Modal(document.getElementById('reportModal'));
     reportModal.show();
 }
+
+
+function loadValidationReport() {
+  const frame = document.getElementById("reportFrame");
+  const loader = document.getElementById("modalIframeLoader");
+
+  loader.style.display = "block";
+  frame.style.opacity = "0";
+
+  frame.src = "/download-validation-report";
+
+  frame.addEventListener(
+    "load",
+    () => {
+      loader.style.display = "none";
+      frame.style.opacity = "1";
+    },
+    { once: true }
+  );
+}
+
 
   function renderPhase() {
     const data = phaseData[currentPhase];
@@ -910,4 +931,10 @@ async function syncProjectProgress() {
   } catch (e) {
     console.error("Failed to update project progress", e);
   }
+}
+
+const disposition = response.headers.get("Content-Disposition") || "";
+const isProblemReport = disposition.includes("problems");
+if (isProblemReport) {
+  alert("⚠️ Architecture has verification/validation issues. Please review the report.");
 }

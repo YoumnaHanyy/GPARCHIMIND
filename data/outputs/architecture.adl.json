@@ -1,11 +1,11 @@
 {
   "system": "ResuFit: Precision CV Matching System",
   "style": "Microservices",
-  "source": "AI",
+  "source": "FALLBACK",
   "decisions": [
     {
-      "name": "...",
-      "rationale": "..."
+      "name": "Fallback architecture",
+      "rationale": "AI output invalid"
     }
   ],
   "production_intents": {
@@ -28,204 +28,78 @@
   },
   "components": [
     {
-      "name": "CV Parser",
-      "responsibility": [
-        "Parse CV",
-        "Extract key information from CV",
-        "Support for various CV formats"
-      ]
+      "name": "API Gateway",
+      "responsibility": "Route client requests"
     },
     {
-      "name": "Screening Question Engine",
-      "responsibility": [
-        "Answer Screening Questions",
-        "Validate and Score Applicant Responses",
-        "Compare applicant responses with expert-generated model"
-      ]
+      "name": "User Service",
+      "responsibility": "Manage users"
     },
     {
-      "name": "Job Matching Algorithm",
-      "responsibility": [
-        "Compare CV with Job Requirements",
-        "Calculate cosine similarity and Jaccard similarity",
-        "Generate percentage-based result"
-      ]
+      "name": "Order Service",
+      "responsibility": "Manage orders"
     },
     {
-      "name": "User Interface",
-      "responsibility": [
-        "Submit CV",
-        "View and Edit CV",
-        "Present screening questions to applicants",
-        "Display rating for CV"
-      ]
-    },
-    {
-      "name": "Rating Engine",
-      "responsibility": [
-        "Get Rating for CV",
-        "Calculate rating based on CV and job requirements"
-      ]
-    },
-    {
-      "name": "ChatGPT Integration",
-      "responsibility": [
-        "Validate and Score Applicant Responses",
-        "Compare applicant responses with expert-generated model"
-      ]
+      "name": "Order Database",
+      "responsibility": "Persist order data"
     }
   ],
   "relationships": [
     {
-      "source": "CV Parser",
-      "target": "Job Matching Algorithm",
+      "source": "API Gateway",
+      "target": "User Service",
       "type": "data-flow"
     },
     {
-      "source": "CV Parser",
-      "target": "Rating Engine",
+      "source": "API Gateway",
+      "target": "Order Service",
       "type": "data-flow"
     },
     {
-      "source": "CV Parser",
-      "target": "User Interface",
-      "type": "event-flow"
-    },
-    {
-      "source": "Screening Question Engine",
-      "target": "User Interface",
-      "type": "event-flow"
-    },
-    {
-      "source": "Job Matching Algorithm",
-      "target": "User Interface",
-      "type": "event-flow"
-    },
-    {
-      "source": "Rating Engine",
-      "target": "User Interface",
-      "type": "event-flow"
-    },
-    {
-      "source": "User Interface",
-      "target": "Screening Question Engine",
-      "type": "event-flow"
-    },
-    {
-      "source": "Screening Question Engine",
-      "target": "ChatGPT Integration",
-      "type": "data-flow"
-    },
-    {
-      "source": "ChatGPT Integration",
-      "target": "Rating Engine",
+      "source": "Order Service",
+      "target": "Order Database",
       "type": "data-flow"
     }
   ],
   "runtime_flow": [
     {
-      "from": "User Interface",
-      "to": "CV Parser",
-      "action": "Submit CV",
-      "mode": "async"
-    },
-    {
-      "from": "CV Parser",
-      "to": "Job Matching Algorithm",
-      "action": "Parse CV and send to Job Matching Algorithm",
+      "from": "API",
+      "to": "Service",
+      "action": "Process business request",
       "mode": "sync"
     },
     {
-      "from": "CV Parser",
-      "to": "Rating Engine",
-      "action": "Parse CV and send to Rating Engine",
+      "from": "Service",
+      "to": "Database",
+      "action": "Persist data",
       "mode": "sync"
-    },
-    {
-      "from": "Job Matching Algorithm",
-      "to": "User Interface",
-      "action": "Display rating for CV",
-      "mode": "async"
-    },
-    {
-      "from": "Rating Engine",
-      "to": "User Interface",
-      "action": "Display rating for CV",
-      "mode": "async"
-    },
-    {
-      "from": "User Interface",
-      "to": "Screening Question Engine",
-      "action": "Present screening questions to applicants",
-      "mode": "async"
-    },
-    {
-      "from": "Screening Question Engine",
-      "to": "ChatGPT Integration",
-      "action": "Validate and Score Applicant Responses",
-      "mode": "sync"
-    },
-    {
-      "from": "ChatGPT Integration",
-      "to": "Rating Engine",
-      "action": "Compare applicant responses with expert-generated model",
-      "mode": "sync"
-    },
-    {
-      "from": "Screening Question Engine",
-      "to": "User Interface",
-      "action": "Present screening questions to applicants",
-      "mode": "async"
     }
   ],
   "critique": [
     {
-      "component": "CV Parser",
-      "issue": "Potential performance bottleneck if slow or inefficient"
+      "component": "Order Service",
+      "description": "Potential performance issue due to inefficient request handling.",
+      "recommendation": "Implement load balancing and caching mechanisms to improve performance."
     },
     {
-      "component": "Job Matching Algorithm",
-      "issue": "Potential performance bottleneck if slow or inefficient"
+      "component": "API Gateway",
+      "description": "Security vulnerability due to lack of authentication and authorization mechanisms.",
+      "recommendation": "Implement OAuth or JWT to secure the API Gateway."
     },
     {
-      "component": "Rating Engine",
-      "issue": "Potential performance bottleneck if slow or inefficient"
-    },
-    {
-      "component": "ChatGPT Integration",
-      "issue": "Potential security risks if not properly integrated"
-    },
-    {
-      "component": "User Interface",
-      "issue": "Potential security risks if not properly secured"
-    },
-    {
-      "component": "CV Parser",
-      "issue": "Potential privacy risks if extracting sensitive information"
-    },
-    {
-      "component": "Job Matching Algorithm",
-      "issue": "Potential scalability issues if bottlenecked"
-    },
-    {
-      "component": "Rating Engine",
-      "issue": "Potential scalability issues if bottlenecked"
+      "component": "Order Database",
+      "description": "Reliability concern due to potential downtime or data loss.",
+      "recommendation": "Implement a redundant database setup, such as master-slave replication, to ensure high availability and data integrity."
     },
     {
       "component": "User Interface",
-      "issue": "Potential usability issues if not properly designed"
+      "description": "Usability issue due to lack of user experience research and design.",
+      "recommendation": "Conduct user experience research and design a user-friendly interface that meets the system's usability requirements."
     },
     {
-      "component": "System",
-      "issue": "Potential maintainability issues due to complex relationships between components"
-    },
-    {
-      "component": "User Interface",
-      "issue": "Potential compatibility issues if not properly designed or implemented"
-    },
-    {
-      "component": "System",
-      "issue": "Potential integration challenges due to ChatGPT Integration component"
+      "component": "System Architecture",
+      "description": "Maintainability concern due to potential monolithic architecture.",
+      "recommendation": "Consider adopting a microservices architecture to improve maintainability and scalability."
     }
   ]
 }

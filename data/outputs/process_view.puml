@@ -1,19 +1,10 @@
 @startuml
 autonumber
 actor User
-participant "CV Parser" as CVParser
-participant "Screening Question Engine" as ScreeningQuestionEngine
-participant "Job Matching Algorithm" as JobMatchingAlgorithm
-participant "User Interface" as UserInterface
-participant "Rating Engine" as RatingEngine
-participant "ChatGPT Integration" as ChatGPTIntegration
-UserInterface ->> CVParser : Submit CV
-CVParser -> JobMatchingAlgorithm : Parse CV and send to Job Matching Algorithm
-CVParser -> RatingEngine : Parse CV and send to Rating Engine
-JobMatchingAlgorithm ->> UserInterface : Display rating for CV
-RatingEngine ->> UserInterface : Display rating for CV
-UserInterface ->> ScreeningQuestionEngine : Present screening questions to applicants
-ScreeningQuestionEngine -> ChatGPTIntegration : Validate and Score Applicant Responses
-ChatGPTIntegration -> RatingEngine : Compare applicant responses with expert-generated model
-ScreeningQuestionEngine ->> UserInterface : Present screening questions to applicants
+participant "API Gateway" as APIGateway
+participant "User Service" as UserService
+participant "Order Service" as OrderService
+participant "Order Database" as OrderDatabase
+API -> Service : Process business request
+Service -> Database : Persist data
 @enduml
