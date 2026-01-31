@@ -1,7 +1,0 @@
-System ArchiMind {
-  Component RequirementsParser = new Component {}
-  Component ArchitectureEvaluator = new Component {}
-  Component DocumentationGenerator = new Component {}
-  Component KnowledgeBase = new Component {}
-  Component ScoringEngine = new Component {}
-}
