@@ -1,0 +1,65 @@
+{
+  "system": {
+    "name": "ArchiMind",
+    "architectureStyle": "Microservices"
+  },
+  "qualityAttributes": {
+    "scalability": "High",
+    "maintainability": "High",
+    "performance": "Medium"
+  },
+  "services": [
+    {
+      "name": "RequirementsParser",
+      "responsibility": "Analyze software requirements"
+    },
+    {
+      "name": "ArchitectureEvaluator",
+      "responsibility": "Select optimal architecture"
+    },
+    {
+      "name": "DocumentationGenerator",
+      "responsibility": "Generate architecture documentation"
+    },
+    {
+      "name": "KnowledgeBase",
+      "responsibility": "Store and manage architecture knowledge"
+    },
+    {
+      "name": "ScoringEngine",
+      "responsibility": "Evaluate architecture options based on non-functional requirements"
+    }
+  ],
+  "relationships": [
+    {
+      "source": "RequirementsParser",
+      "target": "ArchitectureEvaluator",
+      "type": "data-flow"
+    },
+    {
+      "source": "ArchitectureEvaluator",
+      "target": "ScoringEngine",
+      "type": "data-flow"
+    },
+    {
+      "source": "ScoringEngine",
+      "target": "ArchitectureEvaluator",
+      "type": "feedback"
+    },
+    {
+      "source": "ArchitectureEvaluator",
+      "target": "DocumentationGenerator",
+      "type": "data-flow"
+    },
+    {
+      "source": "KnowledgeBase",
+      "target": "RequirementsParser",
+      "type": "data-flow"
+    },
+    {
+      "source": "DocumentationGenerator",
+      "target": "KnowledgeBase",
+      "type": "data-flow"
+    }
+  ]
+}
