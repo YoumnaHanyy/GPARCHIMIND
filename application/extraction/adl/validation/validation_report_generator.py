@@ -250,3 +250,4 @@ def generate_validation_pdf(validation_result: dict):
 
     doc.build(story)
     return path
+    
