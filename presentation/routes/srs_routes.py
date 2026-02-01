@@ -14,11 +14,41 @@ from service.hybrid_service import execute_hybrid_method
 from infrastructure.repositories.project_repo import update_project_progress, create_project
 from infrastructure.repositories.weighted_repository import save_weighted_result
 from infrastructure.repositories.nfr_dataset_repository import NFRPredictionRepository
+import pdfplumber
+
 
 router = APIRouter()
 
 UPLOAD_DIR = "uploads"
 os.makedirs(UPLOAD_DIR, exist_ok=True)
+
+
+
+
+
+def extract_text_from_pdf(pdf_path: str) -> str:
+    text = ""
+    with pdfplumber.open(pdf_path) as pdf:
+        for page in pdf.pages:
+            text += page.extract_text() or ""
+    return text
+
+
+def check_srs_sections(text: str):
+    text = text.lower()
+
+    has_functional = (
+        "functional requirements" in text or
+        "functional requirement" in text
+    )
+
+    has_non_functional = (
+        "non-functional requirements" in text or
+        "non functional requirements" in text or
+        "non-functional requirement" in text
+    )
+
+    return has_functional, has_non_functional
 
 
 def clean_object_id(items: list):
@@ -43,6 +73,22 @@ async def extract_srs(request: Request, file: UploadFile = File(...)):
         pdf_path = os.path.join(UPLOAD_DIR, f"{project_id}.pdf")
         with open(pdf_path, "wb") as f:
             f.write(await file.read())
+        
+        # ✅ STRUCTURE CHECK (HERE ONLY)
+        pdf_text = extract_text_from_pdf(pdf_path)
+        has_fr, has_nfr = check_srs_sections(pdf_text)
+
+        if not has_fr or not has_nfr:
+         return JSONResponse(
+        status_code=400,
+        content={
+            "error": "Invalid SRS format",
+            "message": (
+                "The uploaded SRS must contain clearly defined "
+                "'Functional Requirements' and 'Non-Functional Requirements' sections."
+            )
+        }
+    )
 
         # 2️⃣ Extract FR + NFR
         extraction_result = process_srs(
@@ -69,6 +115,7 @@ async def extract_srs(request: Request, file: UploadFile = File(...)):
         # 5️⃣ Return data to frontend
         return {
             "project_id": project_id,
+            "srs_verified":True,
             "functional": clean_object_id(extraction_result.get("functional", [])),
             "nfr_predictions": clean_object_id(high_confidence),
             "low_confidence_nfrs": clean_object_id(low_confidence),

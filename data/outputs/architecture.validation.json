@@ -13,16 +13,16 @@
   },
   "quality": {
     "fan_in": {
-      "User Service": 1,
+      "API Gateway": 0,
       "Order Database": 1,
       "Order Service": 1,
-      "API Gateway": 0
+      "User Service": 1
     },
     "fan_out": {
-      "User Service": 0,
+      "API Gateway": 2,
       "Order Database": 0,
       "Order Service": 1,
-      "API Gateway": 2
+      "User Service": 0
     },
     "centralization_index": 0.25,
     "risks": []

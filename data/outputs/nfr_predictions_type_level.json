@@ -27,8 +27,8 @@
     "title": "Security"
   },
   {
-    "description": "The system SHALL ensure that user data is handled in accordance with applicable laws and regulations.",
-    "confidence": 0.9647150039672852,
+    "description": "The system SHALL ensure that user data is collected and stored in accordance with applicable laws and regulations.",
+    "confidence": 0.9717892408370972,
     "confirmed": false,
     "predicted_level": "Medium",
     "predicted_type": "SE",
@@ -45,8 +45,8 @@
     "title": "Scalability"
   },
   {
-    "description": "The system MUST be easy to use and navigate for all users.",
-    "confidence": 0.9400955438613892,
+    "description": "The system MUST be easy to use and navigate for users with varying levels of technical expertise.",
+    "confidence": 0.9423085451126099,
     "confirmed": false,
     "predicted_level": "High",
     "predicted_type": "US",
@@ -54,8 +54,8 @@
     "title": "Usability"
   },
   {
-    "description": "The system SHOULD be easy to modify and update.",
-    "confidence": 0.9383950233459473,
+    "description": "The system SHOULD be designed to be easily maintained and updated by the development team.",
+    "confidence": 0.955119252204895,
     "confirmed": false,
     "predicted_level": "Low",
     "predicted_type": "MN",

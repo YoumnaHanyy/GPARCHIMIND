@@ -6,7 +6,7 @@
       "page": 16,
       "start_index": null
     },
-    "project_id": "proj_c88f9f08"
+    "project_id": "proj_2fe4ae6a"
   },
   {
     "title": "viewing and editing the CV",
@@ -15,16 +15,16 @@
       "page": 16,
       "start_index": null
     },
-    "project_id": "proj_c88f9f08"
+    "project_id": "proj_2fe4ae6a"
   },
   {
     "title": "answering screening questions",
     "description": "Applicants are presented with screening questions defined by an expert recruiter.",
     "source": {
-      "page": 13,
+      "page": 12,
       "start_index": null
     },
-    "project_id": "proj_c88f9f08"
+    "project_id": "proj_2fe4ae6a"
   },
   {
     "title": "getting a rating for the submitted CV",
@@ -33,6 +33,6 @@
       "page": 13,
       "start_index": null
     },
-    "project_id": "proj_c88f9f08"
+    "project_id": "proj_2fe4ae6a"
   }
 ]

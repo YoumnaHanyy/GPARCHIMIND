@@ -626,6 +626,9 @@ document.getElementById('processForm').onsubmit = async (e) => {
     // Store extracted data
     extractedData = data;
     window.currentProjectId = data.project_id;
+    if (data.srs_verified) {
+    showSrsVerifiedBadge();
+   }
 
     // Stop loading animation
     stopLoadingAnimation();
@@ -905,6 +908,21 @@ function showErrorModal(message) {
   );
 
   errorModal.show();
+}
+function showSrsVerifiedBadge() {
+  const box = document.getElementById("srsVerificationStatus");
+
+  if (!box) return;
+
+  box.innerHTML = `
+    <div class="alert alert-success d-flex align-items-center mt-3">
+      <i class="bi bi-check-circle-fill me-2"></i>
+      <strong>SRS Verified</strong>
+      <span class="ms-2 text-muted">
+        Functional and Non-Functional Requirements detected successfully.
+      </span>
+    </div>
+  `;
 }
 
 function getProgressValue(phase) {

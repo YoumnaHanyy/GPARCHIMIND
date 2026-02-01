@@ -6,7 +6,7 @@
       "page": 21,
       "start_index": null
     },
-    "project_id": "proj_c88f9f08"
+    "project_id": "proj_2fe4ae6a"
   },
   {
     "title": "Reliability",
@@ -15,7 +15,7 @@
       "page": 21,
       "start_index": null
     },
-    "project_id": "proj_c88f9f08"
+    "project_id": "proj_2fe4ae6a"
   },
   {
     "title": "Security",
@@ -24,16 +24,16 @@
       "page": 21,
       "start_index": null
     },
-    "project_id": "proj_c88f9f08"
+    "project_id": "proj_2fe4ae6a"
   },
   {
     "title": "Privacy",
-    "description": "The system SHALL ensure that user data is handled in accordance with applicable laws and regulations.",
+    "description": "The system SHALL ensure that user data is collected and stored in accordance with applicable laws and regulations.",
     "source": {
       "page": 21,
       "start_index": null
     },
-    "project_id": "proj_c88f9f08"
+    "project_id": "proj_2fe4ae6a"
   },
   {
     "title": "Scalability",
@@ -42,25 +42,25 @@
       "page": 21,
       "start_index": null
     },
-    "project_id": "proj_c88f9f08"
+    "project_id": "proj_2fe4ae6a"
   },
   {
     "title": "Usability",
-    "description": "The system MUST be easy to use and navigate for all users.",
+    "description": "The system MUST be easy to use and navigate for users with varying levels of technical expertise.",
     "source": {
       "page": 21,
       "start_index": null
     },
-    "project_id": "proj_c88f9f08"
+    "project_id": "proj_2fe4ae6a"
   },
   {
     "title": "Maintainability",
-    "description": "The system SHOULD be easy to modify and update.",
+    "description": "The system SHOULD be designed to be easily maintained and updated by the development team.",
     "source": {
       "page": 21,
       "start_index": null
     },
-    "project_id": "proj_c88f9f08"
+    "project_id": "proj_2fe4ae6a"
   },
   {
     "title": "Compatibility",
@@ -69,7 +69,7 @@
       "page": 22,
       "start_index": null
     },
-    "project_id": "proj_c88f9f08"
+    "project_id": "proj_2fe4ae6a"
   },
   {
     "title": "Integration",
@@ -78,6 +78,6 @@
       "page": 22,
       "start_index": null
     },
-    "project_id": "proj_c88f9f08"
+    "project_id": "proj_2fe4ae6a"
   }
 ]
