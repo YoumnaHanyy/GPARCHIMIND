@@ -1,9 +1,9 @@
 {
-  "status": "SUCCESS",
+  "status": "FAILED",
   "structural": {
     "metrics": {
-      "component_count": 4,
-      "relationship_count": 3,
+      "component_count": 6,
+      "relationship_count": 10,
       "undefined_references": 0,
       "self_loops": 0,
       "invalid_relationship_types": 0
@@ -13,23 +13,42 @@
   },
   "quality": {
     "fan_in": {
-      "API Gateway": 0,
-      "Order Database": 1,
-      "Order Service": 1,
-      "User Service": 1
+      "Rating Generator": 5,
+      "Screening Question Manager": 1,
+      "ChatGPT Validator": 1,
+      "CV Comparator": 2,
+      "User Interface": 0,
+      "CV Parser": 1
     },
     "fan_out": {
-      "API Gateway": 2,
-      "Order Database": 0,
-      "Order Service": 1,
-      "User Service": 0
+      "Rating Generator": 0,
+      "Screening Question Manager": 1,
+      "ChatGPT Validator": 1,
+      "CV Comparator": 1,
+      "User Interface": 5,
+      "CV Parser": 2
     },
-    "centralization_index": 0.25,
-    "risks": []
+    "centralization_index": 0.8333333333333334,
+    "risks": [
+      {
+        "component": "Rating Generator",
+        "risk": "High coupling",
+        "quality_attribute": "Modifiability"
+      },
+      {
+        "component": "User Interface",
+        "risk": "High coupling",
+        "quality_attribute": "Modifiability"
+      },
+      {
+        "risk": "High centralization",
+        "quality_attribute": "Availability"
+      }
+    ]
   },
   "domain": {
     "stateless_ratio": 1.0,
-    "state_concentration": 1,
-    "communication_style": "synchronous"
+    "state_concentration": 5,
+    "communication_style": "event-driven"
   }
 }

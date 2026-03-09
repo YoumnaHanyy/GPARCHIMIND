@@ -1,11 +1,55 @@
 {
   "system": "ResuFit: Precision CV Matching System",
   "style": "Microservices",
-  "source": "FALLBACK",
+  "source": "AI",
   "decisions": [
     {
-      "name": "Fallback architecture",
-      "rationale": "AI output invalid"
+      "name": "Implement Microservices Architecture",
+      "rationale": "To meet the performance, reliability, security, and scalability requirements, a microservices architecture is necessary to ensure each service can be scaled and maintained independently."
+    },
+    {
+      "name": "Use Python for Parsing CV",
+      "rationale": "The system uses the Python library for parsing the CV and extracting key information, so Python is the most suitable choice for this task."
+    },
+    {
+      "name": "Implement Cosine Similarity and Jaccard Similarity",
+      "rationale": "To assess the alignment between the extracted information from the CV and the job requirements, cosine similarity and Jaccard similarity are necessary."
+    },
+    {
+      "name": "Validate Applicant Responses with ChatGPT",
+      "rationale": "Applicant responses are verified and graded by comparing them to an expert-generated model, and the applicant\u2019s answers are validated and scored by ChatGPT."
+    },
+    {
+      "name": "Generate Percentage-Based Result",
+      "rationale": "The system generates a percentage-based result that represents the applicant\u2019s overall suitability for the role by averaging CV ranking and screening question validation scores."
+    },
+    {
+      "name": "Implement User Authentication and Authorization",
+      "rationale": "To protect user data and prevent unauthorized access, user authentication and authorization are necessary."
+    },
+    {
+      "name": "Design for Scalability and Performance",
+      "rationale": "To meet the performance and scalability requirements, the system must be designed to handle a large number of users and requests without compromising performance."
+    },
+    {
+      "name": "Implement Data Encryption and Access Control",
+      "rationale": "To protect user data and prevent unauthorized access, data encryption and access control are necessary."
+    },
+    {
+      "name": "Ensure Compliance with Applicable Laws and Regulations",
+      "rationale": "The system must ensure that user data is handled in accordance with applicable laws and regulations."
+    },
+    {
+      "name": "Implement User-Friendly Interface",
+      "rationale": "To meet the usability requirement, the system must provide an intuitive and user-friendly interface that is easy to navigate."
+    },
+    {
+      "name": "Design for Maintainability and Compatibility",
+      "rationale": "To meet the maintainability and compatibility requirements, the system must be designed to be easily maintained and updated, and be compatible with a variety of devices and browsers."
+    },
+    {
+      "name": "Implement Integration with Other Systems and Applications",
+      "rationale": "To meet the integration requirement, the system must be able to integrate with other systems and applications."
     }
   ],
   "production_intents": {
@@ -28,51 +72,182 @@
   },
   "components": [
     {
-      "name": "API Gateway",
-      "responsibility": "Route client requests"
+      "name": "CV Parser",
+      "responsibility": [
+        "Parse CV",
+        "Extract key information such as skills and years of experience"
+      ]
     },
     {
-      "name": "User Service",
-      "responsibility": "Manage users"
+      "name": "Screening Question Manager",
+      "responsibility": [
+        "Present screening questions to applicants",
+        "Validate applicant responses",
+        "Grade applicant responses"
+      ]
     },
     {
-      "name": "Order Service",
-      "responsibility": "Manage orders"
+      "name": "Rating Generator",
+      "responsibility": [
+        "Calculate CV ranking score",
+        "Calculate screening question validation score",
+        "Generate percentage-based result"
+      ]
     },
     {
-      "name": "Order Database",
-      "responsibility": "Persist order data"
+      "name": "CV Comparator",
+      "responsibility": [
+        "Compare CV with job requirements",
+        "Assess alignment between CV and job requirements using cosine similarity and Jaccard similarity"
+      ]
+    },
+    {
+      "name": "ChatGPT Validator",
+      "responsibility": [
+        "Verify applicant responses",
+        "Grade applicant responses"
+      ]
+    },
+    {
+      "name": "User Interface",
+      "responsibility": [
+        "Allow applicants to submit CVs",
+        "Allow applicants to view and edit their parsed CVs",
+        "Present screening questions to applicants",
+        "Display rating results to applicants"
+      ]
     }
   ],
   "relationships": [
     {
-      "source": "API Gateway",
-      "target": "User Service",
+      "source": "CV Parser",
+      "target": "CV Comparator",
       "type": "data-flow"
     },
     {
-      "source": "API Gateway",
-      "target": "Order Service",
+      "source": "CV Parser",
+      "target": "Rating Generator",
       "type": "data-flow"
     },
     {
-      "source": "Order Service",
-      "target": "Order Database",
+      "source": "CV Comparator",
+      "target": "Rating Generator",
       "type": "data-flow"
+    },
+    {
+      "source": "Screening Question Manager",
+      "target": "Rating Generator",
+      "type": "data-flow"
+    },
+    {
+      "source": "ChatGPT Validator",
+      "target": "Rating Generator",
+      "type": "data-flow"
+    },
+    {
+      "source": "User Interface",
+      "target": "CV Parser",
+      "type": "event-flow"
+    },
+    {
+      "source": "User Interface",
+      "target": "Screening Question Manager",
+      "type": "event-flow"
+    },
+    {
+      "source": "User Interface",
+      "target": "ChatGPT Validator",
+      "type": "event-flow"
+    },
+    {
+      "source": "User Interface",
+      "target": "Rating Generator",
+      "type": "event-flow"
+    },
+    {
+      "source": "User Interface",
+      "target": "CV Comparator",
+      "type": "event-flow"
     }
   ],
   "runtime_flow": [
     {
-      "from": "API",
-      "to": "Service",
-      "action": "Process business request",
+      "from": "User Interface",
+      "to": "CV Parser",
+      "action": "Submit CV",
+      "mode": "async"
+    },
+    {
+      "from": "CV Parser",
+      "to": "CV Comparator",
+      "action": "Parse CV and extract key information",
       "mode": "sync"
     },
     {
-      "from": "Service",
-      "to": "Database",
-      "action": "Persist data",
+      "from": "CV Comparator",
+      "to": "Rating Generator",
+      "action": "Calculate CV ranking score",
       "mode": "sync"
+    },
+    {
+      "from": "CV Parser",
+      "to": "Rating Generator",
+      "action": "Calculate CV ranking score",
+      "mode": "sync"
+    },
+    {
+      "from": "Screening Question Manager",
+      "to": "Rating Generator",
+      "action": "Calculate screening question validation score",
+      "mode": "sync"
+    },
+    {
+      "from": "ChatGPT Validator",
+      "to": "Rating Generator",
+      "action": "Calculate screening question validation score",
+      "mode": "sync"
+    },
+    {
+      "from": "User Interface",
+      "to": "Screening Question Manager",
+      "action": "Present screening questions",
+      "mode": "async"
+    },
+    {
+      "from": "Screening Question Manager",
+      "to": "ChatGPT Validator",
+      "action": "Validate applicant responses",
+      "mode": "sync"
+    },
+    {
+      "from": "ChatGPT Validator",
+      "to": "Rating Generator",
+      "action": "Calculate screening question validation score",
+      "mode": "sync"
+    },
+    {
+      "from": "User Interface",
+      "to": "ChatGPT Validator",
+      "action": "Submit applicant responses",
+      "mode": "async"
+    },
+    {
+      "from": "User Interface",
+      "to": "CV Comparator",
+      "action": "Compare CV with job requirements",
+      "mode": "async"
+    },
+    {
+      "from": "CV Comparator",
+      "to": "Rating Generator",
+      "action": "Calculate CV ranking score",
+      "mode": "sync"
+    },
+    {
+      "from": "User Interface",
+      "to": "Rating Generator",
+      "action": "Display rating results",
+      "mode": "async"
     }
   ],
   "critique": []

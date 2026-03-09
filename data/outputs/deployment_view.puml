@@ -7,27 +7,34 @@ node "Client" {
 node "Kubernetes Ingress" {
   component "Ingress Controller"
 }
-node "API Gateway Pod" {
-  component "API Gateway"
+node "CV Parser Pod" {
+  component "CV Parser"
 }
-node "User Service Pod" {
-  component "User Service"
+node "Screening Question Manager Pod" {
+  component "Screening Question Manager"
 }
-node "Order Service Pod" {
-  component "Order Service"
+node "Rating Generator Pod" {
+  component "Rating Generator"
 }
-node "Database StatefulSet" {
-  database "Order Database"
+node "CV Comparator Pod" {
+  component "CV Comparator"
+}
+node "ChatGPT Validator Pod" {
+  component "ChatGPT Validator"
+}
+node "User Interface Pod" {
+  component "User Interface"
 }
 "User" --> "Ingress Controller" : TCP/IP
 "Ingress Controller" --> "API Gateway Pod" : HTTP/HTTPS
 "User" --> "Ingress Controller"
 "Ingress Controller" --> "API Gateway Pod"
-"API Gateway Pod" --> "User Service Pod"
-"API Gateway Pod" --> "Order Service Pod"
-"API Gateway Pod" --> "Database StatefulSet"
-"User Service Pod" --> "Database StatefulSet"
-"Order Service Pod" --> "Database StatefulSet"
+"API Gateway Pod" --> "CV Parser Pod"
+"API Gateway Pod" --> "Screening Question Manager Pod"
+"API Gateway Pod" --> "Rating Generator Pod"
+"API Gateway Pod" --> "CV Comparator Pod"
+"API Gateway Pod" --> "ChatGPT Validator Pod"
+"API Gateway Pod" --> "User Interface Pod"
 node "Secondary Region" {
   component "Replica Services"
 }

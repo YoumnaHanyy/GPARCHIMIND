@@ -1,52 +1,97 @@
 System ResuFit:PrecisionCVMatchingSystem {
   Property view : String = "runtime";
   Property architectureStyle : String = "Microservices";
-  Property source : String = "FALLBACK";
-  Component APIGateway = new Component {
+  Property source : String = "AI";
+  Component CVParser = new Component {
     Port in;
     Port out;
-    Property responsibility : String = "Route client requests";
-    Property state : String = "stateless";
-    Property scaling : String = "horizontal";
-    Property type : String = "L7";
-    Property healthChecks : Boolean = true;
-  }
-  Component UserService = new Component {
-    Port in;
-    Port out;
-    Property responsibility : String = "Manage users";
+    Property responsibility : String = "['Parse CV', 'Extract key information such as skills and years of experience']";
     Property state : String = "stateless";
     Property scaling : String = "horizontal";
   }
-  Component OrderService = new Component {
+  Component ScreeningQuestionManager = new Component {
     Port in;
     Port out;
-    Property responsibility : String = "Manage orders";
+    Property responsibility : String = "['Present screening questions to applicants', 'Validate applicant responses', 'Grade applicant responses']";
     Property state : String = "stateless";
     Property scaling : String = "horizontal";
   }
-  Component OrderDatabase = new Component {
+  Component RatingGenerator = new Component {
     Port in;
     Port out;
-    Property responsibility : String = "Persist order data";
-    Property state : String = "stateful";
-    Property scaling : String = "vertical";
-    Property consistency : String = "eventual";
-    Property replication : String = "multi-node";
+    Property responsibility : String = "['Calculate CV ranking score', 'Calculate screening question validation score', 'Generate percentage-based result']";
+    Property state : String = "stateless";
+    Property scaling : String = "horizontal";
   }
-  Attachment APIGateway.out to UserService.in {
+  Component CVComparator = new Component {
+    Port in;
+    Port out;
+    Property responsibility : String = "['Compare CV with job requirements', 'Assess alignment between CV and job requirements using cosine similarity and Jaccard similarity']";
+    Property state : String = "stateless";
+    Property scaling : String = "horizontal";
+  }
+  Component ChatGPTValidator = new Component {
+    Port in;
+    Port out;
+    Property responsibility : String = "['Verify applicant responses', 'Grade applicant responses']";
+    Property state : String = "stateless";
+    Property scaling : String = "horizontal";
+  }
+  Component UserInterface = new Component {
+    Port in;
+    Port out;
+    Property responsibility : String = "['Allow applicants to submit CVs', 'Allow applicants to view and edit their parsed CVs', 'Present screening questions to applicants', 'Display rating results to applicants']";
+    Property state : String = "stateless";
+    Property scaling : String = "horizontal";
+  }
+  Attachment CVParser.out to CVComparator.in {
     Property delivery : String = "at-least-once";
     Property ordering : Boolean = true;
     Property backpressure : String = "bounded";
   }
-  Attachment APIGateway.out to OrderService.in {
+  Attachment CVParser.out to RatingGenerator.in {
     Property delivery : String = "at-least-once";
     Property ordering : Boolean = true;
     Property backpressure : String = "bounded";
   }
-  Attachment OrderService.out to OrderDatabase.in {
+  Attachment CVComparator.out to RatingGenerator.in {
     Property delivery : String = "at-least-once";
     Property ordering : Boolean = true;
+    Property backpressure : String = "bounded";
+  }
+  Attachment ScreeningQuestionManager.out to RatingGenerator.in {
+    Property delivery : String = "at-least-once";
+    Property ordering : Boolean = true;
+    Property backpressure : String = "bounded";
+  }
+  Attachment ChatGPTValidator.out to RatingGenerator.in {
+    Property delivery : String = "at-least-once";
+    Property ordering : Boolean = true;
+    Property backpressure : String = "bounded";
+  }
+  Attachment UserInterface.out to CVParser.in {
+    Property delivery : String = "at-least-once";
+    Property ordering : Boolean = false;
+    Property backpressure : String = "bounded";
+  }
+  Attachment UserInterface.out to ScreeningQuestionManager.in {
+    Property delivery : String = "at-least-once";
+    Property ordering : Boolean = false;
+    Property backpressure : String = "bounded";
+  }
+  Attachment UserInterface.out to ChatGPTValidator.in {
+    Property delivery : String = "at-least-once";
+    Property ordering : Boolean = false;
+    Property backpressure : String = "bounded";
+  }
+  Attachment UserInterface.out to RatingGenerator.in {
+    Property delivery : String = "at-least-once";
+    Property ordering : Boolean = false;
+    Property backpressure : String = "bounded";
+  }
+  Attachment UserInterface.out to CVComparator.in {
+    Property delivery : String = "at-least-once";
+    Property ordering : Boolean = false;
     Property backpressure : String = "bounded";
   }
   Property resilience_pattern : String = "Retry, CircuitBreaker";

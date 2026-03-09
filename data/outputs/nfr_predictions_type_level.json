@@ -1,7 +1,7 @@
 [
   {
-    "description": "The system MUST respond within a reasonable time frame.",
-    "confidence": 0.9715486168861389,
+    "description": "The system MUST respond to user requests within a reasonable time frame.",
+    "confidence": 0.9637231826782227,
     "confirmed": false,
     "predicted_level": "High",
     "predicted_type": "PE",
@@ -9,9 +9,9 @@
     "title": "Performance"
   },
   {
-    "description": "The system SHALL be available at least 99.9% of the time.",
-    "confidence": 0.9764779806137085,
-    "confirmed": false,
+    "description": "The system MUST be able to recover from failures and maintain data integrity.",
+    "confidence": 1.0,
+    "confirmed": true,
     "predicted_level": "High",
     "predicted_type": "A",
     "predicted_type_label": "Availability",
@@ -27,26 +27,26 @@
     "title": "Security"
   },
   {
-    "description": "The system SHALL ensure that user data is collected and stored in accordance with applicable laws and regulations.",
-    "confidence": 0.9717892408370972,
+    "description": "The system MUST ensure that user data is handled in accordance with applicable laws and regulations.",
+    "confidence": 0.9689907431602478,
     "confirmed": false,
-    "predicted_level": "Medium",
+    "predicted_level": "High",
     "predicted_type": "SE",
     "predicted_type_label": "Security",
     "title": "Privacy"
   },
   {
-    "description": "The system SHOULD be able to handle a large number of users and CVs without a significant decrease in performance.",
+    "description": "The system MUST be able to handle a large number of users and requests without compromising performance.",
     "confidence": 1.0,
     "confirmed": true,
-    "predicted_level": "Low",
+    "predicted_level": "High",
     "predicted_type": "SC",
     "predicted_type_label": "Scalability",
     "title": "Scalability"
   },
   {
-    "description": "The system MUST be easy to use and navigate for users with varying levels of technical expertise.",
-    "confidence": 0.9423085451126099,
+    "description": "The system MUST provide an intuitive and user-friendly interface that is easy to navigate.",
+    "confidence": 0.9454792737960815,
     "confirmed": false,
     "predicted_level": "High",
     "predicted_type": "US",
@@ -54,10 +54,10 @@
     "title": "Usability"
   },
   {
-    "description": "The system SHOULD be designed to be easily maintained and updated by the development team.",
-    "confidence": 0.955119252204895,
+    "description": "The system MUST be designed to be easily maintained and updated.",
+    "confidence": 0.9535478353500366,
     "confirmed": false,
-    "predicted_level": "Low",
+    "predicted_level": "High",
     "predicted_type": "MN",
     "predicted_type_label": "Manageability",
     "title": "Maintainability"
@@ -72,10 +72,10 @@
     "title": "Compatibility"
   },
   {
-    "description": "The system SHOULD be able to integrate with other HR systems and tools.",
+    "description": "The system MUST be able to integrate with other systems and applications.",
     "confidence": 1.0,
     "confirmed": true,
-    "predicted_level": "Low",
+    "predicted_level": "High",
     "predicted_type": "PO",
     "predicted_type_label": "Portability",
     "title": "Integration"

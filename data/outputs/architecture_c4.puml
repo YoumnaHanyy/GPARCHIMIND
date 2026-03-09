@@ -2,12 +2,21 @@
 !include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
 LAYOUT_WITH_LEGEND()
 System_Boundary(ResuFitPrecisionCVMatchingSystem, "ResuFit: Precision CV Matching System") {
-  Container(APIGateway, "API Gateway", "REST API", "Route client requests")
-  Container(UserService, "User Service", "Service", "Manage users")
-  Container(OrderService, "Order Service", "Service", "Manage orders")
-  ContainerDb(OrderDatabase, "Order Database", "Database", "Persist order data")
+  Container(CVParser, "CV Parser", "Service", "['Parse CV', 'Extract key information such as skills and years of experience']")
+  Container(ScreeningQuestionManager, "Screening Question Manager", "Service", "['Present screening questions to applicants', 'Validate applicant responses', 'Grade applicant responses']")
+  Container(RatingGenerator, "Rating Generator", "Service", "['Calculate CV ranking score', 'Calculate screening question validation score', 'Generate percentage-based result']")
+  Container(CVComparator, "CV Comparator", "Service", "['Compare CV with job requirements', 'Assess alignment between CV and job requirements using cosine similarity and Jaccard similarity']")
+  Container(ChatGPTValidator, "ChatGPT Validator", "Service", "['Verify applicant responses', 'Grade applicant responses']")
+  Container(UserInterface, "User Interface", "Service", "['Allow applicants to submit CVs', 'Allow applicants to view and edit their parsed CVs', 'Present screening questions to applicants', 'Display rating results to applicants']")
 }
-Rel(APIGateway, UserService, "call", "Sync")
-Rel(APIGateway, OrderService, "call", "Sync")
-Rel(OrderService, OrderDatabase, "call", "Sync")
+Rel(CVParser, CVComparator, "call", "Sync")
+Rel(CVParser, RatingGenerator, "call", "Sync")
+Rel(CVComparator, RatingGenerator, "call", "Sync")
+Rel(ScreeningQuestionManager, RatingGenerator, "call", "Sync")
+Rel(ChatGPTValidator, RatingGenerator, "call", "Sync")
+Rel(UserInterface, CVParser, "event", "Async")
+Rel(UserInterface, ScreeningQuestionManager, "event", "Async")
+Rel(UserInterface, ChatGPTValidator, "event", "Async")
+Rel(UserInterface, RatingGenerator, "event", "Async")
+Rel(UserInterface, CVComparator, "event", "Async")
 @enduml

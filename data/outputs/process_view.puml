@@ -1,10 +1,23 @@
 @startuml
 autonumber
 actor User
-participant "API Gateway" as APIGateway
-participant "User Service" as UserService
-participant "Order Service" as OrderService
-participant "Order Database" as OrderDatabase
-API -> Service : Process business request
-Service -> Database : Persist data
+participant "CV Parser" as CVParser
+participant "Screening Question Manager" as ScreeningQuestionManager
+participant "Rating Generator" as RatingGenerator
+participant "CV Comparator" as CVComparator
+participant "ChatGPT Validator" as ChatGPTValidator
+participant "User Interface" as UserInterface
+UserInterface ->> CVParser : Submit CV
+CVParser -> CVComparator : Parse CV and extract key information
+CVComparator -> RatingGenerator : Calculate CV ranking score
+CVParser -> RatingGenerator : Calculate CV ranking score
+ScreeningQuestionManager -> RatingGenerator : Calculate screening question validation score
+ChatGPTValidator -> RatingGenerator : Calculate screening question validation score
+UserInterface ->> ScreeningQuestionManager : Present screening questions
+ScreeningQuestionManager -> ChatGPTValidator : Validate applicant responses
+ChatGPTValidator -> RatingGenerator : Calculate screening question validation score
+UserInterface ->> ChatGPTValidator : Submit applicant responses
+UserInterface ->> CVComparator : Compare CV with job requirements
+CVComparator -> RatingGenerator : Calculate CV ranking score
+UserInterface ->> RatingGenerator : Display rating results
 @enduml
