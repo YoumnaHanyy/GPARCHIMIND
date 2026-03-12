@@ -1,38 +1,83 @@
 [
   {
-    "title": "submitting the CV",
-    "description": "Applicants submit their CVs for parsing and analysis.",
+    "title": "Provide a comprehensive learning support system",
+    "description": "Conduct precise assessments, identify challenges related to reading and working memory, and deliver personalized AI-driven tutoring experiences.",
     "source": {
-      "page": 16,
+      "page": null,
       "start_index": null
     },
-    "project_id": "proj_2fe4ae6a"
+    "project_id": "proj_0554d143"
   },
   {
-    "title": "viewing and editing the CV",
-    "description": "Applicants can view and edit their parsed CV.",
+    "title": "Conduct precise assessments",
+    "description": "Identify challenges related to reading and working memory.",
     "source": {
-      "page": 16,
+      "page": null,
       "start_index": null
     },
-    "project_id": "proj_2fe4ae6a"
+    "project_id": "proj_0554d143"
   },
   {
-    "title": "answering screening questions",
-    "description": "Applicants are presented with screening questions defined by an expert recruiter.",
+    "title": "Deliver personalized AI-driven tutoring experiences",
+    "description": "Provide tailored educational interventions for individuals with learning disabilities.",
     "source": {
-      "page": 12,
+      "page": null,
       "start_index": null
     },
-    "project_id": "proj_2fe4ae6a"
+    "project_id": "proj_0554d143"
   },
   {
-    "title": "getting a rating for the submitted CV",
-    "description": "The system generates a percentage-based result, providing a fair evaluation of each applicant.",
+    "title": "Emulate human teaching methods in mathematics",
+    "description": "Foster student growth by encouraging reflection on both successful and challenging decisions made during interactive games.",
     "source": {
-      "page": 13,
+      "page": null,
       "start_index": null
     },
-    "project_id": "proj_2fe4ae6a"
+    "project_id": "proj_0554d143"
+  },
+  {
+    "title": "Provide a tailored language tutoring environment",
+    "description": "Using personalized games, activities, and a user interface tailored to the unique needs of individuals with Dyslexia.",
+    "source": {
+      "page": null,
+      "start_index": null
+    },
+    "project_id": "proj_0554d143"
+  },
+  {
+    "title": "Streamline the learning process",
+    "description": "Easing the burden on parents and teachers while supporting children’s development.",
+    "source": {
+      "page": null,
+      "start_index": null
+    },
+    "project_id": "proj_0554d143"
+  },
+  {
+    "title": "Identify learning problems",
+    "description": "Using fuzzy neural network (FNN) and then teaches the student according to their preferences.",
+    "source": {
+      "page": null,
+      "start_index": null
+    },
+    "project_id": "proj_0554d143"
+  },
+  {
+    "title": "Create an interactive learning environment",
+    "description": "Integrating elements such as chat, games, and voice interactions.",
+    "source": {
+      "page": null,
+      "start_index": null
+    },
+    "project_id": "proj_0554d143"
+  },
+  {
+    "title": "Provide a roadmap for developers and a key reference for stakeholders",
+    "description": "Offering detailed insights into the functional and non-functional requirements essential for a successful system implementation.",
+    "source": {
+      "page": null,
+      "start_index": null
+    },
+    "project_id": "proj_0554d143"
   }
 ]

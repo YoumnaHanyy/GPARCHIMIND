@@ -1,83 +1,74 @@
 [
   {
-    "title": "Performance",
-    "description": "The system MUST respond within a reasonable time frame.",
-    "source": {
-      "page": 21,
-      "start_index": null
-    },
-    "project_id": "proj_2fe4ae6a"
-  },
-  {
-    "title": "Reliability",
-    "description": "The system SHALL be available at least 99.9% of the time.",
-    "source": {
-      "page": 21,
-      "start_index": null
-    },
-    "project_id": "proj_2fe4ae6a"
-  },
-  {
-    "title": "Security",
-    "description": "The system MUST protect user data and prevent unauthorized access.",
-    "source": {
-      "page": 21,
-      "start_index": null
-    },
-    "project_id": "proj_2fe4ae6a"
-  },
-  {
-    "title": "Privacy",
-    "description": "The system SHALL ensure that user data is collected and stored in accordance with applicable laws and regulations.",
-    "source": {
-      "page": 21,
-      "start_index": null
-    },
-    "project_id": "proj_2fe4ae6a"
-  },
-  {
     "title": "Scalability",
-    "description": "The system SHOULD be able to handle a large number of users and CVs without a significant decrease in performance.",
+    "description": "The system must be able to accommodate millions of students.",
     "source": {
-      "page": 21,
+      "page": null,
       "start_index": null
     },
-    "project_id": "proj_2fe4ae6a"
+    "project_id": "proj_0554d143"
+  },
+  {
+    "title": "Accessibility",
+    "description": "The system must be accessible to individuals with learning disabilities.",
+    "source": {
+      "page": null,
+      "start_index": null
+    },
+    "project_id": "proj_0554d143"
   },
   {
     "title": "Usability",
-    "description": "The system MUST be easy to use and navigate for users with varying levels of technical expertise.",
+    "description": "The system must be user-friendly and easy to navigate.",
     "source": {
-      "page": 21,
+      "page": null,
       "start_index": null
     },
-    "project_id": "proj_2fe4ae6a"
+    "project_id": "proj_0554d143"
+  },
+  {
+    "title": "Data Privacy",
+    "description": "The system must comply with data privacy regulations and protect user data.",
+    "source": {
+      "page": null,
+      "start_index": null
+    },
+    "project_id": "proj_0554d143"
+  },
+  {
+    "title": "Security",
+    "description": "The system must ensure the security and integrity of user data.",
+    "source": {
+      "page": null,
+      "start_index": null
+    },
+    "project_id": "proj_0554d143"
+  },
+  {
+    "title": "Performance",
+    "description": "The system must perform efficiently and effectively.",
+    "source": {
+      "page": null,
+      "start_index": null
+    },
+    "project_id": "proj_0554d143"
+  },
+  {
+    "title": "Reliability",
+    "description": "The system must be reliable and consistent in its performance.",
+    "source": {
+      "page": null,
+      "start_index": null
+    },
+    "project_id": "proj_0554d143"
   },
   {
     "title": "Maintainability",
-    "description": "The system SHOULD be designed to be easily maintained and updated by the development team.",
+    "description": "The system must be easy to maintain and update.",
     "source": {
-      "page": 21,
+      "page": null,
       "start_index": null
     },
-    "project_id": "proj_2fe4ae6a"
-  },
-  {
-    "title": "Compatibility",
-    "description": "The system MUST be compatible with a variety of devices and browsers.",
-    "source": {
-      "page": 22,
-      "start_index": null
-    },
-    "project_id": "proj_2fe4ae6a"
-  },
-  {
-    "title": "Integration",
-    "description": "The system SHOULD be able to integrate with other HR systems and tools.",
-    "source": {
-      "page": 22,
-      "start_index": null
-    },
-    "project_id": "proj_2fe4ae6a"
+    "project_id": "proj_0554d143"
   }
 ]
