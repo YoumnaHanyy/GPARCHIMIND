@@ -3,6 +3,7 @@ from fastapi.responses import JSONResponse
 import os
 import uuid
 import traceback
+import fitz
 from application.extraction.extraction_service import process_srs
 from ai.inference.predict_type_level import predict_and_save_nfr, predict_level_for_text
 from service.ordinal_service import execute_ordinal_method
@@ -14,6 +15,7 @@ from service.hybrid_service import execute_hybrid_method
 from infrastructure.repositories.project_repo import update_project_progress, create_project
 from infrastructure.repositories.weighted_repository import save_weighted_result
 from infrastructure.repositories.nfr_dataset_repository import NFRPredictionRepository
+from infrastructure.repositories.srs_repository import SRSRepository
 import pdfplumber
 
 
@@ -71,12 +73,28 @@ async def extract_srs(request: Request, file: UploadFile = File(...)):
 
         # 1️⃣ Save PDF
         pdf_path = os.path.join(UPLOAD_DIR, f"{project_id}.pdf")
+        file_bytes = await file.read()
+
         with open(pdf_path, "wb") as f:
-            f.write(await file.read())
+          f.write(file_bytes)
         
         # ✅ STRUCTURE CHECK (HERE ONLY)
         pdf_text = extract_text_from_pdf(pdf_path)
+
+        pdf_doc = fitz.open(pdf_path)
+        num_pages = len(pdf_doc)
+        pdf_doc.close()
         has_fr, has_nfr = check_srs_sections(pdf_text)
+        user_id = request.session.get("user", {}).get("id", "guest")
+        status = "verified" if (has_fr and has_nfr) else "error"
+        SRSRepository.save_srs(
+              file_bytes=file_bytes,
+              filename=file.filename,
+              project_id=project_id,
+              user_id=user_id,
+              num_pages=num_pages,
+              status=status
+        )
 
         if not has_fr or not has_nfr:
          return JSONResponse(
@@ -96,10 +114,13 @@ async def extract_srs(request: Request, file: UploadFile = File(...)):
             project_id=project_id,
             hf_key=os.getenv("HF_API_KEY")
         )
-
+        
         if not extraction_result:
             raise ValueError("process_srs returned empty result")
+        project_name = extraction_result.get("project_name", "Unknown Project")
+        user_id = request.session.get("user", {}).get("id", "guest")
 
+        create_project(project_id, user_id, project_name)
         # 3️⃣ Predict NFR Type + Level → Saves to BOTH MongoDB AND JSON
         all_predictions = predict_and_save_nfr(project_id)
 
@@ -216,7 +237,6 @@ async def confirm_nfr(request: Request):
     save_weighted_result(project_id, weighted_result)
 
     user_id = request.session.get("user", {}).get("id", "guest")
-    create_project(project_id, user_id)
 
     return {
         "status": "ok",

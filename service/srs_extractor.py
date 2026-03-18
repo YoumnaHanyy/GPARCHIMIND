@@ -34,8 +34,42 @@ class SRSExtractor:
         return text
 
     def chunk_text(self, text: str, chunk_size: int = CHUNK_SIZE) -> List[str]:
-        return [text[i:i + chunk_size] for i in range(0, len(text), chunk_size)]
+        return [text[i:i + chunk_size] for i in range(0, len(text), chunk_size)]  
 
+    def extract_project_name(self, text: str) -> str:
+        lines = [line.strip() for line in text.split("\n") if line.strip()]
+
+        for i, line in enumerate(lines):
+            lower_line = line.lower()
+
+            if "software requirement specification document for" in lower_line:
+            
+            # ✅ خد الجزء اللي بعد "for" من نفس السطر
+                after_for = line.split("for", 1)[-1].strip()
+
+                title_parts = []
+
+                if after_for:
+                    title_parts.append(after_for)
+
+            # ✅ كمل السطور اللي بعده
+                for j in range(i + 1, min(i + 6, len(lines))):
+                    current = lines[j]
+
+                    if (
+                        "," in current
+                        or "supervised" in current.lower()
+                        or "table" in current.lower()
+                        or any(char.isdigit() for char in current)
+                    ):
+                        break
+ 
+                    title_parts.append(current)
+  
+                if title_parts:
+                    return " ".join(title_parts)
+
+        return "Unknown Project" 
     # -------------------------------
     # JSON PARSING (LLM SAFE)
     # -------------------------------
@@ -71,6 +105,7 @@ class SRSExtractor:
     # FUNCTIONAL + NON-FUNCTIONAL EXTRACTION
     # -------------------------------
     def extract_requirements(self, srs_text: str, project_id: int = 2) -> Dict:
+        project_name = self.extract_project_name(srs_text)
         try:
             prompt = f"""
 You are an expert software analyst.
@@ -117,6 +152,7 @@ SRS:
 
             # 🔹 Graceful failure (system does NOT crash)
             return {
+                "project_name": project_name,
                 "functional": [],
                 "non_functional": [],
                 "error": "LLM extraction failed",
@@ -155,6 +191,7 @@ SRS:
         # RETURN FINAL RESULT
         # -------------------------------
         return {
+            "project_name": project_name,
             "functional": functional_requirements,
             "non_functional": non_functional_requirements,
             "saved_files": paths

@@ -1,56 +1,65 @@
 [
   {
-    "description": "The system shall be scalable to accommodate a large number of users.",
-    "confidence": 0.9690760374069214,
-    "confirmed": false,
+    "title": "Standards Compliance",
+    "description": "The system shall comply with relevant security standards and regulations.",
+    "predicted_type": "SE",
+    "predicted_type_label": "Security",
+    "confidence": 0.982631266117096,
     "predicted_level": "Medium",
+    "confirmed": false
+  },
+  {
+    "title": "Hardware Limitations",
+    "description": "The system shall operate within the constraints of available hardware resources.",
+    "predicted_type": "PO",
+    "predicted_type_label": "Portability",
+    "confidence": 0.6573919653892517,
+    "predicted_level": "Medium",
+    "confirmed": false
+  },
+  {
+    "title": "Network Constraints",
+    "description": "The system shall operate within the constraints of available network resources.",
     "predicted_type": "SC",
     "predicted_type_label": "Scalability",
-    "title": "Scalability"
+    "confidence": 0.8461320996284485,
+    "predicted_level": "Medium",
+    "confirmed": false
   },
   {
-    "description": "The system shall be accessible to individuals with Dyslexia, including those with visual impairments.",
-    "confidence": 1.0,
-    "confirmed": true,
-    "predicted_level": "Medium",
-    "predicted_type": "MD",
-    "predicted_type_label": "Modularity",
-    "title": "Accessibility"
-  },
-  {
-    "description": "The system shall be user-friendly and easy to navigate.",
-    "confidence": 0.9284949898719788,
-    "confirmed": false,
-    "predicted_level": "Medium",
+    "title": "Usability",
+    "description": "The system shall provide a user-friendly interface that is easy to navigate and use.",
     "predicted_type": "US",
     "predicted_type_label": "Usability",
-    "title": "Usability"
-  },
-  {
-    "description": "The system shall ensure the security and confidentiality of user data.",
-    "confidence": 0.9866602420806885,
-    "confirmed": false,
-    "predicted_level": "High",
-    "predicted_type": "SE",
-    "predicted_type_label": "Security",
-    "title": "Security"
-  },
-  {
-    "description": "The system shall perform efficiently and effectively, with minimal downtime.",
-    "confidence": 1.0,
-    "confirmed": true,
+    "confidence": 0.9160017967224121,
     "predicted_level": "Medium",
-    "predicted_type": "IN",
-    "predicted_type_label": "Interoperability",
-    "title": "Performance"
+    "confirmed": false
   },
   {
-    "description": "The system shall comply with data privacy regulations and ensure the secure storage and transmission of user data.",
-    "confidence": 0.9821802377700806,
-    "confirmed": false,
-    "predicted_level": "High",
+    "title": "Performance",
+    "description": "The system shall respond to user input within a reasonable time frame.",
+    "predicted_type": "PE",
+    "predicted_type_label": "Performance",
+    "confidence": 0.9645494222640991,
+    "predicted_level": "Medium",
+    "confirmed": false
+  },
+  {
+    "title": "Security",
+    "description": "The system shall protect user data and prevent unauthorized access.",
     "predicted_type": "SE",
     "predicted_type_label": "Security",
-    "title": "Data Privacy"
+    "confidence": 0.9878333806991577,
+    "predicted_level": "High",
+    "confirmed": false
+  },
+  {
+    "title": "Scalability",
+    "description": "The system shall be able to handle a large volume of users and data.",
+    "predicted_type": "SC",
+    "predicted_type_label": "Scalability",
+    "confidence": 0.9578140377998352,
+    "predicted_level": "Medium",
+    "confirmed": false
   }
 ]
