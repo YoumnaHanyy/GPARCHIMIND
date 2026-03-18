@@ -3,63 +3,72 @@
     "title": "Submit CV",
     "description": "Applicants can submit their CVs for parsing and analysis.",
     "source": {
-      "page": "1.1",
-      "start_index": null
+      "page": 1,
+      "start_index": 1
     },
-    "project_id": "proj_2542e31e"
+    "project_id": "proj_5748c631"
   },
   {
     "title": "View and Edit CV",
     "description": "Applicants can view and edit their parsed CV.",
     "source": {
-      "page": "1.1",
-      "start_index": null
+      "page": 1,
+      "start_index": 2
     },
-    "project_id": "proj_2542e31e"
+    "project_id": "proj_5748c631"
   },
   {
     "title": "Answer Screening Questions",
     "description": "Applicants are presented with screening questions defined by an expert recruiter.",
     "source": {
-      "page": "1.3",
-      "start_index": null
+      "page": 1,
+      "start_index": 3
     },
-    "project_id": "proj_2542e31e"
+    "project_id": "proj_5748c631"
   },
   {
     "title": "Get Rating for CV",
-    "description": "Applicants get a rating for their CV based on CV parsing and screening question validation scores.",
+    "description": "The system generates a percentage-based result, providing a fair evaluation of each applicant.",
     "source": {
-      "page": "1.3",
-      "start_index": null
+      "page": 1,
+      "start_index": 4
     },
-    "project_id": "proj_2542e31e"
+    "project_id": "proj_5748c631"
   },
   {
     "title": "Parse CV",
-    "description": "The system uses the Python library for parsing the CV and extracting key information such as skills and years of experience.",
+    "description": "The system uses the Python library for parsing the CV and extracting key information.",
     "source": {
-      "page": "Abstract",
-      "start_index": null
+      "page": 3,
+      "start_index": 1
     },
-    "project_id": "proj_2542e31e"
+    "project_id": "proj_5748c631"
   },
   {
     "title": "Compare CV with Job Requirements",
-    "description": "The system uses cosine similarity and Jaccard similarity to assess the alignment between the extracted information from the CV and the job requirements specified by the recruiter.",
+    "description": "The system uses cosine similarity and Jaccard similarity to assess the alignment between the extracted information from the CV and the job requirements.",
     "source": {
-      "page": "1.3",
-      "start_index": null
+      "page": 3,
+      "start_index": 2
     },
-    "project_id": "proj_2542e31e"
+    "project_id": "proj_5748c631"
   },
   {
     "title": "Validate and Score Applicant Responses",
-    "description": "Applicant responses are verified and graded by comparing them to an expert-generated model, and the applicant’s answers are validated and scored by ChatGPT.",
+    "description": "Applicant responses are verified and graded by comparing them to an expert-generated model, and the applicant's answers are validated and scored by ChatGPT.",
     "source": {
-      "page": "1.3",
-      "start_index": null
+      "page": 3,
+      "start_index": 3
     },
-    "project_id": "proj_2542e31e"
+    "project_id": "proj_5748c631"
+  },
+  {
+    "title": "Generate Percentage-Based Result",
+    "description": "The system generates a percentage-based result, providing a fair evaluation of each applicant.",
+    "source": {
+      "page": 3,
+      "start_index": 4
+    },
+    "project_id": "proj_5748c631"
   }
 ]
