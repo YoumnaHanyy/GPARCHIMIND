@@ -10,33 +10,49 @@ node "Kubernetes Ingress" {
 node "CV Parser Pod" {
   component "CV Parser"
 }
-node "Screening Question Manager Pod" {
-  component "Screening Question Manager"
+node "Screening Question Validator Pod" {
+  component "Screening Question Validator"
+}
+node "Cosine Similarity Calculator Pod" {
+  component "Cosine Similarity Calculator"
+}
+node "Jaccard Similarity Calculator Pod" {
+  component "Jaccard Similarity Calculator"
 }
 node "Rating Generator Pod" {
   component "Rating Generator"
 }
-node "CV Comparator Pod" {
-  component "CV Comparator"
+node "CV Comparison Module Pod" {
+  component "CV Comparison Module"
 }
 node "ChatGPT Validator Pod" {
   component "ChatGPT Validator"
 }
-node "User Interface Pod" {
-  component "User Interface"
+node "Submit CV Module Pod" {
+  component "Submit CV Module"
+}
+node "View and Edit CV Module Pod" {
+  component "View and Edit CV Module"
+}
+node "Answer Screening Questions Module Pod" {
+  component "Answer Screening Questions Module"
+}
+node "Get Rating for CV Module Pod" {
+  component "Get Rating for CV Module"
 }
 "User" --> "Ingress Controller" : TCP/IP
 "Ingress Controller" --> "API Gateway Pod" : HTTP/HTTPS
 "User" --> "Ingress Controller"
 "Ingress Controller" --> "API Gateway Pod"
 "API Gateway Pod" --> "CV Parser Pod"
-"API Gateway Pod" --> "Screening Question Manager Pod"
+"API Gateway Pod" --> "Screening Question Validator Pod"
+"API Gateway Pod" --> "Cosine Similarity Calculator Pod"
+"API Gateway Pod" --> "Jaccard Similarity Calculator Pod"
 "API Gateway Pod" --> "Rating Generator Pod"
-"API Gateway Pod" --> "CV Comparator Pod"
+"API Gateway Pod" --> "CV Comparison Module Pod"
 "API Gateway Pod" --> "ChatGPT Validator Pod"
-"API Gateway Pod" --> "User Interface Pod"
-node "Secondary Region" {
-  component "Replica Services"
-}
-"Ingress Controller" --> "Secondary Region" : failover
+"API Gateway Pod" --> "Submit CV Module Pod"
+"API Gateway Pod" --> "View and Edit CV Module Pod"
+"API Gateway Pod" --> "Answer Screening Questions Module Pod"
+"API Gateway Pod" --> "Get Rating for CV Module Pod"
 @enduml

@@ -2,8 +2,8 @@
   "status": "FAILED",
   "structural": {
     "metrics": {
-      "component_count": 6,
-      "relationship_count": 10,
+      "component_count": 11,
+      "relationship_count": 16,
       "undefined_references": 0,
       "self_loops": 0,
       "invalid_relationship_types": 0
@@ -13,42 +13,48 @@
   },
   "quality": {
     "fan_in": {
-      "Rating Generator": 5,
-      "Screening Question Manager": 1,
-      "ChatGPT Validator": 1,
-      "CV Comparator": 2,
-      "User Interface": 0,
-      "CV Parser": 1
+      "CV Comparison Module": 3,
+      "Cosine Similarity Calculator": 1,
+      "Answer Screening Questions Module": 0,
+      "View and Edit CV Module": 1,
+      "ChatGPT Validator": 2,
+      "CV Parser": 1,
+      "Screening Question Validator": 1,
+      "Get Rating for CV Module": 1,
+      "Rating Generator": 4,
+      "Submit CV Module": 1,
+      "Jaccard Similarity Calculator": 1
     },
     "fan_out": {
+      "CV Comparison Module": 2,
+      "Cosine Similarity Calculator": 1,
+      "Answer Screening Questions Module": 2,
+      "View and Edit CV Module": 1,
+      "ChatGPT Validator": 2,
+      "CV Parser": 1,
+      "Screening Question Validator": 1,
+      "Get Rating for CV Module": 0,
       "Rating Generator": 0,
-      "Screening Question Manager": 1,
-      "ChatGPT Validator": 1,
-      "CV Comparator": 1,
-      "User Interface": 5,
-      "CV Parser": 2
+      "Submit CV Module": 5,
+      "Jaccard Similarity Calculator": 1
     },
-    "centralization_index": 0.8333333333333334,
+    "centralization_index": 0.36363636363636365,
     "risks": [
       {
-        "component": "Rating Generator",
+        "component": "CV Comparison Module",
         "risk": "High coupling",
         "quality_attribute": "Modifiability"
       },
       {
-        "component": "User Interface",
+        "component": "Submit CV Module",
         "risk": "High coupling",
         "quality_attribute": "Modifiability"
-      },
-      {
-        "risk": "High centralization",
-        "quality_attribute": "Availability"
       }
     ]
   },
   "domain": {
     "stateless_ratio": 1.0,
-    "state_concentration": 5,
-    "communication_style": "event-driven"
+    "state_concentration": 4,
+    "communication_style": "synchronous"
   }
 }

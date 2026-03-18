@@ -1,65 +1,125 @@
 System ResuFit:PrecisionCVMatchingSystem {
   Property view : String = "runtime";
-  Property architectureStyle : String = "Microservices";
+  Property architectureStyle : String = "Layered (N-Tier)";
   Property source : String = "AI";
   Component CVParser = new Component {
     Port in;
     Port out;
-    Property responsibility : String = "['Parse CV', 'Extract key information such as skills and years of experience']";
+    Property responsibility : String = "Parse and extract key information from the applicant's CV";
     Property state : String = "stateless";
     Property scaling : String = "horizontal";
   }
-  Component ScreeningQuestionManager = new Component {
+  Component ScreeningQuestionValidator = new Component {
     Port in;
     Port out;
-    Property responsibility : String = "['Present screening questions to applicants', 'Validate applicant responses', 'Grade applicant responses']";
+    Property responsibility : String = "Verify and grade applicant responses against an expert-generated model";
+    Property state : String = "stateless";
+    Property scaling : String = "horizontal";
+  }
+  Component CosineSimilarityCalculator = new Component {
+    Port in;
+    Port out;
+    Property responsibility : String = "Assess the alignment between CV information and job requirements using cosine similarity";
+    Property state : String = "stateless";
+    Property scaling : String = "horizontal";
+  }
+  Component JaccardSimilarityCalculator = new Component {
+    Port in;
+    Port out;
+    Property responsibility : String = "Assess the alignment between CV information and job requirements using Jaccard similarity";
     Property state : String = "stateless";
     Property scaling : String = "horizontal";
   }
   Component RatingGenerator = new Component {
     Port in;
     Port out;
-    Property responsibility : String = "['Calculate CV ranking score', 'Calculate screening question validation score', 'Generate percentage-based result']";
+    Property responsibility : String = "Generate a percentage-based result representing the applicant's overall suitability for the role";
     Property state : String = "stateless";
     Property scaling : String = "horizontal";
   }
-  Component CVComparator = new Component {
+  Component CVComparisonModule = new Component {
     Port in;
     Port out;
-    Property responsibility : String = "['Compare CV with job requirements', 'Assess alignment between CV and job requirements using cosine similarity and Jaccard similarity']";
+    Property responsibility : String = "Compare CV information with job requirements and generate a ranking";
     Property state : String = "stateless";
     Property scaling : String = "horizontal";
   }
   Component ChatGPTValidator = new Component {
     Port in;
     Port out;
-    Property responsibility : String = "['Verify applicant responses', 'Grade applicant responses']";
+    Property responsibility : String = "Validate and score applicant responses using ChatGPT";
     Property state : String = "stateless";
     Property scaling : String = "horizontal";
   }
-  Component UserInterface = new Component {
+  Component SubmitCVModule = new Component {
     Port in;
     Port out;
-    Property responsibility : String = "['Allow applicants to submit CVs', 'Allow applicants to view and edit their parsed CVs', 'Present screening questions to applicants', 'Display rating results to applicants']";
+    Property responsibility : String = "Allow applicants to submit their CVs for parsing and analysis";
     Property state : String = "stateless";
     Property scaling : String = "horizontal";
   }
-  Attachment CVParser.out to CVComparator.in {
+  Component ViewandEditCVModule = new Component {
+    Port in;
+    Port out;
+    Property responsibility : String = "Enable applicants to view and edit their parsed CV";
+    Property state : String = "stateless";
+    Property scaling : String = "horizontal";
+  }
+  Component AnswerScreeningQuestionsModule = new Component {
+    Port in;
+    Port out;
+    Property responsibility : String = "Present applicants with screening questions defined by an expert recruiter";
+    Property state : String = "stateless";
+    Property scaling : String = "horizontal";
+  }
+  Component GetRatingforCVModule = new Component {
+    Port in;
+    Port out;
+    Property responsibility : String = "Provide applicants with a rating for their submitted CV";
+    Property state : String = "stateless";
+    Property scaling : String = "horizontal";
+  }
+  Attachment SubmitCVModule.out to CVParser.in {
     Property delivery : String = "at-least-once";
     Property ordering : Boolean = true;
     Property backpressure : String = "bounded";
   }
-  Attachment CVParser.out to RatingGenerator.in {
+  Attachment CVParser.out to CVComparisonModule.in {
     Property delivery : String = "at-least-once";
     Property ordering : Boolean = true;
     Property backpressure : String = "bounded";
   }
-  Attachment CVComparator.out to RatingGenerator.in {
+  Attachment CVComparisonModule.out to RatingGenerator.in {
     Property delivery : String = "at-least-once";
     Property ordering : Boolean = true;
     Property backpressure : String = "bounded";
   }
-  Attachment ScreeningQuestionManager.out to RatingGenerator.in {
+  Attachment CVComparisonModule.out to GetRatingforCVModule.in {
+    Property delivery : String = "at-least-once";
+    Property ordering : Boolean = true;
+    Property backpressure : String = "bounded";
+  }
+  Attachment SubmitCVModule.out to ViewandEditCVModule.in {
+    Property delivery : String = "at-least-once";
+    Property ordering : Boolean = false;
+    Property backpressure : String = "bounded";
+  }
+  Attachment ViewandEditCVModule.out to SubmitCVModule.in {
+    Property delivery : String = "at-least-once";
+    Property ordering : Boolean = false;
+    Property backpressure : String = "bounded";
+  }
+  Attachment AnswerScreeningQuestionsModule.out to ScreeningQuestionValidator.in {
+    Property delivery : String = "at-least-once";
+    Property ordering : Boolean = true;
+    Property backpressure : String = "bounded";
+  }
+  Attachment ScreeningQuestionValidator.out to RatingGenerator.in {
+    Property delivery : String = "at-least-once";
+    Property ordering : Boolean = true;
+    Property backpressure : String = "bounded";
+  }
+  Attachment SubmitCVModule.out to ChatGPTValidator.in {
     Property delivery : String = "at-least-once";
     Property ordering : Boolean = true;
     Property backpressure : String = "bounded";
@@ -69,34 +129,39 @@ System ResuFit:PrecisionCVMatchingSystem {
     Property ordering : Boolean = true;
     Property backpressure : String = "bounded";
   }
-  Attachment UserInterface.out to CVParser.in {
+  Attachment SubmitCVModule.out to CosineSimilarityCalculator.in {
     Property delivery : String = "at-least-once";
-    Property ordering : Boolean = false;
+    Property ordering : Boolean = true;
     Property backpressure : String = "bounded";
   }
-  Attachment UserInterface.out to ScreeningQuestionManager.in {
+  Attachment CosineSimilarityCalculator.out to CVComparisonModule.in {
     Property delivery : String = "at-least-once";
-    Property ordering : Boolean = false;
+    Property ordering : Boolean = true;
     Property backpressure : String = "bounded";
   }
-  Attachment UserInterface.out to ChatGPTValidator.in {
+  Attachment SubmitCVModule.out to JaccardSimilarityCalculator.in {
     Property delivery : String = "at-least-once";
-    Property ordering : Boolean = false;
+    Property ordering : Boolean = true;
     Property backpressure : String = "bounded";
   }
-  Attachment UserInterface.out to RatingGenerator.in {
+  Attachment JaccardSimilarityCalculator.out to CVComparisonModule.in {
     Property delivery : String = "at-least-once";
-    Property ordering : Boolean = false;
+    Property ordering : Boolean = true;
     Property backpressure : String = "bounded";
   }
-  Attachment UserInterface.out to CVComparator.in {
+  Attachment AnswerScreeningQuestionsModule.out to ChatGPTValidator.in {
     Property delivery : String = "at-least-once";
-    Property ordering : Boolean = false;
+    Property ordering : Boolean = true;
     Property backpressure : String = "bounded";
   }
-  Property resilience_pattern : String = "Retry, CircuitBreaker";
-  Property delivery : String = "at-least-once";
-  Property ordering : Boolean = false;
-  Property authentication : String = "service-to-service";
+  Attachment ChatGPTValidator.out to RatingGenerator.in {
+    Property delivery : String = "at-least-once";
+    Property ordering : Boolean = true;
+    Property backpressure : String = "bounded";
+  }
+  Property resilience_pattern : String = "Retry";
+  Property delivery : String = "at-most-once";
+  Property ordering : Boolean = true;
+  Property authentication : String = "centralized";
   Property authorization : String = "RBAC";
 }

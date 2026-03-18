@@ -2,22 +2,30 @@
 autonumber
 actor User
 participant "CV Parser" as CVParser
-participant "Screening Question Manager" as ScreeningQuestionManager
+participant "Screening Question Validator" as ScreeningQuestionValidator
+participant "Cosine Similarity Calculator" as CosineSimilarityCalculator
+participant "Jaccard Similarity Calculator" as JaccardSimilarityCalculator
 participant "Rating Generator" as RatingGenerator
-participant "CV Comparator" as CVComparator
+participant "CV Comparison Module" as CVComparisonModule
 participant "ChatGPT Validator" as ChatGPTValidator
-participant "User Interface" as UserInterface
-UserInterface ->> CVParser : Submit CV
-CVParser -> CVComparator : Parse CV and extract key information
-CVComparator -> RatingGenerator : Calculate CV ranking score
-CVParser -> RatingGenerator : Calculate CV ranking score
-ScreeningQuestionManager -> RatingGenerator : Calculate screening question validation score
-ChatGPTValidator -> RatingGenerator : Calculate screening question validation score
-UserInterface ->> ScreeningQuestionManager : Present screening questions
-ScreeningQuestionManager -> ChatGPTValidator : Validate applicant responses
-ChatGPTValidator -> RatingGenerator : Calculate screening question validation score
-UserInterface ->> ChatGPTValidator : Submit applicant responses
-UserInterface ->> CVComparator : Compare CV with job requirements
-CVComparator -> RatingGenerator : Calculate CV ranking score
-UserInterface ->> RatingGenerator : Display rating results
+participant "Submit CV Module" as SubmitCVModule
+participant "View and Edit CV Module" as ViewandEditCVModule
+participant "Answer Screening Questions Module" as AnswerScreeningQuestionsModule
+participant "Get Rating for CV Module" as GetRatingforCVModule
+SubmitCVModule -> CVParser : Parse and extract key information from the applicant's CV
+CVParser -> CVComparisonModule : Compare CV information with job requirements and generate a ranking
+CVComparisonModule -> RatingGenerator : Generate a percentage-based result representing the applicant's overall suitability for the role
+CVComparisonModule -> GetRatingforCVModule : Provide applicants with a rating for their submitted CV
+SubmitCVModule ->> ViewandEditCVModule : Enable applicants to view and edit their parsed CV
+ViewandEditCVModule ->> SubmitCVModule : Allow applicants to submit their CVs for parsing and analysis
+AnswerScreeningQuestionsModule -> ScreeningQuestionValidator : Verify and grade applicant responses against an expert-generated model
+ScreeningQuestionValidator -> RatingGenerator : Generate a percentage-based result representing the applicant's overall suitability for the role
+SubmitCVModule -> ChatGPTValidator : Validate and score applicant responses using ChatGPT
+ChatGPTValidator -> RatingGenerator : Generate a percentage-based result representing the applicant's overall suitability for the role
+SubmitCVModule -> CosineSimilarityCalculator : Assess the alignment between CV information and job requirements using cosine similarity
+CosineSimilarityCalculator -> CVComparisonModule : Compare CV information with job requirements and generate a ranking
+SubmitCVModule -> JaccardSimilarityCalculator : Assess the alignment between CV information and job requirements using Jaccard similarity
+JaccardSimilarityCalculator -> CVComparisonModule : Compare CV information with job requirements and generate a ranking
+AnswerScreeningQuestionsModule -> ChatGPTValidator : Validate and score applicant responses using ChatGPT
+ChatGPTValidator -> RatingGenerator : Generate a percentage-based result representing the applicant's overall suitability for the role
 @enduml

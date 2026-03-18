@@ -1,142 +1,135 @@
 {
   "system": "ResuFit: Precision CV Matching System",
-  "style": "Microservices",
+  "style": "Layered (N-Tier)",
   "source": "AI",
   "decisions": [
     {
-      "name": "Implement Microservices Architecture",
-      "rationale": "To meet the performance, reliability, security, and scalability requirements, a microservices architecture is necessary to ensure each service can be scaled and maintained independently."
+      "name": "Layered Architecture",
+      "rationale": "The system will be designed using a layered (N-Tier) architecture style to ensure a clear separation of concerns, scalability, and maintainability."
     },
     {
-      "name": "Use Python for Parsing CV",
-      "rationale": "The system uses the Python library for parsing the CV and extracting key information, so Python is the most suitable choice for this task."
+      "name": "Python Library for CV Parsing",
+      "rationale": "The system will use a Python library to parse CVs and extract key information such as skills and years of experience."
     },
     {
-      "name": "Implement Cosine Similarity and Jaccard Similarity",
-      "rationale": "To assess the alignment between the extracted information from the CV and the job requirements, cosine similarity and Jaccard similarity are necessary."
+      "name": "Cosine Similarity and Jaccard Similarity for CV Comparison",
+      "rationale": "The system will use cosine similarity and Jaccard similarity to assess the alignment between the extracted information from the CV and the job requirements specified by the recruiter."
     },
     {
-      "name": "Validate Applicant Responses with ChatGPT",
-      "rationale": "Applicant responses are verified and graded by comparing them to an expert-generated model, and the applicant\u2019s answers are validated and scored by ChatGPT."
+      "name": "Expert-Generated Model for Applicant Response Validation",
+      "rationale": "Applicant responses will be verified and graded by comparing them to an expert-generated model, and the applicant's answers will be validated and scored by ChatGPT."
     },
     {
-      "name": "Generate Percentage-Based Result",
-      "rationale": "The system generates a percentage-based result that represents the applicant\u2019s overall suitability for the role by averaging CV ranking and screening question validation scores."
-    },
-    {
-      "name": "Implement User Authentication and Authorization",
-      "rationale": "To protect user data and prevent unauthorized access, user authentication and authorization are necessary."
-    },
-    {
-      "name": "Design for Scalability and Performance",
-      "rationale": "To meet the performance and scalability requirements, the system must be designed to handle a large number of users and requests without compromising performance."
-    },
-    {
-      "name": "Implement Data Encryption and Access Control",
-      "rationale": "To protect user data and prevent unauthorized access, data encryption and access control are necessary."
-    },
-    {
-      "name": "Ensure Compliance with Applicable Laws and Regulations",
-      "rationale": "The system must ensure that user data is handled in accordance with applicable laws and regulations."
-    },
-    {
-      "name": "Implement User-Friendly Interface",
-      "rationale": "To meet the usability requirement, the system must provide an intuitive and user-friendly interface that is easy to navigate."
-    },
-    {
-      "name": "Design for Maintainability and Compatibility",
-      "rationale": "To meet the maintainability and compatibility requirements, the system must be designed to be easily maintained and updated, and be compatible with a variety of devices and browsers."
-    },
-    {
-      "name": "Implement Integration with Other Systems and Applications",
-      "rationale": "To meet the integration requirement, the system must be able to integrate with other systems and applications."
+      "name": "Percentage-Based Result Generation",
+      "rationale": "The system will generate a percentage-based result that represents the applicant's overall suitability for the role by averaging CV ranking and screening question validation scores."
     }
   ],
   "production_intents": {
     "deployment": {
-      "scaling": "horizontal",
-      "availability": "multi-region"
+      "scaling": "vertical",
+      "availability": "single-region"
     },
     "security": {
-      "authentication": "service-to-service",
+      "authentication": "centralized",
       "authorization": "RBAC"
     },
     "resilience": {
       "patterns": [
-        "Retry",
-        "CircuitBreaker"
+        "Retry"
       ],
-      "delivery": "at-least-once",
-      "ordering": false
+      "delivery": "at-most-once"
     }
   },
   "components": [
     {
       "name": "CV Parser",
-      "responsibility": [
-        "Parse CV",
-        "Extract key information such as skills and years of experience"
-      ]
+      "responsibility": "Parse and extract key information from the applicant's CV"
     },
     {
-      "name": "Screening Question Manager",
-      "responsibility": [
-        "Present screening questions to applicants",
-        "Validate applicant responses",
-        "Grade applicant responses"
-      ]
+      "name": "Screening Question Validator",
+      "responsibility": "Verify and grade applicant responses against an expert-generated model"
+    },
+    {
+      "name": "Cosine Similarity Calculator",
+      "responsibility": "Assess the alignment between CV information and job requirements using cosine similarity"
+    },
+    {
+      "name": "Jaccard Similarity Calculator",
+      "responsibility": "Assess the alignment between CV information and job requirements using Jaccard similarity"
     },
     {
       "name": "Rating Generator",
-      "responsibility": [
-        "Calculate CV ranking score",
-        "Calculate screening question validation score",
-        "Generate percentage-based result"
-      ]
+      "responsibility": "Generate a percentage-based result representing the applicant's overall suitability for the role"
     },
     {
-      "name": "CV Comparator",
-      "responsibility": [
-        "Compare CV with job requirements",
-        "Assess alignment between CV and job requirements using cosine similarity and Jaccard similarity"
-      ]
+      "name": "CV Comparison Module",
+      "responsibility": "Compare CV information with job requirements and generate a ranking"
     },
     {
       "name": "ChatGPT Validator",
-      "responsibility": [
-        "Verify applicant responses",
-        "Grade applicant responses"
-      ]
+      "responsibility": "Validate and score applicant responses using ChatGPT"
     },
     {
-      "name": "User Interface",
-      "responsibility": [
-        "Allow applicants to submit CVs",
-        "Allow applicants to view and edit their parsed CVs",
-        "Present screening questions to applicants",
-        "Display rating results to applicants"
-      ]
+      "name": "Submit CV Module",
+      "responsibility": "Allow applicants to submit their CVs for parsing and analysis"
+    },
+    {
+      "name": "View and Edit CV Module",
+      "responsibility": "Enable applicants to view and edit their parsed CV"
+    },
+    {
+      "name": "Answer Screening Questions Module",
+      "responsibility": "Present applicants with screening questions defined by an expert recruiter"
+    },
+    {
+      "name": "Get Rating for CV Module",
+      "responsibility": "Provide applicants with a rating for their submitted CV"
     }
   ],
   "relationships": [
     {
-      "source": "CV Parser",
-      "target": "CV Comparator",
+      "source": "Submit CV Module",
+      "target": "CV Parser",
       "type": "data-flow"
     },
     {
       "source": "CV Parser",
+      "target": "CV Comparison Module",
+      "type": "data-flow"
+    },
+    {
+      "source": "CV Comparison Module",
       "target": "Rating Generator",
       "type": "data-flow"
     },
     {
-      "source": "CV Comparator",
+      "source": "CV Comparison Module",
+      "target": "Get Rating for CV Module",
+      "type": "data-flow"
+    },
+    {
+      "source": "Submit CV Module",
+      "target": "View and Edit CV Module",
+      "type": "event-flow"
+    },
+    {
+      "source": "View and Edit CV Module",
+      "target": "Submit CV Module",
+      "type": "event-flow"
+    },
+    {
+      "source": "Answer Screening Questions Module",
+      "target": "Screening Question Validator",
+      "type": "data-flow"
+    },
+    {
+      "source": "Screening Question Validator",
       "target": "Rating Generator",
       "type": "data-flow"
     },
     {
-      "source": "Screening Question Manager",
-      "target": "Rating Generator",
+      "source": "Submit CV Module",
+      "target": "ChatGPT Validator",
       "type": "data-flow"
     },
     {
@@ -145,109 +138,132 @@
       "type": "data-flow"
     },
     {
-      "source": "User Interface",
-      "target": "CV Parser",
-      "type": "event-flow"
+      "source": "Submit CV Module",
+      "target": "Cosine Similarity Calculator",
+      "type": "data-flow"
     },
     {
-      "source": "User Interface",
-      "target": "Screening Question Manager",
-      "type": "event-flow"
+      "source": "Cosine Similarity Calculator",
+      "target": "CV Comparison Module",
+      "type": "data-flow"
     },
     {
-      "source": "User Interface",
+      "source": "Submit CV Module",
+      "target": "Jaccard Similarity Calculator",
+      "type": "data-flow"
+    },
+    {
+      "source": "Jaccard Similarity Calculator",
+      "target": "CV Comparison Module",
+      "type": "data-flow"
+    },
+    {
+      "source": "Answer Screening Questions Module",
       "target": "ChatGPT Validator",
-      "type": "event-flow"
+      "type": "data-flow"
     },
     {
-      "source": "User Interface",
+      "source": "ChatGPT Validator",
       "target": "Rating Generator",
-      "type": "event-flow"
-    },
-    {
-      "source": "User Interface",
-      "target": "CV Comparator",
-      "type": "event-flow"
+      "type": "data-flow"
     }
   ],
   "runtime_flow": [
     {
-      "from": "User Interface",
+      "from": "Submit CV Module",
       "to": "CV Parser",
-      "action": "Submit CV",
+      "action": "Parse and extract key information from the applicant's CV",
+      "mode": "sync"
+    },
+    {
+      "from": "CV Parser",
+      "to": "CV Comparison Module",
+      "action": "Compare CV information with job requirements and generate a ranking",
+      "mode": "sync"
+    },
+    {
+      "from": "CV Comparison Module",
+      "to": "Rating Generator",
+      "action": "Generate a percentage-based result representing the applicant's overall suitability for the role",
+      "mode": "sync"
+    },
+    {
+      "from": "CV Comparison Module",
+      "to": "Get Rating for CV Module",
+      "action": "Provide applicants with a rating for their submitted CV",
+      "mode": "sync"
+    },
+    {
+      "from": "Submit CV Module",
+      "to": "View and Edit CV Module",
+      "action": "Enable applicants to view and edit their parsed CV",
       "mode": "async"
     },
     {
-      "from": "CV Parser",
-      "to": "CV Comparator",
-      "action": "Parse CV and extract key information",
+      "from": "View and Edit CV Module",
+      "to": "Submit CV Module",
+      "action": "Allow applicants to submit their CVs for parsing and analysis",
+      "mode": "async"
+    },
+    {
+      "from": "Answer Screening Questions Module",
+      "to": "Screening Question Validator",
+      "action": "Verify and grade applicant responses against an expert-generated model",
       "mode": "sync"
     },
     {
-      "from": "CV Comparator",
+      "from": "Screening Question Validator",
       "to": "Rating Generator",
-      "action": "Calculate CV ranking score",
+      "action": "Generate a percentage-based result representing the applicant's overall suitability for the role",
       "mode": "sync"
     },
     {
-      "from": "CV Parser",
-      "to": "Rating Generator",
-      "action": "Calculate CV ranking score",
-      "mode": "sync"
-    },
-    {
-      "from": "Screening Question Manager",
-      "to": "Rating Generator",
-      "action": "Calculate screening question validation score",
+      "from": "Submit CV Module",
+      "to": "ChatGPT Validator",
+      "action": "Validate and score applicant responses using ChatGPT",
       "mode": "sync"
     },
     {
       "from": "ChatGPT Validator",
       "to": "Rating Generator",
-      "action": "Calculate screening question validation score",
+      "action": "Generate a percentage-based result representing the applicant's overall suitability for the role",
       "mode": "sync"
     },
     {
-      "from": "User Interface",
-      "to": "Screening Question Manager",
-      "action": "Present screening questions",
-      "mode": "async"
+      "from": "Submit CV Module",
+      "to": "Cosine Similarity Calculator",
+      "action": "Assess the alignment between CV information and job requirements using cosine similarity",
+      "mode": "sync"
     },
     {
-      "from": "Screening Question Manager",
+      "from": "Cosine Similarity Calculator",
+      "to": "CV Comparison Module",
+      "action": "Compare CV information with job requirements and generate a ranking",
+      "mode": "sync"
+    },
+    {
+      "from": "Submit CV Module",
+      "to": "Jaccard Similarity Calculator",
+      "action": "Assess the alignment between CV information and job requirements using Jaccard similarity",
+      "mode": "sync"
+    },
+    {
+      "from": "Jaccard Similarity Calculator",
+      "to": "CV Comparison Module",
+      "action": "Compare CV information with job requirements and generate a ranking",
+      "mode": "sync"
+    },
+    {
+      "from": "Answer Screening Questions Module",
       "to": "ChatGPT Validator",
-      "action": "Validate applicant responses",
+      "action": "Validate and score applicant responses using ChatGPT",
       "mode": "sync"
     },
     {
       "from": "ChatGPT Validator",
       "to": "Rating Generator",
-      "action": "Calculate screening question validation score",
+      "action": "Generate a percentage-based result representing the applicant's overall suitability for the role",
       "mode": "sync"
-    },
-    {
-      "from": "User Interface",
-      "to": "ChatGPT Validator",
-      "action": "Submit applicant responses",
-      "mode": "async"
-    },
-    {
-      "from": "User Interface",
-      "to": "CV Comparator",
-      "action": "Compare CV with job requirements",
-      "mode": "async"
-    },
-    {
-      "from": "CV Comparator",
-      "to": "Rating Generator",
-      "action": "Calculate CV ranking score",
-      "mode": "sync"
-    },
-    {
-      "from": "User Interface",
-      "to": "Rating Generator",
-      "action": "Display rating results",
-      "mode": "async"
     }
   ],
   "critique": []
