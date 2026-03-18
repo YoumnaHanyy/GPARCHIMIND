@@ -1,83 +1,83 @@
 [
   {
     "title": "Performance",
-    "description": "The system MUST respond within a reasonable time frame.",
+    "description": "The system MUST respond to user requests within 2 seconds under normal load.",
     "source": {
-      "page": 21,
+      "page": 30,
       "start_index": null
     },
-    "project_id": "proj_2911b8c9"
+    "project_id": "proj_ecommerce_001"
   },
   {
     "title": "Reliability",
-    "description": "The system SHALL be available at least 99.9% of the time.",
+    "description": "The system SHALL ensure that all transactions are processed reliably without data loss.",
     "source": {
-      "page": 21,
+      "page": 30,
       "start_index": null
     },
-    "project_id": "proj_2911b8c9"
+    "project_id": "proj_ecommerce_001"
   },
   {
     "title": "Security",
-    "description": "The system MUST protect user data and prevent unauthorized access.",
+    "description": "The system MUST secure payment transactions and protect sensitive user information.",
     "source": {
-      "page": 21,
+      "page": 31,
       "start_index": null
     },
-    "project_id": "proj_2911b8c9"
-  },
-  {
-    "title": "Privacy",
-    "description": "The system SHALL ensure that user data is handled in accordance with applicable laws and regulations.",
-    "source": {
-      "page": 21,
-      "start_index": null
-    },
-    "project_id": "proj_2911b8c9"
+    "project_id": "proj_ecommerce_001"
   },
   {
     "title": "Scalability",
-    "description": "The system SHOULD be able to handle a large number of users and CVs without a significant decrease in performance.",
+    "description": "The system SHOULD handle a high number of concurrent users during peak times without performance degradation.",
     "source": {
-      "page": 21,
+      "page": 31,
       "start_index": null
     },
-    "project_id": "proj_2911b8c9"
+    "project_id": "proj_ecommerce_001"
+  },
+  {
+    "title": "Availability",
+    "description": "The system SHALL be available 99.9% of the time to ensure continuous service.",
+    "source": {
+      "page": 32,
+      "start_index": null
+    },
+    "project_id": "proj_ecommerce_001"
   },
   {
     "title": "Usability",
-    "description": "The system MUST be easy to use and navigate for users with varying levels of technical expertise.",
+    "description": "The system MUST provide an intuitive and user-friendly interface for customers.",
     "source": {
-      "page": 21,
+      "page": 32,
       "start_index": null
     },
-    "project_id": "proj_2911b8c9"
+    "project_id": "proj_ecommerce_001"
   },
   {
     "title": "Maintainability",
-    "description": "The system SHOULD be designed to be easily maintained and updated by the development team.",
+    "description": "The system SHOULD be easy to maintain, update, and extend by developers.",
     "source": {
-      "page": 21,
+      "page": 33,
       "start_index": null
     },
-    "project_id": "proj_2911b8c9"
+    "project_id": "proj_ecommerce_001"
   },
   {
     "title": "Compatibility",
-    "description": "The system MUST be compatible with a variety of devices and browsers.",
+    "description": "The system MUST be compatible with multiple browsers and mobile devices.",
     "source": {
-      "page": 22,
+      "page": 33,
       "start_index": null
     },
-    "project_id": "proj_2911b8c9"
+    "project_id": "proj_ecommerce_001"
   },
   {
     "title": "Integration",
-    "description": "The system SHOULD be able to integrate with other HR systems and tools.",
+    "description": "The system SHOULD integrate with external payment gateways and shipping services.",
     "source": {
-      "page": 22,
+      "page": 34,
       "start_index": null
     },
-    "project_id": "proj_2911b8c9"
+    "project_id": "proj_ecommerce_001"
   }
 ]

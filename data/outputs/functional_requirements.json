@@ -1,38 +1,38 @@
 [
   {
-    "title": "submitting the CV",
-    "description": "Applicants submit their CVs for parsing and analysis.",
+    "title": "placing an order",
+    "description": "Users can place orders online and confirm purchases.",
     "source": {
-      "page": 16,
+      "page": 10,
       "start_index": null
     },
-    "project_id": "proj_2911b8c9"
+    "project_id": "proj_test_001"
   },
   {
-    "title": "viewing and editing the CV",
-    "description": "Applicants can view and edit their parsed CV.",
+    "title": "receiving order notifications",
+    "description": "Users receive notifications when the order status changes.",
     "source": {
-      "page": 16,
+      "page": 11,
       "start_index": null
     },
-    "project_id": "proj_2911b8c9"
+    "project_id": "proj_test_001"
   },
   {
-    "title": "answering screening questions",
-    "description": "Applicants are presented with screening questions defined by an expert recruiter.",
+    "title": "processing payments",
+    "description": "The system processes payments using multiple payment methods.",
+    "source": {
+      "page": 12,
+      "start_index": null
+    },
+    "project_id": "proj_test_001"
+  },
+  {
+    "title": "managing products",
+    "description": "Administrators can add, update, and delete products.",
     "source": {
       "page": 13,
       "start_index": null
     },
-    "project_id": "proj_2911b8c9"
-  },
-  {
-    "title": "getting a rating for the submitted CV",
-    "description": "The system generates a percentage-based result, providing a fair evaluation of each applicant.",
-    "source": {
-      "page": 13,
-      "start_index": null
-    },
-    "project_id": "proj_2911b8c9"
+    "project_id": "proj_test_001"
   }
 ]
