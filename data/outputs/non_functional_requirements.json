@@ -1,83 +1,56 @@
 [
   {
-    "title": "Performance",
-    "description": "The system MUST respond to user requests within a reasonable time frame.",
-    "source": {
-      "page": 6,
-      "start_index": 1
-    },
-    "project_id": "proj_5748c631"
-  },
-  {
-    "title": "Reliability",
-    "description": "The system MUST be able to recover from failures and maintain data consistency.",
-    "source": {
-      "page": 6,
-      "start_index": 2
-    },
-    "project_id": "proj_5748c631"
-  },
-  {
-    "title": "Security",
-    "description": "The system MUST protect user data and prevent unauthorized access.",
-    "source": {
-      "page": 6,
-      "start_index": 3
-    },
-    "project_id": "proj_5748c631"
-  },
-  {
-    "title": "Privacy",
-    "description": "The system MUST ensure that user data is handled in accordance with applicable laws and regulations.",
-    "source": {
-      "page": 6,
-      "start_index": 4
-    },
-    "project_id": "proj_5748c631"
-  },
-  {
     "title": "Scalability",
-    "description": "The system MUST be able to handle a large number of users and requests without compromising performance.",
+    "description": "The system shall be scalable to accommodate a large number of users.",
     "source": {
-      "page": 6,
-      "start_index": 5
+      "page": "16",
+      "start_index": "5.5"
     },
-    "project_id": "proj_5748c631"
+    "project_id": "proj_e846adaf"
+  },
+  {
+    "title": "Accessibility",
+    "description": "The system shall be accessible to individuals with Dyslexia, including those with visual impairments.",
+    "source": {
+      "page": "16",
+      "start_index": "5.2"
+    },
+    "project_id": "proj_e846adaf"
   },
   {
     "title": "Usability",
-    "description": "The system MUST provide an intuitive and user-friendly interface that is easy to navigate.",
+    "description": "The system shall be user-friendly and easy to navigate.",
     "source": {
-      "page": 6,
-      "start_index": 6
+      "page": "16",
+      "start_index": "5.2"
     },
-    "project_id": "proj_5748c631"
+    "project_id": "proj_e846adaf"
   },
   {
-    "title": "Maintainability",
-    "description": "The system MUST be designed to be easily maintained and updated.",
+    "title": "Security",
+    "description": "The system shall ensure the security and confidentiality of user data.",
     "source": {
-      "page": 6,
-      "start_index": 7
+      "page": "16",
+      "start_index": "5.4"
     },
-    "project_id": "proj_5748c631"
+    "project_id": "proj_e846adaf"
   },
   {
-    "title": "Compatibility",
-    "description": "The system MUST be compatible with a variety of devices and browsers.",
+    "title": "Performance",
+    "description": "The system shall perform efficiently and effectively, with minimal downtime.",
     "source": {
-      "page": 6,
-      "start_index": 8
+      "page": "16",
+      "start_index": "5.5"
     },
-    "project_id": "proj_5748c631"
+    "project_id": "proj_e846adaf"
   },
   {
-    "title": "Integration",
-    "description": "The system MUST be able to integrate with other systems and services.",
+    "title": "Data Privacy",
+    "description": "The system shall comply with data privacy regulations and ensure the secure storage and transmission of user data.",
     "source": {
-      "page": 6,
-      "start_index": 9
+      "page": "16",
+      "start_index": "5.4"
     },
-    "project_id": "proj_5748c631"
+    "project_id": "proj_e846adaf"
   }
 ]

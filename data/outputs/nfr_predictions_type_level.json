@@ -1,25 +1,34 @@
 [
   {
-    "description": "The system MUST respond to user requests within a reasonable time frame.",
-    "confidence": 0.9659295082092285,
+    "description": "The system shall be scalable to accommodate a large number of users.",
+    "confidence": 0.9690760374069214,
     "confirmed": false,
-    "predicted_level": "High",
-    "predicted_type": "PE",
-    "predicted_type_label": "Performance",
-    "title": "Performance"
+    "predicted_level": "Medium",
+    "predicted_type": "SC",
+    "predicted_type_label": "Scalability",
+    "title": "Scalability"
   },
   {
-    "description": "The system MUST be able to recover from failures and maintain data consistency.",
+    "description": "The system shall be accessible to individuals with Dyslexia, including those with visual impairments.",
     "confidence": 1.0,
     "confirmed": true,
-    "predicted_level": "High",
-    "predicted_type": "A",
-    "predicted_type_label": "Availability",
-    "title": "Reliability"
+    "predicted_level": "Medium",
+    "predicted_type": "MD",
+    "predicted_type_label": "Modularity",
+    "title": "Accessibility"
   },
   {
-    "description": "The system MUST protect user data and prevent unauthorized access.",
-    "confidence": 0.9825927019119263,
+    "description": "The system shall be user-friendly and easy to navigate.",
+    "confidence": 0.9284949898719788,
+    "confirmed": false,
+    "predicted_level": "Medium",
+    "predicted_type": "US",
+    "predicted_type_label": "Usability",
+    "title": "Usability"
+  },
+  {
+    "description": "The system shall ensure the security and confidentiality of user data.",
+    "confidence": 0.9866602420806885,
     "confirmed": false,
     "predicted_level": "High",
     "predicted_type": "SE",
@@ -27,57 +36,21 @@
     "title": "Security"
   },
   {
-    "description": "The system MUST ensure that user data is handled in accordance with applicable laws and regulations.",
-    "confidence": 0.9546220898628235,
+    "description": "The system shall perform efficiently and effectively, with minimal downtime.",
+    "confidence": 1.0,
+    "confirmed": true,
+    "predicted_level": "Medium",
+    "predicted_type": "IN",
+    "predicted_type_label": "Interoperability",
+    "title": "Performance"
+  },
+  {
+    "description": "The system shall comply with data privacy regulations and ensure the secure storage and transmission of user data.",
+    "confidence": 0.9821802377700806,
     "confirmed": false,
     "predicted_level": "High",
     "predicted_type": "SE",
     "predicted_type_label": "Security",
-    "title": "Privacy"
-  },
-  {
-    "description": "The system MUST be able to handle a large number of users and requests without compromising performance.",
-    "confidence": 1.0,
-    "confirmed": true,
-    "predicted_level": "High",
-    "predicted_type": "FT",
-    "predicted_type_label": "Fault Tolerance",
-    "title": "Scalability"
-  },
-  {
-    "description": "The system MUST provide an intuitive and user-friendly interface that is easy to navigate.",
-    "confidence": 0.9342976212501526,
-    "confirmed": false,
-    "predicted_level": "High",
-    "predicted_type": "US",
-    "predicted_type_label": "Usability",
-    "title": "Usability"
-  },
-  {
-    "description": "The system MUST be designed to be easily maintained and updated.",
-    "confidence": 0.9667864441871643,
-    "confirmed": false,
-    "predicted_level": "High",
-    "predicted_type": "MN",
-    "predicted_type_label": "Manageability",
-    "title": "Maintainability"
-  },
-  {
-    "description": "The system MUST be compatible with a variety of devices and browsers.",
-    "confidence": 1.0,
-    "confirmed": true,
-    "predicted_level": "High",
-    "predicted_type": "AC",
-    "predicted_type_label": "Accessibility",
-    "title": "Compatibility"
-  },
-  {
-    "description": "The system MUST be able to integrate with other systems and services.",
-    "confidence": 1.0,
-    "confirmed": true,
-    "predicted_level": "High",
-    "predicted_type": "PO",
-    "predicted_type_label": "Portability",
-    "title": "Integration"
+    "title": "Data Privacy"
   }
 ]

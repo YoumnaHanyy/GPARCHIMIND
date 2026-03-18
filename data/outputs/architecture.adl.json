@@ -1,11 +1,15 @@
 {
   "system": "ResuFit: Precision CV Matching System",
-  "style": "Microservices",
-  "source": "FALLBACK",
+  "style": "Event-Driven/ Messaging",
+  "source": "AI",
   "decisions": [
     {
-      "name": "Fallback architecture",
-      "rationale": "AI output invalid"
+      "name": "Functional Requirements",
+      "rationale": "[{'title': 'submitting the CV', 'description': 'Applicants submit their CVs for parsing and analysis.', 'source': {'page': 16, 'start_index': None}, 'project_id': 'proj_d326da84'}, {'title': 'viewing and editing the CV', 'description': 'Applicants can view and edit their parsed CV.', 'source': {'page': 16, 'start_index': None}, 'project_id': 'proj_d326da84'}, {'title': 'answering screening questions', 'description': 'Applicants are presented with screening questions defined by an expert recruiter.', 'source': {'page': 12, 'start_index': None}, 'project_id': 'proj_d326da84'}, {'title': 'getting a rating for the submitted CV', 'description': 'The system generates a percentage-based result, providing a fair evaluation of each applicant.', 'source': {'page': 13, 'start_index': None}, 'project_id': 'proj_d326da84'}]"
+    },
+    {
+      "name": "Non-Functional Requirements",
+      "rationale": "[{'title': 'Performance', 'description': 'The system MUST respond within a reasonable time frame.', 'source': {'page': 21, 'start_index': None}, 'project_id': 'proj_d326da84'}, {'title': 'Reliability', 'description': 'The system SHALL be available at least 99.9% of the time.', 'source': {'page': 21, 'start_index': None}, 'project_id': 'proj_d326da84'}, {'title': 'Security', 'description': 'The system MUST protect user data and prevent unauthorized access.', 'source': {'page': 21, 'start_index': None}, 'project_id': 'proj_d326da84'}, {'title': 'Privacy', 'description': 'The system SHALL ensure that user data is collected and stored in accordance with applicable laws and regulations.', 'source': {'page': 21, 'start_index': None}, 'project_id': 'proj_d326da84'}, {'title': 'Scalability', 'description': 'The system SHOULD be able to handle a large number of users and CVs without a significant decrease in performance.', 'source': {'page': 21, 'start_index': None}, 'project_id': 'proj_d326da84'}, {'title': 'Usability', 'description': 'The system MUST be easy to use and navigate for users with varying levels of technical expertise.', 'source': {'page': 21, 'start_index': None}, 'project_id': 'proj_d326da84'}, {'title': 'Maintainability', 'description': 'The system SHOULD be designed to be easily maintained and updated by the development team.', 'source': {'page': 21, 'start_index': None}, 'project_id': 'proj_d326da84'}, {'title': 'Compatibility', 'description': 'The system MUST be compatible with a variety of devices and browsers.', 'source': {'page': 22, 'start_index': None}, 'project_id': 'proj_d326da84'}, {'title': 'Integration', 'description': 'The system SHOULD be able to integrate with other HR systems and tools.', 'source': {'page': 22, 'start_index': None}, 'project_id': 'proj_d326da84'}]"
     }
   ],
   "production_intents": {
@@ -28,51 +32,146 @@
   },
   "components": [
     {
-      "name": "API Gateway",
-      "responsibility": "Route client requests"
+      "name": "CVParser",
+      "responsibility": "Parses and analyzes submitted CVs"
     },
     {
-      "name": "User Service",
-      "responsibility": "Manage users"
+      "name": "CVViewer",
+      "responsibility": "Displays the parsed CV to applicants for viewing and editing"
     },
     {
-      "name": "Order Service",
-      "responsibility": "Manage orders"
+      "name": "ScreeningQuestionManager",
+      "responsibility": "Manages screening questions and presents them to applicants"
     },
     {
-      "name": "Order Database",
-      "responsibility": "Persist order data"
+      "name": "RatingEngine",
+      "responsibility": "Generates a percentage-based result to evaluate each applicant's CV"
+    },
+    {
+      "name": "Database",
+      "responsibility": "Stores and retrieves CV data, screening questions, and ratings"
+    },
+    {
+      "name": "APIGateway",
+      "responsibility": "Handles incoming requests and routes them to the appropriate components"
+    },
+    {
+      "name": "Security",
+      "responsibility": "Ensures secure authentication and authorization for applicants and recruiters"
     }
   ],
   "relationships": [
     {
-      "source": "API Gateway",
-      "target": "User Service",
+      "source": "APIGateway",
+      "target": "CVParser",
       "type": "data-flow"
     },
     {
-      "source": "API Gateway",
-      "target": "Order Service",
+      "source": "APIGateway",
+      "target": "ScreeningQuestionManager",
       "type": "data-flow"
     },
     {
-      "source": "Order Service",
-      "target": "Order Database",
+      "source": "APIGateway",
+      "target": "RatingEngine",
       "type": "data-flow"
+    },
+    {
+      "source": "APIGateway",
+      "target": "Database",
+      "type": "data-flow"
+    },
+    {
+      "source": "APIGateway",
+      "target": "Security",
+      "type": "event-flow"
+    },
+    {
+      "source": "CVParser",
+      "target": "CVViewer",
+      "type": "data-flow"
+    },
+    {
+      "source": "ScreeningQuestionManager",
+      "target": "CVViewer",
+      "type": "data-flow"
+    },
+    {
+      "source": "RatingEngine",
+      "target": "Database",
+      "type": "data-flow"
+    },
+    {
+      "source": "Database",
+      "target": "APIGateway",
+      "type": "data-flow"
+    },
+    {
+      "source": "Security",
+      "target": "APIGateway",
+      "type": "event-flow"
     }
   ],
   "runtime_flow": [
     {
-      "from": "API",
-      "to": "Service",
-      "action": "Process business request",
-      "mode": "sync"
+      "from": "APIGateway",
+      "to": "Security",
+      "action": "Authenticate incoming request",
+      "mode": "async"
     },
     {
-      "from": "Service",
+      "from": "Security",
+      "to": "APIGateway",
+      "action": "Authorize authenticated request",
+      "mode": "async"
+    },
+    {
+      "from": "APIGateway",
+      "to": "CVParser",
+      "action": "Parse and analyze submitted CV",
+      "mode": "async"
+    },
+    {
+      "from": "CVParser",
+      "to": "CVViewer",
+      "action": "Display parsed CV to applicant",
+      "mode": "async"
+    },
+    {
+      "from": "APIGateway",
+      "to": "ScreeningQuestionManager",
+      "action": "Retrieve and present screening questions",
+      "mode": "async"
+    },
+    {
+      "from": "ScreeningQuestionManager",
+      "to": "CVViewer",
+      "action": "Present screening questions to applicant",
+      "mode": "async"
+    },
+    {
+      "from": "APIGateway",
+      "to": "RatingEngine",
+      "action": "Generate rating based on parsed CV",
+      "mode": "async"
+    },
+    {
+      "from": "RatingEngine",
       "to": "Database",
-      "action": "Persist data",
-      "mode": "sync"
+      "action": "Store generated rating",
+      "mode": "async"
+    },
+    {
+      "from": "Database",
+      "to": "APIGateway",
+      "action": "Retrieve stored rating",
+      "mode": "async"
+    },
+    {
+      "from": "APIGateway",
+      "to": "Security",
+      "action": "Authorize access to stored rating",
+      "mode": "async"
     }
   ],
   "critique": []

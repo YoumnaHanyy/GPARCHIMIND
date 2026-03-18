@@ -1,74 +1,74 @@
 [
   {
-    "title": "Submit CV",
-    "description": "Applicants can submit their CVs for parsing and analysis.",
+    "title": "System Functions",
+    "description": "The system shall provide a comprehensive learning support system that conducts precise assessments, identifies challenges related to reading and working memory, and delivers personalized AI-driven tutoring experiences.",
     "source": {
-      "page": 1,
-      "start_index": 1
+      "page": "12",
+      "start_index": "4.1"
     },
-    "project_id": "proj_5748c631"
+    "project_id": "proj_e846adaf"
   },
   {
-    "title": "View and Edit CV",
-    "description": "Applicants can view and edit their parsed CV.",
+    "title": "Detailed Functional Specification",
+    "description": "The system shall provide a tailored language tutoring environment using personalized games, activities, and a user interface tailored to the unique needs of individuals with Dyslexia.",
     "source": {
-      "page": 1,
-      "start_index": 2
+      "page": "14",
+      "start_index": "4.2"
     },
-    "project_id": "proj_5748c631"
+    "project_id": "proj_e846adaf"
   },
   {
-    "title": "Answer Screening Questions",
-    "description": "Applicants are presented with screening questions defined by an expert recruiter.",
+    "title": "User Interface",
+    "description": "The system shall provide a user interface that is tailored to the unique needs of individuals with Dyslexia, including interactive games, chat, and voice interactions.",
     "source": {
-      "page": 1,
-      "start_index": 3
+      "page": "6",
+      "start_index": "2.2.1"
     },
-    "project_id": "proj_5748c631"
+    "project_id": "proj_e846adaf"
   },
   {
-    "title": "Get Rating for CV",
-    "description": "The system generates a percentage-based result, providing a fair evaluation of each applicant.",
+    "title": "Personalized Learning Experiences",
+    "description": "The system shall provide personalized learning experiences for individuals with Dyslexia, including interactive games, activities, and a tailored interface.",
     "source": {
-      "page": 1,
-      "start_index": 4
+      "page": "5",
+      "start_index": "1.2"
     },
-    "project_id": "proj_5748c631"
+    "project_id": "proj_e846adaf"
   },
   {
-    "title": "Parse CV",
-    "description": "The system uses the Python library for parsing the CV and extracting key information.",
+    "title": "AI-Driven Tutoring",
+    "description": "The system shall provide AI-driven tutoring experiences that are tailored to the unique needs of individuals with Dyslexia.",
     "source": {
-      "page": 3,
-      "start_index": 1
+      "page": "12",
+      "start_index": "4.1"
     },
-    "project_id": "proj_5748c631"
+    "project_id": "proj_e846adaf"
   },
   {
-    "title": "Compare CV with Job Requirements",
-    "description": "The system uses cosine similarity and Jaccard similarity to assess the alignment between the extracted information from the CV and the job requirements.",
+    "title": "Precise Assessments",
+    "description": "The system shall conduct precise assessments to identify challenges related to reading and working memory.",
     "source": {
-      "page": 3,
-      "start_index": 2
+      "page": "7",
+      "start_index": "3.1"
     },
-    "project_id": "proj_5748c631"
+    "project_id": "proj_e846adaf"
   },
   {
-    "title": "Validate and Score Applicant Responses",
-    "description": "Applicant responses are verified and graded by comparing them to an expert-generated model, and the applicant's answers are validated and scored by ChatGPT.",
+    "title": "Early and Accurate Diagnostic Tools",
+    "description": "The system shall provide early and accurate diagnostic tools to identify individuals with Dyslexia.",
     "source": {
-      "page": 3,
-      "start_index": 3
+      "page": "7",
+      "start_index": "3.1"
     },
-    "project_id": "proj_5748c631"
+    "project_id": "proj_e846adaf"
   },
   {
-    "title": "Generate Percentage-Based Result",
-    "description": "The system generates a percentage-based result, providing a fair evaluation of each applicant.",
+    "title": "Personalized Interventions",
+    "description": "The system shall deliver personalized interventions to individuals with Dyslexia.",
     "source": {
-      "page": 3,
-      "start_index": 4
+      "page": "7",
+      "start_index": "3.1"
     },
-    "project_id": "proj_5748c631"
+    "project_id": "proj_e846adaf"
   }
 ]
