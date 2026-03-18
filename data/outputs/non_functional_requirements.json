@@ -1,74 +1,83 @@
 [
   {
-    "title": "Scalability",
-    "description": "The system must be able to accommodate millions of students.",
-    "source": {
-      "page": null,
-      "start_index": null
-    },
-    "project_id": "proj_0554d143"
-  },
-  {
-    "title": "Accessibility",
-    "description": "The system must be accessible to individuals with learning disabilities.",
-    "source": {
-      "page": null,
-      "start_index": null
-    },
-    "project_id": "proj_0554d143"
-  },
-  {
-    "title": "Usability",
-    "description": "The system must be user-friendly and easy to navigate.",
-    "source": {
-      "page": null,
-      "start_index": null
-    },
-    "project_id": "proj_0554d143"
-  },
-  {
-    "title": "Data Privacy",
-    "description": "The system must comply with data privacy regulations and protect user data.",
-    "source": {
-      "page": null,
-      "start_index": null
-    },
-    "project_id": "proj_0554d143"
-  },
-  {
-    "title": "Security",
-    "description": "The system must ensure the security and integrity of user data.",
-    "source": {
-      "page": null,
-      "start_index": null
-    },
-    "project_id": "proj_0554d143"
-  },
-  {
     "title": "Performance",
-    "description": "The system must perform efficiently and effectively.",
+    "description": "The system MUST respond to user input within a reasonable time frame.",
     "source": {
-      "page": null,
+      "page": "6.1",
       "start_index": null
     },
-    "project_id": "proj_0554d143"
+    "project_id": "proj_2542e31e"
   },
   {
     "title": "Reliability",
-    "description": "The system must be reliable and consistent in its performance.",
+    "description": "The system MUST be able to accurately parse and analyze CVs and provide reliable results.",
     "source": {
-      "page": null,
+      "page": "6.2",
       "start_index": null
     },
-    "project_id": "proj_0554d143"
+    "project_id": "proj_2542e31e"
+  },
+  {
+    "title": "Security",
+    "description": "The system MUST protect user data and prevent unauthorized access.",
+    "source": {
+      "page": "6.3",
+      "start_index": null
+    },
+    "project_id": "proj_2542e31e"
+  },
+  {
+    "title": "Privacy",
+    "description": "The system MUST ensure that user data is handled in accordance with relevant laws and regulations.",
+    "source": {
+      "page": "6.4",
+      "start_index": null
+    },
+    "project_id": "proj_2542e31e"
+  },
+  {
+    "title": "Scalability",
+    "description": "The system MUST be able to handle a large volume of users and CVs without compromising performance.",
+    "source": {
+      "page": "6.5",
+      "start_index": null
+    },
+    "project_id": "proj_2542e31e"
+  },
+  {
+    "title": "Usability",
+    "description": "The system MUST provide an intuitive and user-friendly interface that is easy to navigate.",
+    "source": {
+      "page": "6.6",
+      "start_index": null
+    },
+    "project_id": "proj_2542e31e"
   },
   {
     "title": "Maintainability",
-    "description": "The system must be easy to maintain and update.",
+    "description": "The system MUST be designed to be easily maintained and updated.",
     "source": {
-      "page": null,
+      "page": "6.7",
       "start_index": null
     },
-    "project_id": "proj_0554d143"
+    "project_id": "proj_2542e31e"
+  },
+  {
+    "title": "Compatibility",
+    "description": "The system MUST be compatible with a variety of devices and browsers.",
+    "source": {
+      "page": "6.8",
+      "start_index": null
+    },
+    "project_id": "proj_2542e31e"
+  },
+  {
+    "title": "Integration",
+    "description": "The system MUST be able to integrate with other systems and tools.",
+    "source": {
+      "page": "6.9",
+      "start_index": null
+    },
+    "project_id": "proj_2542e31e"
   }
 ]
