@@ -1,10 +1,21 @@
 @startuml
 autonumber
 actor User
-participant "API Gateway" as APIGateway
-participant "User Service" as UserService
-participant "Order Service" as OrderService
-participant "Order Database" as OrderDatabase
-API -> Service : Process business request
-Service -> Database : Persist data
+participant "CVParser" as CVParser
+participant "CVViewer" as CVViewer
+participant "ScreeningQuestionManager" as ScreeningQuestionManager
+participant "RatingEngine" as RatingEngine
+participant "Database" as Database
+participant "APIGateway" as APIGateway
+participant "Security" as Security
+APIGateway ->> Security : Authenticate incoming request
+Security ->> APIGateway : Authorize authenticated request
+APIGateway ->> CVParser : Parse and analyze submitted CV
+CVParser ->> CVViewer : Display parsed CV to applicant
+APIGateway ->> ScreeningQuestionManager : Retrieve and present screening questions
+ScreeningQuestionManager ->> CVViewer : Present screening questions to applicant
+APIGateway ->> RatingEngine : Generate rating based on parsed CV
+RatingEngine ->> Database : Store generated rating
+Database ->> APIGateway : Retrieve stored rating
+APIGateway ->> Security : Authorize access to stored rating
 @enduml

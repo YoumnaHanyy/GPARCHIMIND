@@ -275,14 +275,15 @@ def serve_archgen(request: Request):
 async def login_page(
     request: Request,
     error: str = None,
-    logout: str = None
+    logout: str = None,
+    info: str = None
 ):
     """
     Display login page with optional error message
     """
     error_message = None
     info_message = None
-
+    
     if error == "invalid":
         error_message = "Invalid email or password. Please try again."
     elif error == "server":
@@ -292,7 +293,9 @@ async def login_page(
 
     if logout == "1":
         info_message = "Thank you for visiting our website!"
-
+    
+    if info == "created":
+       info_message = "Your account created successfully! Login Now" 
     
     return templates.TemplateResponse(
         "login.html",

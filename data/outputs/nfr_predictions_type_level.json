@@ -1,25 +1,34 @@
 [
   {
-    "description": "The system MUST respond within a reasonable time frame.",
-    "confidence": 0.9715486168861389,
+    "description": "The system shall be scalable to accommodate a large number of users.",
+    "confidence": 0.9690760374069214,
     "confirmed": false,
-    "predicted_level": "High",
-    "predicted_type": "PE",
-    "predicted_type_label": "Performance",
-    "title": "Performance"
+    "predicted_level": "Medium",
+    "predicted_type": "SC",
+    "predicted_type_label": "Scalability",
+    "title": "Scalability"
   },
   {
-    "description": "The system SHALL be available at least 99.9% of the time.",
-    "confidence": 0.9764779806137085,
-    "confirmed": false,
-    "predicted_level": "High",
-    "predicted_type": "A",
-    "predicted_type_label": "Availability",
-    "title": "Reliability"
+    "description": "The system shall be accessible to individuals with Dyslexia, including those with visual impairments.",
+    "confidence": 1.0,
+    "confirmed": true,
+    "predicted_level": "Medium",
+    "predicted_type": "MD",
+    "predicted_type_label": "Modularity",
+    "title": "Accessibility"
   },
   {
-    "description": "The system MUST protect user data and prevent unauthorized access.",
-    "confidence": 0.98123699426651,
+    "description": "The system shall be user-friendly and easy to navigate.",
+    "confidence": 0.9284949898719788,
+    "confirmed": false,
+    "predicted_level": "Medium",
+    "predicted_type": "US",
+    "predicted_type_label": "Usability",
+    "title": "Usability"
+  },
+  {
+    "description": "The system shall ensure the security and confidentiality of user data.",
+    "confidence": 0.9866602420806885,
     "confirmed": false,
     "predicted_level": "High",
     "predicted_type": "SE",
@@ -27,57 +36,21 @@
     "title": "Security"
   },
   {
-    "description": "The system SHALL ensure that user data is collected and stored in accordance with applicable laws and regulations.",
-    "confidence": 0.9717892408370972,
-    "confirmed": false,
+    "description": "The system shall perform efficiently and effectively, with minimal downtime.",
+    "confidence": 1.0,
+    "confirmed": true,
     "predicted_level": "Medium",
+    "predicted_type": "IN",
+    "predicted_type_label": "Interoperability",
+    "title": "Performance"
+  },
+  {
+    "description": "The system shall comply with data privacy regulations and ensure the secure storage and transmission of user data.",
+    "confidence": 0.9821802377700806,
+    "confirmed": false,
+    "predicted_level": "High",
     "predicted_type": "SE",
     "predicted_type_label": "Security",
-    "title": "Privacy"
-  },
-  {
-    "description": "The system SHOULD be able to handle a large number of users and CVs without a significant decrease in performance.",
-    "confidence": 1.0,
-    "confirmed": true,
-    "predicted_level": "Low",
-    "predicted_type": "SC",
-    "predicted_type_label": "Scalability",
-    "title": "Scalability"
-  },
-  {
-    "description": "The system MUST be easy to use and navigate for users with varying levels of technical expertise.",
-    "confidence": 0.9423085451126099,
-    "confirmed": false,
-    "predicted_level": "High",
-    "predicted_type": "US",
-    "predicted_type_label": "Usability",
-    "title": "Usability"
-  },
-  {
-    "description": "The system SHOULD be designed to be easily maintained and updated by the development team.",
-    "confidence": 0.955119252204895,
-    "confirmed": false,
-    "predicted_level": "Low",
-    "predicted_type": "MN",
-    "predicted_type_label": "Manageability",
-    "title": "Maintainability"
-  },
-  {
-    "description": "The system MUST be compatible with a variety of devices and browsers.",
-    "confidence": 1.0,
-    "confirmed": true,
-    "predicted_level": "High",
-    "predicted_type": "PO",
-    "predicted_type_label": "Portability",
-    "title": "Compatibility"
-  },
-  {
-    "description": "The system SHOULD be able to integrate with other HR systems and tools.",
-    "confidence": 1.0,
-    "confirmed": true,
-    "predicted_level": "Low",
-    "predicted_type": "PO",
-    "predicted_type_label": "Portability",
-    "title": "Integration"
+    "title": "Data Privacy"
   }
 ]

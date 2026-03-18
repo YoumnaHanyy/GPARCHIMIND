@@ -2,8 +2,8 @@
   "status": "SUCCESS",
   "structural": {
     "metrics": {
-      "component_count": 4,
-      "relationship_count": 3,
+      "component_count": 7,
+      "relationship_count": 10,
       "undefined_references": 0,
       "self_loops": 0,
       "invalid_relationship_types": 0
@@ -13,23 +13,35 @@
   },
   "quality": {
     "fan_in": {
-      "API Gateway": 0,
-      "Order Database": 1,
-      "Order Service": 1,
-      "User Service": 1
+      "RatingEngine": 1,
+      "CVParser": 1,
+      "ScreeningQuestionManager": 1,
+      "Security": 1,
+      "CVViewer": 2,
+      "Database": 2,
+      "APIGateway": 2
     },
     "fan_out": {
-      "API Gateway": 2,
-      "Order Database": 0,
-      "Order Service": 1,
-      "User Service": 0
+      "RatingEngine": 1,
+      "CVParser": 1,
+      "ScreeningQuestionManager": 1,
+      "Security": 1,
+      "CVViewer": 0,
+      "Database": 1,
+      "APIGateway": 5
     },
-    "centralization_index": 0.25,
-    "risks": []
+    "centralization_index": 0.2857142857142857,
+    "risks": [
+      {
+        "component": "APIGateway",
+        "risk": "High coupling",
+        "quality_attribute": "Modifiability"
+      }
+    ]
   },
   "domain": {
     "stateless_ratio": 1.0,
-    "state_concentration": 1,
+    "state_concentration": 2,
     "communication_style": "synchronous"
   }
 }

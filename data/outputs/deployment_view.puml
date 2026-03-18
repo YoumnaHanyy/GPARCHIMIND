@@ -7,27 +7,43 @@ node "Client" {
 node "Kubernetes Ingress" {
   component "Ingress Controller"
 }
-node "API Gateway Pod" {
-  component "API Gateway"
+node "CVParser Pod" {
+  component "CVParser"
 }
-node "User Service Pod" {
-  component "User Service"
+node "CVViewer Pod" {
+  component "CVViewer"
 }
-node "Order Service Pod" {
-  component "Order Service"
+node "ScreeningQuestionManager Pod" {
+  component "ScreeningQuestionManager"
+}
+node "RatingEngine Pod" {
+  component "RatingEngine"
+}
+node "APIGateway Pod" {
+  component "APIGateway"
+}
+node "Security Pod" {
+  component "Security"
 }
 node "Database StatefulSet" {
-  database "Order Database"
+  database "Database"
 }
 "User" --> "Ingress Controller" : TCP/IP
 "Ingress Controller" --> "API Gateway Pod" : HTTP/HTTPS
 "User" --> "Ingress Controller"
 "Ingress Controller" --> "API Gateway Pod"
-"API Gateway Pod" --> "User Service Pod"
-"API Gateway Pod" --> "Order Service Pod"
-"API Gateway Pod" --> "Database StatefulSet"
-"User Service Pod" --> "Database StatefulSet"
-"Order Service Pod" --> "Database StatefulSet"
+"API Gateway Pod" --> "CVParser Pod"
+"API Gateway Pod" --> "CVViewer Pod"
+"API Gateway Pod" --> "ScreeningQuestionManager Pod"
+"API Gateway Pod" --> "RatingEngine Pod"
+"API Gateway Pod" --> "APIGateway Pod"
+"API Gateway Pod" --> "Security Pod"
+"CVParser Pod" --> "Database StatefulSet"
+"CVViewer Pod" --> "Database StatefulSet"
+"ScreeningQuestionManager Pod" --> "Database StatefulSet"
+"RatingEngine Pod" --> "Database StatefulSet"
+"APIGateway Pod" --> "Database StatefulSet"
+"Security Pod" --> "Database StatefulSet"
 node "Secondary Region" {
   component "Replica Services"
 }
