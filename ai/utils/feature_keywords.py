@@ -1,83 +1,61 @@
 FEATURE_KEYWORDS = {
-
     "HIGH_SCALABILITY": [
-        "scalable", "scalability", "high load", "heavy load",
-        "large number of users", "many users", "millions of users",
-        "concurrent users", "high traffic", "handle traffic",
-        "growth", "expand", "scale up", "handle demand"
+        "scalable", "scalability", "high load", "many users",
+        "large number of users", "traffic", "concurrent users"
     ],
 
     "LOW_LATENCY": [
-        "low latency", "fast", "quick", "instant",
-        "response time", "fast response", "quick response",
-        "real-time response", "minimal delay", "immediate"
+        "low latency", "fast", "quick response",
+        "response time", "real-time response", "instant"
     ],
 
     "HIGH_SECURITY": [
-        "secure", "security", "protect", "protection",
+        "secure", "security", "protection",
         "authentication", "authorization", "encryption",
-        "data protection", "prevent unauthorized access",
-        "privacy", "confidential", "secure data"
+        "prevent unauthorized access"
     ],
 
     "HIGH_MAINTAINABILITY": [
-        "maintain", "maintainable", "easy to maintain",
-        "easy to update", "easy to modify",
-        "flexible code", "clean code", "refactor",
-        "extensible", "modular code"
-    ],
-
-    "HIGH_EXTENSIBILITY": [
-        "extensible", "extend", "add features",
-        "future expansion", "easy to extend",
-        "plug-in", "scalable design"
+        "maintain", "maintainable", "easy to update",
+        "easy to modify", "flexible code"
     ],
 
     "FAULT_TOLERANCE": [
         "reliable", "reliability", "fault tolerant",
-        "high availability", "availability", "99.9%",
-        "failover", "resilient", "recovery",
-        "no downtime", "robust"
+        "availability", "99.9%", "failover"
     ],
 
     "DISTRIBUTED_SYSTEM": [
-        "distributed", "multiple nodes", "cluster",
-        "microservices", "cloud", "cloud-based",
-        "horizontal scaling", "server cluster"
+        "distributed", "multiple nodes", "microservices",
+        "cloud", "cluster"
     ],
 
     "EVENT_DRIVEN": [
-        "event", "events", "trigger", "triggered",
-        "notification", "notify", "publish",
-        "subscribe", "pub-sub", "message queue",
-        "event-driven"
+        "event", "trigger", "notification", "update",
+        "publish", "subscribe"
     ],
 
     "REAL_TIME": [
-        "real-time", "real time", "live", "instant",
-        "immediate", "streaming"
+        "real-time", "instant", "live", "immediate"
     ],
 
     "MODULARITY": [
-        "modular", "loosely coupled", "decoupled",
-        "separation of concerns", "independent modules",
-        "components", "layered architecture"
+        "modular", "loosely coupled", "separation of concerns",
+        "independent modules"
+    ],
+     "HIGH_EXTENSIBILITY": [
+        "extensible", "extendable", "plug in", "plugin", "add new features"
     ],
 
     "FLEXIBLE_CREATION": [
-        "dynamic object creation", "create different types",
-        "flexible instantiation", "object creation logic",
-        "factory", "builder pattern"
+        "factory", "builder", "object creation", "dynamic creation"
     ],
 
     "DYNAMIC_BEHAVIOR": [
-        "dynamic behavior", "change behavior",
-        "switch logic", "runtime decision",
-        "strategy", "algorithm selection"
+        "strategy", "runtime behavior change", "dynamic behavior"
     ],
 
     "HIGH_COUPLING_RISK": [
-        "tight coupling", "dependent modules",
-        "strong dependency", "hardcoded interaction"
+        "tightly coupled", "dependent modules", "strong dependency"
     ]
 }

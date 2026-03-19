@@ -25,7 +25,9 @@ Your task is to extract ONLY explicitly supported architectural features from th
 * 0.7 – 0.89 → clearly implied with strong evidence
 * 0.4 – 0.69 → weak or indirect evidence
 * 0.0 – 0.3 → no clear evidence
-
+- Use 0.4–0.6 when there is indirect but reasonable evidence (do NOT assign 0.0 in such cases)  
+- Use high scores (0.9–1.0) when there is strong explicit evidence in the text.
+- Do NOT hesitate to assign 0.9 if clear keywords or phrases are present.
 ⚠️ OUTPUT RULES:
 
 * Return ONLY valid JSON

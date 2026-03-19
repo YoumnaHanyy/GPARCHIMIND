@@ -4,10 +4,31 @@ from huggingface_hub import InferenceClient
 from ai.inference.feature_validator import validate_features
 from ai.inference.prompt_builder import build_prompt
 from ai.inference.response_parser import parse_response
-
+from ai.utils.feature_keywords import FEATURE_KEYWORDS
 # MODEL
 client = InferenceClient(model="meta-llama/Meta-Llama-3-8B-Instruct")
 
+ALL_FEATURES = [
+    "EVENT_DRIVEN",
+    "REAL_TIME",
+    "HIGH_SCALABILITY",
+    "LOW_LATENCY",
+    "HIGH_EXTENSIBILITY",
+    "HIGH_MAINTAINABILITY",
+    "FLEXIBLE_CREATION",
+    "DYNAMIC_BEHAVIOR",
+    "DISTRIBUTED_SYSTEM",
+    "FAULT_TOLERANCE",
+    "HIGH_SECURITY",
+    "MODULARITY",
+    "HIGH_COUPLING_RISK"
+]
+
+def ensure_all_features(features):
+    for key in ALL_FEATURES:
+        if key not in features:
+            features[key] = 0.0
+    return features
 
 def load_requirements():
     with open("data/outputs/functional_requirements.json", "r") as f:
@@ -17,6 +38,7 @@ def load_requirements():
         nfrs = json.load(f)
 
     return frs, nfrs
+
 
 
 def format_requirements(frs, nfrs):
@@ -44,7 +66,7 @@ def format_requirements(frs, nfrs):
 def normalize_text(text):
     text = text.lower()
     text = text.replace("-", " ")
-    text = re.sub(r"[^\w\s]", "", text)  # يشيل الرموز
+    text = re.sub(r"[^a-zA-Z0-9\s]", "", text)
     return text
 
 
@@ -60,29 +82,55 @@ def call_llm(prompt):
 
     return response.choices[0].message.content
 
-
 def extract_features():
     frs, nfrs = load_requirements()
 
     frs_text, nfrs_text = format_requirements(frs, nfrs)
 
     full_text = frs_text + "\n" + nfrs_text
+   
 
-    # 🔥 نعمل preprocessing هنا
-    full_text = normalize_text(full_text)
-
-    prompt = build_prompt(frs_text, nfrs_text)
-
+    prompt = build_prompt(frs_text,nfrs_text)
     response = call_llm(prompt)
-
-    print("RAW RESPONSE:\n", response)
 
     features = parse_response(response)
 
-    # 👇 validation يستخدم النص النضيف
+    features = ensure_all_features(features)
+
+    # ✅ مرة واحدة بس
     features = validate_features(features, full_text)
 
     return features
+
+
+
+
+def build_feature_decision(features, text):
+    decisions = {}
+
+    for feature, score in features.items():
+
+        if score >= 0.7:
+            supported = True
+        elif score <= 0.3:
+            supported = False
+        else:
+            supported = "partial"
+
+        # extract evidence
+        evidence = []
+        for word in FEATURE_KEYWORDS.get(feature, []):
+            if word in text.lower():
+                evidence.append(word)
+
+        decisions[feature] = {
+            "supported": supported,
+            "confidence": round(score, 2),
+            "evidence": list(set(evidence))
+        }
+
+    return decisions
+
 
 
 def save_features(features):
@@ -90,7 +138,18 @@ def save_features(features):
         json.dump(features, f, indent=4)
 
 
+def save_decisions(decisions):
+    with open("data/outputs/feature_decisions.json", "w") as f:
+        json.dump(decisions, f, indent=4)
+
+
 if __name__ == "__main__":
-    features = extract_features()
-    save_features(features)
-    print(features)
+  features = extract_features()
+
+  frs, nfrs = load_requirements()
+  frs_text, nfrs_text = format_requirements(frs, nfrs)
+  full_text = frs_text + "\n" + nfrs_text
+
+  decisions = build_feature_decision(features, full_text)
+  save_decisions(decisions)
+  print(decisions)

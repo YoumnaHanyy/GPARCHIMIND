@@ -1,83 +1,38 @@
 [
   {
-    "title": "Performance",
-    "description": "The system MUST respond to user requests within 2 seconds under normal load.",
+    "title": "usability",
+    "description": "The system should be easy to use and understandable for all users.",
     "source": {
-      "page": 30,
+      "page": 5,
       "start_index": null
     },
-    "project_id": "proj_ecommerce_001"
+    "project_id": "proj_negative_test_001"
   },
   {
-    "title": "Reliability",
-    "description": "The system SHALL ensure that all transactions are processed reliably without data loss.",
+    "title": "compatibility",
+    "description": "The system should work across different devices and browsers.",
     "source": {
-      "page": 30,
+      "page": 6,
       "start_index": null
     },
-    "project_id": "proj_ecommerce_001"
+    "project_id": "proj_negative_test_001"
   },
   {
-    "title": "Security",
-    "description": "The system MUST secure payment transactions and protect sensitive user information.",
+    "title": "availability",
+    "description": "The system should be available most of the time.",
     "source": {
-      "page": 31,
+      "page": 7,
       "start_index": null
     },
-    "project_id": "proj_ecommerce_001"
+    "project_id": "proj_negative_test_001"
   },
   {
-    "title": "Scalability",
-    "description": "The system SHOULD handle a high number of concurrent users during peak times without performance degradation.",
+    "title": "general performance",
+    "description": "The system should perform adequately under normal usage conditions.",
     "source": {
-      "page": 31,
+      "page": 8,
       "start_index": null
     },
-    "project_id": "proj_ecommerce_001"
-  },
-  {
-    "title": "Availability",
-    "description": "The system SHALL be available 99.9% of the time to ensure continuous service.",
-    "source": {
-      "page": 32,
-      "start_index": null
-    },
-    "project_id": "proj_ecommerce_001"
-  },
-  {
-    "title": "Usability",
-    "description": "The system MUST provide an intuitive and user-friendly interface for customers.",
-    "source": {
-      "page": 32,
-      "start_index": null
-    },
-    "project_id": "proj_ecommerce_001"
-  },
-  {
-    "title": "Maintainability",
-    "description": "The system SHOULD be easy to maintain, update, and extend by developers.",
-    "source": {
-      "page": 33,
-      "start_index": null
-    },
-    "project_id": "proj_ecommerce_001"
-  },
-  {
-    "title": "Compatibility",
-    "description": "The system MUST be compatible with multiple browsers and mobile devices.",
-    "source": {
-      "page": 33,
-      "start_index": null
-    },
-    "project_id": "proj_ecommerce_001"
-  },
-  {
-    "title": "Integration",
-    "description": "The system SHOULD integrate with external payment gateways and shipping services.",
-    "source": {
-      "page": 34,
-      "start_index": null
-    },
-    "project_id": "proj_ecommerce_001"
+    "project_id": "proj_negative_test_001"
   }
 ]

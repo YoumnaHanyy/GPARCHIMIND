@@ -1,0 +1,69 @@
+{
+    "EVENT_DRIVEN": {
+        "supported": false,
+        "confidence": 0.0,
+        "evidence": []
+    },
+    "REAL_TIME": {
+        "supported": false,
+        "confidence": 0.0,
+        "evidence": []
+    },
+    "HIGH_SCALABILITY": {
+        "supported": "partial",
+        "confidence": 0.32,
+        "evidence": []
+    },
+    "LOW_LATENCY": {
+        "supported": false,
+        "confidence": 0.0,
+        "evidence": []
+    },
+    "HIGH_EXTENSIBILITY": {
+        "supported": false,
+        "confidence": 0.0,
+        "evidence": []
+    },
+    "HIGH_MAINTAINABILITY": {
+        "supported": "partial",
+        "confidence": 0.32,
+        "evidence": []
+    },
+    "FLEXIBLE_CREATION": {
+        "supported": false,
+        "confidence": 0.0,
+        "evidence": []
+    },
+    "DYNAMIC_BEHAVIOR": {
+        "supported": false,
+        "confidence": 0.0,
+        "evidence": []
+    },
+    "DISTRIBUTED_SYSTEM": {
+        "supported": false,
+        "confidence": 0.0,
+        "evidence": []
+    },
+    "FAULT_TOLERANCE": {
+        "supported": "partial",
+        "confidence": 0.5,
+        "evidence": [
+            "availability"
+        ]
+    },
+    "HIGH_SECURITY": {
+        "supported": false,
+        "confidence": 0.0,
+        "evidence": []
+    },
+    "MODULARITY": {
+        "supported": false,
+        "confidence": 0.0,
+        "evidence": []
+    },
+    "HIGH_COUPLING_RISK": {
+        "supported": false,
+        "confidence": 0.0,
+        "evidence": []
+    }
+}
