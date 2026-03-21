@@ -1,65 +1,83 @@
 [
   {
-    "title": "Standards Compliance",
-    "description": "The system shall comply with relevant security standards and regulations.",
-    "predicted_type": "SE",
-    "predicted_type_label": "Security",
-    "confidence": 0.982631266117096,
-    "predicted_level": "Medium",
-    "confirmed": false
-  },
-  {
-    "title": "Hardware Limitations",
-    "description": "The system shall operate within the constraints of available hardware resources.",
-    "predicted_type": "PO",
-    "predicted_type_label": "Portability",
-    "confidence": 0.6573919653892517,
-    "predicted_level": "Medium",
-    "confirmed": false
-  },
-  {
-    "title": "Network Constraints",
-    "description": "The system shall operate within the constraints of available network resources.",
-    "predicted_type": "SC",
-    "predicted_type_label": "Scalability",
-    "confidence": 0.8461320996284485,
-    "predicted_level": "Medium",
-    "confirmed": false
-  },
-  {
-    "title": "Usability",
-    "description": "The system shall provide a user-friendly interface that is easy to navigate and use.",
-    "predicted_type": "US",
-    "predicted_type_label": "Usability",
-    "confidence": 0.9160017967224121,
-    "predicted_level": "Medium",
-    "confirmed": false
-  },
-  {
-    "title": "Performance",
-    "description": "The system shall respond to user input within a reasonable time frame.",
-    "predicted_type": "PE",
-    "predicted_type_label": "Performance",
-    "confidence": 0.9645494222640991,
-    "predicted_level": "Medium",
-    "confirmed": false
-  },
-  {
     "title": "Security",
-    "description": "The system shall protect user data and prevent unauthorized access.",
+    "description": "The data must be secured in order for the System to be available everywhere, reliable, and secure",
     "predicted_type": "SE",
     "predicted_type_label": "Security",
-    "confidence": 0.9878333806991577,
+    "confidence": 0.9427734613418579,
     "predicted_level": "High",
     "confirmed": false
   },
   {
+    "title": "Performance",
+    "description": "The application should work fast without any errors or delays or system failure",
+    "predicted_type": "PE",
+    "predicted_type_label": "Performance",
+    "confidence": 0.9511208534240723,
+    "predicted_level": "Low",
+    "confirmed": false
+  },
+  {
+    "title": "Usability",
+    "description": "The app will provide friendly user interface that suitable for all type of people",
+    "predicted_type": "US",
+    "predicted_type_label": "Usability",
+    "confidence": 0.844233512878418,
+    "predicted_level": "Medium",
+    "confirmed": false
+  },
+  {
+    "title": "Accessibility",
+    "description": "User must own a smart mobile phone and have basic English knowledge",
+    "predicted_type": "US",
+    "predicted_type_label": "Usability",
+    "confidence": 0.8389796614646912,
+    "predicted_level": "High",
+    "confirmed": false
+  },
+  {
+    "title": "Reliability",
+    "description": "Our goal to build reliable mobile application that is easy for users to use it anywhere",
+    "predicted_type": "US",
+    "predicted_type_label": "Usability",
+    "confidence": 0.669823169708252,
+    "predicted_level": "Medium",
+    "confirmed": false
+  },
+  {
+    "title": "Compatibility",
+    "description": "Alert mobile application can work with iOS and Android operating systems",
+    "predicted_type": "PO",
+    "predicted_type_label": "Portability",
+    "confidence": 0.8713395595550537,
+    "predicted_level": "Low",
+    "confirmed": false
+  },
+  {
     "title": "Scalability",
-    "description": "The system shall be able to handle a large volume of users and data.",
+    "description": "The application should be able to handle a large number of users and crimes",
     "predicted_type": "SC",
     "predicted_type_label": "Scalability",
-    "confidence": 0.9578140377998352,
-    "predicted_level": "Medium",
+    "confidence": 0.7830652594566345,
+    "predicted_level": "Low",
+    "confirmed": false
+  },
+  {
+    "title": "Maintainability",
+    "description": "The application should be easy to maintain and update",
+    "predicted_type": "MN",
+    "predicted_type_label": "Manageability",
+    "confidence": 0.9125012159347534,
+    "predicted_level": "Low",
+    "confirmed": false
+  },
+  {
+    "title": "Response Time",
+    "description": "All application should load at least in 3 seconds",
+    "predicted_type": "PE",
+    "predicted_type_label": "Performance",
+    "confidence": 0.9617825746536255,
+    "predicted_level": "Low",
     "confirmed": false
   }
 ]

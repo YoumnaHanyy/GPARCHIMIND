@@ -1,65 +1,47 @@
 [
   {
-    "title": "Standards Compliance",
-    "description": "The system shall comply with relevant security standards and regulations.",
-    "source": {
-      "page": 19,
-      "start_index": null
-    },
-    "project_id": "proj_fb6c6a77"
-  },
-  {
-    "title": "Hardware Limitations",
-    "description": "The system shall operate within the constraints of available hardware resources.",
-    "source": {
-      "page": 19,
-      "start_index": null
-    },
-    "project_id": "proj_fb6c6a77"
-  },
-  {
-    "title": "Network Constraints",
-    "description": "The system shall operate within the constraints of available network resources.",
-    "source": {
-      "page": 19,
-      "start_index": null
-    },
-    "project_id": "proj_fb6c6a77"
-  },
-  {
-    "title": "Usability",
-    "description": "The system shall provide a user-friendly interface that is easy to navigate and use.",
-    "source": {
-      "page": null,
-      "start_index": null
-    },
-    "project_id": "proj_fb6c6a77"
+    "title": "Security",
+    "description": "The data must be secured in order for the System to be available everywhere, reliable, and secure",
+    "project_id": "proj_4b3b6209"
   },
   {
     "title": "Performance",
-    "description": "The system shall respond to user input within a reasonable time frame.",
-    "source": {
-      "page": null,
-      "start_index": null
-    },
-    "project_id": "proj_fb6c6a77"
+    "description": "The application should work fast without any errors or delays or system failure",
+    "project_id": "proj_4b3b6209"
   },
   {
-    "title": "Security",
-    "description": "The system shall protect user data and prevent unauthorized access.",
-    "source": {
-      "page": null,
-      "start_index": null
-    },
-    "project_id": "proj_fb6c6a77"
+    "title": "Usability",
+    "description": "The app will provide friendly user interface that suitable for all type of people",
+    "project_id": "proj_4b3b6209"
+  },
+  {
+    "title": "Accessibility",
+    "description": "User must own a smart mobile phone and have basic English knowledge",
+    "project_id": "proj_4b3b6209"
+  },
+  {
+    "title": "Reliability",
+    "description": "Our goal to build reliable mobile application that is easy for users to use it anywhere",
+    "project_id": "proj_4b3b6209"
+  },
+  {
+    "title": "Compatibility",
+    "description": "Alert mobile application can work with iOS and Android operating systems",
+    "project_id": "proj_4b3b6209"
   },
   {
     "title": "Scalability",
-    "description": "The system shall be able to handle a large volume of users and data.",
-    "source": {
-      "page": null,
-      "start_index": null
-    },
-    "project_id": "proj_fb6c6a77"
+    "description": "The application should be able to handle a large number of users and crimes",
+    "project_id": "proj_4b3b6209"
+  },
+  {
+    "title": "Maintainability",
+    "description": "The application should be easy to maintain and update",
+    "project_id": "proj_4b3b6209"
+  },
+  {
+    "title": "Response Time",
+    "description": "All application should load at least in 3 seconds",
+    "project_id": "proj_4b3b6209"
   }
 ]

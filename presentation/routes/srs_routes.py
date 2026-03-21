@@ -112,7 +112,7 @@ async def extract_srs(request: Request, file: UploadFile = File(...)):
         extraction_result = process_srs(
             pdf_path=pdf_path,
             project_id=project_id,
-            hf_key=os.getenv("HF_API_KEY")
+            hf_key=None
         )
         
         if not extraction_result:
@@ -130,8 +130,49 @@ async def extract_srs(request: Request, file: UploadFile = File(...)):
         # 4️⃣ Get high and low confidence from MongoDB
         high_confidence = NFRPredictionRepository.get_high_confidence(project_id)
         low_confidence = NFRPredictionRepository.get_low_confidence(project_id)
-
         print(f"📊 High confidence: {len(high_confidence)}, Low confidence: {len(low_confidence)}")
+        if len(low_confidence) == 0:
+            print("⚡ No low confidence → auto running architecture")
+
+            all_nfrs = high_confidence
+
+            functional_result = execute_functional_method(project_id)
+    
+            freq_norm, must_norm, importance = compute_nfr_statistics(all_nfrs)
+    
+            ordinal_result = execute_ordinal_method()
+            binary_result = execute_binary_method()
+    
+            weighted_result = execute_weighted_method(
+                freq_norm=freq_norm,
+                must_norm=must_norm,
+                importance=importance
+            )
+    
+            hybrid_result = execute_hybrid_method(
+                project_id,
+                functional_result,
+                ordinal_result,
+                binary_result,
+                weighted_result
+            )
+
+            save_weighted_result(project_id, weighted_result)
+
+            return {
+                "project_id": project_id,
+                "srs_verified": True,
+                "functional": clean_object_id(extraction_result.get("functional", [])),
+                "nfr_predictions": clean_object_id(high_confidence),
+                "low_confidence_nfrs": [],
+                "needs_confirmation": False,
+                "functional_method": functional_result,
+                "ordinal_method": ordinal_result.get("result"),
+                "binary_method": binary_result,
+                "weighted_method": weighted_result,
+                "hybrid_method": hybrid_result
+            }
+        
 
         # 5️⃣ Return data to frontend
         return {
