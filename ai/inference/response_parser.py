@@ -26,6 +26,6 @@ def parse_response(response):
         for feature, keywords in FEATURE_KEYWORDS.items():
             for word in keywords:
                 if word in text or word.replace(" ", "") in text:
-                   features[feature] = max(features[feature], 0.5)
+                   features[feature] = 0.3
 
         return features

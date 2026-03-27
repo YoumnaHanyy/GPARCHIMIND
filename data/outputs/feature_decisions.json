@@ -1,69 +1,153 @@
 {
     "EVENT_DRIVEN": {
-        "supported": false,
-        "confidence": 0.0,
-        "evidence": []
-    },
-    "REAL_TIME": {
-        "supported": false,
-        "confidence": 0.0,
-        "evidence": []
-    },
-    "HIGH_SCALABILITY": {
         "supported": "partial",
-        "confidence": 0.32,
-        "evidence": []
+        "confidence": 0.63,
+        "evidence": [
+            "react to event",
+            "on change",
+            "event based",
+            "on update",
+            "reactive system",
+            "trigger action"
+        ]
     },
-    "LOW_LATENCY": {
-        "supported": false,
-        "confidence": 0.0,
-        "evidence": []
-    },
-    "HIGH_EXTENSIBILITY": {
-        "supported": false,
-        "confidence": 0.0,
-        "evidence": []
-    },
-    "HIGH_MAINTAINABILITY": {
-        "supported": "partial",
-        "confidence": 0.32,
-        "evidence": []
-    },
-    "FLEXIBLE_CREATION": {
-        "supported": false,
-        "confidence": 0.0,
-        "evidence": []
+    "MODULARITY": {
+        "supported": true,
+        "confidence": 0.85,
+        "evidence": [
+            "component based",
+            "plug and play",
+            "separation of concerns",
+            "modular system"
+        ]
     },
     "DYNAMIC_BEHAVIOR": {
-        "supported": false,
-        "confidence": 0.0,
-        "evidence": []
-    },
-    "DISTRIBUTED_SYSTEM": {
-        "supported": false,
-        "confidence": 0.0,
-        "evidence": []
-    },
-    "FAULT_TOLERANCE": {
         "supported": "partial",
         "confidence": 0.5,
         "evidence": [
-            "availability"
+            "adaptive system"
+        ]
+    },
+    "LOW_LATENCY": {
+        "supported": true,
+        "confidence": 0.85,
+        "evidence": [
+            "minimal delay",
+            "low response time",
+            "near real time",
+            "quick",
+            "optimized performance",
+            "short response time",
+            "near zero delay",
+            "quick response"
+        ]
+    },
+    "FLEXIBLE_CREATION": {
+        "supported": false,
+        "confidence": 0.3,
+        "evidence": []
+    },
+    "HIGH_EXTENSIBILITY": {
+        "supported": "partial",
+        "confidence": 0.38,
+        "evidence": [
+            "plugin system",
+            "plug in",
+            "extend system"
+        ]
+    },
+    "HIGH_SCALABILITY": {
+        "supported": true,
+        "confidence": 0.9,
+        "evidence": [
+            "large number of users",
+            "scale out",
+            "many users",
+            "scale up",
+            "simultaneous users",
+            "millions of users",
+            "elastic system",
+            "concurrent users",
+            "scalability"
+        ]
+    },
+    "HIGH_MAINTAINABILITY": {
+        "supported": true,
+        "confidence": 0.75,
+        "evidence": [
+            "update system",
+            "easy to maintain",
+            "easy to update",
+            "system updates",
+            "easy to modify",
+            "easy to change",
+            "structured system"
+        ]
+    },
+    "REAL_TIME": {
+        "supported": "partial",
+        "confidence": 0.38,
+        "evidence": [
+            "real time",
+            "live system",
+            "data streaming"
         ]
     },
     "HIGH_SECURITY": {
-        "supported": false,
-        "confidence": 0.0,
-        "evidence": []
+        "supported": true,
+        "confidence": 0.9,
+        "evidence": [
+            "encrypted data",
+            "prevent unauthorized access",
+            "login protection",
+            "secure transactions",
+            "protect user data",
+            "protect data",
+            "data privacy",
+            "user authentication",
+            "secure",
+            "data protection",
+            "security",
+            "authentication",
+            "access control",
+            "secure payment",
+            "secure communication",
+            "secure login",
+            "two factor authentication",
+            "high security"
+        ]
     },
-    "MODULARITY": {
-        "supported": false,
-        "confidence": 0.0,
-        "evidence": []
+    "FAULT_TOLERANCE": {
+        "supported": true,
+        "confidence": 0.85,
+        "evidence": [
+            "backup system",
+            "high availability",
+            "availability",
+            "resilient system",
+            "reliability",
+            "system recovery",
+            "high reliability"
+        ]
+    },
+    "DISTRIBUTED_SYSTEM": {
+        "supported": "partial",
+        "confidence": 0.58,
+        "evidence": [
+            "service based architecture",
+            "network based",
+            "clustered system",
+            "distributed system",
+            "cloud based",
+            "api based"
+        ]
     },
     "HIGH_COUPLING_RISK": {
-        "supported": false,
-        "confidence": 0.0,
-        "evidence": []
+        "supported": "partial",
+        "confidence": 0.6,
+        "evidence": [
+            "hard to change",
+            "monolithic system"
+        ]
     }
 }

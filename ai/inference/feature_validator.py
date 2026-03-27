@@ -3,7 +3,12 @@ from ai.utils.text_utils import normalize_text
 
 
 def match_keyword(word, text):
-    return word in text or word.replace("-", " ") in text
+    return (
+        word in text or
+        word.replace("-", " ") in text or
+        word.replace(" ", "") in text or
+        any(w in text for w in word.split())
+    )
 
 
 def validate_features(features, text):
@@ -21,26 +26,41 @@ def validate_features(features, text):
         if feature not in features:
             continue
 
-        # 🧠 count evidence strength
-        matches = [word for word in keywords if word in text]
+        # 🧠 keyword matching
+        matches = [word for word in keywords if match_keyword(word, text)]
         count = len(matches)
 
-        # 🔥 dynamic scoring
-        if count == 0:
-            features[feature] *= 0.8
+        current = features[feature]
 
-        elif count == 1:
-            features[feature] = max(features[feature], 0.5)
+        # 🔥 boost تدريجي (مش قفزات)
+        if count == 1:
+            current = max(current, 0.5)
 
         elif count == 2:
-            features[feature] = max(features[feature], 0.7)
+            current = max(current, 0.6)
 
         elif count >= 3:
-            features[feature] = max(features[feature], 0.85)
+            current = min(0.85, current + 0.15)
 
-        # 🚫 منع 1.0 إلا بشروط قوية
-        if features[feature] > 0.95:
-            if count < 4:   # لازم 4 keywords على الأقل
-                features[feature] = 0.9
+        # 🧠 weak signal correction (بس لو AI ضعيف جدًا)
+        if count == 0 and current < 0.3:
+            current = 0.3
+
+        # 🔒 strict features control
+        if feature in strict_features:
+            strict_words = strict_features[feature]
+            if not any(match_keyword(w, text) for w in strict_words):
+                current = min(current, 0.5)
+
+        # 🚫 منع القيم العالية بدون evidence كفاية
+        if current > 0.9 and count < 3:
+            current = 0.85
+
+        # 🎯 final cap
+        current = min(current, 0.9)
+
+        features[feature] = round(current, 2)
 
     return features
+
+

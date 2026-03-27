@@ -66,7 +66,6 @@ def format_requirements(frs, nfrs):
 def normalize_text(text):
     text = text.lower()
     text = text.replace("-", " ")
-    text = re.sub(r"[^a-zA-Z0-9\s]", "", text)
     return text
 
 
@@ -88,25 +87,59 @@ def extract_features():
     frs_text, nfrs_text = format_requirements(frs, nfrs)
 
     full_text = frs_text + "\n" + nfrs_text
-   
 
-    prompt = build_prompt(frs_text,nfrs_text)
-    response = call_llm(prompt)
+    prompt = build_prompt(frs_text, nfrs_text)
 
-    features = parse_response(response)
+    # 🔁 MULTI-RUN (المهم)
+    runs = []
+
+    for _ in range(3):
+        response = call_llm(prompt)
+        parsed = parse_response(response)
+        runs.append(parsed)
+
+    # 🧠 average
+    ai_features = {}
+
+    for k in runs[0]:
+        ai_features[k] = sum(r.get(k, 0.0) for r in runs) / len(runs)
+
+    # validation
+    validated = validate_features(ai_features.copy(), full_text)
+
+    # merge
+    features = {}
+
+    for k in set(ai_features) | set(validated):
+        features[k] = max(
+            ai_features.get(k, 0.0),
+            validated.get(k, 0.0)
+        )
 
     features = ensure_all_features(features)
 
-    # ✅ مرة واحدة بس
-    features = validate_features(features, full_text)
-
     return features
 
+def match_keyword(word, text):
+    return (
+        word in text or
+        word.replace(" ", "") in text or
+        word.replace("-", " ") in text or
+        any(w in text for w in word.split())
+    )
 
 
+def extract_evidence(feature, text):
+    evidence = []
 
+    for word in FEATURE_KEYWORDS.get(feature, []):
+        if match_keyword(word, text):
+            evidence.append(word)
+
+    return list(set(evidence))
 def build_feature_decision(features, text):
     decisions = {}
+    text = normalize_text(text)
 
     for feature, score in features.items():
 
@@ -117,22 +150,19 @@ def build_feature_decision(features, text):
         else:
             supported = "partial"
 
-        # extract evidence
-        evidence = []
-        for word in FEATURE_KEYWORDS.get(feature, []):
-            if word in text.lower():
-                evidence.append(word)
+        evidence = extract_evidence(feature, text)
+
+        # fallback
+        if not evidence and score > 0.5:
+            evidence = ["derived from context"]
 
         decisions[feature] = {
             "supported": supported,
             "confidence": round(score, 2),
-            "evidence": list(set(evidence))
+            "evidence": evidence
         }
 
     return decisions
-
-
-
 def save_features(features):
     with open("data/outputs/features.json", "w") as f:
         json.dump(features, f, indent=4)

@@ -1,64 +1,87 @@
 def build_prompt(frs_text, nfrs_text):
- return f"""
-You are a senior software architect with strict analytical reasoning.
+    return f"""
+You are a senior software architect.
 
-Your task is to extract ONLY explicitly supported architectural features from the given requirements.
+Your task is to analyze system requirements and assign a confidence score (0.0 to 1.0) for each architectural feature.
 
-⚠️ STRICT RULES:
+----------------------------------------
+RULES:
 
-* Do NOT assume or infer features unless there is clear textual evidence.
-* If a feature is not explicitly supported, assign a LOW score (0.0 - 0.3).
-* Base every score on direct evidence from the requirements.
+- Do NOT hallucinate features.
+- Base your decision on the requirements text.
+- HOWEVER, you ARE ALLOWED to use reasonable architectural inference.
 
-⚠️ IMPORTANT DISTINCTIONS:
+- If multiple weak signals exist → combine them.
+- Do NOT be overly conservative.
+- Slight overestimation is acceptable if logically justified.
 
-* "Fast", "2 seconds", or "quick response" → LOW_LATENCY, NOT REAL_TIME
-* "Notifications" alone → NOT EVENT_DRIVEN unless terms like "event", "publish", "subscribe", "message queue" are present
-* "Integration with external systems" → does NOT imply DISTRIBUTED_SYSTEM
-* "Reliable" or "availability" → FAULT_TOLERANCE, NOT DISTRIBUTED_SYSTEM
-* "Maintainable" → HIGH_MAINTAINABILITY
-* "Scalable" or "many users" → HIGH_SCALABILITY
+----------------------------------------
+IMPORTANT DISTINCTIONS:
 
-⚠️ SCORING GUIDELINES:
+- "Fast", "quick response", "2 seconds" → LOW_LATENCY (NOT REAL_TIME)
+- Notifications + system reactions → may indicate EVENT_DRIVEN
+- Integration with APIs or external systems → may indicate DISTRIBUTED_SYSTEM
+- "Reliable" or "availability" → FAULT_TOLERANCE
+- "Maintainable" → HIGH_MAINTAINABILITY
+- "Scalable", "many users", "concurrent users" → HIGH_SCALABILITY
 
-* 0.9 – 1.0 → explicitly and strongly supported
-* 0.7 – 0.89 → clearly implied with strong evidence
-* 0.4 – 0.69 → weak or indirect evidence
-* 0.0 – 0.3 → no clear evidence
-- Use 0.4–0.6 when there is indirect but reasonable evidence (do NOT assign 0.0 in such cases)  
-- Use high scores (0.9–1.0) when there is strong explicit evidence in the text.
-- Do NOT hesitate to assign 0.9 if clear keywords or phrases are present.
-⚠️ OUTPUT RULES:
+----------------------------------------
+SCORING GUIDE:
 
-* Return ONLY valid JSON
-* Do NOT include explanations
-* Do NOT add extra text
-* You MUST return all listed features exactly once
-* Do NOT add or remove any feature
+- 0.9 – 1.0 → strong explicit evidence
+- 0.7 – 0.89 → strong indirect evidence
+- 0.4 – 0.69 → weak but reasonable signals
+- 0.0 – 0.3 → no meaningful support
 
-Features:
+- If multiple indicators support a feature → increase score
 
-* EVENT_DRIVEN
-* REAL_TIME
-* HIGH_SCALABILITY
-* LOW_LATENCY
-* HIGH_EXTENSIBILITY
-* HIGH_MAINTAINABILITY
-* FLEXIBLE_CREATION
-* DYNAMIC_BEHAVIOR
-* DISTRIBUTED_SYSTEM
-* FAULT_TOLERANCE
-* HIGH_SECURITY
-* MODULARITY
-* HIGH_COUPLING_RISK
+----------------------------------------
+FEATURES TO SCORE:
 
-Before producing the final JSON:
+EVENT_DRIVEN  
+REAL_TIME  
+HIGH_SCALABILITY  
+LOW_LATENCY  
+HIGH_EXTENSIBILITY  
+HIGH_MAINTAINABILITY  
+FLEXIBLE_CREATION  
+DYNAMIC_BEHAVIOR  
+DISTRIBUTED_SYSTEM  
+FAULT_TOLERANCE  
+HIGH_SECURITY  
+MODULARITY  
+HIGH_COUPLING_RISK  
 
-* Internally justify each score using exact phrases from the requirements
-* Then review all scores again and reduce any score that is not strongly supported
+----------------------------------------
+OUTPUT FORMAT (STRICT):
 
-Requirements:
+Return ONLY valid JSON.
+No explanation.
+No extra text.
+
+Example:
+
+{{
+  "EVENT_DRIVEN": 0.6,
+  "REAL_TIME": 0.5,
+  "HIGH_SCALABILITY": 0.9,
+  "LOW_LATENCY": 0.7,
+  "HIGH_EXTENSIBILITY": 0.3,
+  "HIGH_MAINTAINABILITY": 0.6,
+  "FLEXIBLE_CREATION": 0.2,
+  "DYNAMIC_BEHAVIOR": 0.6,
+  "DISTRIBUTED_SYSTEM": 0.7,
+  "FAULT_TOLERANCE": 0.8,
+  "HIGH_SECURITY": 0.9,
+  "MODULARITY": 0.7,
+  "HIGH_COUPLING_RISK": 0.2
+}}
+
+----------------------------------------
+REQUIREMENTS:
+
 {frs_text}
+
 {nfrs_text}
 
 JSON:
