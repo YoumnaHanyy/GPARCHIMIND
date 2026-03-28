@@ -1,47 +1,74 @@
 [
   {
-    "title": "Transfer Money",
-    "description": "Users can transfer money between their accounts and to other users.",
+    "title": "Submit CV",
+    "description": "Applicants can submit their CVs for parsing and analysis.",
     "source": {
-      "page": "2.1",
-      "start_index": null
+      "page": "Introduction",
+      "start_index": "1.1"
     },
-    "project_id": "proj_bank_001"
+    "project_id": "proj_a82f712f"
   },
   {
-    "title": "View Transaction History",
-    "description": "Users can view a history of their past transactions.",
+    "title": "View and Edit CV",
+    "description": "Applicants can view and edit their parsed CV.",
     "source": {
-      "page": "2.2",
-      "start_index": null
+      "page": "Introduction",
+      "start_index": "1.1"
     },
-    "project_id": "proj_bank_001"
+    "project_id": "proj_a82f712f"
   },
   {
-    "title": "Fraud Detection",
-    "description": "The system detects suspicious transactions using intelligent algorithms.",
+    "title": "Answer Screening Questions",
+    "description": "Applicants are presented with screening questions defined by an expert recruiter.",
     "source": {
-      "page": "2.3",
-      "start_index": null
+      "page": "Introduction",
+      "start_index": "1.1"
     },
-    "project_id": "proj_bank_001"
+    "project_id": "proj_a82f712f"
   },
   {
-    "title": "Authentication",
-    "description": "Users must authenticate using secure login mechanisms before accessing their accounts.",
+    "title": "Get Rating for CV",
+    "description": "Applicants get a rating for their submitted CV.",
     "source": {
-      "page": "2.4",
-      "start_index": null
+      "page": "Introduction",
+      "start_index": "1.1"
     },
-    "project_id": "proj_bank_001"
+    "project_id": "proj_a82f712f"
   },
   {
-    "title": "Generate Reports",
-    "description": "The system generates financial reports based on user transactions.",
+    "title": "Parse CV",
+    "description": "The system uses the Python library for parsing the CV and extracting key information.",
     "source": {
-      "page": "2.5",
-      "start_index": null
+      "page": "Abstract",
+      "start_index": "ResuFit is a web-based application"
     },
-    "project_id": "proj_bank_001"
+    "project_id": "proj_a82f712f"
+  },
+  {
+    "title": "Compare CV with Job Requirements",
+    "description": "The system uses cosine similarity and Jaccard similarity to assess the alignment between the extracted information from the CV and the job requirements specified by the recruiter.",
+    "source": {
+      "page": "Abstract",
+      "start_index": "The parsing process extracts key information based on what the recruiter has defined in the job description"
+    },
+    "project_id": "proj_a82f712f"
+  },
+  {
+    "title": "Validate and Score Applicant Responses",
+    "description": "Applicant responses are verified and graded by comparing them to an expert-generated model, and the applicant’s answers are validated and scored by ChatGPT.",
+    "source": {
+      "page": "Abstract",
+      "start_index": "Applicant responses are verified and graded by comparing them to an expert-generated model"
+    },
+    "project_id": "proj_a82f712f"
+  },
+  {
+    "title": "Generate Percentage-Based Result",
+    "description": "The system generates a percentage-based result that represents the applicant’s overall suitability for the role by averaging the CV ranking and screening question validation scores.",
+    "source": {
+      "page": "Abstract",
+      "start_index": "A percentage-based result that represents the applicant’s overall suitability for the role"
+    },
+    "project_id": "proj_a82f712f"
   }
 ]

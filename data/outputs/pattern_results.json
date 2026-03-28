@@ -1,0 +1,39 @@
+{
+    "top_patterns": [
+        {
+            "pattern": "Observer",
+            "score": 1.0,
+            "confidence": "STRONG",
+            "reasons": [
+                "[CORE] EVENT_DRIVEN",
+                "[GENERIC] REAL_TIME"
+            ]
+        },
+        {
+            "pattern": "Strategy",
+            "score": 0.574,
+            "confidence": "MEDIUM",
+            "reasons": [
+                "[CORE] DYNAMIC_BEHAVIOR"
+            ]
+        },
+        {
+            "pattern": "Factory",
+            "score": 0.221,
+            "confidence": "WEAK",
+            "reasons": [
+                "[GENERIC] HIGH_SCALABILITY",
+                "[GENERIC] HIGH_EXTENSIBILITY"
+            ]
+        }
+    ],
+    "all_scores": {
+        "Factory": 0.221,
+        "Builder": 0.0,
+        "Singleton": 0.0,
+        "Observer": 1.0,
+        "Strategy": 0.574,
+        "Mediator": 0.05,
+        "Command": 0.0
+    }
+}

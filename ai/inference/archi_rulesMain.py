@@ -99,18 +99,22 @@ def run_inference(input_data: dict):
 
 # 🧪 optional: لو حابة تشغليه standalone للتست
 if __name__ == "__main__":
-    with open("test_input.json", "r") as f:
+    with open("data/outputs/feature_decisions.json", "r") as f:
         data = json.load(f)
 
     output = run_inference(data)
 
+  # 🔹 print
     print("\n=== Top Design Pattern Recommendations ===")
 
     for item in output["top_patterns"]:
-        print(f"\n{item['pattern']} → {item['score']} ({item['confidence']})")
+     print(f"\n{item['pattern']} → {item['score']} ({item['confidence']})")
 
-        for reason in item["reasons"]:
-            print("  -", reason)
+    for reason in item["reasons"]:
+        print("  -", reason)
 
-    if output["all_scores"] and max(output["all_scores"].values()) < 0.2:
-        print("\n⚠️ No strong pattern detected")
+# 🔹 save
+    with open("data/outputs/pattern_results.json", "w") as f:
+     json.dump(output, f, indent=4)
+
+    print("\n✅ Results saved to pattern_results.json")

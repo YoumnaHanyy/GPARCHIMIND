@@ -1,6 +1,7 @@
 import json
 import re
 from huggingface_hub import InferenceClient
+from infrastructure.database import db
 from ai.inference.feature_validator import validate_features
 from ai.inference.prompt_builder import build_prompt
 from ai.inference.response_parser import parse_response
@@ -167,19 +168,52 @@ def save_features(features):
     with open("data/outputs/features.json", "w") as f:
         json.dump(features, f, indent=4)
 
+def load_selected_architecture(project_id):
 
-def save_decisions(decisions):
+    hybrid_doc = db.hybrid_method.find_one({"project_id": project_id})
+
+    if not hybrid_doc or not hybrid_doc.get("selected_architecture"):
+        raise ValueError("No selected architecture found")
+
+    return hybrid_doc["selected_architecture"]
+
+
+
+def get_latest_project_id():
+    doc = db.hybrid_method.find_one(
+        {"selected_architecture": {"$exists": True}},
+        sort=[("_id", -1)]
+    )
+
+    if not doc:
+        raise ValueError("No project with selected architecture found")
+
+    return doc["project_id"]
+def save_decisions(decisions, architecture="LAYERED"):
+    output = {
+        "architecture": architecture,
+        "features": decisions
+    }
+
     with open("data/outputs/feature_decisions.json", "w") as f:
-        json.dump(decisions, f, indent=4)
+        json.dump(output, f, indent=4)
+
 
 
 if __name__ == "__main__":
-  features = extract_features()
+    features = extract_features()
 
-  frs, nfrs = load_requirements()
-  frs_text, nfrs_text = format_requirements(frs, nfrs)
-  full_text = frs_text + "\n" + nfrs_text
+    frs, nfrs = load_requirements()
+    frs_text, nfrs_text = format_requirements(frs, nfrs)
+    full_text = frs_text + "\n" + nfrs_text
 
-  decisions = build_feature_decision(features, full_text)
-  save_decisions(decisions)
-  print(decisions)
+    decisions = build_feature_decision(features, full_text)
+
+    # 🔥 automatic بدل ما تكتبيه
+    project_id = get_latest_project_id()
+    architecture = load_selected_architecture(project_id)
+
+    save_decisions(decisions, architecture)
+
+    print("✅ Using project:", project_id)
+    print(decisions)

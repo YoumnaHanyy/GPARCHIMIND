@@ -1,83 +1,83 @@
 [
   {
-    "title": "Performance",
-    "description": "The system must respond to user input within a reasonable time frame and perform tasks efficiently.",
+    "description": "The system MUST respond to user requests within a reasonable time frame.",
+    "confidence": 0.9637231826782227,
+    "confirmed": false,
+    "predicted_level": "High",
     "predicted_type": "PE",
     "predicted_type_label": "Performance",
-    "confidence": 0.9643062353134155,
-    "predicted_level": "High",
-    "confirmed": false
+    "title": "Performance"
   },
   {
-    "title": "Reliability",
-    "description": "The system must be able to recover from failures and maintain data integrity.",
+    "description": "The system MUST be available and functioning correctly at all times.",
+    "confidence": 0.9704962968826294,
+    "confirmed": false,
+    "predicted_level": "High",
     "predicted_type": "A",
     "predicted_type_label": "Availability",
-    "confidence": 0.6303340196609497,
-    "predicted_level": "High",
-    "confirmed": false
+    "title": "Reliability"
   },
   {
-    "title": "Security",
-    "description": "The system must protect user data and prevent unauthorized access.",
-    "predicted_type": "SE",
-    "predicted_type_label": "Security",
+    "description": "The system MUST protect user data and prevent unauthorized access.",
     "confidence": 0.98123699426651,
+    "confirmed": false,
     "predicted_level": "High",
-    "confirmed": false
-  },
-  {
-    "title": "Privacy",
-    "description": "The system must ensure that user data is handled in accordance with relevant laws and regulations.",
     "predicted_type": "SE",
     "predicted_type_label": "Security",
-    "confidence": 0.9703742861747742,
-    "predicted_level": "High",
-    "confirmed": false
+    "title": "Security"
   },
   {
-    "title": "Scalability",
-    "description": "The system must be able to handle an increasing number of users and data without compromising performance.",
+    "description": "The system MUST ensure that user data is collected and stored in accordance with applicable laws and regulations.",
+    "confidence": 0.9745767712593079,
+    "confirmed": false,
+    "predicted_level": "High",
+    "predicted_type": "SE",
+    "predicted_type_label": "Security",
+    "title": "Privacy"
+  },
+  {
+    "description": "The system MUST be able to handle a large number of users and requests without compromising performance.",
+    "confidence": 1.0,
+    "confirmed": true,
+    "predicted_level": "High",
     "predicted_type": "SC",
     "predicted_type_label": "Scalability",
-    "confidence": 0.8924492597579956,
-    "predicted_level": "High",
-    "confirmed": false
+    "title": "Scalability"
   },
   {
-    "title": "Usability",
-    "description": "The system must be easy to use and navigate, with clear and intuitive interfaces.",
+    "description": "The system MUST be easy to use and navigate for users of all skill levels.",
+    "confidence": 0.945107638835907,
+    "confirmed": false,
+    "predicted_level": "High",
     "predicted_type": "US",
     "predicted_type_label": "Usability",
-    "confidence": 0.9496889114379883,
-    "predicted_level": "High",
-    "confirmed": false
+    "title": "Usability"
   },
   {
-    "title": "Maintainability",
-    "description": "The system must be easy to modify and update, with clear and well-structured code.",
+    "description": "The system MUST be easy to modify and update without affecting its functionality.",
+    "confidence": 0.9340874552726746,
+    "confirmed": false,
+    "predicted_level": "High",
     "predicted_type": "MN",
     "predicted_type_label": "Manageability",
-    "confidence": 0.9370574951171875,
-    "predicted_level": "High",
-    "confirmed": false
+    "title": "Maintainability"
   },
   {
-    "title": "Compatibility",
-    "description": "The system must be compatible with different browsers and devices.",
+    "description": "The system MUST be compatible with a variety of devices and browsers.",
+    "confidence": 1.0,
+    "confirmed": true,
+    "predicted_level": "High",
     "predicted_type": "PO",
     "predicted_type_label": "Portability",
-    "confidence": 0.8506345748901367,
-    "predicted_level": "High",
-    "confirmed": false
+    "title": "Compatibility"
   },
   {
-    "title": "Integration",
-    "description": "The system must be able to integrate with other systems and tools.",
+    "description": "The system MUST be able to integrate with other systems and applications.",
+    "confidence": 1.0,
+    "confirmed": true,
+    "predicted_level": "High",
     "predicted_type": "PO",
     "predicted_type_label": "Portability",
-    "confidence": 0.7062474489212036,
-    "predicted_level": "High",
-    "confirmed": false
+    "title": "Integration"
   }
 ]
