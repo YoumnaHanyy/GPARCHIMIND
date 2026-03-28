@@ -1,5 +1,6 @@
 import json
 import re
+from ai.inference.archi_rulesMain import run_design_patterns
 from huggingface_hub import InferenceClient
 from infrastructure.database import db
 from ai.inference.feature_validator import validate_features
@@ -209,11 +210,20 @@ if __name__ == "__main__":
 
     decisions = build_feature_decision(features, full_text)
 
-    # 🔥 automatic بدل ما تكتبيه
+    # 🔥 auto project + architecture
     project_id = get_latest_project_id()
     architecture = load_selected_architecture(project_id)
 
     save_decisions(decisions, architecture)
 
     print("✅ Using project:", project_id)
-    print(decisions)
+
+    # =========================
+    # 🔥 NEW: run inference مباشرة
+    # =========================
+    data = {
+        "architecture": architecture,
+        "features": decisions
+    }
+
+    run_design_patterns(data)

@@ -1,6 +1,6 @@
 import json
-from semantic_map import SEMANTIC_MAP
-from engine import (
+from ai.inference.semantic_map import SEMANTIC_MAP
+from ai.inference.engine import (
     apply_rules,
     apply_architecture,
     apply_negative_rules,
@@ -98,23 +98,20 @@ def run_inference(input_data: dict):
 
 
 # 🧪 optional: لو حابة تشغليه standalone للتست
-if __name__ == "__main__":
-    with open("data/outputs/feature_decisions.json", "r") as f:
-        data = json.load(f)
+def run_design_patterns(input_data):
+    output = run_inference(input_data)
 
-    output = run_inference(data)
-
-  # 🔹 print
     print("\n=== Top Design Pattern Recommendations ===")
 
     for item in output["top_patterns"]:
-     print(f"\n{item['pattern']} → {item['score']} ({item['confidence']})")
+        print(f"\n{item['pattern']} → {item['score']} ({item['confidence']})")
 
-    for reason in item["reasons"]:
-        print("  -", reason)
+        for reason in item["reasons"]:
+            print("  -", reason)
 
-# 🔹 save
     with open("data/outputs/pattern_results.json", "w") as f:
-     json.dump(output, f, indent=4)
+        json.dump(output, f, indent=4)
 
     print("\n✅ Results saved to pattern_results.json")
+
+    return output

@@ -1,31 +1,101 @@
 {
-    "architecture": "Microservices",
+    "architecture": "Service Oriented (SOA)",
     "features": {
-        "LOW_LATENCY": {
+        "DISTRIBUTED_SYSTEM": {
+            "supported": "partial",
+            "confidence": 0.52,
+            "evidence": [
+                "third party integration",
+                "network based",
+                "service based architecture",
+                "cloud based",
+                "api based",
+                "distributed system",
+                "clustered system"
+            ]
+        },
+        "MODULARITY": {
+            "supported": true,
+            "confidence": 0.82,
+            "evidence": [
+                "module",
+                "component based",
+                "separation of concerns",
+                "plug and play",
+                "modular system"
+            ]
+        },
+        "HIGH_MAINTAINABILITY": {
             "supported": true,
             "confidence": 0.85,
             "evidence": [
-                "optimized performance",
-                "near real time",
-                "low response time",
-                "short response time",
-                "quick response",
-                "instant response",
-                "real-time response",
-                "immediate response"
+                "structured system",
+                "system updates",
+                "maintainability",
+                "easy to maintain",
+                "easy to change",
+                "easy to update",
+                "maintain",
+                "update system",
+                "easy maintenance",
+                "easy to modify"
+            ]
+        },
+        "HIGH_SECURITY": {
+            "supported": true,
+            "confidence": 0.9,
+            "evidence": [
+                "access control",
+                "protect data",
+                "prevent unauthorized access",
+                "protect user data",
+                "security",
+                "encrypted data",
+                "high security",
+                "data protection",
+                "privacy protection",
+                "data privacy",
+                "user authentication"
             ]
         },
         "REAL_TIME": {
             "supported": "partial",
-            "confidence": 0.55,
+            "confidence": 0.58,
             "evidence": [
+                "live system",
+                "live update",
+                "real time",
+                "data streaming",
                 "immediate update",
                 "instant update",
-                "live system",
-                "real time",
-                "live update",
-                "data streaming",
                 "continuous update"
+            ]
+        },
+        "HIGH_COUPLING_RISK": {
+            "supported": "partial",
+            "confidence": 0.32,
+            "evidence": [
+                "hard to change",
+                "monolithic system",
+                "low flexibility"
+            ]
+        },
+        "LOW_LATENCY": {
+            "supported": true,
+            "confidence": 0.85,
+            "evidence": [
+                "near real time",
+                "short response time",
+                "optimized performance",
+                "low response time",
+                "low latency"
+            ]
+        },
+        "DYNAMIC_BEHAVIOR": {
+            "supported": "partial",
+            "confidence": 0.5,
+            "evidence": [
+                "adaptive system"
             ]
         },
         "FLEXIBLE_CREATION": {
@@ -33,131 +103,60 @@
             "confidence": 0.3,
             "evidence": []
         },
-        "HIGH_COUPLING_RISK": {
-            "supported": "partial",
-            "confidence": 0.6,
-            "evidence": [
-                "monolithic system",
-                "hard to change"
-            ]
-        },
-        "DISTRIBUTED_SYSTEM": {
+        "FAULT_TOLERANCE": {
             "supported": true,
-            "confidence": 0.78,
+            "confidence": 0.9,
             "evidence": [
-                "distributed system",
-                "network based",
-                "third party integration",
-                "cloud based",
-                "api based",
-                "service based architecture",
-                "clustered system"
-            ]
-        },
-        "DYNAMIC_BEHAVIOR": {
-            "supported": "partial",
-            "confidence": 0.6,
-            "evidence": [
-                "adaptive system"
-            ]
-        },
-        "MODULARITY": {
-            "supported": true,
-            "confidence": 0.85,
-            "evidence": [
-                "separation of concerns",
-                "component based",
-                "plug and play",
-                "modular system"
+                "backup system",
+                "recover from failure",
+                "system recovery",
+                "99.9%",
+                "resilient system",
+                "reliability",
+                "high reliability"
             ]
         },
         "EVENT_DRIVEN": {
-            "supported": true,
-            "confidence": 0.85,
+            "supported": "partial",
+            "confidence": 0.55,
             "evidence": [
-                "event processing",
-                "react to event",
-                "event handler",
-                "event based",
-                "update",
-                "event",
                 "on update",
-                "on change",
+                "react to event",
                 "event driven",
+                "update",
+                "on change",
+                "event",
+                "reactive system",
                 "event stream",
-                "reactive system"
+                "event handler",
+                "event processing",
+                "event based"
             ]
         },
         "HIGH_SCALABILITY": {
             "supported": true,
             "confidence": 0.9,
             "evidence": [
-                "scalability",
-                "scale out",
-                "handle high load",
-                "scale up",
-                "handle load",
-                "concurrent users",
-                "millions of users",
-                "large number of users",
                 "elastic system",
-                "many users",
-                "simultaneous users"
+                "handle load",
+                "scalability",
+                "simultaneous users",
+                "handle high load",
+                "concurrent users",
+                "large number of users",
+                "scale up",
+                "scale out",
+                "millions of users",
+                "many users"
             ]
         },
         "HIGH_EXTENSIBILITY": {
             "supported": "partial",
-            "confidence": 0.45,
+            "confidence": 0.42,
             "evidence": [
-                "expand functionality",
-                "extend system",
                 "plugin system",
+                "extend system",
                 "plug in"
-            ]
-        },
-        "FAULT_TOLERANCE": {
-            "supported": true,
-            "confidence": 0.85,
-            "evidence": [
-                "high reliability",
-                "reliability",
-                "recover from failure",
-                "system recovery",
-                "resilient system",
-                "backup system"
-            ]
-        },
-        "HIGH_SECURITY": {
-            "supported": true,
-            "confidence": 0.9,
-            "evidence": [
-                "encrypted data",
-                "user authentication",
-                "security",
-                "data privacy",
-                "data protection",
-                "high security",
-                "privacy protection",
-                "prevent unauthorized access",
-                "access control",
-                "protect data",
-                "protect user data"
-            ]
-        },
-        "HIGH_MAINTAINABILITY": {
-            "supported": true,
-            "confidence": 0.85,
-            "evidence": [
-                "system updates",
-                "maintainability",
-                "easy to maintain",
-                "easy to update",
-                "maintain",
-                "easy to change",
-                "update system",
-                "structured system",
-                "easy maintenance",
-                "easy to modify"
             ]
         }
     }

@@ -1,74 +1,47 @@
 [
   {
-    "title": "Submit CV",
-    "description": "Applicants can submit their CVs for parsing and analysis.",
+    "title": "System Functions",
+    "description": "The system shall allow applicants to submit their CVs for parsing and analysis.",
     "source": {
-      "page": "Introduction",
-      "start_index": "1.1"
+      "page": 15,
+      "start_index": null
     },
-    "project_id": "proj_a82f712f"
+    "project_id": "proj_d1d23b65"
   },
   {
-    "title": "View and Edit CV",
-    "description": "Applicants can view and edit their parsed CV.",
+    "title": "Detailed Functional Specification",
+    "description": "The system shall extract key information from CVs, including skills and years of experience.",
     "source": {
-      "page": "Introduction",
-      "start_index": "1.1"
+      "page": 16,
+      "start_index": null
     },
-    "project_id": "proj_a82f712f"
+    "project_id": "proj_d1d23b65"
   },
   {
-    "title": "Answer Screening Questions",
-    "description": "Applicants are presented with screening questions defined by an expert recruiter.",
+    "title": "Viewing and Editing the CV",
+    "description": "The system shall allow applicants to view and edit their parsed CV.",
     "source": {
-      "page": "Introduction",
-      "start_index": "1.1"
+      "page": 1,
+      "start_index": null
     },
-    "project_id": "proj_a82f712f"
+    "project_id": "proj_d1d23b65"
   },
   {
-    "title": "Get Rating for CV",
-    "description": "Applicants get a rating for their submitted CV.",
+    "title": "Answering Screening Questions",
+    "description": "The system shall allow applicants to answer screening questions defined by an expert recruiter.",
     "source": {
-      "page": "Introduction",
-      "start_index": "1.1"
+      "page": 13,
+      "start_index": null
     },
-    "project_id": "proj_a82f712f"
+    "project_id": "proj_d1d23b65"
   },
   {
-    "title": "Parse CV",
-    "description": "The system uses the Python library for parsing the CV and extracting key information.",
+    "title": "Getting a Rating for the Submitted CV",
+    "description": "The system shall provide a rating for the submitted CV based on the similarity between the applicant's CV and the job requirements.",
     "source": {
-      "page": "Abstract",
-      "start_index": "ResuFit is a web-based application"
+      "page": 13,
+      "start_index": null
     },
-    "project_id": "proj_a82f712f"
-  },
-  {
-    "title": "Compare CV with Job Requirements",
-    "description": "The system uses cosine similarity and Jaccard similarity to assess the alignment between the extracted information from the CV and the job requirements specified by the recruiter.",
-    "source": {
-      "page": "Abstract",
-      "start_index": "The parsing process extracts key information based on what the recruiter has defined in the job description"
-    },
-    "project_id": "proj_a82f712f"
-  },
-  {
-    "title": "Validate and Score Applicant Responses",
-    "description": "Applicant responses are verified and graded by comparing them to an expert-generated model, and the applicant’s answers are validated and scored by ChatGPT.",
-    "source": {
-      "page": "Abstract",
-      "start_index": "Applicant responses are verified and graded by comparing them to an expert-generated model"
-    },
-    "project_id": "proj_a82f712f"
-  },
-  {
-    "title": "Generate Percentage-Based Result",
-    "description": "The system generates a percentage-based result that represents the applicant’s overall suitability for the role by averaging the CV ranking and screening question validation scores.",
-    "source": {
-      "page": "Abstract",
-      "start_index": "A percentage-based result that represents the applicant’s overall suitability for the role"
-    },
-    "project_id": "proj_a82f712f"
+    "project_id": "proj_d1d23b65"
   }
 ]
