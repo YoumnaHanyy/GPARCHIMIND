@@ -1,322 +1,114 @@
 [
   {
-    "description": "system shall generate safer route to users",
+    "description": "Alerts should be set up to notify administrators of abnormal system behavior or performance issues",
     "source": {
       "page": null,
       "start_index": null
     },
-    "project_id": "proj_4b3b6209"
+    "project_id": "proj_4953e349"
   },
   {
-    "description": "user can download the app either from Android mobile or iOS",
+    "description": "Users can use our script maker to generate a script that can be used to make a long story video, the script also can be saved to be used later",
     "source": {
       "page": null,
       "start_index": null
     },
-    "project_id": "proj_4b3b6209"
+    "project_id": "proj_4953e349"
   },
   {
-    "description": "The admin can modify user details, reset passwords, or deactivate accounts if necessary",
+    "description": "The user shall be able to Sign Up on the system",
     "source": {
       "page": null,
       "start_index": null
     },
-    "project_id": "proj_4b3b6209"
+    "project_id": "proj_4953e349"
   },
   {
-    "description": "system shall pin the crimes in map",
+    "description": "The user shall be able to enter a script to the system to generate a long video or film",
     "source": {
       "page": null,
       "start_index": null
     },
-    "project_id": "proj_4b3b6209"
+    "project_id": "proj_4953e349"
   },
   {
-    "description": "User should have an account and face any type of crimes and need any support",
+    "description": "The user shall be able to select the voice over of the characters and the music of the video",
     "source": {
       "page": null,
       "start_index": null
     },
-    "project_id": "proj_4b3b6209"
+    "project_id": "proj_4953e349"
   },
   {
-    "description": "System should generate a safe route for users",
+    "description": "The user shall be able to remove his account from the system",
     "source": {
       "page": null,
       "start_index": null
     },
-    "project_id": "proj_4b3b6209"
+    "project_id": "proj_4953e349"
   },
   {
-    "description": "user can add new crime with pictures only for validation",
+    "description": "The user shall be able to logout of the system",
     "source": {
       "page": null,
       "start_index": null
     },
-    "project_id": "proj_4b3b6209"
+    "project_id": "proj_4953e349"
   },
   {
-    "description": "user shall post his crime anonymously",
+    "description": "The user shall be able to login to the system using his account",
     "source": {
       "page": null,
       "start_index": null
     },
-    "project_id": "proj_4b3b6209"
+    "project_id": "proj_4953e349"
   },
   {
-    "description": "System should show all crimes in the map as pins",
+    "description": "The user shall be able to view history of the input prompt or script",
     "source": {
       "page": null,
       "start_index": null
     },
-    "project_id": "proj_4b3b6209"
+    "project_id": "proj_4953e349"
   },
   {
-    "description": "user can view map and navigate through crimes",
+    "description": "The user shall be able to edit his account",
     "source": {
       "page": null,
       "start_index": null
     },
-    "project_id": "proj_4b3b6209"
+    "project_id": "proj_4953e349"
   },
   {
-    "description": "User should have an account and access the map to post a crime and add a description, upload a picture for validation",
+    "description": "The user shall be able to create a video from the history of the input prompt or script",
     "source": {
       "page": null,
       "start_index": null
     },
-    "project_id": "proj_4b3b6209"
+    "project_id": "proj_4953e349"
   },
   {
-    "description": "admin shall add new type of crimes if needed",
+    "description": "The user shall be able to view the generated video",
     "source": {
       "page": null,
       "start_index": null
     },
-    "project_id": "proj_4b3b6209"
+    "project_id": "proj_4953e349"
   },
   {
-    "description": "admin shall delete profiles",
+    "description": "The user shall be able to enter a simple prompt to the system to create a small video",
     "source": {
       "page": null,
       "start_index": null
     },
-    "project_id": "proj_4b3b6209"
+    "project_id": "proj_4953e349"
   },
   {
-    "description": "user shall Edit account information",
+    "description": "The user shall be able to edit on the generated video",
     "source": {
       "page": null,
       "start_index": null
     },
-    "project_id": "proj_4b3b6209"
-  },
-  {
-    "description": "user shall delete his crime",
-    "source": {
-      "page": null,
-      "start_index": null
-    },
-    "project_id": "proj_4b3b6209"
-  },
-  {
-    "description": "User shall Delete account",
-    "source": {
-      "page": null,
-      "start_index": null
-    },
-    "project_id": "proj_4b3b6209"
-  },
-  {
-    "description": "User shall Register a new account",
-    "source": {
-      "page": null,
-      "start_index": null
-    },
-    "project_id": "proj_4b3b6209"
-  },
-  {
-    "description": "admin shall connect to user who face any crime at the moment",
-    "source": {
-      "page": null,
-      "start_index": null
-    },
-    "project_id": "proj_4b3b6209"
-  },
-  {
-    "description": "user shall view the dash board",
-    "source": {
-      "page": null,
-      "start_index": null
-    },
-    "project_id": "proj_4b3b6209"
-  },
-  {
-    "description": "An admin needs to update a user account",
-    "source": {
-      "page": null,
-      "start_index": null
-    },
-    "project_id": "proj_4b3b6209"
-  },
-  {
-    "description": "user shall sign-up an account",
-    "source": {
-      "page": null,
-      "start_index": null
-    },
-    "project_id": "proj_4b3b6209"
-  },
-  {
-    "description": "User can chat with admins if the user is facing any emergencies",
-    "source": {
-      "page": null,
-      "start_index": null
-    },
-    "project_id": "proj_4b3b6209"
-  },
-  {
-    "description": "system shall the crimes in dashboard and map for a period of time depend on the emergency",
-    "source": {
-      "page": null,
-      "start_index": null
-    },
-    "project_id": "proj_4b3b6209"
-  },
-  {
-    "description": "user can view heat map of the crimes",
-    "source": {
-      "page": null,
-      "start_index": null
-    },
-    "project_id": "proj_4b3b6209"
-  },
-  {
-    "description": "User shall Login with an account",
-    "source": {
-      "page": null,
-      "start_index": null
-    },
-    "project_id": "proj_4b3b6209"
-  },
-  {
-    "description": "user shall submit any witnessed crime",
-    "source": {
-      "page": null,
-      "start_index": null
-    },
-    "project_id": "proj_4b3b6209"
-  },
-  {
-    "description": "admin shall delete any crime",
-    "source": {
-      "page": null,
-      "start_index": null
-    },
-    "project_id": "proj_4b3b6209"
-  },
-  {
-    "description": "User should have access to the map to post a crime",
-    "source": {
-      "page": null,
-      "start_index": null
-    },
-    "project_id": "proj_4b3b6209"
-  },
-  {
-    "description": "user shall upload picture of the crime",
-    "source": {
-      "page": null,
-      "start_index": null
-    },
-    "project_id": "proj_4b3b6209"
-  },
-  {
-    "description": "user shall chat with the admins for an emergency contact",
-    "source": {
-      "page": null,
-      "start_index": null
-    },
-    "project_id": "proj_4b3b6209"
-  },
-  {
-    "description": "admin shall connect the police to some crimes",
-    "source": {
-      "page": null,
-      "start_index": null
-    },
-    "project_id": "proj_4b3b6209"
-  },
-  {
-    "description": "System shall ask users to re-upload photos if an error happens",
-    "source": {
-      "page": null,
-      "start_index": null
-    },
-    "project_id": "proj_4b3b6209"
-  },
-  {
-    "description": "user shall edit his crime",
-    "source": {
-      "page": null,
-      "start_index": null
-    },
-    "project_id": "proj_4b3b6209"
-  },
-  {
-    "description": "user shall choose area to get its safe direction",
-    "source": {
-      "page": null,
-      "start_index": null
-    },
-    "project_id": "proj_4b3b6209"
-  },
-  {
-    "description": "user shall view the map",
-    "source": {
-      "page": null,
-      "start_index": null
-    },
-    "project_id": "proj_4b3b6209"
-  },
-  {
-    "description": "system shall validate the crimes by image processing",
-    "source": {
-      "page": null,
-      "start_index": null
-    },
-    "project_id": "proj_4b3b6209"
-  },
-  {
-    "description": "admins shall view all crime details",
-    "source": {
-      "page": null,
-      "start_index": null
-    },
-    "project_id": "proj_4b3b6209"
-  },
-  {
-    "description": "system shall transfer all the crimes to dashboard",
-    "source": {
-      "page": null,
-      "start_index": null
-    },
-    "project_id": "proj_4b3b6209"
-  },
-  {
-    "description": "User must submit crime description with picture and location",
-    "source": {
-      "page": null,
-      "start_index": null
-    },
-    "project_id": "proj_4b3b6209"
-  },
-  {
-    "description": "user can check even if there is any nearby crimes in the area surrounded",
-    "source": {
-      "page": null,
-      "start_index": null
-    },
-    "project_id": "proj_4b3b6209"
+    "project_id": "proj_4953e349"
   }
 ]

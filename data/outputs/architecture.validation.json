@@ -1,9 +1,9 @@
 {
-  "status": "SUCCESS",
+  "status": "FAILED",
   "structural": {
     "metrics": {
-      "component_count": 7,
-      "relationship_count": 10,
+      "component_count": 9,
+      "relationship_count": 8,
       "undefined_references": 0,
       "self_loops": 0,
       "invalid_relationship_types": 0
@@ -13,27 +13,31 @@
   },
   "quality": {
     "fan_in": {
-      "RatingEngine": 1,
-      "CVParser": 1,
-      "ScreeningQuestionManager": 1,
-      "Security": 1,
-      "CVViewer": 2,
-      "Database": 2,
-      "APIGateway": 2
+      "Avatar Customization": 4,
+      "Authentication and Authorization": 1,
+      "System Administration": 0,
+      "User Interface": 0,
+      "Voice Cloning": 0,
+      "Natural Language Processing (NLP)": 0,
+      "Emotion Expression": 1,
+      "Avatar Creation": 1,
+      "Image Processing": 1
     },
     "fan_out": {
-      "RatingEngine": 1,
-      "CVParser": 1,
-      "ScreeningQuestionManager": 1,
-      "Security": 1,
-      "CVViewer": 0,
-      "Database": 1,
-      "APIGateway": 5
+      "Avatar Customization": 1,
+      "Authentication and Authorization": 1,
+      "System Administration": 1,
+      "User Interface": 1,
+      "Voice Cloning": 1,
+      "Natural Language Processing (NLP)": 1,
+      "Emotion Expression": 0,
+      "Avatar Creation": 1,
+      "Image Processing": 1
     },
-    "centralization_index": 0.2857142857142857,
+    "centralization_index": 0.4444444444444444,
     "risks": [
       {
-        "component": "APIGateway",
+        "component": "Avatar Customization",
         "risk": "High coupling",
         "quality_attribute": "Modifiability"
       }
@@ -41,7 +45,7 @@
   },
   "domain": {
     "stateless_ratio": 1.0,
-    "state_concentration": 2,
-    "communication_style": "synchronous"
+    "state_concentration": 4,
+    "communication_style": "event-driven"
   }
 }

@@ -1,83 +1,83 @@
 [
   {
-    "title": "Security",
-    "description": "The data must be secured in order for the System to be available everywhere, reliable, and secure",
-    "predicted_type": "SE",
-    "predicted_type_label": "Security",
-    "confidence": 0.9427734613418579,
-    "predicted_level": "High",
-    "confirmed": false
-  },
-  {
-    "title": "Performance",
-    "description": "The application should work fast without any errors or delays or system failure",
+    "description": "The system should generate a 5-Response time for user interactions with the UI should be less than 1 second",
+    "confidence": 0.979804277420044,
+    "confirmed": false,
+    "predicted_level": " Low",
     "predicted_type": "PE",
     "predicted_type_label": "Performance",
-    "confidence": 0.9511208534240723,
-    "predicted_level": "Low",
-    "confirmed": false
+    "title": "Performance"
   },
   {
-    "title": "Usability",
-    "description": "The app will provide friendly user interface that suitable for all type of people",
-    "predicted_type": "US",
-    "predicted_type_label": "Usability",
-    "confidence": 0.844233512878418,
-    "predicted_level": "Medium",
-    "confirmed": false
-  },
-  {
-    "title": "Accessibility",
-    "description": "User must own a smart mobile phone and have basic English knowledge",
-    "predicted_type": "US",
-    "predicted_type_label": "Usability",
-    "confidence": 0.8389796614646912,
-    "predicted_level": "High",
-    "confirmed": false
-  },
-  {
-    "title": "Reliability",
-    "description": "Our goal to build reliable mobile application that is easy for users to use it anywhere",
-    "predicted_type": "US",
-    "predicted_type_label": "Usability",
-    "confidence": 0.669823169708252,
-    "predicted_level": "Medium",
-    "confirmed": false
-  },
-  {
-    "title": "Compatibility",
-    "description": "Alert mobile application can work with iOS and Android operating systems",
-    "predicted_type": "PO",
-    "predicted_type_label": "Portability",
-    "confidence": 0.8713395595550537,
-    "predicted_level": "Low",
-    "confirmed": false
-  },
-  {
-    "title": "Scalability",
-    "description": "The application should be able to handle a large number of users and crimes",
+    "description": "The system must support 100 concurrent users without significant performance degradation, and its architecture must be scalable to handle increased text prompts and user requests",
+    "confidence": 0.956850528717041,
+    "confirmed": false,
+    "predicted_level": " High",
     "predicted_type": "SC",
     "predicted_type_label": "Scalability",
-    "confidence": 0.7830652594566345,
-    "predicted_level": "Low",
-    "confirmed": false
+    "title": "Scalability"
   },
   {
-    "title": "Maintainability",
-    "description": "The application should be easy to maintain and update",
-    "predicted_type": "MN",
-    "predicted_type_label": "Manageability",
-    "confidence": 0.9125012159347534,
-    "predicted_level": "Low",
-    "confirmed": false
+    "description": "Backup and disaster recovery mechanisms should be in place to ensure data integrity",
+    "confidence": 1.0,
+    "confirmed": true,
+    "predicted_level": " Low",
+    "predicted_type": "A",
+    "predicted_type_label": "Availability",
+    "title": "Availability"
   },
   {
-    "title": "Response Time",
-    "description": "All application should load at least in 3 seconds",
-    "predicted_type": "PE",
-    "predicted_type_label": "Performance",
-    "confidence": 0.9617825746536255,
-    "predicted_level": "Low",
-    "confirmed": false
+    "description": "User data, including text prompts and videos, should be encrypted both in transit and at rest, and access to sensitive services should be restricted based on user roles and permissions",
+    "confidence": 0.9816839098930359,
+    "confirmed": false,
+    "predicted_level": " Low",
+    "predicted_type": "SE",
+    "predicted_type_label": "Security",
+    "title": "Security"
+  },
+  {
+    "description": "Licensing and usage of external APIs should adhere to legal and ethical standards",
+    "confidence": 1.0,
+    "confirmed": true,
+    "predicted_level": " Low",
+    "predicted_type": "SE",
+    "predicted_type_label": "Security",
+    "title": "Compliance"
+  },
+  {
+    "description": "The user interface should be intuitive and user-friendly, requiring minimal training for users to operate",
+    "confidence": 0.9359385967254639,
+    "confirmed": false,
+    "predicted_level": " Low",
+    "predicted_type": "US",
+    "predicted_type_label": "Usability",
+    "title": "Maintainability"
+  },
+  {
+    "description": "The system should be available 24/7, except during scheduled maintenance windows",
+    "confidence": 0.9481737613677979,
+    "confirmed": false,
+    "predicted_level": " Low",
+    "predicted_type": "A",
+    "predicted_type_label": "Availability",
+    "title": "Reliability"
+  },
+  {
+    "description": "The system should comply with accessibility standards to ensure usability for users with disabilities",
+    "confidence": 0.9237850904464722,
+    "confirmed": false,
+    "predicted_level": " Low",
+    "predicted_type": "US",
+    "predicted_type_label": "Usability",
+    "title": "Usability"
+  },
+  {
+    "description": "The system should have robust monitoring tools in place to track resource utilization, identify performance bottlenecks, and generate logs for auditing purposes",
+    "confidence": 1.0,
+    "confirmed": true,
+    "predicted_level": " Low",
+    "predicted_type": "SC",
+    "predicted_type_label": "Scalability",
+    "title": "Adaptability"
   }
 ]

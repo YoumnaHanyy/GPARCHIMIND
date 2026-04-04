@@ -49,7 +49,24 @@ from presentation.routes.architecture_routes import router as architecture_route
 from presentation.routes.srs_routes import router as srs_router
 from dotenv import load_dotenv
 import os
+import threading
+import time
+from service.retrain_service import merge_and_retrain
+from infrastructure.database import db
+from service.retrain_service import run_retrain_async
 
+def auto_retrain_loop():
+    while True:
+        time.sleep(86400)
+
+        count = db.new_nfr_confirmed.count_documents({})
+
+        if count > 0:
+            print(f"⏱️ Auto retrain → {count}")
+            run_retrain_async()
+
+
+threading.Thread(target=auto_retrain_loop, daemon=True).start()
 load_dotenv()
 
 # ============================================================

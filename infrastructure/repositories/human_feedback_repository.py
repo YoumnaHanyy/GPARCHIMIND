@@ -3,7 +3,7 @@ from infrastructure.database import db
 from ai.utils.nfr_mapping import get_nfr_label, get_nfr_code
 
 CONFIRMED_NFR_COLLECTION = db.confirmed_NFR
-
+NEW_CONFIRMED_COLLECTION = db.new_nfr_confirmed
 
 def load_confirmed_types():
     """
@@ -110,3 +110,23 @@ def save_confirmed_nfr(doc: dict):
         },
         upsert=True
     )
+
+def save_new_confirmed_nfr(doc: dict):
+    """
+    Save confirmed NFR to new_nfr_confirmed collection
+    """
+
+    level = doc.get("predicted_level", "").lower()
+
+    # 🎯 label logic
+    if level in ["high", "medium"]:
+        label = 1
+    else:
+        label = 0
+
+    NEW_CONFIRMED_COLLECTION.insert_one({
+        "type": doc.get("confirmed_type"),
+        "requirement": doc.get("description"),
+        "level": doc.get("predicted_level"),
+        "label": label
+    })

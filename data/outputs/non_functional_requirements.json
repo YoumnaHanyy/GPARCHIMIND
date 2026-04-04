@@ -1,47 +1,47 @@
 [
   {
-    "title": "Security",
-    "description": "The data must be secured in order for the System to be available everywhere, reliable, and secure",
-    "project_id": "proj_4b3b6209"
-  },
-  {
     "title": "Performance",
-    "description": "The application should work fast without any errors or delays or system failure",
-    "project_id": "proj_4b3b6209"
-  },
-  {
-    "title": "Usability",
-    "description": "The app will provide friendly user interface that suitable for all type of people",
-    "project_id": "proj_4b3b6209"
-  },
-  {
-    "title": "Accessibility",
-    "description": "User must own a smart mobile phone and have basic English knowledge",
-    "project_id": "proj_4b3b6209"
-  },
-  {
-    "title": "Reliability",
-    "description": "Our goal to build reliable mobile application that is easy for users to use it anywhere",
-    "project_id": "proj_4b3b6209"
-  },
-  {
-    "title": "Compatibility",
-    "description": "Alert mobile application can work with iOS and Android operating systems",
-    "project_id": "proj_4b3b6209"
+    "description": "The system should generate a 5-Response time for user interactions with the UI should be less than 1 second",
+    "project_id": "proj_4953e349"
   },
   {
     "title": "Scalability",
-    "description": "The application should be able to handle a large number of users and crimes",
-    "project_id": "proj_4b3b6209"
+    "description": "The system must support 100 concurrent users without significant performance degradation, and its architecture must be scalable to handle increased text prompts and user requests",
+    "project_id": "proj_4953e349"
+  },
+  {
+    "title": "Availability",
+    "description": "Backup and disaster recovery mechanisms should be in place to ensure data integrity",
+    "project_id": "proj_4953e349"
+  },
+  {
+    "title": "Security",
+    "description": "User data, including text prompts and videos, should be encrypted both in transit and at rest, and access to sensitive services should be restricted based on user roles and permissions",
+    "project_id": "proj_4953e349"
+  },
+  {
+    "title": "Compliance",
+    "description": "Licensing and usage of external APIs should adhere to legal and ethical standards",
+    "project_id": "proj_4953e349"
   },
   {
     "title": "Maintainability",
-    "description": "The application should be easy to maintain and update",
-    "project_id": "proj_4b3b6209"
+    "description": "The user interface should be intuitive and user-friendly, requiring minimal training for users to operate",
+    "project_id": "proj_4953e349"
   },
   {
-    "title": "Response Time",
-    "description": "All application should load at least in 3 seconds",
-    "project_id": "proj_4b3b6209"
+    "title": "Reliability",
+    "description": "The system should be available 24/7, except during scheduled maintenance windows",
+    "project_id": "proj_4953e349"
+  },
+  {
+    "title": "Usability",
+    "description": "The system should comply with accessibility standards to ensure usability for users with disabilities",
+    "project_id": "proj_4953e349"
+  },
+  {
+    "title": "Adaptability",
+    "description": "The system should have robust monitoring tools in place to track resource utilization, identify performance bottlenecks, and generate logs for auditing purposes",
+    "project_id": "proj_4953e349"
   }
 ]

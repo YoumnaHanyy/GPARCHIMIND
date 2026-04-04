@@ -7,45 +7,44 @@ node "Client" {
 node "Kubernetes Ingress" {
   component "Ingress Controller"
 }
-node "CVParser Pod" {
-  component "CVParser"
+node "User Interface Pod" {
+  component "User Interface"
 }
-node "CVViewer Pod" {
-  component "CVViewer"
+node "Image Processing Pod" {
+  component "Image Processing"
 }
-node "ScreeningQuestionManager Pod" {
-  component "ScreeningQuestionManager"
+node "Voice Cloning Pod" {
+  component "Voice Cloning"
 }
-node "RatingEngine Pod" {
-  component "RatingEngine"
+node "Avatar Customization Pod" {
+  component "Avatar Customization"
 }
-node "APIGateway Pod" {
-  component "APIGateway"
+node "Natural Language Processing (NLP) Pod" {
+  component "Natural Language Processing (NLP)"
 }
-node "Security Pod" {
-  component "Security"
+node "Authentication and Authorization Pod" {
+  component "Authentication and Authorization"
 }
-node "Database StatefulSet" {
-  database "Database"
+node "Avatar Creation Pod" {
+  component "Avatar Creation"
+}
+node "Emotion Expression Pod" {
+  component "Emotion Expression"
+}
+node "System Administration Pod" {
+  component "System Administration"
 }
 "User" --> "Ingress Controller" : TCP/IP
 "Ingress Controller" --> "API Gateway Pod" : HTTP/HTTPS
 "User" --> "Ingress Controller"
 "Ingress Controller" --> "API Gateway Pod"
-"API Gateway Pod" --> "CVParser Pod"
-"API Gateway Pod" --> "CVViewer Pod"
-"API Gateway Pod" --> "ScreeningQuestionManager Pod"
-"API Gateway Pod" --> "RatingEngine Pod"
-"API Gateway Pod" --> "APIGateway Pod"
-"API Gateway Pod" --> "Security Pod"
-"CVParser Pod" --> "Database StatefulSet"
-"CVViewer Pod" --> "Database StatefulSet"
-"ScreeningQuestionManager Pod" --> "Database StatefulSet"
-"RatingEngine Pod" --> "Database StatefulSet"
-"APIGateway Pod" --> "Database StatefulSet"
-"Security Pod" --> "Database StatefulSet"
-node "Secondary Region" {
-  component "Replica Services"
-}
-"Ingress Controller" --> "Secondary Region" : failover
+"API Gateway Pod" --> "User Interface Pod"
+"API Gateway Pod" --> "Image Processing Pod"
+"API Gateway Pod" --> "Voice Cloning Pod"
+"API Gateway Pod" --> "Avatar Customization Pod"
+"API Gateway Pod" --> "Natural Language Processing (NLP) Pod"
+"API Gateway Pod" --> "Authentication and Authorization Pod"
+"API Gateway Pod" --> "Avatar Creation Pod"
+"API Gateway Pod" --> "Emotion Expression Pod"
+"API Gateway Pod" --> "System Administration Pod"
 @enduml

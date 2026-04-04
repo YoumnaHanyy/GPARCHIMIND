@@ -1,177 +1,228 @@
 {
   "system": "ResuFit: Precision CV Matching System",
-  "style": "Event-Driven/ Messaging",
+  "style": "Layered (N-Tier)",
   "source": "AI",
   "decisions": [
     {
-      "name": "Functional Requirements",
-      "rationale": "[{'title': 'submitting the CV', 'description': 'Applicants submit their CVs for parsing and analysis.', 'source': {'page': 16, 'start_index': None}, 'project_id': 'proj_d326da84'}, {'title': 'viewing and editing the CV', 'description': 'Applicants can view and edit their parsed CV.', 'source': {'page': 16, 'start_index': None}, 'project_id': 'proj_d326da84'}, {'title': 'answering screening questions', 'description': 'Applicants are presented with screening questions defined by an expert recruiter.', 'source': {'page': 12, 'start_index': None}, 'project_id': 'proj_d326da84'}, {'title': 'getting a rating for the submitted CV', 'description': 'The system generates a percentage-based result, providing a fair evaluation of each applicant.', 'source': {'page': 13, 'start_index': None}, 'project_id': 'proj_d326da84'}]"
+      "name": "Layered (N-Tier) Architecture Style",
+      "rationale": "To achieve scalability, maintainability, and reusability of the system"
     },
     {
-      "name": "Non-Functional Requirements",
-      "rationale": "[{'title': 'Performance', 'description': 'The system MUST respond within a reasonable time frame.', 'source': {'page': 21, 'start_index': None}, 'project_id': 'proj_d326da84'}, {'title': 'Reliability', 'description': 'The system SHALL be available at least 99.9% of the time.', 'source': {'page': 21, 'start_index': None}, 'project_id': 'proj_d326da84'}, {'title': 'Security', 'description': 'The system MUST protect user data and prevent unauthorized access.', 'source': {'page': 21, 'start_index': None}, 'project_id': 'proj_d326da84'}, {'title': 'Privacy', 'description': 'The system SHALL ensure that user data is collected and stored in accordance with applicable laws and regulations.', 'source': {'page': 21, 'start_index': None}, 'project_id': 'proj_d326da84'}, {'title': 'Scalability', 'description': 'The system SHOULD be able to handle a large number of users and CVs without a significant decrease in performance.', 'source': {'page': 21, 'start_index': None}, 'project_id': 'proj_d326da84'}, {'title': 'Usability', 'description': 'The system MUST be easy to use and navigate for users with varying levels of technical expertise.', 'source': {'page': 21, 'start_index': None}, 'project_id': 'proj_d326da84'}, {'title': 'Maintainability', 'description': 'The system SHOULD be designed to be easily maintained and updated by the development team.', 'source': {'page': 21, 'start_index': None}, 'project_id': 'proj_d326da84'}, {'title': 'Compatibility', 'description': 'The system MUST be compatible with a variety of devices and browsers.', 'source': {'page': 22, 'start_index': None}, 'project_id': 'proj_d326da84'}, {'title': 'Integration', 'description': 'The system SHOULD be able to integrate with other HR systems and tools.', 'source': {'page': 22, 'start_index': None}, 'project_id': 'proj_d326da84'}]"
+      "name": "Use of GPT-4 model for natural language processing",
+      "rationale": "To achieve state-of-the-art natural language processing capabilities"
+    },
+    {
+      "name": "Encryption of user passwords",
+      "rationale": "To ensure the security of user data"
+    },
+    {
+      "name": "Use of smartphone connected to the internet with a working camera",
+      "rationale": "To enable users to upload images and videos"
+    },
+    {
+      "name": "Availability on Play store for android users and App store for iOS users",
+      "rationale": "To ensure the system is accessible to a wide range of users"
+    },
+    {
+      "name": "Use of digital twin technology",
+      "rationale": "To enable the creation of personalized avatars"
+    },
+    {
+      "name": "Use of voice cloning technology",
+      "rationale": "To enable the creation of personalized avatars with realistic voices"
+    },
+    {
+      "name": "Use of speech-to-text feature",
+      "rationale": "To enable users to interact with the avatar through voice commands"
+    },
+    {
+      "name": "Use of text-to-speech feature",
+      "rationale": "To enable users to interact with the avatar through text commands"
+    },
+    {
+      "name": "Use of 3D model generation technology",
+      "rationale": "To enable the creation of personalized avatars with realistic appearances"
+    },
+    {
+      "name": "Use of AI-powered avatar customization",
+      "rationale": "To enable users to customize their avatars to their liking"
     }
   ],
   "production_intents": {
     "deployment": {
-      "scaling": "horizontal",
-      "availability": "multi-region"
+      "scaling": "vertical",
+      "availability": "single-region"
     },
     "security": {
-      "authentication": "service-to-service",
+      "authentication": "centralized",
       "authorization": "RBAC"
     },
     "resilience": {
       "patterns": [
-        "Retry",
-        "CircuitBreaker"
+        "Retry"
       ],
-      "delivery": "at-least-once",
-      "ordering": false
+      "delivery": "at-most-once",
+      "ordering": true
     }
   },
   "components": [
     {
-      "name": "CVParser",
-      "responsibility": "Parses and analyzes submitted CVs"
+      "name": "User Interface",
+      "responsibility": "Handle user interactions, including uploading images, recording voice, and conversing with the avatar."
     },
     {
-      "name": "CVViewer",
-      "responsibility": "Displays the parsed CV to applicants for viewing and editing"
+      "name": "Image Processing",
+      "responsibility": "Convert uploaded images to 3D models and generate lifelike digital twin avatars."
     },
     {
-      "name": "ScreeningQuestionManager",
-      "responsibility": "Manages screening questions and presents them to applicants"
+      "name": "Voice Cloning",
+      "responsibility": "Clone the user's voice and make the avatar adapt to the user's voice."
     },
     {
-      "name": "RatingEngine",
-      "responsibility": "Generates a percentage-based result to evaluate each applicant's CV"
+      "name": "Avatar Customization",
+      "responsibility": "Allow users to customize their avatar's look and express emotions based on images and conversations."
     },
     {
-      "name": "Database",
-      "responsibility": "Stores and retrieves CV data, screening questions, and ratings"
+      "name": "Natural Language Processing (NLP)",
+      "responsibility": "Use the GPT-4 model for state-of-the-art natural language processing and respond to user questions."
     },
     {
-      "name": "APIGateway",
-      "responsibility": "Handles incoming requests and routes them to the appropriate components"
+      "name": "Authentication and Authorization",
+      "responsibility": "Handle user sign-up, login, profile editing, and logout functionality."
     },
     {
-      "name": "Security",
-      "responsibility": "Ensures secure authentication and authorization for applicants and recruiters"
+      "name": "Avatar Creation",
+      "responsibility": "Create avatars based on user requirements and make them adapt to the user."
+    },
+    {
+      "name": "Emotion Expression",
+      "responsibility": "Make the avatar express emotions based on images and conversations."
+    },
+    {
+      "name": "System Administration",
+      "responsibility": "Create accounts for administrators and provide access to system data and features."
     }
   ],
   "relationships": [
     {
-      "source": "APIGateway",
-      "target": "CVParser",
-      "type": "data-flow"
-    },
-    {
-      "source": "APIGateway",
-      "target": "ScreeningQuestionManager",
-      "type": "data-flow"
-    },
-    {
-      "source": "APIGateway",
-      "target": "RatingEngine",
-      "type": "data-flow"
-    },
-    {
-      "source": "APIGateway",
-      "target": "Database",
-      "type": "data-flow"
-    },
-    {
-      "source": "APIGateway",
-      "target": "Security",
+      "source": "User Interface",
+      "target": "Image Processing",
       "type": "event-flow"
     },
     {
-      "source": "CVParser",
-      "target": "CVViewer",
+      "source": "Image Processing",
+      "target": "Avatar Customization",
       "type": "data-flow"
     },
     {
-      "source": "ScreeningQuestionManager",
-      "target": "CVViewer",
+      "source": "Voice Cloning",
+      "target": "Avatar Customization",
       "type": "data-flow"
     },
     {
-      "source": "RatingEngine",
-      "target": "Database",
+      "source": "Avatar Customization",
+      "target": "Emotion Expression",
+      "type": "event-flow"
+    },
+    {
+      "source": "Natural Language Processing (NLP)",
+      "target": "Avatar Customization",
       "type": "data-flow"
     },
     {
-      "source": "Database",
-      "target": "APIGateway",
+      "source": "Avatar Creation",
+      "target": "Avatar Customization",
       "type": "data-flow"
     },
     {
-      "source": "Security",
-      "target": "APIGateway",
+      "source": "Authentication and Authorization",
+      "target": "Avatar Creation",
+      "type": "event-flow"
+    },
+    {
+      "source": "System Administration",
+      "target": "Authentication and Authorization",
       "type": "event-flow"
     }
   ],
   "runtime_flow": [
     {
-      "from": "APIGateway",
-      "to": "Security",
-      "action": "Authenticate incoming request",
+      "from": "User Interface",
+      "to": "Image Processing",
+      "action": "Upload Image",
       "mode": "async"
     },
     {
-      "from": "Security",
-      "to": "APIGateway",
-      "action": "Authorize authenticated request",
+      "from": "Image Processing",
+      "to": "Avatar Customization",
+      "action": "Process Image",
+      "mode": "sync"
+    },
+    {
+      "from": "Voice Cloning",
+      "to": "Avatar Customization",
+      "action": "Clone Voice",
+      "mode": "sync"
+    },
+    {
+      "from": "Avatar Customization",
+      "to": "Emotion Expression",
+      "action": "Update Emotion",
       "mode": "async"
     },
     {
-      "from": "APIGateway",
-      "to": "CVParser",
-      "action": "Parse and analyze submitted CV",
+      "from": "Natural Language Processing (NLP)",
+      "to": "Avatar Customization",
+      "action": "Process Conversation",
+      "mode": "sync"
+    },
+    {
+      "from": "Avatar Creation",
+      "to": "Avatar Customization",
+      "action": "Create Avatar",
+      "mode": "sync"
+    },
+    {
+      "from": "Authentication and Authorization",
+      "to": "Avatar Creation",
+      "action": "Authenticate User",
+      "mode": "sync"
+    },
+    {
+      "from": "System Administration",
+      "to": "Authentication and Authorization",
+      "action": "Create Admin Account",
+      "mode": "sync"
+    },
+    {
+      "from": "User Interface",
+      "to": "Voice Cloning",
+      "action": "Record Voice",
       "mode": "async"
     },
     {
-      "from": "CVParser",
-      "to": "CVViewer",
-      "action": "Display parsed CV to applicant",
+      "from": "User Interface",
+      "to": "Natural Language Processing (NLP)",
+      "action": "Converse with Avatar",
       "mode": "async"
     },
     {
-      "from": "APIGateway",
-      "to": "ScreeningQuestionManager",
-      "action": "Retrieve and present screening questions",
+      "from": "User Interface",
+      "to": "Avatar Customization",
+      "action": "Customize Avatar",
       "mode": "async"
     },
     {
-      "from": "ScreeningQuestionManager",
-      "to": "CVViewer",
-      "action": "Present screening questions to applicant",
-      "mode": "async"
+      "from": "Avatar Customization",
+      "to": "Avatar Creation",
+      "action": "Update Avatar",
+      "mode": "sync"
     },
     {
-      "from": "APIGateway",
-      "to": "RatingEngine",
-      "action": "Generate rating based on parsed CV",
-      "mode": "async"
-    },
-    {
-      "from": "RatingEngine",
-      "to": "Database",
-      "action": "Store generated rating",
-      "mode": "async"
-    },
-    {
-      "from": "Database",
-      "to": "APIGateway",
-      "action": "Retrieve stored rating",
-      "mode": "async"
-    },
-    {
-      "from": "APIGateway",
-      "to": "Security",
-      "action": "Authorize access to stored rating",
-      "mode": "async"
+      "from": "Avatar Creation",
+      "to": "Avatar Customization",
+      "action": "Create Avatar",
+      "mode": "sync"
     }
   ],
   "critique": []

@@ -1,21 +1,26 @@
 @startuml
 autonumber
 actor User
-participant "CVParser" as CVParser
-participant "CVViewer" as CVViewer
-participant "ScreeningQuestionManager" as ScreeningQuestionManager
-participant "RatingEngine" as RatingEngine
-participant "Database" as Database
-participant "APIGateway" as APIGateway
-participant "Security" as Security
-APIGateway ->> Security : Authenticate incoming request
-Security ->> APIGateway : Authorize authenticated request
-APIGateway ->> CVParser : Parse and analyze submitted CV
-CVParser ->> CVViewer : Display parsed CV to applicant
-APIGateway ->> ScreeningQuestionManager : Retrieve and present screening questions
-ScreeningQuestionManager ->> CVViewer : Present screening questions to applicant
-APIGateway ->> RatingEngine : Generate rating based on parsed CV
-RatingEngine ->> Database : Store generated rating
-Database ->> APIGateway : Retrieve stored rating
-APIGateway ->> Security : Authorize access to stored rating
+participant "User Interface" as UserInterface
+participant "Image Processing" as ImageProcessing
+participant "Voice Cloning" as VoiceCloning
+participant "Avatar Customization" as AvatarCustomization
+participant "Natural Language Processing (NLP)" as NaturalLanguageProcessingNLP
+participant "Authentication and Authorization" as AuthenticationandAuthorization
+participant "Avatar Creation" as AvatarCreation
+participant "Emotion Expression" as EmotionExpression
+participant "System Administration" as SystemAdministration
+UserInterface ->> ImageProcessing : Upload Image
+ImageProcessing -> AvatarCustomization : Process Image
+VoiceCloning -> AvatarCustomization : Clone Voice
+AvatarCustomization ->> EmotionExpression : Update Emotion
+NaturalLanguageProcessingNLP -> AvatarCustomization : Process Conversation
+AvatarCreation -> AvatarCustomization : Create Avatar
+AuthenticationandAuthorization -> AvatarCreation : Authenticate User
+SystemAdministration -> AuthenticationandAuthorization : Create Admin Account
+UserInterface ->> VoiceCloning : Record Voice
+UserInterface ->> NaturalLanguageProcessingNLP : Converse with Avatar
+UserInterface ->> AvatarCustomization : Customize Avatar
+AvatarCustomization -> AvatarCreation : Update Avatar
+AvatarCreation -> AvatarCustomization : Create Avatar
 @enduml

@@ -61,7 +61,8 @@ class SRSExtractor:
     def chunk_text(self, text: str, chunk_size: int = CHUNK_SIZE) -> List[str]:
         return [text[i:i + chunk_size] for i in range(0, len(text), chunk_size)]  
     def extract_candidates(self, text: str):
-      sentences = re.split(r'[.\n]', text)
+      text = text.replace("\n", " ")
+      sentences = re.split(r'\.', text)
       candidates = []
 
       for s in sentences:

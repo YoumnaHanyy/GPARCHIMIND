@@ -17,8 +17,10 @@ from infrastructure.repositories.weighted_repository import save_weighted_result
 from infrastructure.repositories.nfr_dataset_repository import NFRPredictionRepository
 from infrastructure.repositories.srs_repository import SRSRepository
 import pdfplumber
-
-
+from infrastructure.repositories.human_feedback_repository import save_new_confirmed_nfr
+from service.retrain_service import merge_and_retrain
+from infrastructure.database import db
+from service.retrain_service import run_retrain_async
 router = APIRouter()
 
 UPLOAD_DIR = "uploads"
@@ -247,8 +249,19 @@ async def confirm_nfr(request: Request):
         )
 
         if success:
-            confirmed_count += 1
+           confirmed_count += 1
+           save_new_confirmed_nfr({
+                "description": description,
+                "confirmed_type": confirmed_type,
+                "predicted_level": predicted_level
+        })
+    
+    count = db.new_nfr_confirmed.count_documents({})
 
+    print(f"📊 New feedback count: {count}")
+
+    if count >= 3:
+        run_retrain_async()
     # Get ALL predictions from MongoDB (high confidence + confirmed)
     all_nfrs = NFRPredictionRepository.get_by_project(project_id)
 
