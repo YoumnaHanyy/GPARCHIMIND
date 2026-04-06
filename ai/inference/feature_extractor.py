@@ -201,7 +201,7 @@ def save_decisions(decisions, architecture="LAYERED"):
 
 
 
-if __name__ == "__main__":
+def generate_phase4(project_id):
     features = extract_features()
 
     frs, nfrs = load_requirements()
@@ -210,20 +210,14 @@ if __name__ == "__main__":
 
     decisions = build_feature_decision(features, full_text)
 
-    # 🔥 auto project + architecture
-    project_id = get_latest_project_id()
     architecture = load_selected_architecture(project_id)
 
-    save_decisions(decisions, architecture)
-
-    print("✅ Using project:", project_id)
-
-    # =========================
-    # 🔥 NEW: run inference مباشرة
-    # =========================
     data = {
         "architecture": architecture,
         "features": decisions
     }
 
-    run_design_patterns(data)
+    # 🔥 هنا بقى المهم
+    patterns_result = run_design_patterns(data)
+
+    return patterns_result

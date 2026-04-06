@@ -377,17 +377,17 @@ async function saveSelectedArchitecture() {
 }
 
 function renderDesignPatterns(data) {
-  if (!data || !data.phase4 || !data.phase4.patterns) {
+  if (!data || !data.phase4 || !data.phase4.top_patterns) {
     return "<p class='text-muted'>No design patterns available.</p>";
   }
 
   let html = "<h5 class='section-header'>Recommended Design Patterns</h5>";
 
-  data.phase4.patterns.forEach((p, idx) => {
+  data.phase4.top_patterns.forEach((p, idx) => {
     html += `
       <div class="mb-4">
-        <div class="req-title">${idx + 1}. ${p.name}</div>
-        <div class="req-desc">${p.description}</div>
+        <div class="req-title">${idx + 1}. ${p.pattern}</div>
+        <div class="req-desc">${p.reasons.join(", ")}</div>
       </div>
     `;
   });
@@ -864,7 +864,7 @@ async function submitNFRConfirmation() {
     extractedData.binary_method = confirmData.binary_method;
     extractedData.weighted_method = confirmData.weighted_method;
     extractedData.hybrid_method = confirmData.hybrid_method;
-
+    extractedData.phase4 = confirmData.phase4;
     /* 6️⃣ Short delay for UX */
     setTimeout(() => {
       stopLoadingAnimation();

@@ -1,38 +1,38 @@
 [
   {
-    "title": "submitting the CV",
-    "description": "Applicants submit their CVs for parsing and analysis.",
+    "title": "Submit CV",
+    "description": "Applicants can submit their CVs for parsing and analysis.",
     "source": {
       "page": 16,
       "start_index": null
     },
-    "project_id": "proj_2a42d2f0"
+    "project_id": "proj_c5c219bd"
   },
   {
-    "title": "viewing and editing the CV",
+    "title": "View and Edit CV",
     "description": "Applicants can view and edit their parsed CV.",
     "source": {
       "page": 16,
       "start_index": null
     },
-    "project_id": "proj_2a42d2f0"
+    "project_id": "proj_c5c219bd"
   },
   {
-    "title": "answering screening questions",
+    "title": "Answer Screening Questions",
     "description": "Applicants are presented with screening questions defined by an expert recruiter.",
-    "source": {
-      "page": 12,
-      "start_index": null
-    },
-    "project_id": "proj_2a42d2f0"
-  },
-  {
-    "title": "getting a rating for the submitted CV",
-    "description": "The system generates a percentage-based result, providing a fair evaluation of each applicant.",
     "source": {
       "page": 13,
       "start_index": null
     },
-    "project_id": "proj_2a42d2f0"
+    "project_id": "proj_c5c219bd"
+  },
+  {
+    "title": "Get Rating for CV",
+    "description": "Applicants receive a rating for their CV based on the similarity between the applicant's CV and the job requirements.",
+    "source": {
+      "page": 13,
+      "start_index": null
+    },
+    "project_id": "proj_c5c219bd"
   }
 ]
