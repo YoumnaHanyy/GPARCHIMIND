@@ -1,34 +1,43 @@
 [
   {
-    "description": "The system shall be scalable to accommodate a large number of users.",
-    "confidence": 0.9690760374069214,
+    "description": "The system must be able to accommodate millions of students.",
+    "confidence": 0.9584578275680542,
     "confirmed": false,
-    "predicted_level": "Medium",
+    "predicted_level": "High",
     "predicted_type": "SC",
     "predicted_type_label": "Scalability",
     "title": "Scalability"
   },
   {
-    "description": "The system shall be accessible to individuals with Dyslexia, including those with visual impairments.",
+    "description": "The system must be accessible to individuals with learning disabilities.",
     "confidence": 1.0,
     "confirmed": true,
-    "predicted_level": "Medium",
-    "predicted_type": "MD",
-    "predicted_type_label": "Modularity",
+    "predicted_level": "High",
+    "predicted_type": "A",
+    "predicted_type_label": "Availability",
     "title": "Accessibility"
   },
   {
-    "description": "The system shall be user-friendly and easy to navigate.",
-    "confidence": 0.9284949898719788,
+    "description": "The system must be user-friendly and easy to navigate.",
+    "confidence": 0.9317547678947449,
     "confirmed": false,
-    "predicted_level": "Medium",
+    "predicted_level": "High",
     "predicted_type": "US",
     "predicted_type_label": "Usability",
     "title": "Usability"
   },
   {
-    "description": "The system shall ensure the security and confidentiality of user data.",
-    "confidence": 0.9866602420806885,
+    "description": "The system must comply with data privacy regulations.",
+    "confidence": 0.9766131639480591,
+    "confirmed": false,
+    "predicted_level": "High",
+    "predicted_type": "SE",
+    "predicted_type_label": "Security",
+    "title": "Data Privacy"
+  },
+  {
+    "description": "The system must ensure the security and integrity of user data.",
+    "confidence": 0.9822390079498291,
     "confirmed": false,
     "predicted_level": "High",
     "predicted_type": "SE",
@@ -36,21 +45,39 @@
     "title": "Security"
   },
   {
-    "description": "The system shall perform efficiently and effectively, with minimal downtime.",
+    "description": "The system must perform efficiently and effectively.",
     "confidence": 1.0,
     "confirmed": true,
-    "predicted_level": "Medium",
-    "predicted_type": "IN",
-    "predicted_type_label": "Interoperability",
+    "predicted_level": "High",
+    "predicted_type": "A",
+    "predicted_type_label": "Availability",
     "title": "Performance"
   },
   {
-    "description": "The system shall comply with data privacy regulations and ensure the secure storage and transmission of user data.",
-    "confidence": 0.9821802377700806,
+    "description": "The system must be reliable and consistent in its performance.",
+    "confidence": 0.9430555105209351,
     "confirmed": false,
     "predicted_level": "High",
-    "predicted_type": "SE",
-    "predicted_type_label": "Security",
-    "title": "Data Privacy"
+    "predicted_type": "PE",
+    "predicted_type_label": "Performance",
+    "title": "Reliability"
+  },
+  {
+    "description": "The system must be easy to maintain and update.",
+    "confidence": 0.9706531763076782,
+    "confirmed": false,
+    "predicted_level": "High",
+    "predicted_type": "MN",
+    "predicted_type_label": "Manageability",
+    "title": "Maintainability"
+  },
+  {
+    "description": "The system must be easy to test and validate.",
+    "confidence": 1.0,
+    "confirmed": true,
+    "predicted_level": "High",
+    "predicted_type": "FT",
+    "predicted_type_label": "Fault Tolerance",
+    "title": "Testability"
   }
 ]

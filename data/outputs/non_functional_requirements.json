@@ -1,56 +1,83 @@
 [
   {
     "title": "Scalability",
-    "description": "The system shall be scalable to accommodate a large number of users.",
+    "description": "The system must be able to accommodate millions of students.",
     "source": {
-      "page": "16",
-      "start_index": "5.5"
+      "page": null,
+      "start_index": null
     },
-    "project_id": "proj_e846adaf"
+    "project_id": "proj_91ad1ff0"
   },
   {
     "title": "Accessibility",
-    "description": "The system shall be accessible to individuals with Dyslexia, including those with visual impairments.",
+    "description": "The system must be accessible to individuals with learning disabilities.",
     "source": {
-      "page": "16",
-      "start_index": "5.2"
+      "page": null,
+      "start_index": null
     },
-    "project_id": "proj_e846adaf"
+    "project_id": "proj_91ad1ff0"
   },
   {
     "title": "Usability",
-    "description": "The system shall be user-friendly and easy to navigate.",
+    "description": "The system must be user-friendly and easy to navigate.",
     "source": {
-      "page": "16",
-      "start_index": "5.2"
+      "page": null,
+      "start_index": null
     },
-    "project_id": "proj_e846adaf"
-  },
-  {
-    "title": "Security",
-    "description": "The system shall ensure the security and confidentiality of user data.",
-    "source": {
-      "page": "16",
-      "start_index": "5.4"
-    },
-    "project_id": "proj_e846adaf"
-  },
-  {
-    "title": "Performance",
-    "description": "The system shall perform efficiently and effectively, with minimal downtime.",
-    "source": {
-      "page": "16",
-      "start_index": "5.5"
-    },
-    "project_id": "proj_e846adaf"
+    "project_id": "proj_91ad1ff0"
   },
   {
     "title": "Data Privacy",
-    "description": "The system shall comply with data privacy regulations and ensure the secure storage and transmission of user data.",
+    "description": "The system must comply with data privacy regulations.",
     "source": {
-      "page": "16",
-      "start_index": "5.4"
+      "page": null,
+      "start_index": null
     },
-    "project_id": "proj_e846adaf"
+    "project_id": "proj_91ad1ff0"
+  },
+  {
+    "title": "Security",
+    "description": "The system must ensure the security and integrity of user data.",
+    "source": {
+      "page": null,
+      "start_index": null
+    },
+    "project_id": "proj_91ad1ff0"
+  },
+  {
+    "title": "Performance",
+    "description": "The system must perform efficiently and effectively.",
+    "source": {
+      "page": null,
+      "start_index": null
+    },
+    "project_id": "proj_91ad1ff0"
+  },
+  {
+    "title": "Reliability",
+    "description": "The system must be reliable and consistent in its performance.",
+    "source": {
+      "page": null,
+      "start_index": null
+    },
+    "project_id": "proj_91ad1ff0"
+  },
+  {
+    "title": "Maintainability",
+    "description": "The system must be easy to maintain and update.",
+    "source": {
+      "page": null,
+      "start_index": null
+    },
+    "project_id": "proj_91ad1ff0"
+  },
+  {
+    "title": "Testability",
+    "description": "The system must be easy to test and validate.",
+    "source": {
+      "page": null,
+      "start_index": null
+    },
+    "project_id": "proj_91ad1ff0"
   }
 ]
