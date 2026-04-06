@@ -1,9 +1,9 @@
 {
-  "status": "FAILED",
+  "status": "SUCCESS",
   "structural": {
     "metrics": {
-      "component_count": 11,
-      "relationship_count": 16,
+      "component_count": 16,
+      "relationship_count": 14,
       "undefined_references": 0,
       "self_loops": 0,
       "invalid_relationship_types": 0
@@ -13,48 +13,47 @@
   },
   "quality": {
     "fan_in": {
-      "CV Comparison Module": 3,
-      "Cosine Similarity Calculator": 1,
-      "Answer Screening Questions Module": 0,
-      "View and Edit CV Module": 1,
-      "ChatGPT Validator": 2,
-      "CV Parser": 1,
-      "Screening Question Validator": 1,
-      "Get Rating for CV Module": 1,
-      "Rating Generator": 4,
-      "Submit CV Module": 1,
-      "Jaccard Similarity Calculator": 1
+      "Hand Tracking": 1,
+      "Real-Time Collaboration": 1,
+      "Gaussian Blur": 1,
+      "Gesture Analysis": 0,
+      "Multiprocessing": 1,
+      "Low-Latency": 1,
+      "Place-Agnostic": 1,
+      "Contour Detection": 1,
+      "Background Subtraction": 1,
+      "Single-Hand Interaction": 1,
+      "Face Detection": 0,
+      "Histogram Equalization": 1,
+      "Threading": 1,
+      "Face Recognition": 1,
+      "Customizable Gestures": 1,
+      "Gesture Recognition": 1
     },
     "fan_out": {
-      "CV Comparison Module": 2,
-      "Cosine Similarity Calculator": 1,
-      "Answer Screening Questions Module": 2,
-      "View and Edit CV Module": 1,
-      "ChatGPT Validator": 2,
-      "CV Parser": 1,
-      "Screening Question Validator": 1,
-      "Get Rating for CV Module": 0,
-      "Rating Generator": 0,
-      "Submit CV Module": 5,
-      "Jaccard Similarity Calculator": 1
+      "Hand Tracking": 1,
+      "Real-Time Collaboration": 1,
+      "Gaussian Blur": 1,
+      "Gesture Analysis": 1,
+      "Multiprocessing": 0,
+      "Low-Latency": 1,
+      "Place-Agnostic": 0,
+      "Contour Detection": 1,
+      "Background Subtraction": 1,
+      "Single-Hand Interaction": 1,
+      "Face Detection": 1,
+      "Histogram Equalization": 1,
+      "Threading": 1,
+      "Face Recognition": 1,
+      "Customizable Gestures": 1,
+      "Gesture Recognition": 1
     },
-    "centralization_index": 0.36363636363636365,
-    "risks": [
-      {
-        "component": "CV Comparison Module",
-        "risk": "High coupling",
-        "quality_attribute": "Modifiability"
-      },
-      {
-        "component": "Submit CV Module",
-        "risk": "High coupling",
-        "quality_attribute": "Modifiability"
-      }
-    ]
+    "centralization_index": 0.0625,
+    "risks": []
   },
   "domain": {
     "stateless_ratio": 1.0,
-    "state_concentration": 4,
+    "state_concentration": 1,
     "communication_style": "synchronous"
   }
 }

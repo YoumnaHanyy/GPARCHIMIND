@@ -1,31 +1,34 @@
 @startuml
 autonumber
 actor User
-participant "CV Parser" as CVParser
-participant "Screening Question Validator" as ScreeningQuestionValidator
-participant "Cosine Similarity Calculator" as CosineSimilarityCalculator
-participant "Jaccard Similarity Calculator" as JaccardSimilarityCalculator
-participant "Rating Generator" as RatingGenerator
-participant "CV Comparison Module" as CVComparisonModule
-participant "ChatGPT Validator" as ChatGPTValidator
-participant "Submit CV Module" as SubmitCVModule
-participant "View and Edit CV Module" as ViewandEditCVModule
-participant "Answer Screening Questions Module" as AnswerScreeningQuestionsModule
-participant "Get Rating for CV Module" as GetRatingforCVModule
-SubmitCVModule -> CVParser : Parse and extract key information from the applicant's CV
-CVParser -> CVComparisonModule : Compare CV information with job requirements and generate a ranking
-CVComparisonModule -> RatingGenerator : Generate a percentage-based result representing the applicant's overall suitability for the role
-CVComparisonModule -> GetRatingforCVModule : Provide applicants with a rating for their submitted CV
-SubmitCVModule ->> ViewandEditCVModule : Enable applicants to view and edit their parsed CV
-ViewandEditCVModule ->> SubmitCVModule : Allow applicants to submit their CVs for parsing and analysis
-AnswerScreeningQuestionsModule -> ScreeningQuestionValidator : Verify and grade applicant responses against an expert-generated model
-ScreeningQuestionValidator -> RatingGenerator : Generate a percentage-based result representing the applicant's overall suitability for the role
-SubmitCVModule -> ChatGPTValidator : Validate and score applicant responses using ChatGPT
-ChatGPTValidator -> RatingGenerator : Generate a percentage-based result representing the applicant's overall suitability for the role
-SubmitCVModule -> CosineSimilarityCalculator : Assess the alignment between CV information and job requirements using cosine similarity
-CosineSimilarityCalculator -> CVComparisonModule : Compare CV information with job requirements and generate a ranking
-SubmitCVModule -> JaccardSimilarityCalculator : Assess the alignment between CV information and job requirements using Jaccard similarity
-JaccardSimilarityCalculator -> CVComparisonModule : Compare CV information with job requirements and generate a ranking
-AnswerScreeningQuestionsModule -> ChatGPTValidator : Validate and score applicant responses using ChatGPT
-ChatGPTValidator -> RatingGenerator : Generate a percentage-based result representing the applicant's overall suitability for the role
+participant "Gesture Analysis" as GestureAnalysis
+participant "Gesture Recognition" as GestureRecognition
+participant "Face Recognition" as FaceRecognition
+participant "Hand Tracking" as HandTracking
+participant "Single-Hand Interaction" as SingleHandInteraction
+participant "Customizable Gestures" as CustomizableGestures
+participant "Real-Time Collaboration" as RealTimeCollaboration
+participant "Low-Latency" as LowLatency
+participant "Place-Agnostic" as PlaceAgnostic
+participant "Face Detection" as FaceDetection
+participant "Contour Detection" as ContourDetection
+participant "Gaussian Blur" as GaussianBlur
+participant "Background Subtraction" as BackgroundSubtraction
+participant "Histogram Equalization" as HistogramEqualization
+participant "Threading" as Threading
+participant "Multiprocessing" as Multiprocessing
+GestureAnalysis ->> GestureRecognition : Analyze gestures and reflect the corresponding action on the projected surface.
+GestureRecognition ->> FaceRecognition : Include gesture recognition.
+FaceRecognition ->> HandTracking : Include face recognition.
+HandTracking ->> SingleHandInteraction : Include hand tracking.
+SingleHandInteraction ->> CustomizableGestures : Include single-hand interaction.
+CustomizableGestures ->> RealTimeCollaboration : Customize the actions for specific gestures.
+RealTimeCollaboration ->> LowLatency : Enable real-time collaboration by supporting interactions on the projected surface.
+LowLatency ->> PlaceAgnostic : Have low-latency.
+FaceDetection ->> ContourDetection : Detect the user's face using the YOLOv5 model.
+ContourDetection ->> GaussianBlur : Use contours detection to detect the borders of objects.
+GaussianBlur ->> BackgroundSubtraction : Use Gaussian blur to mute the image noise.
+BackgroundSubtraction ->> HistogramEqualization : Use Background Subtraction (BS) to separate the moving parts.
+HistogramEqualization ->> Threading : Use Histogram Equalization for image contrast optimization.
+Threading ->> Multiprocessing : Use threading for concurrent execution of tasks within a single process.
 @enduml

@@ -1,47 +1,38 @@
 [
   {
-    "title": "System Functions",
-    "description": "The system shall allow applicants to submit their CVs for parsing and analysis.",
-    "source": {
-      "page": 15,
-      "start_index": null
-    },
-    "project_id": "proj_d1d23b65"
-  },
-  {
-    "title": "Detailed Functional Specification",
-    "description": "The system shall extract key information from CVs, including skills and years of experience.",
+    "title": "submitting the CV",
+    "description": "Applicants submit their CVs for parsing and analysis.",
     "source": {
       "page": 16,
       "start_index": null
     },
-    "project_id": "proj_d1d23b65"
+    "project_id": "proj_2a42d2f0"
   },
   {
-    "title": "Viewing and Editing the CV",
-    "description": "The system shall allow applicants to view and edit their parsed CV.",
+    "title": "viewing and editing the CV",
+    "description": "Applicants can view and edit their parsed CV.",
     "source": {
-      "page": 1,
+      "page": 16,
       "start_index": null
     },
-    "project_id": "proj_d1d23b65"
+    "project_id": "proj_2a42d2f0"
   },
   {
-    "title": "Answering Screening Questions",
-    "description": "The system shall allow applicants to answer screening questions defined by an expert recruiter.",
+    "title": "answering screening questions",
+    "description": "Applicants are presented with screening questions defined by an expert recruiter.",
+    "source": {
+      "page": 12,
+      "start_index": null
+    },
+    "project_id": "proj_2a42d2f0"
+  },
+  {
+    "title": "getting a rating for the submitted CV",
+    "description": "The system generates a percentage-based result, providing a fair evaluation of each applicant.",
     "source": {
       "page": 13,
       "start_index": null
     },
-    "project_id": "proj_d1d23b65"
-  },
-  {
-    "title": "Getting a Rating for the Submitted CV",
-    "description": "The system shall provide a rating for the submitted CV based on the similarity between the applicant's CV and the job requirements.",
-    "source": {
-      "page": 13,
-      "start_index": null
-    },
-    "project_id": "proj_d1d23b65"
+    "project_id": "proj_2a42d2f0"
   }
 ]

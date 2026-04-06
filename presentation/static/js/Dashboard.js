@@ -28,10 +28,15 @@ window.addEventListener('DOMContentLoaded', () => {
       ] 
     },
     3: { 
-      name: "Project Complete", 
-      pct: "100%", 
+      name: "Final report", 
+      pct: "90%", 
       tabs: ["Final Report"] 
-    }
+    },
+     4: { 
+    name: "Design Patterns & Code", 
+    pct: "100%", 
+    tabs: ["Design Patterns", "Code Skeleton"] 
+  }
   };
 
   function showUploader() {
@@ -371,6 +376,44 @@ async function saveSelectedArchitecture() {
     }
 }
 
+function renderDesignPatterns(data) {
+  if (!data || !data.phase4 || !data.phase4.patterns) {
+    return "<p class='text-muted'>No design patterns available.</p>";
+  }
+
+  let html = "<h5 class='section-header'>Recommended Design Patterns</h5>";
+
+  data.phase4.patterns.forEach((p, idx) => {
+    html += `
+      <div class="mb-4">
+        <div class="req-title">${idx + 1}. ${p.name}</div>
+        <div class="req-desc">${p.description}</div>
+      </div>
+    `;
+  });
+
+  return html;
+}
+
+function renderCodeSkeleton(data) {
+  if (!data || !data.phase4 || !data.phase4.code) {
+    return "<p class='text-muted'>No code generated.</p>";
+  }
+
+  return `
+    <h5 class="section-header">Generated Code Skeleton</h5>
+
+    <div class="code-box position-relative">
+      <button class="copy-btn" onclick="copyCode()">Copy</button>
+      <pre><code id="generatedCode">${data.phase4.code}</code></pre>
+    </div>
+
+    <div class="mt-4 text-center">
+      <button class="btn btn-success px-4 me-2" onclick="downloadCode()">Download</button>
+      <button class="btn btn-outline-light px-4" onclick="regenerateCode()">Regenerate</button>
+    </div>
+  `;
+}
   /* =======================
      TAB RENDERING
   ======================= */
@@ -501,7 +544,7 @@ function loadValidationReport() {
 
     // Update Buttons
     document.getElementById('btnPrev').style.visibility = currentPhase === 1 ? 'hidden' : 'visible';
-    document.getElementById('btnNext').innerText = currentPhase === 3 ? "Finish" : "Next Phase";
+    document.getElementById('btnNext').innerText = currentPhase === 4 ? "Finish" : "Next Phase";
 
     // Load initial content
     setTab(null, data.tabs[0]);
@@ -543,6 +586,12 @@ function loadValidationReport() {
         case "Final Report":
           content = renderFinalReport(extractedData);
           break;
+        case "Design Patterns":
+          content = renderDesignPatterns(extractedData);
+          break;
+        case "Code Skeleton":
+          content = renderCodeSkeleton(extractedData);
+          break;
         default:
           content = `<p class='text-muted'>Rendering ${name} data...</p>`;
       }
@@ -560,8 +609,11 @@ function changePhase(dir) {
     return;
   }
 
-  if (dir === 1 && currentPhase < 3) {
+  if (dir === 1 && currentPhase < 4) {
     currentPhase++;
+
+    renderPhase(); // 🔥 مهم جدًا
+
     syncProjectProgress();
     triggerLoading();
 
@@ -569,7 +621,7 @@ function changePhase(dir) {
     currentPhase--;
     renderPhase();
 
-  } else if (dir === 1 && currentPhase === 3) {
+  } else if (dir === 1 && currentPhase === 4) {
     syncProjectProgress();
     alert("Project Complete! Returning to dashboard.");
     location.reload();
@@ -951,8 +1003,22 @@ async function syncProjectProgress() {
   }
 }
 
-const disposition = response.headers.get("Content-Disposition") || "";
-const isProblemReport = disposition.includes("problems");
-if (isProblemReport) {
-  alert("⚠️ Architecture has verification/validation issues. Please review the report.");
+
+function copyCode() {
+  const code = document.getElementById("generatedCode").innerText;
+  navigator.clipboard.writeText(code);
+}
+
+function downloadCode() {
+  const code = document.getElementById("generatedCode").innerText;
+  const blob = new Blob([code], { type: "text/plain" });
+
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "skeleton.js";
+  a.click();
+}
+
+function regenerateCode() {
+  alert("Regenerating code...");
 }

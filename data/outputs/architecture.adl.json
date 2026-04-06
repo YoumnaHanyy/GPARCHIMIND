@@ -4,24 +4,32 @@
   "source": "AI",
   "decisions": [
     {
-      "name": "Layered Architecture",
-      "rationale": "The system will be designed using a layered (N-Tier) architecture style to ensure a clear separation of concerns, scalability, and maintainability."
+      "name": "Use a Layered (N-Tier) Architecture Style",
+      "rationale": "The system requires multiple components to interact with each other, such as gesture recognition, face recognition, and hand tracking. A layered architecture style will allow for clear separation of concerns and easier maintenance."
     },
     {
-      "name": "Python Library for CV Parsing",
-      "rationale": "The system will use a Python library to parse CVs and extract key information such as skills and years of experience."
+      "name": "Use a Microservices Architecture for Real-Time Collaboration",
+      "rationale": "To enable real-time collaboration, the system will require multiple services to communicate with each other. A microservices architecture will allow for loose coupling and scalability."
     },
     {
-      "name": "Cosine Similarity and Jaccard Similarity for CV Comparison",
-      "rationale": "The system will use cosine similarity and Jaccard similarity to assess the alignment between the extracted information from the CV and the job requirements specified by the recruiter."
+      "name": "Use Threading for Concurrent Execution of Tasks within a Single Process",
+      "rationale": "The system requires concurrent execution of tasks, such as image processing and gesture recognition. Threading will allow for efficient use of system resources and faster execution times."
     },
     {
-      "name": "Expert-Generated Model for Applicant Response Validation",
-      "rationale": "Applicant responses will be verified and graded by comparing them to an expert-generated model, and the applicant's answers will be validated and scored by ChatGPT."
+      "name": "Use Multiprocessing for Parallel Execution of Tasks across Multiple Processes",
+      "rationale": "To handle multiple users and different types of gestures, the system will require parallel execution of tasks. Multiprocessing will allow for efficient use of system resources and faster execution times."
     },
     {
-      "name": "Percentage-Based Result Generation",
-      "rationale": "The system will generate a percentage-based result that represents the applicant's overall suitability for the role by averaging CV ranking and screening question validation scores."
+      "name": "Use a Database for Storage and Retrieval of User Data",
+      "rationale": "The system will require storage and retrieval of user data, such as gesture recognition models and user preferences. A database will provide a scalable and efficient solution for storing and retrieving data."
+    },
+    {
+      "name": "Use a Message Queue for Communication between Services",
+      "rationale": "To enable real-time collaboration, the system will require communication between services. A message queue will provide a scalable and efficient solution for communication between services."
+    },
+    {
+      "name": "Use a Cloud-Based Infrastructure for Scalability and Reliability",
+      "rationale": "To handle multiple users and different types of gestures, the system will require a scalable and reliable infrastructure. A cloud-based infrastructure will provide the necessary resources and scalability to support the system."
     }
   ],
   "production_intents": {
@@ -42,228 +50,226 @@
   },
   "components": [
     {
-      "name": "CV Parser",
-      "responsibility": "Parse and extract key information from the applicant's CV"
+      "name": "Gesture Analysis",
+      "responsibility": "Analyze gestures and reflect the corresponding action on the projected surface."
     },
     {
-      "name": "Screening Question Validator",
-      "responsibility": "Verify and grade applicant responses against an expert-generated model"
+      "name": "Gesture Recognition",
+      "responsibility": "Include gesture recognition."
     },
     {
-      "name": "Cosine Similarity Calculator",
-      "responsibility": "Assess the alignment between CV information and job requirements using cosine similarity"
+      "name": "Face Recognition",
+      "responsibility": "Include face recognition."
     },
     {
-      "name": "Jaccard Similarity Calculator",
-      "responsibility": "Assess the alignment between CV information and job requirements using Jaccard similarity"
+      "name": "Hand Tracking",
+      "responsibility": "Include hand tracking."
     },
     {
-      "name": "Rating Generator",
-      "responsibility": "Generate a percentage-based result representing the applicant's overall suitability for the role"
+      "name": "Single-Hand Interaction",
+      "responsibility": "Include single-hand interaction."
     },
     {
-      "name": "CV Comparison Module",
-      "responsibility": "Compare CV information with job requirements and generate a ranking"
+      "name": "Customizable Gestures",
+      "responsibility": "Customize the actions for specific gestures."
     },
     {
-      "name": "ChatGPT Validator",
-      "responsibility": "Validate and score applicant responses using ChatGPT"
+      "name": "Real-Time Collaboration",
+      "responsibility": "Enable real-time collaboration by supporting interactions on the projected surface."
     },
     {
-      "name": "Submit CV Module",
-      "responsibility": "Allow applicants to submit their CVs for parsing and analysis"
+      "name": "Low-Latency",
+      "responsibility": "Have low-latency."
     },
     {
-      "name": "View and Edit CV Module",
-      "responsibility": "Enable applicants to view and edit their parsed CV"
+      "name": "Place-Agnostic",
+      "responsibility": "Work effectively in different places."
     },
     {
-      "name": "Answer Screening Questions Module",
-      "responsibility": "Present applicants with screening questions defined by an expert recruiter"
+      "name": "Face Detection",
+      "responsibility": "Detect the user's face using the YOLOv5 model."
     },
     {
-      "name": "Get Rating for CV Module",
-      "responsibility": "Provide applicants with a rating for their submitted CV"
+      "name": "Contour Detection",
+      "responsibility": "Use contours detection to detect the borders of objects."
+    },
+    {
+      "name": "Gaussian Blur",
+      "responsibility": "Use Gaussian blur to mute the image noise."
+    },
+    {
+      "name": "Background Subtraction",
+      "responsibility": "Use Background Subtraction (BS) to separate the moving parts."
+    },
+    {
+      "name": "Histogram Equalization",
+      "responsibility": "Use Histogram Equalization for image contrast optimization."
+    },
+    {
+      "name": "Threading",
+      "responsibility": "Use threading for concurrent execution of tasks within a single process."
+    },
+    {
+      "name": "Multiprocessing",
+      "responsibility": "Use multiprocessing for parallel execution of tasks across multiple processes."
     }
   ],
   "relationships": [
     {
-      "source": "Submit CV Module",
-      "target": "CV Parser",
+      "source": "Gesture Analysis",
+      "target": "Gesture Recognition",
       "type": "data-flow"
     },
     {
-      "source": "CV Parser",
-      "target": "CV Comparison Module",
+      "source": "Gesture Recognition",
+      "target": "Face Recognition",
       "type": "data-flow"
     },
     {
-      "source": "CV Comparison Module",
-      "target": "Rating Generator",
+      "source": "Face Recognition",
+      "target": "Hand Tracking",
       "type": "data-flow"
     },
     {
-      "source": "CV Comparison Module",
-      "target": "Get Rating for CV Module",
+      "source": "Hand Tracking",
+      "target": "Single-Hand Interaction",
       "type": "data-flow"
     },
     {
-      "source": "Submit CV Module",
-      "target": "View and Edit CV Module",
+      "source": "Single-Hand Interaction",
+      "target": "Customizable Gestures",
+      "type": "data-flow"
+    },
+    {
+      "source": "Customizable Gestures",
+      "target": "Real-Time Collaboration",
       "type": "event-flow"
     },
     {
-      "source": "View and Edit CV Module",
-      "target": "Submit CV Module",
+      "source": "Real-Time Collaboration",
+      "target": "Low-Latency",
+      "type": "data-flow"
+    },
+    {
+      "source": "Low-Latency",
+      "target": "Place-Agnostic",
+      "type": "data-flow"
+    },
+    {
+      "source": "Face Detection",
+      "target": "Contour Detection",
+      "type": "data-flow"
+    },
+    {
+      "source": "Contour Detection",
+      "target": "Gaussian Blur",
+      "type": "data-flow"
+    },
+    {
+      "source": "Gaussian Blur",
+      "target": "Background Subtraction",
+      "type": "data-flow"
+    },
+    {
+      "source": "Background Subtraction",
+      "target": "Histogram Equalization",
+      "type": "data-flow"
+    },
+    {
+      "source": "Histogram Equalization",
+      "target": "Threading",
+      "type": "data-flow"
+    },
+    {
+      "source": "Threading",
+      "target": "Multiprocessing",
       "type": "event-flow"
-    },
-    {
-      "source": "Answer Screening Questions Module",
-      "target": "Screening Question Validator",
-      "type": "data-flow"
-    },
-    {
-      "source": "Screening Question Validator",
-      "target": "Rating Generator",
-      "type": "data-flow"
-    },
-    {
-      "source": "Submit CV Module",
-      "target": "ChatGPT Validator",
-      "type": "data-flow"
-    },
-    {
-      "source": "ChatGPT Validator",
-      "target": "Rating Generator",
-      "type": "data-flow"
-    },
-    {
-      "source": "Submit CV Module",
-      "target": "Cosine Similarity Calculator",
-      "type": "data-flow"
-    },
-    {
-      "source": "Cosine Similarity Calculator",
-      "target": "CV Comparison Module",
-      "type": "data-flow"
-    },
-    {
-      "source": "Submit CV Module",
-      "target": "Jaccard Similarity Calculator",
-      "type": "data-flow"
-    },
-    {
-      "source": "Jaccard Similarity Calculator",
-      "target": "CV Comparison Module",
-      "type": "data-flow"
-    },
-    {
-      "source": "Answer Screening Questions Module",
-      "target": "ChatGPT Validator",
-      "type": "data-flow"
-    },
-    {
-      "source": "ChatGPT Validator",
-      "target": "Rating Generator",
-      "type": "data-flow"
     }
   ],
   "runtime_flow": [
     {
-      "from": "Submit CV Module",
-      "to": "CV Parser",
-      "action": "Parse and extract key information from the applicant's CV",
-      "mode": "sync"
-    },
-    {
-      "from": "CV Parser",
-      "to": "CV Comparison Module",
-      "action": "Compare CV information with job requirements and generate a ranking",
-      "mode": "sync"
-    },
-    {
-      "from": "CV Comparison Module",
-      "to": "Rating Generator",
-      "action": "Generate a percentage-based result representing the applicant's overall suitability for the role",
-      "mode": "sync"
-    },
-    {
-      "from": "CV Comparison Module",
-      "to": "Get Rating for CV Module",
-      "action": "Provide applicants with a rating for their submitted CV",
-      "mode": "sync"
-    },
-    {
-      "from": "Submit CV Module",
-      "to": "View and Edit CV Module",
-      "action": "Enable applicants to view and edit their parsed CV",
+      "from": "Gesture Analysis",
+      "to": "Gesture Recognition",
+      "action": "Analyze gestures and reflect the corresponding action on the projected surface.",
       "mode": "async"
     },
     {
-      "from": "View and Edit CV Module",
-      "to": "Submit CV Module",
-      "action": "Allow applicants to submit their CVs for parsing and analysis",
+      "from": "Gesture Recognition",
+      "to": "Face Recognition",
+      "action": "Include gesture recognition.",
       "mode": "async"
     },
     {
-      "from": "Answer Screening Questions Module",
-      "to": "Screening Question Validator",
-      "action": "Verify and grade applicant responses against an expert-generated model",
-      "mode": "sync"
+      "from": "Face Recognition",
+      "to": "Hand Tracking",
+      "action": "Include face recognition.",
+      "mode": "async"
     },
     {
-      "from": "Screening Question Validator",
-      "to": "Rating Generator",
-      "action": "Generate a percentage-based result representing the applicant's overall suitability for the role",
-      "mode": "sync"
+      "from": "Hand Tracking",
+      "to": "Single-Hand Interaction",
+      "action": "Include hand tracking.",
+      "mode": "async"
     },
     {
-      "from": "Submit CV Module",
-      "to": "ChatGPT Validator",
-      "action": "Validate and score applicant responses using ChatGPT",
-      "mode": "sync"
+      "from": "Single-Hand Interaction",
+      "to": "Customizable Gestures",
+      "action": "Include single-hand interaction.",
+      "mode": "async"
     },
     {
-      "from": "ChatGPT Validator",
-      "to": "Rating Generator",
-      "action": "Generate a percentage-based result representing the applicant's overall suitability for the role",
-      "mode": "sync"
+      "from": "Customizable Gestures",
+      "to": "Real-Time Collaboration",
+      "action": "Customize the actions for specific gestures.",
+      "mode": "async"
     },
     {
-      "from": "Submit CV Module",
-      "to": "Cosine Similarity Calculator",
-      "action": "Assess the alignment between CV information and job requirements using cosine similarity",
-      "mode": "sync"
+      "from": "Real-Time Collaboration",
+      "to": "Low-Latency",
+      "action": "Enable real-time collaboration by supporting interactions on the projected surface.",
+      "mode": "async"
     },
     {
-      "from": "Cosine Similarity Calculator",
-      "to": "CV Comparison Module",
-      "action": "Compare CV information with job requirements and generate a ranking",
-      "mode": "sync"
+      "from": "Low-Latency",
+      "to": "Place-Agnostic",
+      "action": "Have low-latency.",
+      "mode": "async"
     },
     {
-      "from": "Submit CV Module",
-      "to": "Jaccard Similarity Calculator",
-      "action": "Assess the alignment between CV information and job requirements using Jaccard similarity",
-      "mode": "sync"
+      "from": "Face Detection",
+      "to": "Contour Detection",
+      "action": "Detect the user's face using the YOLOv5 model.",
+      "mode": "async"
     },
     {
-      "from": "Jaccard Similarity Calculator",
-      "to": "CV Comparison Module",
-      "action": "Compare CV information with job requirements and generate a ranking",
-      "mode": "sync"
+      "from": "Contour Detection",
+      "to": "Gaussian Blur",
+      "action": "Use contours detection to detect the borders of objects.",
+      "mode": "async"
     },
     {
-      "from": "Answer Screening Questions Module",
-      "to": "ChatGPT Validator",
-      "action": "Validate and score applicant responses using ChatGPT",
-      "mode": "sync"
+      "from": "Gaussian Blur",
+      "to": "Background Subtraction",
+      "action": "Use Gaussian blur to mute the image noise.",
+      "mode": "async"
     },
     {
-      "from": "ChatGPT Validator",
-      "to": "Rating Generator",
-      "action": "Generate a percentage-based result representing the applicant's overall suitability for the role",
-      "mode": "sync"
+      "from": "Background Subtraction",
+      "to": "Histogram Equalization",
+      "action": "Use Background Subtraction (BS) to separate the moving parts.",
+      "mode": "async"
+    },
+    {
+      "from": "Histogram Equalization",
+      "to": "Threading",
+      "action": "Use Histogram Equalization for image contrast optimization.",
+      "mode": "async"
+    },
+    {
+      "from": "Threading",
+      "to": "Multiprocessing",
+      "action": "Use threading for concurrent execution of tasks within a single process.",
+      "mode": "async"
     }
   ],
   "critique": []

@@ -1,16 +1,16 @@
 [
   {
-    "description": "The system MUST respond to user input within 2 seconds.",
-    "confidence": 0.9681876301765442,
-    "confirmed": false,
-    "predicted_level": "High",
+    "description": "The system MUST respond within a reasonable time frame.",
+    "confidence": 1.0,
+    "confirmed": true,
+    "predicted_level": " High",
     "predicted_type": "PE",
     "predicted_type_label": "Performance",
     "title": "Performance"
   },
   {
-    "description": "The system SHALL be available 99.9% of the time.",
-    "confidence": 0.976506769657135,
+    "description": "The system SHALL be available at least 99.9% of the time.",
+    "confidence": 0.934357762336731,
     "confirmed": false,
     "predicted_level": "High",
     "predicted_type": "A",
@@ -19,16 +19,16 @@
   },
   {
     "description": "The system MUST protect user data and prevent unauthorized access.",
-    "confidence": 0.98123699426651,
+    "confidence": 0.9548050761222839,
     "confirmed": false,
-    "predicted_level": "High",
+    "predicted_level": " High",
     "predicted_type": "SE",
     "predicted_type_label": "Security",
     "title": "Security"
   },
   {
-    "description": "The system SHALL ensure that user data is not shared without consent.",
-    "confidence": 0.9787716865539551,
+    "description": "The system SHALL ensure that user data is collected and stored in accordance with applicable laws and regulations.",
+    "confidence": 0.9012011885643005,
     "confirmed": false,
     "predicted_level": "High",
     "predicted_type": "SE",
@@ -36,17 +36,17 @@
     "title": "Privacy"
   },
   {
-    "description": "The system MUST be able to handle a minimum of 10,000 users concurrently.",
-    "confidence": 0.937176525592804,
-    "confirmed": false,
+    "description": "The system SHOULD be able to handle a large number of users and CVs without a significant decrease in performance.",
+    "confidence": 1.0,
+    "confirmed": true,
     "predicted_level": "High",
     "predicted_type": "SC",
     "predicted_type_label": "Scalability",
     "title": "Scalability"
   },
   {
-    "description": "The system SHALL be user-friendly and provide clear instructions for use.",
-    "confidence": 0.9489604234695435,
+    "description": "The system MUST be easy to use and navigate for users with varying levels of technical expertise.",
+    "confidence": 0.9012039303779602,
     "confirmed": false,
     "predicted_level": "Medium",
     "predicted_type": "US",
@@ -54,30 +54,30 @@
     "title": "Usability"
   },
   {
-    "description": "The system MUST be easy to modify and update.",
-    "confidence": 0.9337887167930603,
+    "description": "The system SHOULD be designed to be easily maintained and updated by the development team.",
+    "confidence": 0.9078160524368286,
     "confirmed": false,
-    "predicted_level": "High",
+    "predicted_level": "Medium",
     "predicted_type": "MN",
     "predicted_type_label": "Manageability",
     "title": "Maintainability"
   },
   {
-    "description": "The system SHALL be compatible with a minimum of 5 different browsers.",
+    "description": "The system MUST be compatible with a variety of devices and browsers.",
     "confidence": 1.0,
     "confirmed": true,
-    "predicted_level": "Medium",
+    "predicted_level": "Low",
     "predicted_type": "CO",
     "predicted_type_label": "Compatibility",
     "title": "Compatibility"
   },
   {
-    "description": "The system MUST integrate with the HR module from Odoo ERP software.",
+    "description": "The system SHOULD be able to integrate with other HR systems and tools.",
     "confidence": 1.0,
     "confirmed": true,
     "predicted_level": "High",
-    "predicted_type": "CO",
-    "predicted_type_label": "Compatibility",
+    "predicted_type": "O",
+    "predicted_type_label": "Operational",
     "title": "Integration"
   }
 ]

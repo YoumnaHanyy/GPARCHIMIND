@@ -7,52 +7,72 @@ node "Client" {
 node "Kubernetes Ingress" {
   component "Ingress Controller"
 }
-node "CV Parser Pod" {
-  component "CV Parser"
+node "Gesture Analysis Pod" {
+  component "Gesture Analysis"
 }
-node "Screening Question Validator Pod" {
-  component "Screening Question Validator"
+node "Gesture Recognition Pod" {
+  component "Gesture Recognition"
 }
-node "Cosine Similarity Calculator Pod" {
-  component "Cosine Similarity Calculator"
+node "Face Recognition Pod" {
+  component "Face Recognition"
 }
-node "Jaccard Similarity Calculator Pod" {
-  component "Jaccard Similarity Calculator"
+node "Hand Tracking Pod" {
+  component "Hand Tracking"
 }
-node "Rating Generator Pod" {
-  component "Rating Generator"
+node "Single-Hand Interaction Pod" {
+  component "Single-Hand Interaction"
 }
-node "CV Comparison Module Pod" {
-  component "CV Comparison Module"
+node "Customizable Gestures Pod" {
+  component "Customizable Gestures"
 }
-node "ChatGPT Validator Pod" {
-  component "ChatGPT Validator"
+node "Real-Time Collaboration Pod" {
+  component "Real-Time Collaboration"
 }
-node "Submit CV Module Pod" {
-  component "Submit CV Module"
+node "Low-Latency Pod" {
+  component "Low-Latency"
 }
-node "View and Edit CV Module Pod" {
-  component "View and Edit CV Module"
+node "Place-Agnostic Pod" {
+  component "Place-Agnostic"
 }
-node "Answer Screening Questions Module Pod" {
-  component "Answer Screening Questions Module"
+node "Face Detection Pod" {
+  component "Face Detection"
 }
-node "Get Rating for CV Module Pod" {
-  component "Get Rating for CV Module"
+node "Contour Detection Pod" {
+  component "Contour Detection"
+}
+node "Gaussian Blur Pod" {
+  component "Gaussian Blur"
+}
+node "Background Subtraction Pod" {
+  component "Background Subtraction"
+}
+node "Histogram Equalization Pod" {
+  component "Histogram Equalization"
+}
+node "Threading Pod" {
+  component "Threading"
+}
+node "Multiprocessing Pod" {
+  component "Multiprocessing"
 }
 "User" --> "Ingress Controller" : TCP/IP
 "Ingress Controller" --> "API Gateway Pod" : HTTP/HTTPS
 "User" --> "Ingress Controller"
 "Ingress Controller" --> "API Gateway Pod"
-"API Gateway Pod" --> "CV Parser Pod"
-"API Gateway Pod" --> "Screening Question Validator Pod"
-"API Gateway Pod" --> "Cosine Similarity Calculator Pod"
-"API Gateway Pod" --> "Jaccard Similarity Calculator Pod"
-"API Gateway Pod" --> "Rating Generator Pod"
-"API Gateway Pod" --> "CV Comparison Module Pod"
-"API Gateway Pod" --> "ChatGPT Validator Pod"
-"API Gateway Pod" --> "Submit CV Module Pod"
-"API Gateway Pod" --> "View and Edit CV Module Pod"
-"API Gateway Pod" --> "Answer Screening Questions Module Pod"
-"API Gateway Pod" --> "Get Rating for CV Module Pod"
+"API Gateway Pod" --> "Gesture Analysis Pod"
+"API Gateway Pod" --> "Gesture Recognition Pod"
+"API Gateway Pod" --> "Face Recognition Pod"
+"API Gateway Pod" --> "Hand Tracking Pod"
+"API Gateway Pod" --> "Single-Hand Interaction Pod"
+"API Gateway Pod" --> "Customizable Gestures Pod"
+"API Gateway Pod" --> "Real-Time Collaboration Pod"
+"API Gateway Pod" --> "Low-Latency Pod"
+"API Gateway Pod" --> "Place-Agnostic Pod"
+"API Gateway Pod" --> "Face Detection Pod"
+"API Gateway Pod" --> "Contour Detection Pod"
+"API Gateway Pod" --> "Gaussian Blur Pod"
+"API Gateway Pod" --> "Background Subtraction Pod"
+"API Gateway Pod" --> "Histogram Equalization Pod"
+"API Gateway Pod" --> "Threading Pod"
+"API Gateway Pod" --> "Multiprocessing Pod"
 @enduml

@@ -2,161 +2,186 @@ System ResuFit:PrecisionCVMatchingSystem {
   Property view : String = "runtime";
   Property architectureStyle : String = "Layered (N-Tier)";
   Property source : String = "AI";
-  Component CVParser = new Component {
+  Component GestureAnalysis = new Component {
     Port in;
     Port out;
-    Property responsibility : String = "Parse and extract key information from the applicant's CV";
+    Property responsibility : String = "Analyze gestures and reflect the corresponding action on the projected surface.";
     Property state : String = "stateless";
     Property scaling : String = "horizontal";
   }
-  Component ScreeningQuestionValidator = new Component {
+  Component GestureRecognition = new Component {
     Port in;
     Port out;
-    Property responsibility : String = "Verify and grade applicant responses against an expert-generated model";
+    Property responsibility : String = "Include gesture recognition.";
     Property state : String = "stateless";
     Property scaling : String = "horizontal";
   }
-  Component CosineSimilarityCalculator = new Component {
+  Component FaceRecognition = new Component {
     Port in;
     Port out;
-    Property responsibility : String = "Assess the alignment between CV information and job requirements using cosine similarity";
+    Property responsibility : String = "Include face recognition.";
     Property state : String = "stateless";
     Property scaling : String = "horizontal";
   }
-  Component JaccardSimilarityCalculator = new Component {
+  Component HandTracking = new Component {
     Port in;
     Port out;
-    Property responsibility : String = "Assess the alignment between CV information and job requirements using Jaccard similarity";
+    Property responsibility : String = "Include hand tracking.";
     Property state : String = "stateless";
     Property scaling : String = "horizontal";
   }
-  Component RatingGenerator = new Component {
+  Component Single-HandInteraction = new Component {
     Port in;
     Port out;
-    Property responsibility : String = "Generate a percentage-based result representing the applicant's overall suitability for the role";
+    Property responsibility : String = "Include single-hand interaction.";
     Property state : String = "stateless";
     Property scaling : String = "horizontal";
   }
-  Component CVComparisonModule = new Component {
+  Component CustomizableGestures = new Component {
     Port in;
     Port out;
-    Property responsibility : String = "Compare CV information with job requirements and generate a ranking";
+    Property responsibility : String = "Customize the actions for specific gestures.";
     Property state : String = "stateless";
     Property scaling : String = "horizontal";
   }
-  Component ChatGPTValidator = new Component {
+  Component Real-TimeCollaboration = new Component {
     Port in;
     Port out;
-    Property responsibility : String = "Validate and score applicant responses using ChatGPT";
+    Property responsibility : String = "Enable real-time collaboration by supporting interactions on the projected surface.";
     Property state : String = "stateless";
     Property scaling : String = "horizontal";
   }
-  Component SubmitCVModule = new Component {
+  Component Low-Latency = new Component {
     Port in;
     Port out;
-    Property responsibility : String = "Allow applicants to submit their CVs for parsing and analysis";
+    Property responsibility : String = "Have low-latency.";
     Property state : String = "stateless";
     Property scaling : String = "horizontal";
   }
-  Component ViewandEditCVModule = new Component {
+  Component Place-Agnostic = new Component {
     Port in;
     Port out;
-    Property responsibility : String = "Enable applicants to view and edit their parsed CV";
+    Property responsibility : String = "Work effectively in different places.";
     Property state : String = "stateless";
     Property scaling : String = "horizontal";
   }
-  Component AnswerScreeningQuestionsModule = new Component {
+  Component FaceDetection = new Component {
     Port in;
     Port out;
-    Property responsibility : String = "Present applicants with screening questions defined by an expert recruiter";
+    Property responsibility : String = "Detect the user's face using the YOLOv5 model.";
     Property state : String = "stateless";
     Property scaling : String = "horizontal";
   }
-  Component GetRatingforCVModule = new Component {
+  Component ContourDetection = new Component {
     Port in;
     Port out;
-    Property responsibility : String = "Provide applicants with a rating for their submitted CV";
+    Property responsibility : String = "Use contours detection to detect the borders of objects.";
     Property state : String = "stateless";
     Property scaling : String = "horizontal";
   }
-  Attachment SubmitCVModule.out to CVParser.in {
+  Component GaussianBlur = new Component {
+    Port in;
+    Port out;
+    Property responsibility : String = "Use Gaussian blur to mute the image noise.";
+    Property state : String = "stateless";
+    Property scaling : String = "horizontal";
+  }
+  Component BackgroundSubtraction = new Component {
+    Port in;
+    Port out;
+    Property responsibility : String = "Use Background Subtraction (BS) to separate the moving parts.";
+    Property state : String = "stateless";
+    Property scaling : String = "horizontal";
+  }
+  Component HistogramEqualization = new Component {
+    Port in;
+    Port out;
+    Property responsibility : String = "Use Histogram Equalization for image contrast optimization.";
+    Property state : String = "stateless";
+    Property scaling : String = "horizontal";
+  }
+  Component Threading = new Component {
+    Port in;
+    Port out;
+    Property responsibility : String = "Use threading for concurrent execution of tasks within a single process.";
+    Property state : String = "stateless";
+    Property scaling : String = "horizontal";
+  }
+  Component Multiprocessing = new Component {
+    Port in;
+    Port out;
+    Property responsibility : String = "Use multiprocessing for parallel execution of tasks across multiple processes.";
+    Property state : String = "stateless";
+    Property scaling : String = "horizontal";
+  }
+  Attachment GestureAnalysis.out to GestureRecognition.in {
     Property delivery : String = "at-least-once";
     Property ordering : Boolean = true;
     Property backpressure : String = "bounded";
   }
-  Attachment CVParser.out to CVComparisonModule.in {
+  Attachment GestureRecognition.out to FaceRecognition.in {
     Property delivery : String = "at-least-once";
     Property ordering : Boolean = true;
     Property backpressure : String = "bounded";
   }
-  Attachment CVComparisonModule.out to RatingGenerator.in {
+  Attachment FaceRecognition.out to HandTracking.in {
     Property delivery : String = "at-least-once";
     Property ordering : Boolean = true;
     Property backpressure : String = "bounded";
   }
-  Attachment CVComparisonModule.out to GetRatingforCVModule.in {
+  Attachment HandTracking.out to Single-HandInteraction.in {
     Property delivery : String = "at-least-once";
     Property ordering : Boolean = true;
     Property backpressure : String = "bounded";
   }
-  Attachment SubmitCVModule.out to ViewandEditCVModule.in {
+  Attachment Single-HandInteraction.out to CustomizableGestures.in {
+    Property delivery : String = "at-least-once";
+    Property ordering : Boolean = true;
+    Property backpressure : String = "bounded";
+  }
+  Attachment CustomizableGestures.out to Real-TimeCollaboration.in {
     Property delivery : String = "at-least-once";
     Property ordering : Boolean = false;
     Property backpressure : String = "bounded";
   }
-  Attachment ViewandEditCVModule.out to SubmitCVModule.in {
+  Attachment Real-TimeCollaboration.out to Low-Latency.in {
+    Property delivery : String = "at-least-once";
+    Property ordering : Boolean = true;
+    Property backpressure : String = "bounded";
+  }
+  Attachment Low-Latency.out to Place-Agnostic.in {
+    Property delivery : String = "at-least-once";
+    Property ordering : Boolean = true;
+    Property backpressure : String = "bounded";
+  }
+  Attachment FaceDetection.out to ContourDetection.in {
+    Property delivery : String = "at-least-once";
+    Property ordering : Boolean = true;
+    Property backpressure : String = "bounded";
+  }
+  Attachment ContourDetection.out to GaussianBlur.in {
+    Property delivery : String = "at-least-once";
+    Property ordering : Boolean = true;
+    Property backpressure : String = "bounded";
+  }
+  Attachment GaussianBlur.out to BackgroundSubtraction.in {
+    Property delivery : String = "at-least-once";
+    Property ordering : Boolean = true;
+    Property backpressure : String = "bounded";
+  }
+  Attachment BackgroundSubtraction.out to HistogramEqualization.in {
+    Property delivery : String = "at-least-once";
+    Property ordering : Boolean = true;
+    Property backpressure : String = "bounded";
+  }
+  Attachment HistogramEqualization.out to Threading.in {
+    Property delivery : String = "at-least-once";
+    Property ordering : Boolean = true;
+    Property backpressure : String = "bounded";
+  }
+  Attachment Threading.out to Multiprocessing.in {
     Property delivery : String = "at-least-once";
     Property ordering : Boolean = false;
-    Property backpressure : String = "bounded";
-  }
-  Attachment AnswerScreeningQuestionsModule.out to ScreeningQuestionValidator.in {
-    Property delivery : String = "at-least-once";
-    Property ordering : Boolean = true;
-    Property backpressure : String = "bounded";
-  }
-  Attachment ScreeningQuestionValidator.out to RatingGenerator.in {
-    Property delivery : String = "at-least-once";
-    Property ordering : Boolean = true;
-    Property backpressure : String = "bounded";
-  }
-  Attachment SubmitCVModule.out to ChatGPTValidator.in {
-    Property delivery : String = "at-least-once";
-    Property ordering : Boolean = true;
-    Property backpressure : String = "bounded";
-  }
-  Attachment ChatGPTValidator.out to RatingGenerator.in {
-    Property delivery : String = "at-least-once";
-    Property ordering : Boolean = true;
-    Property backpressure : String = "bounded";
-  }
-  Attachment SubmitCVModule.out to CosineSimilarityCalculator.in {
-    Property delivery : String = "at-least-once";
-    Property ordering : Boolean = true;
-    Property backpressure : String = "bounded";
-  }
-  Attachment CosineSimilarityCalculator.out to CVComparisonModule.in {
-    Property delivery : String = "at-least-once";
-    Property ordering : Boolean = true;
-    Property backpressure : String = "bounded";
-  }
-  Attachment SubmitCVModule.out to JaccardSimilarityCalculator.in {
-    Property delivery : String = "at-least-once";
-    Property ordering : Boolean = true;
-    Property backpressure : String = "bounded";
-  }
-  Attachment JaccardSimilarityCalculator.out to CVComparisonModule.in {
-    Property delivery : String = "at-least-once";
-    Property ordering : Boolean = true;
-    Property backpressure : String = "bounded";
-  }
-  Attachment AnswerScreeningQuestionsModule.out to ChatGPTValidator.in {
-    Property delivery : String = "at-least-once";
-    Property ordering : Boolean = true;
-    Property backpressure : String = "bounded";
-  }
-  Attachment ChatGPTValidator.out to RatingGenerator.in {
-    Property delivery : String = "at-least-once";
-    Property ordering : Boolean = true;
     Property backpressure : String = "bounded";
   }
   Property resilience_pattern : String = "Retry";
