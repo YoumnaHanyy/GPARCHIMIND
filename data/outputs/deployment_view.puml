@@ -7,44 +7,55 @@ node "Client" {
 node "Kubernetes Ingress" {
   component "Ingress Controller"
 }
-node "User Interface Pod" {
-  component "User Interface"
+node "Authentication Service Pod" {
+  component "Authentication Service"
 }
-node "Image Processing Pod" {
-  component "Image Processing"
+node "User Profile Service Pod" {
+  component "User Profile Service"
 }
-node "Voice Cloning Pod" {
-  component "Voice Cloning"
+node "Crime Reporting Service Pod" {
+  component "Crime Reporting Service"
 }
-node "Avatar Customization Pod" {
-  component "Avatar Customization"
+node "Dashboard Service Pod" {
+  component "Dashboard Service"
 }
-node "Natural Language Processing (NLP) Pod" {
-  component "Natural Language Processing (NLP)"
+node "Admin Console Pod" {
+  component "Admin Console"
 }
-node "Authentication and Authorization Pod" {
-  component "Authentication and Authorization"
+node "Image Processing Service Pod" {
+  component "Image Processing Service"
 }
-node "Avatar Creation Pod" {
-  component "Avatar Creation"
+node "Route Generation Service Pod" {
+  component "Route Generation Service"
 }
-node "Emotion Expression Pod" {
-  component "Emotion Expression"
+node "Chat Service Pod" {
+  component "Chat Service"
 }
-node "System Administration Pod" {
-  component "System Administration"
+node "Database StatefulSet" {
+  database "Database Service"
 }
 "User" --> "Ingress Controller" : TCP/IP
 "Ingress Controller" --> "API Gateway Pod" : HTTP/HTTPS
 "User" --> "Ingress Controller"
 "Ingress Controller" --> "API Gateway Pod"
-"API Gateway Pod" --> "User Interface Pod"
-"API Gateway Pod" --> "Image Processing Pod"
-"API Gateway Pod" --> "Voice Cloning Pod"
-"API Gateway Pod" --> "Avatar Customization Pod"
-"API Gateway Pod" --> "Natural Language Processing (NLP) Pod"
-"API Gateway Pod" --> "Authentication and Authorization Pod"
-"API Gateway Pod" --> "Avatar Creation Pod"
-"API Gateway Pod" --> "Emotion Expression Pod"
-"API Gateway Pod" --> "System Administration Pod"
+"API Gateway Pod" --> "Authentication Service Pod"
+"API Gateway Pod" --> "User Profile Service Pod"
+"API Gateway Pod" --> "Crime Reporting Service Pod"
+"API Gateway Pod" --> "Dashboard Service Pod"
+"API Gateway Pod" --> "Admin Console Pod"
+"API Gateway Pod" --> "Image Processing Service Pod"
+"API Gateway Pod" --> "Route Generation Service Pod"
+"API Gateway Pod" --> "Chat Service Pod"
+"Authentication Service Pod" --> "Database StatefulSet"
+"User Profile Service Pod" --> "Database StatefulSet"
+"Crime Reporting Service Pod" --> "Database StatefulSet"
+"Dashboard Service Pod" --> "Database StatefulSet"
+"Admin Console Pod" --> "Database StatefulSet"
+"Image Processing Service Pod" --> "Database StatefulSet"
+"Route Generation Service Pod" --> "Database StatefulSet"
+"Chat Service Pod" --> "Database StatefulSet"
+node "Secondary Region" {
+  component "Replica Services"
+}
+"Ingress Controller" --> "Secondary Region" : failover
 @enduml

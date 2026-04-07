@@ -1,47 +1,52 @@
 [
   {
-    "title": "Performance",
-    "description": "The system should generate a 5-Response time for user interactions with the UI should be less than 1 second",
-    "project_id": "proj_4953e349"
+    "title": "Availability",
+    "description": "The system should be up and running 99% of the time",
+    "project_id": "proj_6938e56d"
   },
   {
     "title": "Scalability",
-    "description": "The system must support 100 concurrent users without significant performance degradation, and its architecture must be scalable to handle increased text prompts and user requests",
-    "project_id": "proj_4953e349"
-  },
-  {
-    "title": "Availability",
-    "description": "Backup and disaster recovery mechanisms should be in place to ensure data integrity",
-    "project_id": "proj_4953e349"
-  },
-  {
-    "title": "Security",
-    "description": "User data, including text prompts and videos, should be encrypted both in transit and at rest, and access to sensitive services should be restricted based on user roles and permissions",
-    "project_id": "proj_4953e349"
-  },
-  {
-    "title": "Compliance",
-    "description": "Licensing and usage of external APIs should adhere to legal and ethical standards",
-    "project_id": "proj_4953e349"
-  },
-  {
-    "title": "Maintainability",
-    "description": "The user interface should be intuitive and user-friendly, requiring minimal training for users to operate",
-    "project_id": "proj_4953e349"
+    "description": "The system must support at least 100 concurrent users without exhibiting a discernible decrease in performance",
+    "project_id": "proj_6938e56d"
   },
   {
     "title": "Reliability",
-    "description": "The system should be available 24/7, except during scheduled maintenance windows",
-    "project_id": "proj_4953e349"
+    "description": "The system should be able to handle unexpected errors and provide informative error messages",
+    "project_id": "proj_6938e56d"
   },
   {
     "title": "Usability",
-    "description": "The system should comply with accessibility standards to ensure usability for users with disabilities",
-    "project_id": "proj_4953e349"
+    "description": "The user interface must be easy to use and give applicants and recruiters clear instructions and help",
+    "project_id": "proj_6938e56d"
   },
   {
-    "title": "Adaptability",
-    "description": "The system should have robust monitoring tools in place to track resource utilization, identify performance bottlenecks, and generate logs for auditing purposes",
-    "project_id": "proj_4953e349"
+    "title": "Performance",
+    "description": "The system must respond to user input in less than two seconds",
+    "project_id": "proj_6938e56d"
+  },
+  {
+    "title": "Compatibility",
+    "description": "The system should be compatible with the majority of web browsers, including Edge, Firefox, Safari, and Chrome",
+    "project_id": "proj_6938e56d"
+  },
+  {
+    "title": "Maintainability",
+    "description": "The code should be modular, follow best practices for coding, and have extensive documentation to facilitate maintenance",
+    "project_id": "proj_6938e56d"
+  },
+  {
+    "title": "Data Privacy",
+    "description": "The system needs to adhere to data protection regulations to guarantee the confidentiality of user, CVS, and evaluation data",
+    "project_id": "proj_6938e56d"
+  },
+  {
+    "title": "Fault Tolerance",
+    "description": "The system should be able to handle unexpected errors and provide informative error messages",
+    "project_id": "proj_6938e56d"
+  },
+  {
+    "title": "Cross-browser compatibility",
+    "description": "The system should be compatible with the majority of web browsers, including Edge, Firefox, Safari, and Chrome",
+    "project_id": "proj_6938e56d"
   }
 ]

@@ -22,11 +22,11 @@ def compute_nfr_statistics(nfr_predictions):
         nfr = item["predicted_type"]
         desc = item["predicted_level"].lower()
 
-        if "High" in desc:
+        if "high" in desc:
             weight = 3
-        elif "Medium" in desc:
+        elif "medium" in desc:
             weight = 2
-        elif "Low" in desc:
+        elif "low" in desc:
             weight = 1
         else:
             weight = 0.5

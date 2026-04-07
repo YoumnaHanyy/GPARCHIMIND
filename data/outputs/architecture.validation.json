@@ -3,7 +3,7 @@
   "structural": {
     "metrics": {
       "component_count": 9,
-      "relationship_count": 8,
+      "relationship_count": 14,
       "undefined_references": 0,
       "self_loops": 0,
       "invalid_relationship_types": 0
@@ -13,31 +13,41 @@
   },
   "quality": {
     "fan_in": {
-      "Avatar Customization": 4,
-      "Authentication and Authorization": 1,
-      "System Administration": 0,
-      "User Interface": 0,
-      "Voice Cloning": 0,
-      "Natural Language Processing (NLP)": 0,
-      "Emotion Expression": 1,
-      "Avatar Creation": 1,
-      "Image Processing": 1
+      "Database Service": 3,
+      "Chat Service": 0,
+      "Admin Console": 3,
+      "User Profile Service": 2,
+      "Image Processing Service": 1,
+      "Authentication Service": 0,
+      "Crime Reporting Service": 2,
+      "Dashboard Service": 2,
+      "Route Generation Service": 1
     },
     "fan_out": {
-      "Avatar Customization": 1,
-      "Authentication and Authorization": 1,
-      "System Administration": 1,
-      "User Interface": 1,
-      "Voice Cloning": 1,
-      "Natural Language Processing (NLP)": 1,
-      "Emotion Expression": 0,
-      "Avatar Creation": 1,
-      "Image Processing": 1
+      "Database Service": 2,
+      "Chat Service": 1,
+      "Admin Console": 2,
+      "User Profile Service": 1,
+      "Image Processing Service": 1,
+      "Authentication Service": 2,
+      "Crime Reporting Service": 3,
+      "Dashboard Service": 1,
+      "Route Generation Service": 1
     },
-    "centralization_index": 0.4444444444444444,
+    "centralization_index": 0.3333333333333333,
     "risks": [
       {
-        "component": "Avatar Customization",
+        "component": "Database Service",
+        "risk": "High coupling",
+        "quality_attribute": "Modifiability"
+      },
+      {
+        "component": "Admin Console",
+        "risk": "High coupling",
+        "quality_attribute": "Modifiability"
+      },
+      {
+        "component": "Crime Reporting Service",
         "risk": "High coupling",
         "quality_attribute": "Modifiability"
       }
@@ -45,7 +55,7 @@
   },
   "domain": {
     "stateless_ratio": 1.0,
-    "state_concentration": 4,
+    "state_concentration": 3,
     "communication_style": "event-driven"
   }
 }

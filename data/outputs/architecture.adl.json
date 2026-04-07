@@ -1,229 +1,336 @@
 {
   "system": "ResuFit: Precision CV Matching System",
-  "style": "Layered (N-Tier)",
+  "style": "MVC (model-view-controller)",
   "source": "AI",
   "decisions": [
     {
-      "name": "Layered (N-Tier) Architecture Style",
-      "rationale": "To achieve scalability, maintainability, and reusability of the system"
+      "name": "Use MVC architecture style",
+      "rationale": "Separation of concerns and maintainability"
     },
     {
-      "name": "Use of GPT-4 model for natural language processing",
-      "rationale": "To achieve state-of-the-art natural language processing capabilities"
+      "name": "Implement user authentication and authorization",
+      "rationale": "Security and access control"
     },
     {
-      "name": "Encryption of user passwords",
-      "rationale": "To ensure the security of user data"
+      "name": "Use secure data storage",
+      "rationale": "Data protection and compliance"
     },
     {
-      "name": "Use of smartphone connected to the internet with a working camera",
-      "rationale": "To enable users to upload images and videos"
+      "name": "Optimize application performance",
+      "rationale": "User experience and system reliability"
     },
     {
-      "name": "Availability on Play store for android users and App store for iOS users",
-      "rationale": "To ensure the system is accessible to a wide range of users"
+      "name": "Ensure accessibility and usability",
+      "rationale": "Inclusive design and user-friendly interface"
     },
     {
-      "name": "Use of digital twin technology",
-      "rationale": "To enable the creation of personalized avatars"
+      "name": "Support multiple operating systems",
+      "rationale": "Cross-platform compatibility"
     },
     {
-      "name": "Use of voice cloning technology",
-      "rationale": "To enable the creation of personalized avatars with realistic voices"
+      "name": "Implement image processing for crime validation",
+      "rationale": "Accuracy and reliability"
     },
     {
-      "name": "Use of speech-to-text feature",
-      "rationale": "To enable users to interact with the avatar through voice commands"
+      "name": "Generate safer routes for users",
+      "rationale": "User safety and convenience"
     },
     {
-      "name": "Use of text-to-speech feature",
-      "rationale": "To enable users to interact with the avatar through text commands"
+      "name": "Pin crimes on map for visualization",
+      "rationale": "User understanding and awareness"
     },
     {
-      "name": "Use of 3D model generation technology",
-      "rationale": "To enable the creation of personalized avatars with realistic appearances"
+      "name": "Implement admin features for crime management",
+      "rationale": "Efficient crime handling and resolution"
     },
     {
-      "name": "Use of AI-powered avatar customization",
-      "rationale": "To enable users to customize their avatars to their liking"
+      "name": "Ask users to re-upload photos in case of errors",
+      "rationale": "Error handling and user experience"
     }
   ],
   "production_intents": {
     "deployment": {
-      "scaling": "vertical",
-      "availability": "single-region"
+      "scaling": "horizontal",
+      "availability": "multi-region"
     },
     "security": {
-      "authentication": "centralized",
+      "authentication": "service-to-service",
       "authorization": "RBAC"
     },
     "resilience": {
       "patterns": [
-        "Retry"
+        "Retry",
+        "CircuitBreaker"
       ],
-      "delivery": "at-most-once",
-      "ordering": true
+      "delivery": "at-least-once",
+      "ordering": false
     }
   },
   "components": [
     {
-      "name": "User Interface",
-      "responsibility": "Handle user interactions, including uploading images, recording voice, and conversing with the avatar."
+      "name": "Authentication Service",
+      "responsibility": "Handles user authentication, including login, registration, and account deletion."
     },
     {
-      "name": "Image Processing",
-      "responsibility": "Convert uploaded images to 3D models and generate lifelike digital twin avatars."
+      "name": "User Profile Service",
+      "responsibility": "Manages user profiles, including editing account information and deleting profiles."
     },
     {
-      "name": "Voice Cloning",
-      "responsibility": "Clone the user's voice and make the avatar adapt to the user's voice."
+      "name": "Crime Reporting Service",
+      "responsibility": "Allows users to report crimes, including uploading pictures, editing crime details, and deleting crimes."
     },
     {
-      "name": "Avatar Customization",
-      "responsibility": "Allow users to customize their avatar's look and express emotions based on images and conversations."
+      "name": "Dashboard Service",
+      "responsibility": "Updates the dashboard with crime data and provides a visual representation of crimes on a map."
     },
     {
-      "name": "Natural Language Processing (NLP)",
-      "responsibility": "Use the GPT-4 model for state-of-the-art natural language processing and respond to user questions."
+      "name": "Admin Console",
+      "responsibility": "Provides administrators with tools to manage crimes, including viewing crime details, adding new crime types, and connecting police to crimes."
     },
     {
-      "name": "Authentication and Authorization",
-      "responsibility": "Handle user sign-up, login, profile editing, and logout functionality."
+      "name": "Image Processing Service",
+      "responsibility": "Validates crimes by image processing and asks users to re-upload photos if an error happens."
     },
     {
-      "name": "Avatar Creation",
-      "responsibility": "Create avatars based on user requirements and make them adapt to the user."
+      "name": "Route Generation Service",
+      "responsibility": "Generates safer routes to users based on crime data."
     },
     {
-      "name": "Emotion Expression",
-      "responsibility": "Make the avatar express emotions based on images and conversations."
+      "name": "Chat Service",
+      "responsibility": "Allows users to chat with administrators for emergency contact."
     },
     {
-      "name": "System Administration",
-      "responsibility": "Create accounts for administrators and provide access to system data and features."
+      "name": "Database Service",
+      "responsibility": "Stores and retrieves data for the system, including user profiles, crime reports, and dashboard data."
     }
   ],
   "relationships": [
     {
-      "source": "User Interface",
-      "target": "Image Processing",
+      "source": "Authentication Service",
+      "target": "User Profile Service",
+      "type": "data-flow"
+    },
+    {
+      "source": "Authentication Service",
+      "target": "Crime Reporting Service",
       "type": "event-flow"
     },
     {
-      "source": "Image Processing",
-      "target": "Avatar Customization",
+      "source": "Crime Reporting Service",
+      "target": "Image Processing Service",
       "type": "data-flow"
     },
     {
-      "source": "Voice Cloning",
-      "target": "Avatar Customization",
-      "type": "data-flow"
-    },
-    {
-      "source": "Avatar Customization",
-      "target": "Emotion Expression",
+      "source": "Image Processing Service",
+      "target": "Crime Reporting Service",
       "type": "event-flow"
     },
     {
-      "source": "Natural Language Processing (NLP)",
-      "target": "Avatar Customization",
+      "source": "Crime Reporting Service",
+      "target": "Dashboard Service",
       "type": "data-flow"
     },
     {
-      "source": "Avatar Creation",
-      "target": "Avatar Customization",
+      "source": "Dashboard Service",
+      "target": "Route Generation Service",
       "type": "data-flow"
     },
     {
-      "source": "Authentication and Authorization",
-      "target": "Avatar Creation",
+      "source": "Route Generation Service",
+      "target": "Dashboard Service",
       "type": "event-flow"
     },
     {
-      "source": "System Administration",
-      "target": "Authentication and Authorization",
+      "source": "Crime Reporting Service",
+      "target": "Admin Console",
+      "type": "event-flow"
+    },
+    {
+      "source": "Admin Console",
+      "target": "Database Service",
+      "type": "data-flow"
+    },
+    {
+      "source": "Database Service",
+      "target": "Admin Console",
+      "type": "event-flow"
+    },
+    {
+      "source": "Chat Service",
+      "target": "Admin Console",
+      "type": "event-flow"
+    },
+    {
+      "source": "Admin Console",
+      "target": "Database Service",
+      "type": "data-flow"
+    },
+    {
+      "source": "User Profile Service",
+      "target": "Database Service",
+      "type": "data-flow"
+    },
+    {
+      "source": "Database Service",
+      "target": "User Profile Service",
       "type": "event-flow"
     }
   ],
   "runtime_flow": [
     {
-      "from": "User Interface",
-      "to": "Image Processing",
-      "action": "Upload Image",
+      "from": "Authentication Service",
+      "to": "User Profile Service",
+      "action": "User authentication successful",
+      "mode": "sync"
+    },
+    {
+      "from": "Authentication Service",
+      "to": "Crime Reporting Service",
+      "action": "User attempts to report a crime",
       "mode": "async"
     },
     {
-      "from": "Image Processing",
-      "to": "Avatar Customization",
-      "action": "Process Image",
-      "mode": "sync"
-    },
-    {
-      "from": "Voice Cloning",
-      "to": "Avatar Customization",
-      "action": "Clone Voice",
-      "mode": "sync"
-    },
-    {
-      "from": "Avatar Customization",
-      "to": "Emotion Expression",
-      "action": "Update Emotion",
+      "from": "Crime Reporting Service",
+      "to": "Image Processing Service",
+      "action": "Crime report with image is submitted",
       "mode": "async"
     },
     {
-      "from": "Natural Language Processing (NLP)",
-      "to": "Avatar Customization",
-      "action": "Process Conversation",
+      "from": "Image Processing Service",
+      "to": "Crime Reporting Service",
+      "action": "Image validation result",
       "mode": "sync"
     },
     {
-      "from": "Avatar Creation",
-      "to": "Avatar Customization",
-      "action": "Create Avatar",
-      "mode": "sync"
-    },
-    {
-      "from": "Authentication and Authorization",
-      "to": "Avatar Creation",
-      "action": "Authenticate User",
-      "mode": "sync"
-    },
-    {
-      "from": "System Administration",
-      "to": "Authentication and Authorization",
-      "action": "Create Admin Account",
-      "mode": "sync"
-    },
-    {
-      "from": "User Interface",
-      "to": "Voice Cloning",
-      "action": "Record Voice",
+      "from": "Image Processing Service",
+      "to": "Crime Reporting Service",
+      "action": "Image validation error",
       "mode": "async"
     },
     {
-      "from": "User Interface",
-      "to": "Natural Language Processing (NLP)",
-      "action": "Converse with Avatar",
+      "from": "Crime Reporting Service",
+      "to": "Dashboard Service",
+      "action": "Crime report is submitted",
       "mode": "async"
     },
     {
-      "from": "User Interface",
-      "to": "Avatar Customization",
-      "action": "Customize Avatar",
+      "from": "Dashboard Service",
+      "to": "Route Generation Service",
+      "action": "Dashboard data is updated",
+      "mode": "sync"
+    },
+    {
+      "from": "Route Generation Service",
+      "to": "Dashboard Service",
+      "action": "Safer route is generated",
       "mode": "async"
     },
     {
-      "from": "Avatar Customization",
-      "to": "Avatar Creation",
-      "action": "Update Avatar",
+      "from": "Crime Reporting Service",
+      "to": "Admin Console",
+      "action": "Crime report is submitted",
+      "mode": "async"
+    },
+    {
+      "from": "Admin Console",
+      "to": "Database Service",
+      "action": "Admin console data is updated",
       "mode": "sync"
     },
     {
-      "from": "Avatar Creation",
-      "to": "Avatar Customization",
-      "action": "Create Avatar",
+      "from": "Database Service",
+      "to": "Admin Console",
+      "action": "Database data is updated",
+      "mode": "async"
+    },
+    {
+      "from": "Chat Service",
+      "to": "Admin Console",
+      "action": "User initiates chat",
+      "mode": "async"
+    },
+    {
+      "from": "Admin Console",
+      "to": "Database Service",
+      "action": "Chat data is updated",
       "mode": "sync"
+    },
+    {
+      "from": "User Profile Service",
+      "to": "Database Service",
+      "action": "User profile data is updated",
+      "mode": "sync"
+    },
+    {
+      "from": "Database Service",
+      "to": "User Profile Service",
+      "action": "Database data is updated",
+      "mode": "async"
+    },
+    {
+      "from": "Image Processing Service",
+      "to": "User",
+      "action": "Image upload error",
+      "mode": "async"
+    },
+    {
+      "from": "Image Processing Service",
+      "to": "User",
+      "action": "Image upload success",
+      "mode": "async"
+    },
+    {
+      "from": "Route Generation Service",
+      "to": "User",
+      "action": "Safer route is generated",
+      "mode": "async"
+    },
+    {
+      "from": "Dashboard Service",
+      "to": "User",
+      "action": "Dashboard data is updated",
+      "mode": "async"
+    },
+    {
+      "from": "Admin Console",
+      "to": "User",
+      "action": "Admin console data is updated",
+      "mode": "async"
+    },
+    {
+      "from": "Chat Service",
+      "to": "User",
+      "action": "Chat data is updated",
+      "mode": "async"
     }
   ],
-  "critique": []
+  "critique": [
+    {
+      "component": "Authentication Service",
+      "relationship": "Database Service",
+      "issue": "The Authentication Service and Database Service should have an explicit relationship to ensure security."
+    },
+    {
+      "component": "Image Processing Service",
+      "issue": "The Image Processing Service should be optimized to prevent performance issues."
+    },
+    {
+      "component": "System",
+      "issue": "The system should provide explicit support for users with disabilities to ensure accessibility."
+    },
+    {
+      "component": "Chat Service",
+      "relationship": "Database Service",
+      "issue": "The Chat Service and Database Service should have an explicit relationship to ensure that the user can chat with an administrator even if they are disconnected from the internet."
+    },
+    {
+      "component": "Route Generation Service",
+      "relationship": "Dashboard Service",
+      "issue": "The Route Generation Service and Dashboard Service should have an explicit relationship to ensure that the Route Generation Service is properly integrated with the Dashboard Service."
+    },
+    {
+      "component": "System",
+      "issue": "The system should provide explicit support for users who are not familiar with the system to ensure usability."
+    }
+  ]
 }

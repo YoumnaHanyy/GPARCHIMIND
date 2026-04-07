@@ -1,26 +1,34 @@
 @startuml
 autonumber
 actor User
-participant "User Interface" as UserInterface
-participant "Image Processing" as ImageProcessing
-participant "Voice Cloning" as VoiceCloning
-participant "Avatar Customization" as AvatarCustomization
-participant "Natural Language Processing (NLP)" as NaturalLanguageProcessingNLP
-participant "Authentication and Authorization" as AuthenticationandAuthorization
-participant "Avatar Creation" as AvatarCreation
-participant "Emotion Expression" as EmotionExpression
-participant "System Administration" as SystemAdministration
-UserInterface ->> ImageProcessing : Upload Image
-ImageProcessing -> AvatarCustomization : Process Image
-VoiceCloning -> AvatarCustomization : Clone Voice
-AvatarCustomization ->> EmotionExpression : Update Emotion
-NaturalLanguageProcessingNLP -> AvatarCustomization : Process Conversation
-AvatarCreation -> AvatarCustomization : Create Avatar
-AuthenticationandAuthorization -> AvatarCreation : Authenticate User
-SystemAdministration -> AuthenticationandAuthorization : Create Admin Account
-UserInterface ->> VoiceCloning : Record Voice
-UserInterface ->> NaturalLanguageProcessingNLP : Converse with Avatar
-UserInterface ->> AvatarCustomization : Customize Avatar
-AvatarCustomization -> AvatarCreation : Update Avatar
-AvatarCreation -> AvatarCustomization : Create Avatar
+participant "Authentication Service" as AuthenticationService
+participant "User Profile Service" as UserProfileService
+participant "Crime Reporting Service" as CrimeReportingService
+participant "Dashboard Service" as DashboardService
+participant "Admin Console" as AdminConsole
+participant "Image Processing Service" as ImageProcessingService
+participant "Route Generation Service" as RouteGenerationService
+participant "Chat Service" as ChatService
+participant "Database Service" as DatabaseService
+AuthenticationService -> UserProfileService : User authentication successful
+AuthenticationService ->> CrimeReportingService : User attempts to report a crime
+CrimeReportingService ->> ImageProcessingService : Crime report with image is submitted
+ImageProcessingService -> CrimeReportingService : Image validation result
+ImageProcessingService ->> CrimeReportingService : Image validation error
+CrimeReportingService ->> DashboardService : Crime report is submitted
+DashboardService -> RouteGenerationService : Dashboard data is updated
+RouteGenerationService ->> DashboardService : Safer route is generated
+CrimeReportingService ->> AdminConsole : Crime report is submitted
+AdminConsole -> DatabaseService : Admin console data is updated
+DatabaseService ->> AdminConsole : Database data is updated
+ChatService ->> AdminConsole : User initiates chat
+AdminConsole -> DatabaseService : Chat data is updated
+UserProfileService -> DatabaseService : User profile data is updated
+DatabaseService ->> UserProfileService : Database data is updated
+ImageProcessingService ->> User : Image upload error
+ImageProcessingService ->> User : Image upload success
+RouteGenerationService ->> User : Safer route is generated
+DashboardService ->> User : Dashboard data is updated
+AdminConsole ->> User : Admin console data is updated
+ChatService ->> User : Chat data is updated
 @enduml
