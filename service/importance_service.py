@@ -2,6 +2,7 @@ import PyPDF2
 import nltk
 import re
 from collections import Counter
+from ai.inference.predict_type_level import predict_nfr_type_only
 
 nltk.download("punkt", quiet=True)
 
@@ -30,6 +31,9 @@ def compute_importance_from_srs_pdf(pdf_path: str):
     sentences = nltk.sent_tokenize(text)
     total_sentences = len(sentences) or 1
 
+    # ⚠️ IMPORTANT
+    # هنا إحنا بنفترض إن الـ predicted_type
+    # اتخزن قبل كده في non_functional_requirements.json
     from ai.inference.predict_type_level import predict_nfr_type_only
 
     model_counts = Counter()
