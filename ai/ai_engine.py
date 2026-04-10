@@ -17,7 +17,7 @@ client = InferenceClient(
     token=HF_API_KEY
 )
 
-# ================= LLM CALL =================
+# ================= LLM HELPERS =================
 
 def ask_llm(prompt: str, temperature=0.2):
     response = client.chat_completion(
