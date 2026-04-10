@@ -1,11 +1,51 @@
 {
   "system": "ResuFit: Precision CV Matching System",
-  "style": "Microservices",
-  "source": "FALLBACK",
+  "style": "MVC (model-view-controller)",
+  "source": "AI",
   "decisions": [
     {
-      "name": "Fallback architecture",
-      "rationale": "AI output invalid"
+      "name": "Use MVC architecture style",
+      "rationale": "Separation of concerns and maintainability"
+    },
+    {
+      "name": "Implement user authentication and authorization",
+      "rationale": "Security and access control"
+    },
+    {
+      "name": "Use secure data storage",
+      "rationale": "Data protection and compliance"
+    },
+    {
+      "name": "Optimize application performance",
+      "rationale": "User experience and system reliability"
+    },
+    {
+      "name": "Ensure accessibility and usability",
+      "rationale": "Inclusive design and user-friendly interface"
+    },
+    {
+      "name": "Support multiple operating systems",
+      "rationale": "Cross-platform compatibility"
+    },
+    {
+      "name": "Implement image processing for crime validation",
+      "rationale": "Accuracy and reliability"
+    },
+    {
+      "name": "Generate safer routes for users",
+      "rationale": "User safety and convenience"
+    },
+    {
+      "name": "Pin crimes on map for visualization",
+      "rationale": "User understanding and awareness"
+    },
+    {
+      "name": "Implement admin features for crime management",
+      "rationale": "Efficient crime handling and resolution"
+    },
+    {
+      "name": "Ask users to re-upload photos in case of errors",
+      "rationale": "Error handling and user experience"
     }
   ],
   "production_intents": {
@@ -28,52 +68,269 @@
   },
   "components": [
     {
-      "name": "API Gateway",
-      "responsibility": "Route client requests"
+      "name": "Authentication Service",
+      "responsibility": "Handles user authentication, including login, registration, and account deletion."
     },
     {
-      "name": "User Service",
-      "responsibility": "Manage users"
+      "name": "User Profile Service",
+      "responsibility": "Manages user profiles, including editing account information and deleting profiles."
     },
     {
-      "name": "Order Service",
-      "responsibility": "Manage orders"
+      "name": "Crime Reporting Service",
+      "responsibility": "Allows users to report crimes, including uploading pictures, editing crime details, and deleting crimes."
     },
     {
-      "name": "Order Database",
-      "responsibility": "Persist order data"
+      "name": "Dashboard Service",
+      "responsibility": "Updates the dashboard with crime data and provides a visual representation of crimes on a map."
+    },
+    {
+      "name": "Admin Console",
+      "responsibility": "Provides administrators with tools to manage crimes, including viewing crime details, adding new crime types, and connecting police to crimes."
+    },
+    {
+      "name": "Image Processing Service",
+      "responsibility": "Validates crimes by image processing and asks users to re-upload photos if an error happens."
+    },
+    {
+      "name": "Route Generation Service",
+      "responsibility": "Generates safer routes to users based on crime data."
+    },
+    {
+      "name": "Chat Service",
+      "responsibility": "Allows users to chat with administrators for emergency contact."
+    },
+    {
+      "name": "Database Service",
+      "responsibility": "Stores and retrieves data for the system, including user profiles, crime reports, and dashboard data."
     }
   ],
   "relationships": [
     {
-      "source": "API Gateway",
-      "target": "User Service",
+      "source": "Authentication Service",
+      "target": "User Profile Service",
       "type": "data-flow"
     },
     {
-      "source": "API Gateway",
-      "target": "Order Service",
+      "source": "Authentication Service",
+      "target": "Crime Reporting Service",
+      "type": "event-flow"
+    },
+    {
+      "source": "Crime Reporting Service",
+      "target": "Image Processing Service",
       "type": "data-flow"
     },
     {
-      "source": "Order Service",
-      "target": "Order Database",
+      "source": "Image Processing Service",
+      "target": "Crime Reporting Service",
+      "type": "event-flow"
+    },
+    {
+      "source": "Crime Reporting Service",
+      "target": "Dashboard Service",
       "type": "data-flow"
+    },
+    {
+      "source": "Dashboard Service",
+      "target": "Route Generation Service",
+      "type": "data-flow"
+    },
+    {
+      "source": "Route Generation Service",
+      "target": "Dashboard Service",
+      "type": "event-flow"
+    },
+    {
+      "source": "Crime Reporting Service",
+      "target": "Admin Console",
+      "type": "event-flow"
+    },
+    {
+      "source": "Admin Console",
+      "target": "Database Service",
+      "type": "data-flow"
+    },
+    {
+      "source": "Database Service",
+      "target": "Admin Console",
+      "type": "event-flow"
+    },
+    {
+      "source": "Chat Service",
+      "target": "Admin Console",
+      "type": "event-flow"
+    },
+    {
+      "source": "Admin Console",
+      "target": "Database Service",
+      "type": "data-flow"
+    },
+    {
+      "source": "User Profile Service",
+      "target": "Database Service",
+      "type": "data-flow"
+    },
+    {
+      "source": "Database Service",
+      "target": "User Profile Service",
+      "type": "event-flow"
     }
   ],
   "runtime_flow": [
     {
-      "from": "API",
-      "to": "Service",
-      "action": "Process business request",
+      "from": "Authentication Service",
+      "to": "User Profile Service",
+      "action": "User authentication successful",
       "mode": "sync"
     },
     {
-      "from": "Service",
-      "to": "Database",
-      "action": "Persist data",
+      "from": "Authentication Service",
+      "to": "Crime Reporting Service",
+      "action": "User attempts to report a crime",
+      "mode": "async"
+    },
+    {
+      "from": "Crime Reporting Service",
+      "to": "Image Processing Service",
+      "action": "Crime report with image is submitted",
+      "mode": "async"
+    },
+    {
+      "from": "Image Processing Service",
+      "to": "Crime Reporting Service",
+      "action": "Image validation result",
       "mode": "sync"
+    },
+    {
+      "from": "Image Processing Service",
+      "to": "Crime Reporting Service",
+      "action": "Image validation error",
+      "mode": "async"
+    },
+    {
+      "from": "Crime Reporting Service",
+      "to": "Dashboard Service",
+      "action": "Crime report is submitted",
+      "mode": "async"
+    },
+    {
+      "from": "Dashboard Service",
+      "to": "Route Generation Service",
+      "action": "Dashboard data is updated",
+      "mode": "sync"
+    },
+    {
+      "from": "Route Generation Service",
+      "to": "Dashboard Service",
+      "action": "Safer route is generated",
+      "mode": "async"
+    },
+    {
+      "from": "Crime Reporting Service",
+      "to": "Admin Console",
+      "action": "Crime report is submitted",
+      "mode": "async"
+    },
+    {
+      "from": "Admin Console",
+      "to": "Database Service",
+      "action": "Admin console data is updated",
+      "mode": "sync"
+    },
+    {
+      "from": "Database Service",
+      "to": "Admin Console",
+      "action": "Database data is updated",
+      "mode": "async"
+    },
+    {
+      "from": "Chat Service",
+      "to": "Admin Console",
+      "action": "User initiates chat",
+      "mode": "async"
+    },
+    {
+      "from": "Admin Console",
+      "to": "Database Service",
+      "action": "Chat data is updated",
+      "mode": "sync"
+    },
+    {
+      "from": "User Profile Service",
+      "to": "Database Service",
+      "action": "User profile data is updated",
+      "mode": "sync"
+    },
+    {
+      "from": "Database Service",
+      "to": "User Profile Service",
+      "action": "Database data is updated",
+      "mode": "async"
+    },
+    {
+      "from": "Image Processing Service",
+      "to": "User",
+      "action": "Image upload error",
+      "mode": "async"
+    },
+    {
+      "from": "Image Processing Service",
+      "to": "User",
+      "action": "Image upload success",
+      "mode": "async"
+    },
+    {
+      "from": "Route Generation Service",
+      "to": "User",
+      "action": "Safer route is generated",
+      "mode": "async"
+    },
+    {
+      "from": "Dashboard Service",
+      "to": "User",
+      "action": "Dashboard data is updated",
+      "mode": "async"
+    },
+    {
+      "from": "Admin Console",
+      "to": "User",
+      "action": "Admin console data is updated",
+      "mode": "async"
+    },
+    {
+      "from": "Chat Service",
+      "to": "User",
+      "action": "Chat data is updated",
+      "mode": "async"
     }
   ],
-  "critique": []
+  "critique": [
+    {
+      "component": "Authentication Service",
+      "relationship": "Database Service",
+      "issue": "The Authentication Service and Database Service should have an explicit relationship to ensure security."
+    },
+    {
+      "component": "Image Processing Service",
+      "issue": "The Image Processing Service should be optimized to prevent performance issues."
+    },
+    {
+      "component": "System",
+      "issue": "The system should provide explicit support for users with disabilities to ensure accessibility."
+    },
+    {
+      "component": "Chat Service",
+      "relationship": "Database Service",
+      "issue": "The Chat Service and Database Service should have an explicit relationship to ensure that the user can chat with an administrator even if they are disconnected from the internet."
+    },
+    {
+      "component": "Route Generation Service",
+      "relationship": "Dashboard Service",
+      "issue": "The Route Generation Service and Dashboard Service should have an explicit relationship to ensure that the Route Generation Service is properly integrated with the Dashboard Service."
+    },
+    {
+      "component": "System",
+      "issue": "The system should provide explicit support for users who are not familiar with the system to ensure usability."
+    }
+  ]
 }

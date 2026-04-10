@@ -1,83 +1,52 @@
 [
   {
-    "title": "Performance",
-    "description": "The system MUST respond within a reasonable time frame.",
-    "source": {
-      "page": 21,
-      "start_index": null
-    },
-    "project_id": "proj_2fe4ae6a"
-  },
-  {
-    "title": "Reliability",
-    "description": "The system SHALL be available at least 99.9% of the time.",
-    "source": {
-      "page": 21,
-      "start_index": null
-    },
-    "project_id": "proj_2fe4ae6a"
-  },
-  {
-    "title": "Security",
-    "description": "The system MUST protect user data and prevent unauthorized access.",
-    "source": {
-      "page": 21,
-      "start_index": null
-    },
-    "project_id": "proj_2fe4ae6a"
-  },
-  {
-    "title": "Privacy",
-    "description": "The system SHALL ensure that user data is collected and stored in accordance with applicable laws and regulations.",
-    "source": {
-      "page": 21,
-      "start_index": null
-    },
-    "project_id": "proj_2fe4ae6a"
+    "title": "Availability",
+    "description": "The system should be up and running 99% of the time",
+    "project_id": "proj_6938e56d"
   },
   {
     "title": "Scalability",
-    "description": "The system SHOULD be able to handle a large number of users and CVs without a significant decrease in performance.",
-    "source": {
-      "page": 21,
-      "start_index": null
-    },
-    "project_id": "proj_2fe4ae6a"
+    "description": "The system must support at least 100 concurrent users without exhibiting a discernible decrease in performance",
+    "project_id": "proj_6938e56d"
+  },
+  {
+    "title": "Reliability",
+    "description": "The system should be able to handle unexpected errors and provide informative error messages",
+    "project_id": "proj_6938e56d"
   },
   {
     "title": "Usability",
-    "description": "The system MUST be easy to use and navigate for users with varying levels of technical expertise.",
-    "source": {
-      "page": 21,
-      "start_index": null
-    },
-    "project_id": "proj_2fe4ae6a"
+    "description": "The user interface must be easy to use and give applicants and recruiters clear instructions and help",
+    "project_id": "proj_6938e56d"
   },
   {
-    "title": "Maintainability",
-    "description": "The system SHOULD be designed to be easily maintained and updated by the development team.",
-    "source": {
-      "page": 21,
-      "start_index": null
-    },
-    "project_id": "proj_2fe4ae6a"
+    "title": "Performance",
+    "description": "The system must respond to user input in less than two seconds",
+    "project_id": "proj_6938e56d"
   },
   {
     "title": "Compatibility",
-    "description": "The system MUST be compatible with a variety of devices and browsers.",
-    "source": {
-      "page": 22,
-      "start_index": null
-    },
-    "project_id": "proj_2fe4ae6a"
+    "description": "The system should be compatible with the majority of web browsers, including Edge, Firefox, Safari, and Chrome",
+    "project_id": "proj_6938e56d"
   },
   {
-    "title": "Integration",
-    "description": "The system SHOULD be able to integrate with other HR systems and tools.",
-    "source": {
-      "page": 22,
-      "start_index": null
-    },
-    "project_id": "proj_2fe4ae6a"
+    "title": "Maintainability",
+    "description": "The code should be modular, follow best practices for coding, and have extensive documentation to facilitate maintenance",
+    "project_id": "proj_6938e56d"
+  },
+  {
+    "title": "Data Privacy",
+    "description": "The system needs to adhere to data protection regulations to guarantee the confidentiality of user, CVS, and evaluation data",
+    "project_id": "proj_6938e56d"
+  },
+  {
+    "title": "Fault Tolerance",
+    "description": "The system should be able to handle unexpected errors and provide informative error messages",
+    "project_id": "proj_6938e56d"
+  },
+  {
+    "title": "Cross-browser compatibility",
+    "description": "The system should be compatible with the majority of web browsers, including Edge, Firefox, Safari, and Chrome",
+    "project_id": "proj_6938e56d"
   }
 ]

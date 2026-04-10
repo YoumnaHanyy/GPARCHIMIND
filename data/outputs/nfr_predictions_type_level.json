@@ -1,83 +1,92 @@
 [
   {
-    "description": "The system MUST respond within a reasonable time frame.",
-    "confidence": 0.9715486168861389,
-    "confirmed": false,
-    "predicted_level": "High",
-    "predicted_type": "PE",
-    "predicted_type_label": "Performance",
-    "title": "Performance"
-  },
-  {
-    "description": "The system SHALL be available at least 99.9% of the time.",
-    "confidence": 0.9764779806137085,
-    "confirmed": false,
-    "predicted_level": "High",
+    "title": "Availability",
+    "description": "The system should be up and running 99% of the time",
     "predicted_type": "A",
     "predicted_type_label": "Availability",
-    "title": "Reliability"
-  },
-  {
-    "description": "The system MUST protect user data and prevent unauthorized access.",
-    "confidence": 0.98123699426651,
-    "confirmed": false,
+    "confidence": 0.9532135128974915,
     "predicted_level": "High",
-    "predicted_type": "SE",
-    "predicted_type_label": "Security",
-    "title": "Security"
+    "confirmed": false
   },
   {
-    "description": "The system SHALL ensure that user data is collected and stored in accordance with applicable laws and regulations.",
-    "confidence": 0.9717892408370972,
-    "confirmed": false,
-    "predicted_level": "Medium",
-    "predicted_type": "SE",
-    "predicted_type_label": "Security",
-    "title": "Privacy"
-  },
-  {
-    "description": "The system SHOULD be able to handle a large number of users and CVs without a significant decrease in performance.",
-    "confidence": 1.0,
-    "confirmed": true,
-    "predicted_level": "Low",
+    "title": "Scalability",
+    "description": "The system must support at least 100 concurrent users without exhibiting a discernible decrease in performance",
     "predicted_type": "SC",
     "predicted_type_label": "Scalability",
-    "title": "Scalability"
+    "confidence": 0.6181042790412903,
+    "predicted_level": " High",
+    "confirmed": false
   },
   {
-    "description": "The system MUST be easy to use and navigate for users with varying levels of technical expertise.",
-    "confidence": 0.9423085451126099,
-    "confirmed": false,
-    "predicted_level": "High",
+    "title": "Reliability",
+    "description": "The system should be able to handle unexpected errors and provide informative error messages",
     "predicted_type": "US",
     "predicted_type_label": "Usability",
-    "title": "Usability"
+    "confidence": 0.5978361964225769,
+    "predicted_level": "High",
+    "confirmed": false
   },
   {
-    "description": "The system SHOULD be designed to be easily maintained and updated by the development team.",
-    "confidence": 0.955119252204895,
-    "confirmed": false,
-    "predicted_level": "Low",
+    "title": "Usability",
+    "description": "The user interface must be easy to use and give applicants and recruiters clear instructions and help",
+    "predicted_type": "US",
+    "predicted_type_label": "Usability",
+    "confidence": 0.9117317795753479,
+    "predicted_level": "Medium",
+    "confirmed": false
+  },
+  {
+    "title": "Performance",
+    "description": "The system must respond to user input in less than two seconds",
+    "predicted_type": "PE",
+    "predicted_type_label": "Performance",
+    "confidence": 0.9251411557197571,
+    "predicted_level": " High",
+    "confirmed": false
+  },
+  {
+    "title": "Compatibility",
+    "description": "The system should be compatible with the majority of web browsers, including Edge, Firefox, Safari, and Chrome",
+    "predicted_type": "PO",
+    "predicted_type_label": "Portability",
+    "confidence": 0.6797724366188049,
+    "predicted_level": "Medium",
+    "confirmed": false
+  },
+  {
+    "title": "Maintainability",
+    "description": "The code should be modular, follow best practices for coding, and have extensive documentation to facilitate maintenance",
     "predicted_type": "MN",
     "predicted_type_label": "Manageability",
-    "title": "Maintainability"
-  },
-  {
-    "description": "The system MUST be compatible with a variety of devices and browsers.",
-    "confidence": 1.0,
-    "confirmed": true,
+    "confidence": 0.9318404197692871,
     "predicted_level": "High",
-    "predicted_type": "PO",
-    "predicted_type_label": "Portability",
-    "title": "Compatibility"
+    "confirmed": false
   },
   {
-    "description": "The system SHOULD be able to integrate with other HR systems and tools.",
-    "confidence": 1.0,
-    "confirmed": true,
-    "predicted_level": "Low",
+    "title": "Data Privacy",
+    "description": "The system needs to adhere to data protection regulations to guarantee the confidentiality of user, CVS, and evaluation data",
+    "predicted_type": "SE",
+    "predicted_type_label": "Security",
+    "confidence": 0.960196316242218,
+    "predicted_level": "High",
+    "confirmed": false
+  },
+  {
+    "title": "Fault Tolerance",
+    "description": "The system should be able to handle unexpected errors and provide informative error messages",
+    "predicted_type": "US",
+    "predicted_type_label": "Usability",
+    "confidence": 0.5978361964225769,
+    "predicted_level": "High",
+    "confirmed": false
+  },
+  {
+    "title": "Cross-browser compatibility",
+    "description": "The system should be compatible with the majority of web browsers, including Edge, Firefox, Safari, and Chrome",
     "predicted_type": "PO",
     "predicted_type_label": "Portability",
-    "title": "Integration"
+    "confidence": 0.6797724366188049,
+    "predicted_level": "Medium",
+    "confirmed": false
   }
 ]

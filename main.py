@@ -49,7 +49,24 @@ from presentation.routes.architecture_routes import router as architecture_route
 from presentation.routes.srs_routes import router as srs_router
 from dotenv import load_dotenv
 import os
+import threading
+import time
+from service.retrain_service import merge_and_retrain
+from infrastructure.database import db
+from service.retrain_service import run_retrain_async
 
+def auto_retrain_loop():
+    while True:
+        time.sleep(86400)
+
+        count = db.new_nfr_confirmed.count_documents({})
+
+        if count > 0:
+            print(f"⏱️ Auto retrain → {count}")
+            run_retrain_async()
+
+
+threading.Thread(target=auto_retrain_loop, daemon=True).start()
 load_dotenv()
 
 # ============================================================
@@ -275,14 +292,15 @@ def serve_archgen(request: Request):
 async def login_page(
     request: Request,
     error: str = None,
-    logout: str = None
+    logout: str = None,
+    info: str = None
 ):
     """
     Display login page with optional error message
     """
     error_message = None
     info_message = None
-
+    
     if error == "invalid":
         error_message = "Invalid email or password. Please try again."
     elif error == "server":
@@ -292,7 +310,9 @@ async def login_page(
 
     if logout == "1":
         info_message = "Thank you for visiting our website!"
-
+    
+    if info == "created":
+       info_message = "Your account created successfully! Login Now" 
     
     return templates.TemplateResponse(
         "login.html",

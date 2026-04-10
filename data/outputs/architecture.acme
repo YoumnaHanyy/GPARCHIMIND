@@ -1,52 +1,140 @@
 System ResuFit:PrecisionCVMatchingSystem {
   Property view : String = "runtime";
-  Property architectureStyle : String = "Microservices";
-  Property source : String = "FALLBACK";
-  Component APIGateway = new Component {
+  Property architectureStyle : String = "MVC (model-view-controller)";
+  Property source : String = "AI";
+  Component AuthenticationService = new Component {
     Port in;
     Port out;
-    Property responsibility : String = "Route client requests";
-    Property state : String = "stateless";
-    Property scaling : String = "horizontal";
-    Property type : String = "L7";
-    Property healthChecks : Boolean = true;
-  }
-  Component UserService = new Component {
-    Port in;
-    Port out;
-    Property responsibility : String = "Manage users";
+    Property responsibility : String = "Handles user authentication, including login, registration, and account deletion.";
     Property state : String = "stateless";
     Property scaling : String = "horizontal";
   }
-  Component OrderService = new Component {
+  Component UserProfileService = new Component {
     Port in;
     Port out;
-    Property responsibility : String = "Manage orders";
+    Property responsibility : String = "Manages user profiles, including editing account information and deleting profiles.";
     Property state : String = "stateless";
     Property scaling : String = "horizontal";
   }
-  Component OrderDatabase = new Component {
+  Component CrimeReportingService = new Component {
     Port in;
     Port out;
-    Property responsibility : String = "Persist order data";
+    Property responsibility : String = "Allows users to report crimes, including uploading pictures, editing crime details, and deleting crimes.";
+    Property state : String = "stateless";
+    Property scaling : String = "horizontal";
+  }
+  Component DashboardService = new Component {
+    Port in;
+    Port out;
+    Property responsibility : String = "Updates the dashboard with crime data and provides a visual representation of crimes on a map.";
+    Property state : String = "stateless";
+    Property scaling : String = "horizontal";
+  }
+  Component AdminConsole = new Component {
+    Port in;
+    Port out;
+    Property responsibility : String = "Provides administrators with tools to manage crimes, including viewing crime details, adding new crime types, and connecting police to crimes.";
+    Property state : String = "stateless";
+    Property scaling : String = "horizontal";
+  }
+  Component ImageProcessingService = new Component {
+    Port in;
+    Port out;
+    Property responsibility : String = "Validates crimes by image processing and asks users to re-upload photos if an error happens.";
+    Property state : String = "stateless";
+    Property scaling : String = "horizontal";
+  }
+  Component RouteGenerationService = new Component {
+    Port in;
+    Port out;
+    Property responsibility : String = "Generates safer routes to users based on crime data.";
+    Property state : String = "stateless";
+    Property scaling : String = "horizontal";
+  }
+  Component ChatService = new Component {
+    Port in;
+    Port out;
+    Property responsibility : String = "Allows users to chat with administrators for emergency contact.";
+    Property state : String = "stateless";
+    Property scaling : String = "horizontal";
+  }
+  Component DatabaseService = new Component {
+    Port in;
+    Port out;
+    Property responsibility : String = "Stores and retrieves data for the system, including user profiles, crime reports, and dashboard data.";
     Property state : String = "stateful";
     Property scaling : String = "vertical";
     Property consistency : String = "eventual";
     Property replication : String = "multi-node";
   }
-  Attachment APIGateway.out to UserService.in {
+  Attachment AuthenticationService.out to UserProfileService.in {
     Property delivery : String = "at-least-once";
     Property ordering : Boolean = true;
     Property backpressure : String = "bounded";
   }
-  Attachment APIGateway.out to OrderService.in {
+  Attachment AuthenticationService.out to CrimeReportingService.in {
+    Property delivery : String = "at-least-once";
+    Property ordering : Boolean = false;
+    Property backpressure : String = "bounded";
+  }
+  Attachment CrimeReportingService.out to ImageProcessingService.in {
     Property delivery : String = "at-least-once";
     Property ordering : Boolean = true;
     Property backpressure : String = "bounded";
   }
-  Attachment OrderService.out to OrderDatabase.in {
+  Attachment ImageProcessingService.out to CrimeReportingService.in {
+    Property delivery : String = "at-least-once";
+    Property ordering : Boolean = false;
+    Property backpressure : String = "bounded";
+  }
+  Attachment CrimeReportingService.out to DashboardService.in {
     Property delivery : String = "at-least-once";
     Property ordering : Boolean = true;
+    Property backpressure : String = "bounded";
+  }
+  Attachment DashboardService.out to RouteGenerationService.in {
+    Property delivery : String = "at-least-once";
+    Property ordering : Boolean = true;
+    Property backpressure : String = "bounded";
+  }
+  Attachment RouteGenerationService.out to DashboardService.in {
+    Property delivery : String = "at-least-once";
+    Property ordering : Boolean = false;
+    Property backpressure : String = "bounded";
+  }
+  Attachment CrimeReportingService.out to AdminConsole.in {
+    Property delivery : String = "at-least-once";
+    Property ordering : Boolean = false;
+    Property backpressure : String = "bounded";
+  }
+  Attachment AdminConsole.out to DatabaseService.in {
+    Property delivery : String = "at-least-once";
+    Property ordering : Boolean = true;
+    Property backpressure : String = "bounded";
+  }
+  Attachment DatabaseService.out to AdminConsole.in {
+    Property delivery : String = "at-least-once";
+    Property ordering : Boolean = false;
+    Property backpressure : String = "bounded";
+  }
+  Attachment ChatService.out to AdminConsole.in {
+    Property delivery : String = "at-least-once";
+    Property ordering : Boolean = false;
+    Property backpressure : String = "bounded";
+  }
+  Attachment AdminConsole.out to DatabaseService.in {
+    Property delivery : String = "at-least-once";
+    Property ordering : Boolean = true;
+    Property backpressure : String = "bounded";
+  }
+  Attachment UserProfileService.out to DatabaseService.in {
+    Property delivery : String = "at-least-once";
+    Property ordering : Boolean = true;
+    Property backpressure : String = "bounded";
+  }
+  Attachment DatabaseService.out to UserProfileService.in {
+    Property delivery : String = "at-least-once";
+    Property ordering : Boolean = false;
     Property backpressure : String = "bounded";
   }
   Property resilience_pattern : String = "Retry, CircuitBreaker";

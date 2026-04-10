@@ -3,25 +3,50 @@ import json
 import re
 import logging
 from typing import List, Dict
-from huggingface_hub import InferenceClient
+
 
 from infrastructure.repositories.extraction_repository import ExtractionRepository
+import requests
+import os
 
 
 logger = logging.getLogger("srs_extractor")
 
-MODEL_NAME = "meta-llama/Meta-Llama-3-8B-Instruct"
+GROQ_API_KEY = os.getenv("GROQ_API_KEY")
+
+def generate(prompt: str) -> str:
+    response = requests.post(
+        "https://api.groq.com/openai/v1/chat/completions",
+        headers={
+            "Authorization": f"Bearer {GROQ_API_KEY}",
+            "Content-Type": "application/json"
+        },
+        json={
+            "model": "llama-3.3-70b-versatile",
+            "messages": [
+                {"role": "system", "content": "Return ONLY valid JSON."},
+                {"role": "user", "content": prompt}
+            ],
+            "temperature": 0.2
+        },
+        timeout=60
+    )
+
+    data = response.json()
+
+    if "choices" not in data:
+        raise ValueError(f"Groq API error: {data}")
+
+    return data["choices"][0]["message"]["content"]
 MAX_CHARS = 12000
 CHUNK_SIZE = 4000
 
 
 class SRSExtractor:
+    KEYWORDS = ["shall", "must", "will", "should", "can", "ought to","needs to" , "need to", "might"]
+    
     def __init__(self, hf_api_key: str):
-        self.client = InferenceClient(
-            model=MODEL_NAME,
-            token=hf_api_key,
-            timeout=120
-        )
+        pass
 
     # -------------------------------
     # PDF TEXT EXTRACTION
@@ -34,8 +59,53 @@ class SRSExtractor:
         return text
 
     def chunk_text(self, text: str, chunk_size: int = CHUNK_SIZE) -> List[str]:
-        return [text[i:i + chunk_size] for i in range(0, len(text), chunk_size)]
+        return [text[i:i + chunk_size] for i in range(0, len(text), chunk_size)]  
+    def extract_candidates(self, text: str):
+      text = text.replace("\n", " ")
+      sentences = re.split(r'\.', text)
+      candidates = []
 
+      for s in sentences:
+        if any(k in s.lower() for k in self.KEYWORDS):
+            clean = s.strip()
+            if len(clean) > 10:
+                candidates.append(clean)
+
+      return list(set(candidates))
+    def extract_project_name(self, text: str) -> str:
+        lines = [line.strip() for line in text.split("\n") if line.strip()]
+
+        for i, line in enumerate(lines):
+            lower_line = line.lower()
+
+            if "software requirement specification document for" in lower_line:
+            
+            # ✅ خد الجزء اللي بعد "for" من نفس السطر
+                after_for = line.split("for", 1)[-1].strip()
+
+                title_parts = []
+
+                if after_for:
+                    title_parts.append(after_for)
+
+            # ✅ كمل السطور اللي بعده
+                for j in range(i + 1, min(i + 6, len(lines))):
+                    current = lines[j]
+
+                    if (
+                        "," in current
+                        or "supervised" in current.lower()
+                        or "table" in current.lower()
+                        or any(char.isdigit() for char in current)
+                    ):
+                        break
+ 
+                    title_parts.append(current)
+  
+                if title_parts:
+                    return " ".join(title_parts)
+
+        return "Unknown Project" 
     # -------------------------------
     # JSON PARSING (LLM SAFE)
     # -------------------------------
@@ -71,52 +141,45 @@ class SRSExtractor:
     # FUNCTIONAL + NON-FUNCTIONAL EXTRACTION
     # -------------------------------
     def extract_requirements(self, srs_text: str, project_id: int = 2) -> Dict:
+        project_name = self.extract_project_name(srs_text)
         try:
-            prompt = f"""
-You are an expert software analyst.
-Extract Functional and Non-Functional Requirements from the SRS below.
+            candidates = self.extract_candidates(srs_text)
 
-Return ONLY valid JSON:
+            joined_text = "\n".join(candidates[:200])
+
+            prompt = f"""
+You are a software requirements analyst.
+
+Classify the following into:
+
+1. Functional Requirements → RETURN AS LIST OF STRINGS ONLY
+2. Non-Functional Requirements → RETURN OBJECTS WITH title + description
+
+Return ONLY JSON:
 
 {{
-  "functional": [
-    {{
-      "title": "exact title",
-      "description": "exact sentence",
-      "source": {{ "page": null, "start_index": null }}
-    }}
-  ],
+  "functional": ["sentence1", "sentence2"],
   "non_functional": [
     {{
-      "title": "exact title",
-      "description": "rewrite professionally using MUST / SHALL / SHOULD / MAY",
-      "source": {{ "page": null, "start_index": null }}
+      "title": "",
+      "description": ""
     }}
   ]
 }}
 
-SRS:
-{srs_text[:MAX_CHARS]}
+Requirements:
+{joined_text}
 """
 
-            response = self.client.chat.completions.create(
-                model=MODEL_NAME,
-                messages=[
-                    {"role": "system", "content": "Return JSON only. No explanation."},
-                    {"role": "user", "content": prompt}
-                ],
-                temperature=0,
-                max_tokens=4000
-            )
-
-            output = response.choices[0].message["content"]
+            output = generate(prompt)
             extracted = self.extract_json_from_model_output(output)
 
         except Exception as e:
-            logger.exception("❌ HuggingFace extraction failed")
+            logger.exception("❌ Groq extraction failed")
 
             # 🔹 Graceful failure (system does NOT crash)
             return {
+                "project_name": project_name,
                 "functional": [],
                 "non_functional": [],
                 "error": "LLM extraction failed",
@@ -126,7 +189,13 @@ SRS:
         # -------------------------------
         # SPLIT RESULTS
         # -------------------------------
-        functional_requirements = extracted.get("functional", [])
+        functional_requirements = [
+    {
+        "description": f,
+        "source": {"page": None, "start_index": None}
+    }
+    for f in extracted.get("functional", [])
+]
         non_functional_requirements = extracted.get("non_functional", [])
 
         # -------------------------------
@@ -155,6 +224,7 @@ SRS:
         # RETURN FINAL RESULT
         # -------------------------------
         return {
+            "project_name": project_name,
             "functional": functional_requirements,
             "non_functional": non_functional_requirements,
             "saved_files": paths
