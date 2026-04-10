@@ -27,6 +27,7 @@ def merge_and_retrain():
 
       if not new_data:
         print("⚠️ No new data to merge")
+        is_training = False
         return
 
     # 3️⃣ Convert to DataFrame
@@ -39,6 +40,12 @@ def merge_and_retrain():
       })
       # 4️⃣ Merge
       df_all = pd.concat([df_old, df_new], ignore_index=True)
+
+# 🚫 remove duplicates
+      df_all = df_all.drop_duplicates(
+          subset=["Requirement", "Type", "Level"],
+          keep="last"
+      )
 
       # 7️⃣ Retrain model
       print("🤖 Retraining model...")

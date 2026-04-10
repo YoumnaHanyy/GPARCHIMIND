@@ -1,52 +1,37 @@
 [
   {
     "title": "Availability",
-    "description": "The system should be up and running 99% of the time",
-    "project_id": "proj_6938e56d"
+    "description": "The application will be available on Play store for android users and App store for iOS users",
+    "project_id": "proj_5544bdef"
   },
   {
-    "title": "Scalability",
-    "description": "The system must support at least 100 concurrent users without exhibiting a discernible decrease in performance",
-    "project_id": "proj_6938e56d"
-  },
-  {
-    "title": "Reliability",
-    "description": "The system should be able to handle unexpected errors and provide informative error messages",
-    "project_id": "proj_6938e56d"
+    "title": "Privacy",
+    "description": "All user’s data will be secured and unavailable to anyone",
+    "project_id": "proj_5544bdef"
   },
   {
     "title": "Usability",
-    "description": "The user interface must be easy to use and give applicants and recruiters clear instructions and help",
-    "project_id": "proj_6938e56d"
+    "description": "The system should be developed in a user-friendly",
+    "project_id": "proj_5544bdef"
   },
   {
-    "title": "Performance",
-    "description": "The system must respond to user input in less than two seconds",
-    "project_id": "proj_6938e56d"
+    "title": "Hardware Limitations",
+    "description": "The user must have a smartphone connected to the internet, with a working camera to be able to take pictures of themselves or a photo for the beloved ones from their devices to upload it to the system",
+    "project_id": "proj_5544bdef"
   },
   {
-    "title": "Compatibility",
-    "description": "The system should be compatible with the majority of web browsers, including Edge, Firefox, Safari, and Chrome",
-    "project_id": "proj_6938e56d"
+    "title": "Security",
+    "description": "The user registration process the system will encrypt the password when the user login",
+    "project_id": "proj_5544bdef"
   },
   {
-    "title": "Maintainability",
-    "description": "The code should be modular, follow best practices for coding, and have extensive documentation to facilitate maintenance",
-    "project_id": "proj_6938e56d"
+    "title": "Reliability",
+    "description": "The user information will be kept in the database and is always up to date it can not lost and always be obtained from the administrator with the user’s permission",
+    "project_id": "proj_5544bdef"
   },
   {
-    "title": "Data Privacy",
-    "description": "The system needs to adhere to data protection regulations to guarantee the confidentiality of user, CVS, and evaluation data",
-    "project_id": "proj_6938e56d"
-  },
-  {
-    "title": "Fault Tolerance",
-    "description": "The system should be able to handle unexpected errors and provide informative error messages",
-    "project_id": "proj_6938e56d"
-  },
-  {
-    "title": "Cross-browser compatibility",
-    "description": "The system should be compatible with the majority of web browsers, including Edge, Firefox, Safari, and Chrome",
-    "project_id": "proj_6938e56d"
+    "title": "Standards Compliance",
+    "description": "Digital Twin Of Human can only runs on Android or IOS operating systems",
+    "project_id": "proj_5544bdef"
   }
 ]

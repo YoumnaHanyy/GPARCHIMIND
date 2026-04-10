@@ -1,91 +1,64 @@
 [
   {
     "title": "Availability",
-    "description": "The system should be up and running 99% of the time",
-    "predicted_type": "A",
-    "predicted_type_label": "Availability",
-    "confidence": 0.9532135128974915,
-    "predicted_level": "High",
+    "description": "The application will be available on Play store for android users and App store for iOS users",
+    "predicted_type": "PO",
+    "predicted_type_label": "Portability",
+    "confidence": 0.5539771318435669,
+    "predicted_level": "Medium",
     "confirmed": false
   },
   {
-    "title": "Scalability",
-    "description": "The system must support at least 100 concurrent users without exhibiting a discernible decrease in performance",
-    "predicted_type": "SC",
-    "predicted_type_label": "Scalability",
-    "confidence": 0.6181042790412903,
-    "predicted_level": " High",
-    "confirmed": false
-  },
-  {
-    "title": "Reliability",
-    "description": "The system should be able to handle unexpected errors and provide informative error messages",
-    "predicted_type": "US",
-    "predicted_type_label": "Usability",
-    "confidence": 0.5978361964225769,
+    "title": "Privacy",
+    "description": "All user’s data will be secured and unavailable to anyone",
+    "predicted_type": "SE",
+    "predicted_type_label": "Security",
+    "confidence": 0.9617932438850403,
     "predicted_level": "High",
     "confirmed": false
   },
   {
     "title": "Usability",
-    "description": "The user interface must be easy to use and give applicants and recruiters clear instructions and help",
+    "description": "The system should be developed in a user-friendly",
     "predicted_type": "US",
     "predicted_type_label": "Usability",
-    "confidence": 0.9117317795753479,
-    "predicted_level": "Medium",
-    "confirmed": false
-  },
-  {
-    "title": "Performance",
-    "description": "The system must respond to user input in less than two seconds",
-    "predicted_type": "PE",
-    "predicted_type_label": "Performance",
-    "confidence": 0.9251411557197571,
-    "predicted_level": " High",
-    "confirmed": false
-  },
-  {
-    "title": "Compatibility",
-    "description": "The system should be compatible with the majority of web browsers, including Edge, Firefox, Safari, and Chrome",
-    "predicted_type": "PO",
-    "predicted_type_label": "Portability",
-    "confidence": 0.6797724366188049,
-    "predicted_level": "Medium",
-    "confirmed": false
-  },
-  {
-    "title": "Maintainability",
-    "description": "The code should be modular, follow best practices for coding, and have extensive documentation to facilitate maintenance",
-    "predicted_type": "MN",
-    "predicted_type_label": "Manageability",
-    "confidence": 0.9318404197692871,
+    "confidence": 0.9000417590141296,
     "predicted_level": "High",
     "confirmed": false
   },
   {
-    "title": "Data Privacy",
-    "description": "The system needs to adhere to data protection regulations to guarantee the confidentiality of user, CVS, and evaluation data",
+    "title": "Hardware Limitations",
+    "description": "The user must have a smartphone connected to the internet, with a working camera to be able to take pictures of themselves or a photo for the beloved ones from their devices to upload it to the system",
+    "predicted_type": "O",
+    "predicted_type_label": "Operational",
+    "confidence": 0.7314493060112,
+    "predicted_level": "Medium",
+    "confirmed": false
+  },
+  {
+    "title": "Security",
+    "description": "The user registration process the system will encrypt the password when the user login",
     "predicted_type": "SE",
     "predicted_type_label": "Security",
-    "confidence": 0.960196316242218,
+    "confidence": 0.9715844988822937,
     "predicted_level": "High",
     "confirmed": false
   },
   {
-    "title": "Fault Tolerance",
-    "description": "The system should be able to handle unexpected errors and provide informative error messages",
-    "predicted_type": "US",
-    "predicted_type_label": "Usability",
-    "confidence": 0.5978361964225769,
+    "title": "Reliability",
+    "description": "The user information will be kept in the database and is always up to date it can not lost and always be obtained from the administrator with the user’s permission",
+    "predicted_type": "SE",
+    "predicted_type_label": "Security",
+    "confidence": 0.8926317095756531,
     "predicted_level": "High",
     "confirmed": false
   },
   {
-    "title": "Cross-browser compatibility",
-    "description": "The system should be compatible with the majority of web browsers, including Edge, Firefox, Safari, and Chrome",
+    "title": "Standards Compliance",
+    "description": "Digital Twin Of Human can only runs on Android or IOS operating systems",
     "predicted_type": "PO",
     "predicted_type_label": "Portability",
-    "confidence": 0.6797724366188049,
+    "confidence": 0.6960519552230835,
     "predicted_level": "Medium",
     "confirmed": false
   }
