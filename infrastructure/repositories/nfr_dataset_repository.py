@@ -76,7 +76,7 @@ class NFRPredictionRepository:
         return docs
     
     @staticmethod
-    def get_high_confidence(project_id: str, threshold: float = 0.90):
+    def get_high_confidence(project_id: str, threshold: float = 0.30):
         """Get only high confidence predictions"""
         docs = list(db.nfr_predictions.find(
             {
@@ -88,7 +88,7 @@ class NFRPredictionRepository:
         return docs
     
     @staticmethod
-    def get_low_confidence(project_id: str, threshold: float = 0.90):
+    def get_low_confidence(project_id: str, threshold: float = 0.30):
         """Get only low confidence predictions"""
         docs = list(db.nfr_predictions.find(
             {

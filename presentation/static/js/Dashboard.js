@@ -130,8 +130,8 @@ window.addEventListener('DOMContentLoaded', () => {
     data.functional.forEach((fr, idx) => {
       html += `
         <div class="mb-3">
-          <div class="req-title">${String.fromCharCode(97 + idx)}. ${fr.title || 'Untitled'}</div>
-          <div class="req-desc">${fr.description || 'No description'}</div>
+          <div class="req-desc"><strong>FR-${String(idx + 1).padStart(2, '0')}:</strong>
+          ${fr.description || 'No description'}</div>
         </div>
       `;
     });
