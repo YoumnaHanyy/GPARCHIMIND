@@ -11,15 +11,15 @@
         },
         {
             "pattern": "Strategy",
-            "score": 0.652,
-            "confidence": "MEDIUM",
+            "score": 0.75,
+            "confidence": "STRONG",
             "reasons": [
                 "[CORE] DYNAMIC_BEHAVIOR"
             ]
         },
         {
             "pattern": "Factory",
-            "score": 0.272,
+            "score": 0.312,
             "confidence": "WEAK",
             "reasons": [
                 "[GENERIC] HIGH_SCALABILITY",
@@ -28,12 +28,12 @@
         }
     ],
     "all_scores": {
-        "Factory": 0.272,
+        "Factory": 0.312,
         "Builder": 0.0,
         "Singleton": 0.0,
         "Observer": 1.0,
-        "Strategy": 0.652,
-        "Mediator": 0.062,
+        "Strategy": 0.75,
+        "Mediator": 0.071,
         "Command": 0.0
     }
 }

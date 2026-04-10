@@ -7,6 +7,7 @@ from ai.inference.feature_validator import validate_features
 from ai.inference.prompt_builder import build_prompt
 from ai.inference.response_parser import parse_response
 from ai.utils.feature_keywords import FEATURE_KEYWORDS
+from infrastructure.repositories.design_pattern_repository import save_design_patterns
 # MODEL
 client = InferenceClient(model="meta-llama/Meta-Llama-3-8B-Instruct")
 
@@ -219,5 +220,8 @@ def generate_phase4(project_id):
 
     # 🔥 هنا بقى المهم
     patterns_result = run_design_patterns(data)
-
+    save_design_patterns(
+    project_id,
+    patterns_result["top_patterns"]
+)
     return patterns_result
