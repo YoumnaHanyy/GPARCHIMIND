@@ -3,7 +3,6 @@ from fastapi.responses import JSONResponse
 import os
 import uuid
 import traceback
-import fitz
 from application.extraction.extraction_service import process_srs
 from ai.inference.predict_type_level import predict_and_save_nfr, predict_level_for_text
 from service.ordinal_service import execute_ordinal_method
@@ -291,6 +290,7 @@ async def confirm_nfr(request: Request):
     save_weighted_result(project_id, weighted_result)
 
     user_id = request.session.get("user", {}).get("id", "guest")
+    create_project(project_id, user_id)
 
     return {
         "status": "ok",
@@ -300,7 +300,8 @@ async def confirm_nfr(request: Request):
         "binary_method": binary_result,
         "weighted_method": weighted_result,
         "hybrid_method": hybrid_result,
-        "nfr_predictions": clean_object_id(all_nfrs)
+        "nfr_predictions": clean_object_id(all_nfrs),
+        "phase4": phase4
     }
 
 

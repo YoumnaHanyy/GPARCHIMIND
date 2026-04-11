@@ -1,37 +1,52 @@
 [
   {
-    "title": "Availability",
-    "description": "The application will be available on Play store for android users and App store for iOS users",
-    "project_id": "proj_5544bdef"
-  },
-  {
-    "title": "Privacy",
-    "description": "All user’s data will be secured and unavailable to anyone",
-    "project_id": "proj_5544bdef"
+    "title": "Security",
+    "description": "User data, including text prompts and videos, should be encrypted both in transit and at rest, and access to sensitive services should be restricted based on user roles and permissions",
+    "project_id": "proj_4f068b3d"
   },
   {
     "title": "Usability",
-    "description": "The system should be developed in a user-friendly",
-    "project_id": "proj_5544bdef"
+    "description": "The System user interface UI must be intuitive to be adequate for users of different technical backgrounds and proficiency",
+    "project_id": "proj_4f068b3d"
   },
   {
-    "title": "Hardware Limitations",
-    "description": "The user must have a smartphone connected to the internet, with a working camera to be able to take pictures of themselves or a photo for the beloved ones from their devices to upload it to the system",
-    "project_id": "proj_5544bdef"
-  },
-  {
-    "title": "Security",
-    "description": "The user registration process the system will encrypt the password when the user login",
-    "project_id": "proj_5544bdef"
+    "title": "Performance",
+    "description": "The system should generate a 5-Response time for user interactions with the UI should be less than 1 second",
+    "project_id": "proj_4f068b3d"
   },
   {
     "title": "Reliability",
-    "description": "The user information will be kept in the database and is always up to date it can not lost and always be obtained from the administrator with the user’s permission",
-    "project_id": "proj_5544bdef"
+    "description": "The system should be available 24/7, except during scheduled maintenance windows",
+    "project_id": "proj_4f068b3d"
   },
   {
-    "title": "Standards Compliance",
-    "description": "Digital Twin Of Human can only runs on Android or IOS operating systems",
-    "project_id": "proj_5544bdef"
+    "title": "Scalability",
+    "description": "The system should have a 99.9% uptime and support 100 concurrent users without significant performance degradation",
+    "project_id": "proj_4f068b3d"
+  },
+  {
+    "title": "Maintainability",
+    "description": "The system should facilitate user access, facilitate easy updates and maintenance, ensure well-documented code, and establish a knowledge transfer plan for developers and support staff",
+    "project_id": "proj_4f068b3d"
+  },
+  {
+    "title": "Adaptability",
+    "description": "The system should have the capability to evolve and accommodate changes in technology, user requirements, or business needs without major disruptions",
+    "project_id": "proj_4f068b3d"
+  },
+  {
+    "title": "Compliance",
+    "description": "Licensing and usage of external APIs should adhere to legal and ethical standards",
+    "project_id": "proj_4f068b3d"
+  },
+  {
+    "title": "Data Protection",
+    "description": "The system should comply with relevant data protection regulations",
+    "project_id": "proj_4f068b3d"
+  },
+  {
+    "title": "Accessibility",
+    "description": "The system should comply with accessibility standards to ensure usability for users with disabilities",
+    "project_id": "proj_4f068b3d"
   }
 ]

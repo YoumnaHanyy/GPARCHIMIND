@@ -1,170 +1,98 @@
 [
   {
-    "description": "The user must record his voice input and then go to the LLM which includes ASR, used to generate a text from speech, NLP used to allow computers to understand, generate, and collaborate with human language",
+    "description": "the user shall be able to login to the system using his account",
     "source": {
       "page": null,
       "start_index": null
     },
-    "project_id": "proj_5544bdef"
+    "project_id": "proj_4f068b3d"
   },
   {
-    "description": "The user will have to answer some questions to analyze their personality while this operation our system will record his voice to use it in the voice cloning",
+    "description": "the user shall be able to view history of the input prompt or script",
     "source": {
       "page": null,
       "start_index": null
     },
-    "project_id": "proj_5544bdef"
+    "project_id": "proj_4f068b3d"
   },
   {
-    "description": "The user will upload an image, then the system will process the image and generate a lifelike 3D digital twin avatar based on the image",
+    "description": "the user shall be able to enter a simple prompt to the system to create a small video",
     "source": {
       "page": null,
       "start_index": null
     },
-    "project_id": "proj_5544bdef"
+    "project_id": "proj_4f068b3d"
   },
   {
-    "description": "The user will have a conversation with the digital twin through a speech-to-text feature",
+    "description": "the user shall be able to edit his account",
     "source": {
       "page": null,
       "start_index": null
     },
-    "project_id": "proj_5544bdef"
+    "project_id": "proj_4f068b3d"
   },
   {
-    "description": "The user shall be able to sign Up to create a new account",
+    "description": "the user shall be able to enter a script to the system to generate a long video or film",
     "source": {
       "page": null,
       "start_index": null
     },
-    "project_id": "proj_5544bdef"
+    "project_id": "proj_4f068b3d"
   },
   {
-    "description": "The user shall be able to login to their account",
+    "description": "the user shall be able to Sign Up on the system",
     "source": {
       "page": null,
       "start_index": null
     },
-    "project_id": "proj_5544bdef"
+    "project_id": "proj_4f068b3d"
   },
   {
-    "description": "The user shall be able to edit his profile",
+    "description": "the user shall be able to logout of the system",
     "source": {
       "page": null,
       "start_index": null
     },
-    "project_id": "proj_5544bdef"
+    "project_id": "proj_4f068b3d"
   },
   {
-    "description": "The user shall be able to logout",
+    "description": "the user shall be able to edit on the generated video",
     "source": {
       "page": null,
       "start_index": null
     },
-    "project_id": "proj_5544bdef"
+    "project_id": "proj_4f068b3d"
   },
   {
-    "description": "The user shall be able to upload images to predict a 3D Model",
+    "description": "the user shall be able to select the voice over of the characters and the music of the video",
     "source": {
       "page": null,
       "start_index": null
     },
-    "project_id": "proj_5544bdef"
+    "project_id": "proj_4f068b3d"
   },
   {
-    "description": "The user should be able to upload images to show their emotions",
+    "description": "the user shall be able to create a video from the history of the input prompt or script",
     "source": {
       "page": null,
       "start_index": null
     },
-    "project_id": "proj_5544bdef"
+    "project_id": "proj_4f068b3d"
   },
   {
-    "description": "The user will record their voice to make their avatar have the same voice",
+    "description": "the user shall be able to remove his account from the system",
     "source": {
       "page": null,
       "start_index": null
     },
-    "project_id": "proj_5544bdef"
+    "project_id": "proj_4f068b3d"
   },
   {
-    "description": "The user will have to answer some question about their life, attitude or a specific situation and how he/she will handle that situation and also they will record their facial expression to make their avatar has the same concept as thinking",
+    "description": "the user shall be able to view the generated video",
     "source": {
       "page": null,
       "start_index": null
     },
-    "project_id": "proj_5544bdef"
-  },
-  {
-    "description": "The user will have the ability to customize the avatar look",
-    "source": {
-      "page": null,
-      "start_index": null
-    },
-    "project_id": "proj_5544bdef"
-  },
-  {
-    "description": "The system shall make the avatar respond on user’s input by voice",
-    "source": {
-      "page": null,
-      "start_index": null
-    },
-    "project_id": "proj_5544bdef"
-  },
-  {
-    "description": "The system shall understand and contextualizes User’s input",
-    "source": {
-      "page": null,
-      "start_index": null
-    },
-    "project_id": "proj_5544bdef"
-  },
-  {
-    "description": "The system shall clone the user’s voice",
-    "source": {
-      "page": null,
-      "start_index": null
-    },
-    "project_id": "proj_5544bdef"
-  },
-  {
-    "description": "The system shall make the avatar adapt on the user",
-    "source": {
-      "page": null,
-      "start_index": null
-    },
-    "project_id": "proj_5544bdef"
-  },
-  {
-    "description": "The system shall create the avatar based on user requirements",
-    "source": {
-      "page": null,
-      "start_index": null
-    },
-    "project_id": "proj_5544bdef"
-  },
-  {
-    "description": "The system shall make the avatar express emotions based on images and conversations",
-    "source": {
-      "page": null,
-      "start_index": null
-    },
-    "project_id": "proj_5544bdef"
-  },
-  {
-    "description": "The user can interact with the avatar by texting or voice chatting giving commands or questions",
-    "source": {
-      "page": null,
-      "start_index": null
-    },
-    "project_id": "proj_5544bdef"
-  },
-  {
-    "description": "The user can upload a file of their voice to make their avatar have the same voice or to their beloved ones",
-    "source": {
-      "page": null,
-      "start_index": null
-    },
-    "project_id": "proj_5544bdef"
+    "project_id": "proj_4f068b3d"
   }
 ]

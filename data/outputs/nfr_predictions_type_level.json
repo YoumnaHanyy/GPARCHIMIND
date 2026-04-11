@@ -1,65 +1,92 @@
 [
   {
-    "title": "Availability",
-    "description": "The application will be available on Play store for android users and App store for iOS users",
-    "predicted_type": "PO",
-    "predicted_type_label": "Portability",
-    "confidence": 0.5539771318435669,
-    "predicted_level": "Medium",
-    "confirmed": false
-  },
-  {
-    "title": "Privacy",
-    "description": "All user’s data will be secured and unavailable to anyone",
+    "title": "Security",
+    "description": "User data, including text prompts and videos, should be encrypted both in transit and at rest, and access to sensitive services should be restricted based on user roles and permissions",
     "predicted_type": "SE",
     "predicted_type_label": "Security",
-    "confidence": 0.9617932438850403,
-    "predicted_level": "High",
+    "confidence": 0.9526983499526978,
+    "predicted_level": " High",
     "confirmed": false
   },
   {
     "title": "Usability",
-    "description": "The system should be developed in a user-friendly",
+    "description": "The System user interface UI must be intuitive to be adequate for users of different technical backgrounds and proficiency",
     "predicted_type": "US",
     "predicted_type_label": "Usability",
-    "confidence": 0.9000417590141296,
-    "predicted_level": "High",
-    "confirmed": false
-  },
-  {
-    "title": "Hardware Limitations",
-    "description": "The user must have a smartphone connected to the internet, with a working camera to be able to take pictures of themselves or a photo for the beloved ones from their devices to upload it to the system",
-    "predicted_type": "O",
-    "predicted_type_label": "Operational",
-    "confidence": 0.7314493060112,
+    "confidence": 0.9149327874183655,
     "predicted_level": "Medium",
     "confirmed": false
   },
   {
-    "title": "Security",
-    "description": "The user registration process the system will encrypt the password when the user login",
-    "predicted_type": "SE",
-    "predicted_type_label": "Security",
-    "confidence": 0.9715844988822937,
-    "predicted_level": "High",
+    "title": "Performance",
+    "description": "The system should generate a 5-Response time for user interactions with the UI should be less than 1 second",
+    "predicted_type": "PE",
+    "predicted_type_label": "Performance",
+    "confidence": 0.939079999923706,
+    "predicted_level": " High",
     "confirmed": false
   },
   {
     "title": "Reliability",
-    "description": "The user information will be kept in the database and is always up to date it can not lost and always be obtained from the administrator with the user’s permission",
-    "predicted_type": "SE",
-    "predicted_type_label": "Security",
-    "confidence": 0.8926317095756531,
+    "description": "The system should be available 24/7, except during scheduled maintenance windows",
+    "predicted_type": "A",
+    "predicted_type_label": "Availability",
+    "confidence": 0.8843381404876709,
     "predicted_level": "High",
     "confirmed": false
   },
   {
-    "title": "Standards Compliance",
-    "description": "Digital Twin Of Human can only runs on Android or IOS operating systems",
-    "predicted_type": "PO",
-    "predicted_type_label": "Portability",
-    "confidence": 0.6960519552230835,
-    "predicted_level": "Medium",
+    "title": "Scalability",
+    "description": "The system should have a 99.9% uptime and support 100 concurrent users without significant performance degradation",
+    "predicted_type": "PE",
+    "predicted_type_label": "Performance",
+    "confidence": 0.7378395795822144,
+    "predicted_level": " High",
+    "confirmed": false
+  },
+  {
+    "title": "Maintainability",
+    "description": "The system should facilitate user access, facilitate easy updates and maintenance, ensure well-documented code, and establish a knowledge transfer plan for developers and support staff",
+    "predicted_type": "MN",
+    "predicted_type_label": "Manageability",
+    "confidence": 0.8921528458595276,
+    "predicted_level": "High",
+    "confirmed": false
+  },
+  {
+    "title": "Adaptability",
+    "description": "The system should have the capability to evolve and accommodate changes in technology, user requirements, or business needs without major disruptions",
+    "predicted_type": "MN",
+    "predicted_type_label": "Manageability",
+    "confidence": 0.43437859416007996,
+    "predicted_level": "High",
+    "confirmed": false
+  },
+  {
+    "title": "Compliance",
+    "description": "Licensing and usage of external APIs should adhere to legal and ethical standards",
+    "predicted_type": "SE",
+    "predicted_type_label": "Security",
+    "confidence": 0.9623851180076599,
+    "predicted_level": " Low",
+    "confirmed": false
+  },
+  {
+    "title": "Data Protection",
+    "description": "The system should comply with relevant data protection regulations",
+    "predicted_type": "SE",
+    "predicted_type_label": "Security",
+    "confidence": 0.9178329706192017,
+    "predicted_level": " High",
+    "confirmed": false
+  },
+  {
+    "title": "Accessibility",
+    "description": "The system should comply with accessibility standards to ensure usability for users with disabilities",
+    "predicted_type": "US",
+    "predicted_type_label": "Usability",
+    "confidence": 0.8542136549949646,
+    "predicted_level": "High",
     "confirmed": false
   }
 ]

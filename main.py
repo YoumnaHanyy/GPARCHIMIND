@@ -85,7 +85,6 @@ app.add_middleware(
     max_age=3600  # 1 hour session timeout
 )
 app.include_router(auth.router)
-
 app.include_router(hybrid_router)
 
 UPLOAD_DIR = "uploads"
@@ -410,4 +409,3 @@ def download_validation_report():
             "Content-Disposition": "inline; filename=architecture_validation_report.pdf"
         }
     )
-#comment
