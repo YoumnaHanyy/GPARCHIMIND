@@ -2,12 +2,21 @@
 !include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
 LAYOUT_WITH_LEGEND()
 System_Boundary(ResuFitPrecisionCVMatchingSystem, "ResuFit: Precision CV Matching System") {
-  Container(APIGateway, "API Gateway", "REST API", "Route client requests")
-  Container(UserService, "User Service", "Service", "Manage users")
-  Container(OrderService, "Order Service", "Service", "Manage orders")
-  ContainerDb(OrderDatabase, "Order Database", "Database", "Persist order data")
+  Container(AssessmentModule, "Assessment Module", "Service", "Conducts precise assessments to identify challenges related to reading and working memory.")
+  Container(PersonalizedTutoringModule, "Personalized Tutoring Module", "Service", "Delivers AI-driven, one-to-one tutoring experiences tailored to the unique needs of individuals with Dyslexia.")
+  Container(LanguageTutoringEnvironment, "Language Tutoring Environment", "Service", "Provides a comprehensive learning support system with personalized games, activities, and a user interface tailored to the unique needs of individuals with Dyslexia.")
+  Container(PhonologicalAwarenessModule, "Phonological Awareness Module", "Service", "Empowers individuals with Dyslexia in the domain of phonological awareness in the area of language learning.")
+  Container(UserInterface, "User Interface", "Service", "Caters to kindergarten students and children with Dyslexia, enhancing reading, spelling, and memorization aspects.")
+  Container(AIDrivenEngine, "AI-Driven Engine", "Service", "Provides AI-driven, one-to-one tutoring experiences and delivers personalized recommendations based on user performance.")
+  Container(HealthandQualityMetrics, "Health and Quality Metrics", "Service", "Tracks and monitors user progress, providing insights into school quality (80%) and health quality (20%) as a secondary factor.")
 }
-Rel(APIGateway, UserService, "call", "Sync")
-Rel(APIGateway, OrderService, "call", "Sync")
-Rel(OrderService, OrderDatabase, "call", "Sync")
+Rel(AssessmentModule, AIDrivenEngine, "call", "Sync")
+Rel(AssessmentModule, HealthandQualityMetrics, "call", "Sync")
+Rel(AIDrivenEngine, PersonalizedTutoringModule, "call", "Sync")
+Rel(PersonalizedTutoringModule, LanguageTutoringEnvironment, "event", "Async")
+Rel(LanguageTutoringEnvironment, PhonologicalAwarenessModule, "event", "Async")
+Rel(PhonologicalAwarenessModule, UserInterface, "event", "Async")
+Rel(UserInterface, AIDrivenEngine, "event", "Async")
+Rel(AIDrivenEngine, HealthandQualityMetrics, "call", "Sync")
+Rel(HealthandQualityMetrics, UserInterface, "event", "Async")
 @enduml

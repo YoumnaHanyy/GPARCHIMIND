@@ -1,38 +1,101 @@
 [
   {
-    "title": "submitting the CV",
-    "description": "Applicants submit their CVs for parsing and analysis.",
+    "title": "Provide a comprehensive learning support system",
+    "description": "Conduct precise assessments, identify challenges related to reading and working memory, and deliver personalized AI-driven tutoring experiences.",
     "source": {
-      "page": 16,
+      "page": null,
       "start_index": null
     },
-    "project_id": "proj_2fe4ae6a"
+    "project_id": "proj_a55dda56"
   },
   {
-    "title": "viewing and editing the CV",
-    "description": "Applicants can view and edit their parsed CV.",
+    "title": "Conduct precise assessments",
+    "description": "Identify challenges related to reading and working memory.",
     "source": {
-      "page": 16,
+      "page": null,
       "start_index": null
     },
-    "project_id": "proj_2fe4ae6a"
+    "project_id": "proj_a55dda56"
   },
   {
-    "title": "answering screening questions",
-    "description": "Applicants are presented with screening questions defined by an expert recruiter.",
+    "title": "Deliver personalized AI-driven tutoring experiences",
+    "description": "Provide tailored educational interventions for individuals with learning disabilities.",
     "source": {
-      "page": 12,
+      "page": null,
       "start_index": null
     },
-    "project_id": "proj_2fe4ae6a"
+    "project_id": "proj_a55dda56"
   },
   {
-    "title": "getting a rating for the submitted CV",
-    "description": "The system generates a percentage-based result, providing a fair evaluation of each applicant.",
+    "title": "Emulate human teaching methods in mathematics",
+    "description": "Encourage reflection on both successful and challenging decisions made during interactive games.",
     "source": {
-      "page": 13,
+      "page": null,
       "start_index": null
     },
-    "project_id": "proj_2fe4ae6a"
+    "project_id": "proj_a55dda56"
+  },
+  {
+    "title": "Conduct early and accurate diagnostic tools",
+    "description": "Provide timely and personalized interventions.",
+    "source": {
+      "page": null,
+      "start_index": null
+    },
+    "project_id": "proj_a55dda56"
+  },
+  {
+    "title": "Provide a tailored language tutoring environment",
+    "description": "Use personalized games, activities, and a user interface tailored to the unique needs of individuals with Dyslexia.",
+    "source": {
+      "page": null,
+      "start_index": null
+    },
+    "project_id": "proj_a55dda56"
+  },
+  {
+    "title": "Classify individuals with Dyslexia",
+    "description": "Use a specialized platform for classifying individuals with Dyslexia.",
+    "source": {
+      "page": null,
+      "start_index": null
+    },
+    "project_id": "proj_a55dda56"
+  },
+  {
+    "title": "Create a personalized teaching strategy",
+    "description": "Determine the limitations and preferences of individuals through an initial evaluation.",
+    "source": {
+      "page": null,
+      "start_index": null
+    },
+    "project_id": "proj_a55dda56"
+  },
+  {
+    "title": "Use voice, chat, personalized games, exercises, and approaches adapted to the specific needs of individuals with Dyslexia",
+    "description": "Uncover the language potential of individuals with Dyslexia.",
+    "source": {
+      "page": null,
+      "start_index": null
+    },
+    "project_id": "proj_a55dda56"
+  },
+  {
+    "title": "Provide a one-to-one tutoring system",
+    "description": "Enhance reading, spelling, and memorization aspects like phonological awareness in new languages.",
+    "source": {
+      "page": null,
+      "start_index": null
+    },
+    "project_id": "proj_a55dda56"
+  },
+  {
+    "title": "Streamline the learning process",
+    "description": "Ease the burden on parents and teachers while supporting children’s development.",
+    "source": {
+      "page": null,
+      "start_index": null
+    },
+    "project_id": "proj_a55dda56"
   }
 ]

@@ -1,25 +1,34 @@
 [
   {
-    "description": "The system MUST respond within a reasonable time frame.",
-    "confidence": 0.9715486168861389,
+    "description": "The system must be able to accommodate a large number of users and adapt to changing demands.",
+    "confidence": 0.9623588919639587,
     "confirmed": false,
     "predicted_level": "High",
-    "predicted_type": "PE",
-    "predicted_type_label": "Performance",
-    "title": "Performance"
+    "predicted_type": "SC",
+    "predicted_type_label": "Scalability",
+    "title": "Scalability"
   },
   {
-    "description": "The system SHALL be available at least 99.9% of the time.",
-    "confidence": 0.9764779806137085,
-    "confirmed": false,
+    "description": "The system must be accessible to users with disabilities and provide equal opportunities for learning.",
+    "confidence": 1.0,
+    "confirmed": true,
     "predicted_level": "High",
-    "predicted_type": "A",
-    "predicted_type_label": "Availability",
-    "title": "Reliability"
+    "predicted_type": "US",
+    "predicted_type_label": "Usability",
+    "title": "Accessibility"
   },
   {
-    "description": "The system MUST protect user data and prevent unauthorized access.",
-    "confidence": 0.98123699426651,
+    "description": "The system must be user-friendly and provide a seamless learning experience.",
+    "confidence": 1.0,
+    "confirmed": true,
+    "predicted_level": "High",
+    "predicted_type": "US",
+    "predicted_type_label": "Usability",
+    "title": "Usability"
+  },
+  {
+    "description": "The system must ensure the confidentiality, integrity, and availability of user data.",
+    "confidence": 0.9707515835762024,
     "confirmed": false,
     "predicted_level": "High",
     "predicted_type": "SE",
@@ -27,57 +36,48 @@
     "title": "Security"
   },
   {
-    "description": "The system SHALL ensure that user data is collected and stored in accordance with applicable laws and regulations.",
-    "confidence": 0.9717892408370972,
-    "confirmed": false,
-    "predicted_level": "Medium",
-    "predicted_type": "SE",
-    "predicted_type_label": "Security",
-    "title": "Privacy"
-  },
-  {
-    "description": "The system SHOULD be able to handle a large number of users and CVs without a significant decrease in performance.",
-    "confidence": 1.0,
-    "confirmed": true,
-    "predicted_level": "Low",
-    "predicted_type": "SC",
-    "predicted_type_label": "Scalability",
-    "title": "Scalability"
-  },
-  {
-    "description": "The system MUST be easy to use and navigate for users with varying levels of technical expertise.",
-    "confidence": 0.9423085451126099,
+    "description": "The system must respond quickly and efficiently to user requests.",
+    "confidence": 0.9141738414764404,
     "confirmed": false,
     "predicted_level": "High",
-    "predicted_type": "US",
-    "predicted_type_label": "Usability",
-    "title": "Usability"
+    "predicted_type": "PE",
+    "predicted_type_label": "Performance",
+    "title": "Performance"
   },
   {
-    "description": "The system SHOULD be designed to be easily maintained and updated by the development team.",
-    "confidence": 0.955119252204895,
+    "description": "The system must be able to recover from failures and provide a consistent learning experience.",
+    "confidence": 1.0,
+    "confirmed": true,
+    "predicted_level": "High",
+    "predicted_type": "A",
+    "predicted_type_label": "Availability",
+    "title": "Reliability"
+  },
+  {
+    "description": "The system must be easy to modify and update to meet changing requirements.",
+    "confidence": 0.9477823972702026,
     "confirmed": false,
-    "predicted_level": "Low",
+    "predicted_level": "High",
     "predicted_type": "MN",
     "predicted_type_label": "Manageability",
     "title": "Maintainability"
   },
   {
-    "description": "The system MUST be compatible with a variety of devices and browsers.",
+    "description": "The system must comply with relevant standards and regulations.",
     "confidence": 1.0,
     "confirmed": true,
     "predicted_level": "High",
-    "predicted_type": "PO",
-    "predicted_type_label": "Portability",
-    "title": "Compatibility"
+    "predicted_type": "L",
+    "predicted_type_label": "Latency",
+    "title": "Standard Compliance"
   },
   {
-    "description": "The system SHOULD be able to integrate with other HR systems and tools.",
-    "confidence": 1.0,
-    "confirmed": true,
-    "predicted_level": "Low",
-    "predicted_type": "PO",
-    "predicted_type_label": "Portability",
-    "title": "Integration"
+    "description": "The system must ensure the confidentiality and security of user data.",
+    "confidence": 0.974128246307373,
+    "confirmed": false,
+    "predicted_level": "High",
+    "predicted_type": "SE",
+    "predicted_type_label": "Security",
+    "title": "Data Privacy Compliance"
   }
 ]

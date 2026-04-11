@@ -2,8 +2,8 @@
   "status": "SUCCESS",
   "structural": {
     "metrics": {
-      "component_count": 4,
-      "relationship_count": 3,
+      "component_count": 7,
+      "relationship_count": 9,
       "undefined_references": 0,
       "self_loops": 0,
       "invalid_relationship_types": 0
@@ -13,23 +13,29 @@
   },
   "quality": {
     "fan_in": {
-      "API Gateway": 0,
-      "Order Database": 1,
-      "Order Service": 1,
-      "User Service": 1
+      "Phonological Awareness Module": 1,
+      "Assessment Module": 0,
+      "Health and Quality Metrics": 2,
+      "Personalized Tutoring Module": 1,
+      "User Interface": 2,
+      "AI-Driven Engine": 2,
+      "Language Tutoring Environment": 1
     },
     "fan_out": {
-      "API Gateway": 2,
-      "Order Database": 0,
-      "Order Service": 1,
-      "User Service": 0
+      "Phonological Awareness Module": 1,
+      "Assessment Module": 2,
+      "Health and Quality Metrics": 1,
+      "Personalized Tutoring Module": 1,
+      "User Interface": 1,
+      "AI-Driven Engine": 2,
+      "Language Tutoring Environment": 1
     },
-    "centralization_index": 0.25,
+    "centralization_index": 0.2857142857142857,
     "risks": []
   },
   "domain": {
     "stateless_ratio": 1.0,
-    "state_concentration": 1,
-    "communication_style": "synchronous"
+    "state_concentration": 2,
+    "communication_style": "event-driven"
   }
 }

@@ -7,27 +7,38 @@ node "Client" {
 node "Kubernetes Ingress" {
   component "Ingress Controller"
 }
-node "API Gateway Pod" {
-  component "API Gateway"
+node "Assessment Module Pod" {
+  component "Assessment Module"
 }
-node "User Service Pod" {
-  component "User Service"
+node "Personalized Tutoring Module Pod" {
+  component "Personalized Tutoring Module"
 }
-node "Order Service Pod" {
-  component "Order Service"
+node "Language Tutoring Environment Pod" {
+  component "Language Tutoring Environment"
 }
-node "Database StatefulSet" {
-  database "Order Database"
+node "Phonological Awareness Module Pod" {
+  component "Phonological Awareness Module"
+}
+node "User Interface Pod" {
+  component "User Interface"
+}
+node "AI-Driven Engine Pod" {
+  component "AI-Driven Engine"
+}
+node "Health and Quality Metrics Pod" {
+  component "Health and Quality Metrics"
 }
 "User" --> "Ingress Controller" : TCP/IP
 "Ingress Controller" --> "API Gateway Pod" : HTTP/HTTPS
 "User" --> "Ingress Controller"
 "Ingress Controller" --> "API Gateway Pod"
-"API Gateway Pod" --> "User Service Pod"
-"API Gateway Pod" --> "Order Service Pod"
-"API Gateway Pod" --> "Database StatefulSet"
-"User Service Pod" --> "Database StatefulSet"
-"Order Service Pod" --> "Database StatefulSet"
+"API Gateway Pod" --> "Assessment Module Pod"
+"API Gateway Pod" --> "Personalized Tutoring Module Pod"
+"API Gateway Pod" --> "Language Tutoring Environment Pod"
+"API Gateway Pod" --> "Phonological Awareness Module Pod"
+"API Gateway Pod" --> "User Interface Pod"
+"API Gateway Pod" --> "AI-Driven Engine Pod"
+"API Gateway Pod" --> "Health and Quality Metrics Pod"
 node "Secondary Region" {
   component "Replica Services"
 }

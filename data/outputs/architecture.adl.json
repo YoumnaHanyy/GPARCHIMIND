@@ -1,11 +1,39 @@
 {
   "system": "ResuFit: Precision CV Matching System",
   "style": "Microservices",
-  "source": "FALLBACK",
+  "source": "AI",
   "decisions": [
     {
-      "name": "Fallback architecture",
-      "rationale": "AI output invalid"
+      "name": "Comprehensive learning support system",
+      "rationale": "System Functions"
+    },
+    {
+      "name": "Tailored language tutoring environment",
+      "rationale": "Detailed Functional Specification"
+    },
+    {
+      "name": "Empower individuals with Dyslexia",
+      "rationale": "Objectives"
+    },
+    {
+      "name": "Cater to kindergarten students and children with Dyslexia",
+      "rationale": "User Characteristics"
+    },
+    {
+      "name": "Comply with relevant standards and regulations",
+      "rationale": "Standard Compliance"
+    },
+    {
+      "name": "Provide an accessible and user-friendly interface",
+      "rationale": "Accessibility Constraints"
+    },
+    {
+      "name": "Be scalable to accommodate a large number of users",
+      "rationale": "Scalability"
+    },
+    {
+      "name": "Comply with relevant data privacy regulations",
+      "rationale": "Data Privacy Compliance"
     }
   ],
   "production_intents": {
@@ -28,52 +56,165 @@
   },
   "components": [
     {
-      "name": "API Gateway",
-      "responsibility": "Route client requests"
+      "name": "Assessment Module",
+      "responsibility": "Conducts precise assessments to identify challenges related to reading and working memory."
     },
     {
-      "name": "User Service",
-      "responsibility": "Manage users"
+      "name": "Personalized Tutoring Module",
+      "responsibility": "Delivers AI-driven, one-to-one tutoring experiences tailored to the unique needs of individuals with Dyslexia."
     },
     {
-      "name": "Order Service",
-      "responsibility": "Manage orders"
+      "name": "Language Tutoring Environment",
+      "responsibility": "Provides a comprehensive learning support system with personalized games, activities, and a user interface tailored to the unique needs of individuals with Dyslexia."
     },
     {
-      "name": "Order Database",
-      "responsibility": "Persist order data"
+      "name": "Phonological Awareness Module",
+      "responsibility": "Empowers individuals with Dyslexia in the domain of phonological awareness in the area of language learning."
+    },
+    {
+      "name": "User Interface",
+      "responsibility": "Caters to kindergarten students and children with Dyslexia, enhancing reading, spelling, and memorization aspects."
+    },
+    {
+      "name": "AI-Driven Engine",
+      "responsibility": "Provides AI-driven, one-to-one tutoring experiences and delivers personalized recommendations based on user performance."
+    },
+    {
+      "name": "Health and Quality Metrics",
+      "responsibility": "Tracks and monitors user progress, providing insights into school quality (80%) and health quality (20%) as a secondary factor."
     }
   ],
   "relationships": [
     {
-      "source": "API Gateway",
-      "target": "User Service",
+      "source": "Assessment Module",
+      "target": "AI-Driven Engine",
       "type": "data-flow"
     },
     {
-      "source": "API Gateway",
-      "target": "Order Service",
+      "source": "Assessment Module",
+      "target": "Health and Quality Metrics",
       "type": "data-flow"
     },
     {
-      "source": "Order Service",
-      "target": "Order Database",
+      "source": "AI-Driven Engine",
+      "target": "Personalized Tutoring Module",
       "type": "data-flow"
+    },
+    {
+      "source": "Personalized Tutoring Module",
+      "target": "Language Tutoring Environment",
+      "type": "event-flow"
+    },
+    {
+      "source": "Language Tutoring Environment",
+      "target": "Phonological Awareness Module",
+      "type": "event-flow"
+    },
+    {
+      "source": "Phonological Awareness Module",
+      "target": "User Interface",
+      "type": "event-flow"
+    },
+    {
+      "source": "User Interface",
+      "target": "AI-Driven Engine",
+      "type": "event-flow"
+    },
+    {
+      "source": "AI-Driven Engine",
+      "target": "Health and Quality Metrics",
+      "type": "data-flow"
+    },
+    {
+      "source": "Health and Quality Metrics",
+      "target": "User Interface",
+      "type": "event-flow"
     }
   ],
   "runtime_flow": [
     {
-      "from": "API",
-      "to": "Service",
-      "action": "Process business request",
+      "from": "Assessment Module",
+      "to": "AI-Driven Engine",
+      "action": "Send assessment results",
       "mode": "sync"
     },
     {
-      "from": "Service",
-      "to": "Database",
-      "action": "Persist data",
+      "from": "Assessment Module",
+      "to": "Health and Quality Metrics",
+      "action": "Send user progress",
+      "mode": "sync"
+    },
+    {
+      "from": "AI-Driven Engine",
+      "to": "Personalized Tutoring Module",
+      "action": "Request tutoring plan",
+      "mode": "async"
+    },
+    {
+      "from": "Personalized Tutoring Module",
+      "to": "Language Tutoring Environment",
+      "action": "Trigger tutoring session",
+      "mode": "sync"
+    },
+    {
+      "from": "Language Tutoring Environment",
+      "to": "Phonological Awareness Module",
+      "action": "Request phonological awareness exercises",
+      "mode": "async"
+    },
+    {
+      "from": "Phonological Awareness Module",
+      "to": "User Interface",
+      "action": "Provide exercises",
+      "mode": "sync"
+    },
+    {
+      "from": "User Interface",
+      "to": "AI-Driven Engine",
+      "action": "Send user interaction data",
+      "mode": "sync"
+    },
+    {
+      "from": "AI-Driven Engine",
+      "to": "Health and Quality Metrics",
+      "action": "Send user performance data",
+      "mode": "sync"
+    },
+    {
+      "from": "Health and Quality Metrics",
+      "to": "User Interface",
+      "action": "Display health and quality metrics",
       "mode": "sync"
     }
   ],
-  "critique": []
+  "critique": [
+    {
+      "component": "Assessment Module",
+      "relationship": "data-flow",
+      "target": "AI-Driven Engine",
+      "nfr": "Scalability",
+      "description": "The Assessment Module's data flow to the AI-Driven Engine may impact the system's scalability, as increased user demand may lead to a surge in data being processed."
+    },
+    {
+      "component": "Personalized Tutoring Module",
+      "relationship": "event-flow",
+      "target": "Language Tutoring Environment",
+      "nfr": "Accessibility Constraints",
+      "description": "The Personalized Tutoring Module's event flow to the Language Tutoring Environment may impact the system's accessibility, as the user interface may not be user-friendly for individuals with Dyslexia."
+    },
+    {
+      "component": "Health and Quality Metrics",
+      "relationship": "data-flow",
+      "target": "User Interface",
+      "nfr": "Data Privacy Compliance",
+      "description": "The Health and Quality Metrics' data flow to the User Interface may impact the system's data privacy compliance, as user data may be exposed to unauthorized parties."
+    },
+    {
+      "component": "AI-Driven Engine",
+      "relationship": "event-flow",
+      "target": "User Interface",
+      "nfr": "Standard Compliance",
+      "description": "The AI-Driven Engine's event flow to the User Interface may impact the system's standard compliance, as the user interface may not meet the required accessibility and usability standards for individuals with Dyslexia."
+    }
+  ]
 }

@@ -1,10 +1,20 @@
 @startuml
 autonumber
 actor User
-participant "API Gateway" as APIGateway
-participant "User Service" as UserService
-participant "Order Service" as OrderService
-participant "Order Database" as OrderDatabase
-API -> Service : Process business request
-Service -> Database : Persist data
+participant "Assessment Module" as AssessmentModule
+participant "Personalized Tutoring Module" as PersonalizedTutoringModule
+participant "Language Tutoring Environment" as LanguageTutoringEnvironment
+participant "Phonological Awareness Module" as PhonologicalAwarenessModule
+participant "User Interface" as UserInterface
+participant "AI-Driven Engine" as AIDrivenEngine
+participant "Health and Quality Metrics" as HealthandQualityMetrics
+AssessmentModule -> AIDrivenEngine : Send assessment results
+AssessmentModule -> HealthandQualityMetrics : Send user progress
+AIDrivenEngine ->> PersonalizedTutoringModule : Request tutoring plan
+PersonalizedTutoringModule -> LanguageTutoringEnvironment : Trigger tutoring session
+LanguageTutoringEnvironment ->> PhonologicalAwarenessModule : Request phonological awareness exercises
+PhonologicalAwarenessModule -> UserInterface : Provide exercises
+UserInterface -> AIDrivenEngine : Send user interaction data
+AIDrivenEngine -> HealthandQualityMetrics : Send user performance data
+HealthandQualityMetrics -> UserInterface : Display health and quality metrics
 @enduml
