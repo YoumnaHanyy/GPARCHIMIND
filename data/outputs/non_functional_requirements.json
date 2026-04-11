@@ -1,52 +1,32 @@
 [
   {
-    "title": "Security",
-    "description": "User data, including text prompts and videos, should be encrypted both in transit and at rest, and access to sensitive services should be restricted based on user roles and permissions",
-    "project_id": "proj_4f068b3d"
-  },
-  {
-    "title": "Usability",
-    "description": "The System user interface UI must be intuitive to be adequate for users of different technical backgrounds and proficiency",
-    "project_id": "proj_4f068b3d"
-  },
-  {
-    "title": "Performance",
-    "description": "The system should generate a 5-Response time for user interactions with the UI should be less than 1 second",
-    "project_id": "proj_4f068b3d"
-  },
-  {
-    "title": "Reliability",
-    "description": "The system should be available 24/7, except during scheduled maintenance windows",
-    "project_id": "proj_4f068b3d"
-  },
-  {
-    "title": "Scalability",
-    "description": "The system should have a 99.9% uptime and support 100 concurrent users without significant performance degradation",
-    "project_id": "proj_4f068b3d"
-  },
-  {
-    "title": "Maintainability",
-    "description": "The system should facilitate user access, facilitate easy updates and maintenance, ensure well-documented code, and establish a knowledge transfer plan for developers and support staff",
-    "project_id": "proj_4f068b3d"
-  },
-  {
-    "title": "Adaptability",
-    "description": "The system should have the capability to evolve and accommodate changes in technology, user requirements, or business needs without major disruptions",
-    "project_id": "proj_4f068b3d"
-  },
-  {
-    "title": "Compliance",
-    "description": "Licensing and usage of external APIs should adhere to legal and ethical standards",
-    "project_id": "proj_4f068b3d"
-  },
-  {
-    "title": "Data Protection",
-    "description": "The system should comply with relevant data protection regulations",
-    "project_id": "proj_4f068b3d"
+    "title": "Response Time",
+    "description": "The system must have low response times",
+    "project_id": "proj_1d57f66b"
   },
   {
     "title": "Accessibility",
-    "description": "The system should comply with accessibility standards to ensure usability for users with disabilities",
-    "project_id": "proj_4f068b3d"
+    "description": "The system must adhere to accessibility standards",
+    "project_id": "proj_1d57f66b"
+  },
+  {
+    "title": "Performance",
+    "description": "The system must deliver optimal performance, with minimal latency",
+    "project_id": "proj_1d57f66b"
+  },
+  {
+    "title": "Usability",
+    "description": "The system must have a user-friendly interface",
+    "project_id": "proj_1d57f66b"
+  },
+  {
+    "title": "Availability",
+    "description": "The system must be available 24/7",
+    "project_id": "proj_1d57f66b"
+  },
+  {
+    "title": "Maintainability",
+    "description": "The system should be easily maintainable",
+    "project_id": "proj_1d57f66b"
   }
 ]

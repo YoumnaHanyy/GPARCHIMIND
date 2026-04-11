@@ -1,91 +1,55 @@
 [
   {
-    "title": "Security",
-    "description": "User data, including text prompts and videos, should be encrypted both in transit and at rest, and access to sensitive services should be restricted based on user roles and permissions",
-    "predicted_type": "SE",
-    "predicted_type_label": "Security",
-    "confidence": 0.9526983499526978,
-    "predicted_level": " High",
-    "confirmed": false
-  },
-  {
-    "title": "Usability",
-    "description": "The System user interface UI must be intuitive to be adequate for users of different technical backgrounds and proficiency",
-    "predicted_type": "US",
-    "predicted_type_label": "Usability",
-    "confidence": 0.9149327874183655,
-    "predicted_level": "Medium",
-    "confirmed": false
-  },
-  {
-    "title": "Performance",
-    "description": "The system should generate a 5-Response time for user interactions with the UI should be less than 1 second",
+    "title": "Response Time",
+    "description": "The system must have low response times",
     "predicted_type": "PE",
     "predicted_type_label": "Performance",
-    "confidence": 0.939079999923706,
-    "predicted_level": " High",
-    "confirmed": false
-  },
-  {
-    "title": "Reliability",
-    "description": "The system should be available 24/7, except during scheduled maintenance windows",
-    "predicted_type": "A",
-    "predicted_type_label": "Availability",
-    "confidence": 0.8843381404876709,
-    "predicted_level": "High",
-    "confirmed": false
-  },
-  {
-    "title": "Scalability",
-    "description": "The system should have a 99.9% uptime and support 100 concurrent users without significant performance degradation",
-    "predicted_type": "PE",
-    "predicted_type_label": "Performance",
-    "confidence": 0.7378395795822144,
-    "predicted_level": " High",
-    "confirmed": false
-  },
-  {
-    "title": "Maintainability",
-    "description": "The system should facilitate user access, facilitate easy updates and maintenance, ensure well-documented code, and establish a knowledge transfer plan for developers and support staff",
-    "predicted_type": "MN",
-    "predicted_type_label": "Manageability",
-    "confidence": 0.8921528458595276,
-    "predicted_level": "High",
-    "confirmed": false
-  },
-  {
-    "title": "Adaptability",
-    "description": "The system should have the capability to evolve and accommodate changes in technology, user requirements, or business needs without major disruptions",
-    "predicted_type": "MN",
-    "predicted_type_label": "Manageability",
-    "confidence": 0.43437859416007996,
-    "predicted_level": "High",
-    "confirmed": false
-  },
-  {
-    "title": "Compliance",
-    "description": "Licensing and usage of external APIs should adhere to legal and ethical standards",
-    "predicted_type": "SE",
-    "predicted_type_label": "Security",
-    "confidence": 0.9623851180076599,
-    "predicted_level": " Low",
-    "confirmed": false
-  },
-  {
-    "title": "Data Protection",
-    "description": "The system should comply with relevant data protection regulations",
-    "predicted_type": "SE",
-    "predicted_type_label": "Security",
-    "confidence": 0.9178329706192017,
+    "confidence": 0.9414144158363342,
     "predicted_level": " High",
     "confirmed": false
   },
   {
     "title": "Accessibility",
-    "description": "The system should comply with accessibility standards to ensure usability for users with disabilities",
+    "description": "The system must adhere to accessibility standards",
     "predicted_type": "US",
     "predicted_type_label": "Usability",
-    "confidence": 0.8542136549949646,
+    "confidence": 0.8754207491874695,
+    "predicted_level": " High",
+    "confirmed": false
+  },
+  {
+    "title": "Performance",
+    "description": "The system must deliver optimal performance, with minimal latency",
+    "predicted_type": "PE",
+    "predicted_type_label": "Performance",
+    "confidence": 0.9455391764640808,
+    "predicted_level": " High",
+    "confirmed": false
+  },
+  {
+    "title": "Usability",
+    "description": "The system must have a user-friendly interface",
+    "predicted_type": "US",
+    "predicted_type_label": "Usability",
+    "confidence": 0.9070541262626648,
+    "predicted_level": "High",
+    "confirmed": false
+  },
+  {
+    "title": "Availability",
+    "description": "The system must be available 24/7",
+    "predicted_type": "A",
+    "predicted_type_label": "Availability",
+    "confidence": 0.943867027759552,
+    "predicted_level": "High",
+    "confirmed": false
+  },
+  {
+    "title": "Maintainability",
+    "description": "The system should be easily maintainable",
+    "predicted_type": "MN",
+    "predicted_type_label": "Manageability",
+    "confidence": 0.9123710989952087,
     "predicted_level": "High",
     "confirmed": false
   }

@@ -1,98 +1,82 @@
 [
   {
-    "description": "the user shall be able to login to the system using his account",
+    "description": "The user shall be able to Login as a prerequisite before accessing system functionalities",
     "source": {
       "page": null,
       "start_index": null
     },
-    "project_id": "proj_4f068b3d"
+    "project_id": "proj_1d57f66b"
   },
   {
-    "description": "the user shall be able to view history of the input prompt or script",
+    "description": "The user shall be able to participate in the screening test, after login",
     "source": {
       "page": null,
       "start_index": null
     },
-    "project_id": "proj_4f068b3d"
+    "project_id": "proj_1d57f66b"
   },
   {
-    "description": "the user shall be able to enter a simple prompt to the system to create a small video",
+    "description": "The user shall be able to view the classified screening test results, following the screening test",
     "source": {
       "page": null,
       "start_index": null
     },
-    "project_id": "proj_4f068b3d"
+    "project_id": "proj_1d57f66b"
   },
   {
-    "description": "the user shall be able to edit his account",
+    "description": "The user shall be able to view report summarizing the screening test results, following the screening test",
     "source": {
       "page": null,
       "start_index": null
     },
-    "project_id": "proj_4f068b3d"
+    "project_id": "proj_1d57f66b"
   },
   {
-    "description": "the user shall be able to enter a script to the system to generate a long video or film",
+    "description": "The user shall be able to choose personalized educational content to support learning",
     "source": {
       "page": null,
       "start_index": null
     },
-    "project_id": "proj_4f068b3d"
+    "project_id": "proj_1d57f66b"
   },
   {
-    "description": "the user shall be able to Sign Up on the system",
+    "description": "The user shall be able to launch lessons through an internal service that automates the extraction of main keywords from selected content, thus preparing it for tutoring",
     "source": {
       "page": null,
       "start_index": null
     },
-    "project_id": "proj_4f068b3d"
+    "project_id": "proj_1d57f66b"
   },
   {
-    "description": "the user shall be able to logout of the system",
+    "description": "The user shall be able to engage in learning lessons tailored to their specific needs using personalized games and activities",
     "source": {
       "page": null,
       "start_index": null
     },
-    "project_id": "proj_4f068b3d"
+    "project_id": "proj_1d57f66b"
   },
   {
-    "description": "the user shall be able to edit on the generated video",
+    "description": "The child doesn’t need to have prior language knowledge; the system automates language learning based on age and proficiency level",
     "source": {
       "page": null,
       "start_index": null
     },
-    "project_id": "proj_4f068b3d"
+    "project_id": "proj_1d57f66b"
   },
   {
-    "description": "the user shall be able to select the voice over of the characters and the music of the video",
+    "description": "Users can initiate a screening test, view reports, and choose content for learning",
     "source": {
       "page": null,
       "start_index": null
     },
-    "project_id": "proj_4f068b3d"
+    "project_id": "proj_1d57f66b"
   },
   {
-    "description": "the user shall be able to create a video from the history of the input prompt or script",
+    "description": "Users can navigate the lessons roadmap, choosing specific lessons tailored to their needs",
     "source": {
       "page": null,
       "start_index": null
     },
-    "project_id": "proj_4f068b3d"
-  },
-  {
-    "description": "the user shall be able to remove his account from the system",
-    "source": {
-      "page": null,
-      "start_index": null
-    },
-    "project_id": "proj_4f068b3d"
-  },
-  {
-    "description": "the user shall be able to view the generated video",
-    "source": {
-      "page": null,
-      "start_index": null
-    },
-    "project_id": "proj_4f068b3d"
+    "project_id": "proj_1d57f66b"
   }
 ]

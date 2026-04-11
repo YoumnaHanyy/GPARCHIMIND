@@ -1,11 +1,12 @@
 from infrastructure.database import db
 from datetime import datetime
 
-binary_collection = db["binary_method"]
+collection = db["methods_results"]
 
 def save_binary_result(data: dict):
-    return binary_collection.insert_one({
-        "method": data["method"],
-        "result": data["result"],
-        "created_at": datetime.utcnow()
-    }).inserted_id
+    return collection.insert_one({
+    "project_id": data.get("project_id"),
+    "method": "binary",
+    "result": data["result"],
+    "created_at": datetime.utcnow()
+}).inserted_id

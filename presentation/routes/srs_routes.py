@@ -21,6 +21,7 @@ from infrastructure.repositories.human_feedback_repository import save_new_confi
 from service.retrain_service import merge_and_retrain
 from infrastructure.database import db
 from service.retrain_service import run_retrain_async
+from ai.inference.feature_extractor import generate_phase4
 router = APIRouter()
 
 UPLOAD_DIR = "uploads"
@@ -142,8 +143,8 @@ async def extract_srs(request: Request, file: UploadFile = File(...)):
     
             freq_norm, must_norm, importance = compute_nfr_statistics(all_nfrs)
     
-            ordinal_result = execute_ordinal_method()
-            binary_result = execute_binary_method()
+            ordinal_result = execute_ordinal_method(project_id)
+            binary_result = execute_binary_method(project_id)
     
             weighted_result = execute_weighted_method(
                 freq_norm=freq_norm,
@@ -292,7 +293,7 @@ async def confirm_nfr(request: Request):
 
     user_id = request.session.get("user", {}).get("id", "guest")
     create_project(project_id, user_id)
-
+    phase4 = generate_phase4(project_id)
     return {
         "status": "ok",
         "saved_count": confirmed_count,
