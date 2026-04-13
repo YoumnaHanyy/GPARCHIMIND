@@ -1,385 +1,734 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>ARCHIMIND | Light Blueprint</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>ARCHIMIND | Light Blueprint</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css"/>
+<script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+    <style>
+        :root {
+            --primary: #10b981;
+            --primary-soft: rgba(16, 185, 129, 0.08);
+            --dark: #0f172a;
+            --bg-light: #f8fafc;
+            --blueprint-line: rgba(16, 185, 129, 0.12);
+            --slate-400: #5f6874;
+            --slate-200: #e2e8f0;
+        }
 
-<style>
-:root {
-    --primary: #10b981;
-    --primary-soft: rgba(16, 185, 129, 0.08);
-    --dark: #0f172a;
-    --bg-light: #f8fafc;
-    --blueprint-line: rgba(16, 185, 129, 0.12);
-}
+        * { box-sizing: border-box; margin: 0; padding: 0; }
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: radial-gradient(circle at 15% 20%, rgba(16,185,129,0.12) 0%, transparent 45%),
+                        radial-gradient(circle at 85% 80%, rgba(16,185,129,0.10) 0%, transparent 50%), #f8fafc;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
 
-body {
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    background:
-        radial-gradient(circle at 15% 20%, rgba(16,185,129,0.12) 0%, transparent 45%),
-        radial-gradient(circle at 85% 80%, rgba(16,185,129,0.10) 0%, transparent 50%),
-        #f8fafc;
-    min-height: 100vh;
+        .main-layout {
+            width: 95%;
+            max-width: 1100px;
+            display: flex;
+            background: white;
+            border-radius: 36px;
+            border: 1px solid var(--slate-200);
+            box-shadow: 0 40px 100px -20px rgba(15, 23, 42, 0.08);
+            overflow: hidden;
+            min-height: 650px;
+        }
+
+        /* --- LEFT SIDE --- */
+        .auth-side {
+            flex: 1;
+            padding: 40px 60px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .top-bar { display: flex; align-items: center; margin-bottom: 20px; }
+        .back-btn {
+            width: 35px; height: 35px; border-radius: 50%; border: 1px solid var(--primary);
+            display: flex; align-items: center; justify-content: center; color: var(--primary);
+            text-decoration: none; margin-right: 15px;
+        }
+
+        h1 { font-size: 2.2rem; letter-spacing: -1.5px; margin-bottom: 5px; color: var(--dark); }
+        .subtitle { color: var(--slate-400); font-size: 0.95rem; margin-bottom: 25px; }
+
+        /* --- STEP INDICATOR --- */
+        .step-indicator {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .step {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--slate-400);
+        }
+        .step.active { color: var(--primary); }
+        .step-num {
+            width: 24px; height: 24px; border-radius: 6px; background: var(--slate-200);
+            display: grid; place-items: center; color: white;
+        }
+        .active .step-num { background: var(--primary); }
+
+        /* --- FORM ELEMENTS --- */
+        .input-group { margin-bottom: 15px; }
+        .input-group label {
+            font-size: 0.7rem; font-weight: 800; text-transform: uppercase;
+            color: var(--slate-400); letter-spacing: 1px; display: block; margin-bottom: 6px;
+        }
+        .input-field {
+            width: 100%; padding: 14px 18px; border-radius: 12px;
+            border: 2px solid #f1f5f9; background: #f8fafc; font-family: inherit; transition: 0.2s;
+        }
+        .input-field:focus { outline: none; border-color: var(--primary); background: white; }
+
+        /* Gender Radio Styling */
+        .gender-options { display: flex; gap: 15px; margin-top: 5px; }
+        .gender-label {
+            flex: 1; padding: 10px; border: 1px solid var(--slate-200);
+            border-radius: 10px; text-align: center; cursor: pointer; font-size: 0.85rem;
+            font-weight: 600; transition: 0.2s;
+        }
+        .gender-options input { display: none; }
+        .gender-options input:checked + .gender-label {
+            background: var(--primary-soft); border-color: var(--primary); color: var(--primary);
+        }
+
+        .btn-primary {
+            width: 100%; padding: 16px; border-radius: 12px; border: none;
+            background: var(--dark); color: white; font-weight: 700; cursor: pointer; margin-top: 15px;
+        }
+        .btn-primary:hover { background: var(--primary); transform: translateY(-1px); }
+        
+        .secondary-link {
+            text-align: center; margin-top: 15px; font-size: 0.85rem; color: var(--slate-400);
+        }
+        .secondary-link a { color: var(--primary); text-decoration: none; font-weight: 700; }
+
+        /* --- RIGHT SIDE --- */
+        .visual-side { flex: 1; position: relative; background: #fdfdfd; display: flex; align-items: center; justify-content: center; }
+        .grid-bg { position: absolute; inset: 0; background-image: linear-gradient(var(--blueprint-line) 1px, transparent 1px), linear-gradient(90deg, var(--blueprint-line) 1px, transparent 1px); background-size: 30px 30px; }
+        .engine-core { width: 340px; background: white; border: 2px solid var(--dark); border-radius: 20px; padding: 20px; z-index: 2; position: relative; }
+        .scanner { position: absolute; left: 0; right: 0; height: 2px; background: var(--primary); animation: scan 3s infinite linear; opacity: 0.5; }
+        @keyframes scan { 0% { top: 0; } 100% { top: 100%; } }
+        .module-box { background: #f8fafc; padding: 12px; border-radius: 10px; margin-bottom: 8px; display: flex; gap: 10px; align-items: center; border: 1px solid #e2e8f0; }
+        
+        .social-divider { display: flex; align-items: center; margin: 20px 0; color: #94a3b8; font-size: 0.75rem; }
+        .social-divider::before, .social-divider::after { content: ""; flex: 1; height: 1px; background: #e2e8f0; }
+        .social-divider span { padding: 0 10px; }
+        .social-login { display: flex; justify-content: center; gap: 12px; }
+        .social-btn { width: 40px; height: 40px; border-radius: 50%; border: 1px solid #e2e8f0; background: #fff; cursor: pointer; transition: 0.2s; }
+
+        #step2 { display: none; }
+        /* Fix for flag alignment in Choices.js */
+.choices__list--dropdown .choices__item, 
+.choices__list--single .choices__item {
     display: flex;
     align-items: center;
-    justify-content: center;
+    
 }
 
-/* ✅ LOGIN-SIZED CONTAINER */
-.main-layout {
-    width: 90%;
-    max-width: 1180px;
-    min-height: 460px;
-    max-height: 700px;
-    display: flex;
-    background: white;
-    border-radius: 36px;
-    border: 1px solid #e2e8f0;
-    box-shadow:
-        0 40px 100px -20px rgba(15, 23, 42, 0.08),
-        0 0 0 12px rgba(16,185,129,.06);
+.flag-icon {
+    width: 20px;
+    height: 14px;
+    margin-right: 10px;
+    vertical-align: middle;
+    border-radius: 2px;
+    margin:3px;
+}
+
+/* Match Choices.js to your input style */
+.choices__inner {
+    background: #f8fafc !important;
+    border: 2px solid #f1f5f9 !important;
+    border-radius: 12px !important;
+    min-height: 50px !important;
+    padding: 8px 14px !important;
+}
+
+.choices__list--single { padding: 4px 0 !important; }
+/* control dropdown height */
+.choices__list--dropdown {
+    max-height: 320px !important;
+    overflow-y: auto;
+}
+/* --- CUSTOM DROPDOWN UI --- */
+
+/* The main box */
+.choices__inner {
+    background: #f8fafc !important;
+    border: 2px solid #f1f5f9 !important;
+    border-radius: 12px !important;
+    min-height: 50px !important;
+    padding: 8px 14px !important;
+    transition: all 0.3s ease;
+}
+
+/* Hover & Focus state */
+.is-focused .choices__inner, .is-open .choices__inner {
+    border-color: var(--primary) !important;
+    background: white !important;
+    box-shadow: 0 0 0 4px var(--primary-soft);
+}
+
+/* The dropdown list box */
+.choices__list--dropdown {
+    border: 1px solid var(--slate-200) !important;
+    border-radius: 12px !important;
+    box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1) !important;
+    margin-top: 8px !important;
     overflow: hidden;
+    
+    /* Animation Properties */
+    display: block !important;
+    visibility: hidden;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* LEFT */
-.auth-side {
-    flex: 1;
-    padding: 50px;
-    border-right: 1px solid #f1f5f9;
-    margin-top: -40px;   /* ← ده اللي يطلع الجزء كله لفوق */
+/* Animation trigger when opened */
+.is-open .choices__list--dropdown {
+    visibility: visible;
+    opacity: 1;
+    transform: translateY(0);
 }
 
-
-
-h1 {
-    font-size: 2.6rem;
-    line-height: 1.1;
-    letter-spacing: -1.8px;
-    margin-bottom: 10px;
+/* Individual items in the list */
+.choices__list--dropdown .choices__item--selectable {
+    padding: 12px 15px !important;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+    cursor: pointer !important;
 }
-p {
-    color: #64748b;
-    margin-bottom: 15px;
+/* Hovering over a country */
+.choices__list--dropdown .choices__item--selectable.is-highlighted {
+    background-color: var(--primary) !important;
+    color: white !important;
+    transition: background 0.2s ease;
 }
-
-.input-container { margin-bottom: 18px; }
-.input-container label {
-    font-size: 0.7rem;
-    font-weight: 800;
-    text-transform: uppercase;
-    margin-bottom: 3px;
-    display: block;
-    color: #94a3b8;
-    letter-spacing: 1px;
+.choices__list--dropdown .choices__item--selectable:hover {
+    background-color: var(--primary-soft) !important;
+    color: var(--primary) !important;
 }
 
-.input-field {
-    width: 100%;
-    padding: 16px 22px;
-    border-radius: 14px;
-    border: 2px solid #f1f5f9;
-    background: #f8fafc;
-}
-.input-field:focus {
-    outline: none;
-    border-color: var(--primary);
-    background: white;
-    box-shadow: 0 10px 25px var(--primary-soft);
+/* 3. Ensure the cursor is always a pointer */
+.choices__list--dropdown .choices__item--selectable {
+    cursor: pointer !important;
 }
 
-.btn-primary {
-    width: 100%;
-    padding: 18px;
-    border-radius: 16px;
-    border: none;
-    background: var(--dark);
-    color: white;
-    font-weight: 700;
+/* The Search Input inside dropdown */
+.choices__input {
+    background-color: #f1f5f9 !important;
+    border-radius: 8px !important;
+    border: none !important;
+    padding: 10px !important;
+    margin-bottom: 5px !important;
+}
+
+.flag-icon {
+    width: 20px;
+    height: 14px;
+    margin-right: 12px;
+    border-radius: 2px;
+    display: inline-block;
+}
+/* Ensure the mouse cursor is a pointer for the whole box */
+.choices {
     cursor: pointer;
-    margin-top: 10px;
-}
-.btn-primary:hover {
-    background: var(--primary);
-    transform: translateY(-2px);
 }
 
-/* RIGHT */
-.visual-side {
-    flex: 1.2;
-    position: relative;
-    background: #fdfdfd;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.choices__input--cloned:focus {
+    outline: none;
+    background-color: white !important;
+    border: 1px solid var(--primary) !important;
+}
+/* Apply the Blueprint border/background to ALL Choices inputs */
+.choices__inner {
+    background: #f8fafc !important;
+    border: 2px solid #f1f5f9 !important;
+    border-radius: 12px !important;
+    transition: all 0.3s ease;
 }
 
-/* GRID */
-.grid-bg {
-    position: absolute;
-    inset: 0;
-    background-image:
-        linear-gradient(var(--blueprint-line) 1px, transparent 1px),
-        linear-gradient(90deg, var(--blueprint-line) 1px, transparent 1px);
-    background-size: 36px 36px;
+/* Hover/Focus state for the main box */
+.is-focused .choices__inner, .is-open .choices__inner {
+    border-color: var(--primary) !important;
+    background: white !important;
+    box-shadow: 0 0 0 4px var(--primary-soft);
 }
 
-.engine-core {
-    width: 420px;
-    background: white;
-    border: 2px solid var(--dark);
-    border-radius: 22px;
-    padding: 22px;
-    box-shadow: 12px 12px 0 var(--primary-soft);
-    position: relative;
-    z-index: 2;
+/* THE HOVER FIX: Standardizing the dropdown item hover/highlight */
+.choices__list--dropdown .choices__item--selectable.is-highlighted {
+    background-color: var(--primary) !important; /* Emerald Green */
+    color: white !important;
+    cursor: pointer !important;
 }
 
-.engine-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 18px;
-    padding-bottom: 12px;
-    border-bottom: 1px solid #f1f5f9;
+/* Ensure dropdown rounds nicely */
+.choices__list--dropdown {
+    border-radius: 12px !important;
+    border: 1px solid var(--slate-200) !important;
+    box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1) !important;
+    margin-top: 8px !important;
 }
-
-.module-box {
-    background: #f8fafc;
-    border: 1px solid #e2e8f0;
-    padding: 14px;
-    border-radius: 12px;
-    margin-bottom: 10px;
-    display: flex;
-    gap: 12px;
-    align-items: center;
-}
-
-.module-icon {
-    width: 34px;
-    height: 34px;
-    border-radius: 10px;
-    display: grid;
-    place-items: center;
-    background: white;
-    color: var(--primary);
-}
-
-.module-text h4 {
-    font-family: 'JetBrains Mono';
-    font-size: 0.75rem;
-}
-.module-text p {
-    font-size: 0.65rem;
-    color: #94a3b8;
-}
-
-/* SCANNER */
-.scanner {
-    position: absolute;
-    left: 0;
-    right: 0;
-    height: 3px;
-    background: var(--primary);
-    animation: scanLight 4s infinite linear;
-    opacity: .4;
-}
-@keyframes scanLight {
-    from { top: 0; }
-    to { top: 100%; }
-}
-
-@media (max-width: 900px) {
-    .visual-side { display: none; }
-    .main-layout { max-width: 500px; }
-}
-.top-bar{
-    display:flex;
-    align-items:center;
-    gap:14px;
-    margin-bottom:10px;
-    margin-top:0px;
-}
-
-.back-btn{
-    translate: -40px;
-    width:42px;
-    height:38px;
-    border-radius:50%;
-    border:2px solid var(--primary);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    color:var(--primary);
-    text-decoration:none;
-    transition:.25s ease;
-}
-
-.back-btn:hover{
-    background:var(--primary);
-    color:#fff;
-}
-.social-divider{
-    display:flex;
-    align-items:center;
-    text-align:center;
-    margin:26px 0 18px;
-    color:#94a3b8;
-    font-size:.85rem;
-}
-.social-divider::before,
-.social-divider::after{
-    content:"";
-    flex:1;
-    height:1px;
-    background:#e2e8f0;
-}
-.social-divider span{padding:0 14px;font-weight:600;}
-
-.social-login{
-    display:flex;
-    justify-content:center;
-    gap:16px;
-}
-
-.social-btn{
-    width:46px;
-    height:46px;
-    border-radius:50%;
-    border:1px solid #e2e8f0;
-    background:#fff;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:1.15rem;
-    cursor:pointer;
-    transition:.25s ease;
-}
-.social-btn.google{color:#ea4335;}
-.social-btn.github{color:#111827;}
-.social-btn.apple{color:#000;}
-.social-btn:hover{
-    transform:translateY(-3px);
-    box-shadow:0 12px 25px rgba(0,0,0,.12);
+/* Validation error state for Choices.js */
+.choices--error .choices__inner {
+    border-color: #ef4444 !important;
 }
 .login-link{
-    position:relative;
-    color:var(--primary);
-    text-decoration:none;
-    font-weight:800;
+    position: relative;
+    color: var(--emerald);
+    font-weight: 800;
+    text-decoration: none;
 }
+
 .login-link::after{
-    content:"";
-    position:absolute;
-    left:0;
-    bottom:-3px;
-    width:0%;
-    height:2px;
-    background:var(--primary);
-    transition:width .3s ease;
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -3px;
+    width: 0%;
+    height: 2px;
+    background: var(--emerald);
+    transition: width 0.3s ease;
 }
+
 .login-link:hover::after{
-    width:100%;
+    width: 100%;
+}
+    
+.line{
+    width:2px;
+    height:32px;
+    background:linear-gradient(to bottom,var(--emerald),transparent);
+    position:relative;
+}
+.line::after{
+    content:'';
+    position:absolute;
+    top:0;left:-3px;
+    width:7px;height:7px;
+    border-radius:50%;
+    background:var(--emerald);
+    animation:flow 2.2s infinite;
+}
+@keyframes flow{
+    0%{top:0;opacity:0;}
+    40%{opacity:1;}
+    100%{top:100%;opacity:0;}
+}
+/* Update the emerald color if not already defined */
+:root {
+    --emerald: #10b981;
+    --emerald-soft: #ecfdf5;
 }
 
-</style>
-</head>
+/* Styling for the login link container */
+.login-redirect-text {
+    margin-top: -10px;
+    margin-bottom: 25px;
+    font-size: 0.95rem;
+    text-align: center;
+    font-weight: 600;
+    color: var(--slate-400); /* Muted slate color */
+}
 
+/* The actual "Log in" link animation */
+.login-link {
+    position: relative;
+    color: var(--emerald);
+    font-weight: 800;
+    text-decoration: none;
+    margin-left: 5px;
+}
+
+.login-link::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -2px;
+    width: 0%;
+    height: 2px;
+    background: var(--emerald);
+    transition: width 0.3s ease;
+}
+
+.login-link:hover::after {
+    width: 100%;
+}
+    </style>
+</head>
 <body>
 
 <div class="main-layout">
-
     <div class="auth-side">
         <div class="top-bar">
-    <a href="/" class="back-btn">
-        <i class="fas fa-arrow-left"></i>
-    </a>
-    <div class="brand">
-        <img src="/static/images/Logo_black.png" style="translate: -50px;height: 50px;">
+            <a href="#" class="back-btn"><i class="fas fa-arrow-left"></i></a>
+            <img src="/static/images/Logo_black.png" alt="Logo" style="height: 50px;">
+        </div>
+
+        <h1>Sustainable Systems.</h1>
+        <p class="subtitle">Your workspace for AI-driven architectural integrity.</p>
+<p class="login-redirect-text">
+    Already have an account? 
+    <a href="/Login" class="login-link">Log in</a>
+</p>
+        <div class="step-indicator">
+            <div class="step active" id="ind1">
+                <span class="step-num">1</span> Personal Details
+            </div>
+            <div class="step" id="ind2">
+                <span class="step-num">2</span> Account Details
+            </div>
+        </div>
+
+        <form id="registrationForm" method="post" action="/signup" novalidate>
+            <div id="step1">
+                <div class="input-group">
+                    <label>Full Name</label>
+                    <input type="text" class="input-field" name="fullname" placeholder="Architect Name" required>
+                </div>
+
+                <div class="input-group">
+                    <label>Date of Birth</label>
+                    <input type="date" class="input-field" id="dob" name="dob" required>
+                </div>
+
+<div style="display:flex; gap:15px;">
+
+    <div class="input-group" style="flex:1;">
+        <label>Nationality</label>
+        <select class="input-field" id="nationality-select" name="nationality" required>
+            <option value="">Select Nationality</option>
+            <option data-custom-properties="https://flagcdn.com/w20/eg.png" value="Egypt">Egypt</option>
+            <option data-custom-properties="https://flagcdn.com/w20/sa.png" value="Saudi Arabia">Saudi Arabia</option>
+            <option data-custom-properties="https://flagcdn.com/w20/ae.png" value="UAE">UAE</option>
+            <option data-custom-properties="https://flagcdn.com/w20/us.png" value="USA">United States</option>
+            <option data-custom-properties="https://flagcdn.com/w20/gb.png" value="UK">United Kingdom</option>
+            <option data-custom-properties="https://flagcdn.com/w20/ca.png" value="Canada">Canada</option>
+            <option data-custom-properties="https://flagcdn.com/w20/de.png" value="Germany">Germany</option>
+            <option data-custom-properties="https://flagcdn.com/w20/fr.png" value="France">France</option>
+            <option data-custom-properties="https://flagcdn.com/w20/it.png" value="Italy">Italy</option>
+            <option data-custom-properties="https://flagcdn.com/w20/es.png" value="Spain">Spain</option>
+            <option data-custom-properties="https://flagcdn.com/w20/cn.png" value="China">China</option>
+            <option data-custom-properties="https://flagcdn.com/w20/jp.png" value="Japan">Japan</option>
+            <option data-custom-properties="https://flagcdn.com/w20/in.png" value="India">India</option>
+            <option data-custom-properties="https://flagcdn.com/w20/br.png" value="Brazil">Brazil</option>
+            <option data-custom-properties="https://flagcdn.com/w20/au.png" value="Australia">Australia</option>
+            <option data-custom-properties="https://flagcdn.com/w20/ru.png" value="Russia">Russia</option>
+            <option data-custom-properties="https://flagcdn.com/w20/kr.png" value="South Korea">South Korea</option>
+            <option data-custom-properties="https://flagcdn.com/w20/mx.png" value="Mexico">Mexico</option>
+            <option data-custom-properties="https://flagcdn.com/w20/tr.png" value="Turkey">Turkey</option>
+        </select>
+    </div>
+
+    <div class="input-group" style="flex:1;">
+        <label>Gender</label>
+        <select class="input-field" name="gender" required>
+            <option value="">Select Gender</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+        </select>
+    </div>
+
+</div>
+
+                <div id="step1-error" style="
+color:#ef4444;
+font-size:13px;
+margin-top:5px;
+margin-bottom:10px;
+display:none;
+">
+Please fill all required fields.
+</div>
+
+<button type="button" class="btn-primary" onclick="goToStep(2)">
+Continue to Step 2
+</button>
+            </div>
+
+            <div id="step2">
+                <div class="input-group">
+                    <label>Work Email</label>
+                    <input type="email" class="input-field" name="email" placeholder="name@firm.com" required>
+                </div>
+
+                <div style="display: flex; gap: 15px;">
+    <div class="input-group" style="flex:1;">
+        <label>Password</label>
+        <input type="password" class="input-field" id="password" name="password" required>
+    </div>
+
+    <div class="input-group" style="flex:1;">
+        <label>Confirm</label>
+        <input type="password" class="input-field" id="confirm_password" name="confirm_password" required>
     </div>
 </div>
 
-        <h1>Sustainable<br>Systems.</h1>
-        <p>Your workspace for AI-driven architectural integrity.</p>
-        <p style="margin-top:25px; text-align:center; font-weight:700;">
-    Already have an account ?
-    <a href="/Login" class="login-link">Log in</a>
-</p>
-
-
-        <div class="input-container">
-            <label>Full Name</label>
-            <input class="input-field" placeholder="Architect Name">
-        </div>
-
-        <div class="input-container">
-            <label>Work Email</label>
-            <input class="input-field" placeholder="name@firm.com">
-        </div>
-
-        <div class="input-container">
-            <label>Role</label>
-            <input class="input-field" placeholder="Senior Architect">
-        </div>
-
-        <button class="btn-primary">Initialize Console</button>
-        <div class="social-divider">
-    <span>or sign in with</span>
+<div id="password-error" style="
+    color:#ef4444;
+    font-size:13px;
+    margin-top:-8px;
+    margin-bottom:10px;
+    display:none;
+">
+Passwords do not match.
 </div>
 
-<div class="social-login">
-    <button class="social-btn google"><i class="fab fa-google"></i></button>
-    <button class="social-btn github"><i class="fab fa-github"></i></button>
-    <button class="social-btn apple"><i class="fab fa-apple"></i></button>
+                <div class="input-group">
+<label>Professional Role</label>
+
+<select class="input-field" name="role" id="role-select" required>
+<option value="student">Student</option>
+<option value="system architect">System Architect</option>
+<option value="developer">Developer</option>
+<option value="product owner">Product Owner</option>
+<option value="project manager">Project Manager</option>
+<option value="others">Other</option>
+</select>
+<div id="step2-error" style="
+    color:#ef4444;
+    font-size:13px;
+    margin-top:5px;
+    margin-bottom:10px;
+    display:none;
+">
+Please fill all required fields.
+</div>
+<input 
+type="text"
+class="input-field"
+id="custom-role"
+name="custom_role"
+placeholder="Enter your role"
+style="display:none; margin-top:10px;"
+>
+
 </div>
 
+                <button type="submit" class="btn-primary">Create Account</button>
+                <p class="secondary-link" style="cursor:pointer;" onclick="goToStep(1)">← Back to personal details</p>
+            </div>
+        </form>
+
+        <div class="social-divider"><span>or sign in with</span></div>
+        <div class="social-login">
+            <button class="social-btn"><i class="fab fa-google"></i></button>
+            <button class="social-btn"><i class="fab fa-github"></i></button>
+            <button class="social-btn"><i class="fab fa-apple"></i></button>
+        </div>
     </div>
 
     <div class="visual-side">
         <div class="grid-bg"></div>
-
         <div class="engine-core">
             <div class="scanner"></div>
-
-            <div class="engine-header">
-                <span style="font-family:JetBrains Mono;font-size:.7rem;">ENGINE_STATUS: ONLINE</span>
-                <span style="font-family:JetBrains Mono;font-size:.7rem;color:#cbd5e1;">REF_099X</span>
+            <div style="font-family: 'JetBrains Mono'; font-size: 0.6rem; margin-bottom: 15px; display: flex; justify-content: space-between; color: var(--slate-400);">
+                <span>ENGINE_STATUS: ONLINE</span>
+                <span>REF_099X</span>
             </div>
-
             <div class="module-box">
-                <div class="module-icon"><i class="fas fa-search"></i></div>
-                <div class="module-text">
-                    <h4>SRS_PARSER</h4>
-                    <p>Mapping requirements</p>
-                </div>
+                <i class="fas fa-search" style="color:var(--primary)"></i>
+                <div style="font-size: 0.7rem;"><strong>SRS_PARSER</strong><br><span style="color:var(--slate-400)">Mapping requirements</span></div>
             </div>
-
-            <div class="module-box" style="border-left:4px solid var(--primary);">
-                <div class="module-icon" style="background:var(--primary);color:white;">
-                    <i class="fas fa-microchip"></i>
-                </div>
-                <div class="module-text">
-                    <h4>MCDM_CORE</h4>
-                    <p style="color:var(--primary);font-weight:700;">Architecture Optimized</p>
-                </div>
+            <div class="module-box" style="border-left: 3px solid var(--primary);">
+                <i class="fas fa-microchip" style="color:var(--primary)"></i>
+                <div style="font-size: 0.7rem;"><strong>MCDM_CORE</strong><br><span style="color:var(--primary)">Architecture Optimized</span></div>
             </div>
-
             <div class="module-box">
-                <div class="module-icon"><i class="fas fa-file-export"></i></div>
-                <div class="module-text">
-                    <h4>ADL_EXPORT</h4>
-                    <p>Blueprint generated</p>
-                </div>
+                <i class="fas fa-file-export" style="color:var(--primary)"></i>
+                <div style="font-size: 0.7rem;"><strong>ADL_EXPORT</strong><br><span style="color:var(--slate-400)">Blueprint generated</span></div>
             </div>
         </div>
     </div>
-
 </div>
+
+<script>
+    // 1. Logic for switching steps
+function goToStep(step) {
+    if (step === 2) {
+        const fullnameInput = document.querySelector('[name="fullname"]');
+        const dobInput = document.querySelector('[name="dob"]');
+        const nationalityInput = document.querySelector('[name="nationality"]');
+        const genderInput = document.querySelector('[name="gender"]');
+        const errorBox = document.getElementById("step1-error");
+
+        let valid = true;
+
+        // RESET BORDERS
+        [fullnameInput, dobInput].forEach(el => el.style.borderColor = "#f1f5f9");
+        document.querySelectorAll('.choices').forEach(el => el.classList.remove('choices--error'));
+
+        // VALIDATION
+        if (!fullnameInput.value) {
+            fullnameInput.style.borderColor = "#ef4444";
+            valid = false;
+        }
+        if (!dobInput.value) {
+            dobInput.style.borderColor = "#ef4444";
+            valid = false;
+        }
+        if (!nationalityInput.value) {
+            nationalityInput.closest(".choices").classList.add('choices--error');
+            valid = false;
+        }
+        if (!genderInput.value) {
+            genderInput.closest(".choices").classList.add('choices--error');
+            valid = false;
+        }
+
+        if (!valid) {
+            errorBox.style.display = "block";
+            return;
+        }
+
+        errorBox.style.display = "none";
+        document.getElementById('step1').style.display = 'none';
+        document.getElementById('step2').style.display = 'block';
+        document.getElementById('ind2').classList.add('active');
+        document.getElementById('ind1').classList.remove('active');
+    } else {
+        document.getElementById('step2').style.display = 'none';
+        document.getElementById('step1').style.display = 'block';
+        document.getElementById('ind1').classList.add('active');
+        document.getElementById('ind2').classList.remove('active');
+    }
+}   // 2. Date of Birth Logic (18+ years and not in the future)
+    const dobInput = document.getElementById('dob');
+    const today = new Date();
+    const maxDate = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate());
+    
+    // Convert to YYYY-MM-DD format for the input 'max' attribute
+    const formattedMaxDate = maxDate.toISOString().split('T')[0];
+    dobInput.setAttribute('max', formattedMaxDate);
+document.addEventListener('DOMContentLoaded', function() {
+    // 1. Initialize Nationality (With Flags)
+    const nationalityElement = document.getElementById('nationality-select');
+    const nationalityChoices = new Choices(nationalityElement, {
+        searchEnabled: true,
+        itemSelectText: '',
+        allowHTML: true,
+        shouldSort: false,
+        placeholderValue: 'Select Nationality',
+        searchPlaceholderValue: 'Search your country...',
+        
+        callbackOnCreateTemplates: function(template) {
+            return {
+                item: (classNames, data) => {
+                    const flagImg = data.value ? `<img src="${data.customProperties}" class="flag-icon">` : '';
+                    return template(`
+                        <div class="${classNames.item} ${data.highlighted ? classNames.highlightedState : classNames.itemSelectable}" 
+                             data-item data-id="${data.id}" data-value="${data.value}">
+                            ${flagImg}<span>${data.label}</span>
+                        </div>
+                    `);
+                },
+                choice: (classNames, data) => {
+                    const flagImg = data.value ? `<img src="${data.customProperties}" class="flag-icon">` : '';
+                    return template(`
+                        <div class="${classNames.item} ${classNames.itemChoice} ${data.disabled ? classNames.itemDisabled : classNames.itemSelectable}" 
+                             data-choice data-id="${data.id}" data-value="${data.value}">
+                            ${flagImg}<span>${data.label}</span>
+                        </div>
+                    `);
+                },
+            };
+        },
+    });
+    
+nationalityChoices.containerOuter.element.addEventListener('showDropdown', function() {
+    setTimeout(() => nationalityChoices.input.element.focus(), 50);
+});
+    // 2. Initialize Gender & Professional Role (Standard UI)
+    // We select all other <select> elements that aren't the nationality one
+    const otherSelects = document.querySelectorAll('select:not(#nationality-select)');
+    otherSelects.forEach(select => {
+        new Choices(select, {
+            searchEnabled: false, // Cleaner for short lists like Gender
+            itemSelectText: '',
+            allowHTML: true,
+            shouldSort: false,
+        });
+    });
+});
+document.getElementById("registrationForm").addEventListener("submit", function(e){
+    const emailInput = document.querySelector('[name="email"]');
+    const password = document.getElementById("password");
+    const confirmPassword = document.getElementById("confirm_password");
+    const generalError = document.getElementById("step2-error");
+    const passwordError = document.getElementById("password-error");
+
+    // Reset
+    [emailInput, password, confirmPassword].forEach(el => el.style.borderColor = "#f1f5f9");
+    generalError.style.display = "none";
+    passwordError.style.display = "none";
+
+    let valid = true;
+    let hasEmpty = false;
+
+    if (!emailInput.value) {
+        emailInput.style.borderColor = "#ef4444";
+        hasEmpty = true;
+        valid = false;
+    }
+    if (!password.value) {
+        password.style.borderColor = "#ef4444";
+        hasEmpty = true;
+        valid = false;
+    }
+    if (!confirmPassword.value) {
+        confirmPassword.style.borderColor = "#ef4444";
+        hasEmpty = true;
+        valid = false;
+    }
+
+    if (hasEmpty) {
+        generalError.textContent = "Please fill all required fields.";
+        generalError.style.display = "block";
+    }
+
+    if (password.value && confirmPassword.value && password.value !== confirmPassword.value) {
+        password.style.borderColor = "#ef4444";
+        confirmPassword.style.borderColor = "#ef4444";
+        passwordError.style.display = "block";
+        valid = false;
+    }
+
+    if (!valid) e.preventDefault();
+});
+const roleSelect = document.getElementById("role-select");
+const customRoleInput = document.getElementById("custom-role");
+
+roleSelect.addEventListener("change", function(){
+
+    if(this.value === "others"){
+        customRoleInput.style.display = "block";
+        customRoleInput.required = true;
+    }
+    else{
+        customRoleInput.style.display = "none";
+        customRoleInput.required = false;
+        customRoleInput.value = "";
+    }
+
+});
+</script>
 
 </body>
 </html>

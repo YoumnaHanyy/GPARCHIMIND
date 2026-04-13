@@ -27,7 +27,7 @@ def execute_weighted_method(freq_norm, must_norm, importance):
             scores[arch] = scores.get(arch, 0) + (
                 level_norm * total_weights[nfr]
             )
-
+        print("ARCH:", arch, "NFR:", nfr, "LEVEL:", level_norm)
     return {
     "top_architectures": sorted(
         [{"Architecture": k, "Score": round(v, 4)} for k, v in scores.items()],

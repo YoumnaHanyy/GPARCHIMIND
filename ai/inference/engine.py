@@ -1,5 +1,5 @@
-from rules import RULES
-from architecture_rules import ARCH_RULES
+from ai.inference.rules import RULES
+from ai.inference.architecture_rules import ARCH_RULES
 
 
 def apply_rules(features):
