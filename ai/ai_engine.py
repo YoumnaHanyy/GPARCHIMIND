@@ -1,10 +1,10 @@
 import os
-from huggingface_hub import InferenceClient
 import json
+import re
+from huggingface_hub import InferenceClient
 from dotenv import load_dotenv
 
 load_dotenv()
-
 
 HF_API_KEY = os.getenv("HF_API_KEY")
 if not HF_API_KEY:
@@ -18,7 +18,6 @@ client = InferenceClient(
 )
 
 # ================= LLM HELPERS =================
-#tryyy
 
 def ask_llm(prompt: str, temperature=0.2):
     response = client.chat_completion(
@@ -29,28 +28,42 @@ def ask_llm(prompt: str, temperature=0.2):
         max_tokens=900,
         temperature=temperature
     )
+
     return response["choices"][0]["message"]["content"]
 
 
-def extract_json(text: str):
-    start = text.find("{")
-    end = text.rfind("}")
-    if start != -1 and end != -1:
-        return json.loads(text[start:end + 1])
-    raise ValueError("Invalid JSON")
+# ================= SAFE JSON EXTRACTION =================
 
-# ================= SAFE JSON GENERATION =================
+def extract_json(text: str):
+    try:
+        match = re.search(r"\{.*\}", text, re.DOTALL)
+
+        if not match:
+            raise ValueError("No JSON object found")
+
+        json_str = match.group()
+
+        # remove trailing commas
+        json_str = re.sub(r",\s*}", "}", json_str)
+        json_str = re.sub(r",\s*]", "]", json_str)
+
+        return json.loads(json_str)
+
+    except Exception as e:
+        raise ValueError(f"Invalid JSON returned by LLM: {e}")
+
+
+# ================= ROBUST LLM JSON =================
 
 def robust_llm_json(prompt, retries=4):
-    """
-    Tries hard to get valid JSON from the LLM.
-    If it fails, we raise an error (no silent fallback).
-    """
+
     last_error = None
 
     for _ in range(retries):
         try:
-            return extract_json(ask_llm(prompt))
+            response = ask_llm(prompt)
+            return extract_json(response)
+
         except Exception as e:
             last_error = e
             prompt = f"""
@@ -59,15 +72,16 @@ NO explanations.
 NO markdown.
 NO comments.
 
-TASK:
 {prompt}
 """
 
     raise RuntimeError(f"LLM failed after {retries} attempts: {last_error}")
 
-# ================= FALLBACK (STYLE-AWARE) =================
+
+# ================= FALLBACK COMPONENTS =================
 
 def fallback_components(style):
+
     style = style.lower()
 
     if "event" in style:
@@ -75,27 +89,29 @@ def fallback_components(style):
             {"name": "Order Service", "responsibility": "Manage orders"},
             {"name": "Payment Service", "responsibility": "Process payments"},
             {"name": "Notification Service", "responsibility": "Send notifications"},
-            {"name": "Message Broker", "responsibility": "Asynchronous communication"},
+            {"name": "Message Broker", "responsibility": "Async communication"},
             {"name": "Order Database", "responsibility": "Persist order data"}
         ]
 
     if "micro" in style:
         return [
-            {"name": "API Gateway", "responsibility": "Route client requests"},
+            {"name": "API Gateway", "responsibility": "Route requests"},
             {"name": "User Service", "responsibility": "Manage users"},
             {"name": "Order Service", "responsibility": "Manage orders"},
-            {"name": "Order Database", "responsibility": "Persist order data"}
+            {"name": "Order Database", "responsibility": "Persist orders"}
         ]
 
-    # default layered
     return [
-        {"name": "API", "responsibility": "Handle client requests"},
+        {"name": "API", "responsibility": "Handle requests"},
         {"name": "Service", "responsibility": "Business logic"},
         {"name": "Database", "responsibility": "Persistent storage"}
     ]
 
 
+# ================= FALLBACK RELATIONSHIPS =================
+
 def fallback_relationships(style):
+
     style = style.lower()
 
     if "event" in style:
@@ -113,130 +129,16 @@ def fallback_relationships(style):
             {"source": "Order Service", "target": "Order Database", "type": "data-flow"}
         ]
 
-    # default layered
     return [
         {"source": "API", "target": "Service", "type": "data-flow"},
         {"source": "Service", "target": "Database", "type": "data-flow"}
     ]
 
-# ================= STYLE-AWARE RULES =================
 
-def style_production_intents(style: str):
-    style = style.lower()
-
-    if "event" in style:
-        return {
-            "deployment": {"scaling": "horizontal", "availability": "multi-region"},
-            "security": {"authentication": "service-to-service", "authorization": "RBAC"},
-            "resilience": {"patterns": ["Retry", "CircuitBreaker"], "delivery": "at-least-once", "ordering": False}
-        }
-
-    if "layered" in style:
-        return {
-            "deployment": {"scaling": "vertical", "availability": "single-region"},
-            "security": {"authentication": "centralized", "authorization": "RBAC"},
-            "resilience": {"patterns": ["Retry"], "delivery": "at-most-once", "ordering": True}
-        }
-
-    return {
-        "deployment": {"scaling": "horizontal", "availability": "multi-region"},
-        "security": {"authentication": "service-to-service", "authorization": "RBAC"},
-        "resilience": {"patterns": ["Retry", "CircuitBreaker"], "delivery": "at-least-once", "ordering": False}
-    }
-
-# ================= ARCHITECTURE STEPS =================
-
-def extract_decisions(system, frs, nfrs, style):
-    prompt = f"""
-System: {system}
-Architecture Style: {style}
-
-Functional Requirements:
-{frs}
-
-Non-Functional Requirements:
-{nfrs}
-
-Return JSON:
-{{ "decisions": [{{ "name": "...", "rationale": "..." }}] }}
-"""
-    return robust_llm_json(prompt).get("decisions", [])
-
-
-def generate_components(system, frs):
-    prompt = f"""
-System: {system}
-
-Functional Requirements:
-{frs}
-
-Return JSON:
-{{ "components": [{{ "name": "...", "responsibility": "..." }}] }}
-"""
-    return robust_llm_json(prompt).get("components", [])
-
-
-def generate_relationships(components):
-    prompt = f"""
-Components:
-{json.dumps(components, indent=2)}
-
-Return JSON:
-{{ "relationships": [{{ "source": "...", "target": "...", "type": "data-flow | event-flow" }}] }}
-"""
-    return robust_llm_json(prompt).get("relationships", [])
-
-
-def critique(components, relationships, nfrs):
-    prompt = f"""
-Components:
-{components}
-
-Relationships:
-{relationships}
-
-NFRs:
-{nfrs}
-
-Return JSON:
-{{ "issues": [] }}
-"""
-    return robust_llm_json(prompt).get("issues", [])
-
-
-def generate_runtime_flow(system, components, relationships, style):
-    prompt = f"""
-You are designing the runtime behavior of a software system.
-
-System: {system}
-Architecture Style: {style}
-
-Components:
-{json.dumps(components, indent=2)}
-
-Relationships:
-{json.dumps(relationships, indent=2)}
-
-Describe the runtime interaction flow as JSON.
-
-Return ONLY valid JSON in the following format:
-{{
-  "steps": [
-    {{
-      "from": "Component name",
-      "to": "Component name",
-      "action": "Meaningful action name",
-      "mode": "sync | async"
-    }}
-  ]
-}}
-"""
-
-    return robust_llm_json(prompt).get("steps", [])
-
-
+# ================= RUNTIME FALLBACK =================
 
 def fallback_runtime_flow(style):
+
     style = style.lower()
 
     if "event" in style:
@@ -244,23 +146,22 @@ def fallback_runtime_flow(style):
             {
                 "from": "Order Service",
                 "to": "Message Broker",
-                "action": "Publish order created event",
+                "action": "Publish order event",
                 "mode": "async"
             },
             {
                 "from": "Message Broker",
                 "to": "Notification Service",
-                "action": "Trigger user notification",
+                "action": "Send notification",
                 "mode": "async"
             }
         ]
 
-    # default layered
     return [
         {
             "from": "API",
             "to": "Service",
-            "action": "Process business request",
+            "action": "Process request",
             "mode": "sync"
         },
         {
@@ -271,25 +172,193 @@ def fallback_runtime_flow(style):
         }
     ]
 
+
+# ================= STYLE PRODUCTION INTENTS =================
+
+def style_production_intents(style: str):
+
+    style = style.lower()
+
+    if "event" in style:
+        return {
+            "deployment": {"scaling": "horizontal", "availability": "multi-region"},
+            "security": {"authentication": "service-to-service", "authorization": "RBAC"},
+            "resilience": {"patterns": ["Retry", "CircuitBreaker"], "delivery": "at-least-once"}
+        }
+
+    if "layered" in style:
+        return {
+            "deployment": {"scaling": "vertical", "availability": "single-region"},
+            "security": {"authentication": "centralized", "authorization": "RBAC"},
+            "resilience": {"patterns": ["Retry"], "delivery": "at-most-once"}
+        }
+
+    return {
+        "deployment": {"scaling": "horizontal", "availability": "multi-region"},
+        "security": {"authentication": "service-to-service", "authorization": "RBAC"},
+        "resilience": {"patterns": ["Retry", "CircuitBreaker"], "delivery": "at-least-once"}
+    }
+
+
+# ================= LLM TASKS =================
+
+def extract_decisions(system, frs, nfrs, style):
+
+    prompt = f"""
+System: {system}
+Architecture Style: {style}
+
+Functional Requirements:
+{frs}
+
+Non Functional Requirements:
+{nfrs}
+
+Return ONLY valid JSON:
+
+{{
+ "decisions":[
+  {{
+   "name":"Decision name",
+   "rationale":"Short explanation"
+  }}
+ ]
+}}
+"""
+
+    return robust_llm_json(prompt).get("decisions", [])
+
+
+def generate_components(system, frs):
+
+    prompt = f"""
+System: {system}
+
+Functional Requirements:
+{frs}
+
+Return ONLY valid JSON:
+
+{{
+ "components":[
+  {{
+   "name":"Component name",
+   "responsibility":"Short responsibility"
+  }}
+ ]
+}}
+"""
+
+    return robust_llm_json(prompt).get("components", [])
+
+
+def generate_relationships(components):
+
+    prompt = f"""
+Components:
+
+{json.dumps(components, indent=2)}
+
+Return ONLY valid JSON:
+
+{{
+ "relationships":[
+  {{
+   "source":"Component",
+   "target":"Component",
+   "type":"data-flow | event-flow"
+  }}
+ ]
+}}
+"""
+
+    return robust_llm_json(prompt).get("relationships", [])
+
+
+def generate_runtime_flow(system, components, relationships, style):
+
+    prompt = f"""
+System: {system}
+Architecture Style: {style}
+
+Components:
+{json.dumps(components, indent=2)}
+
+Relationships:
+{json.dumps(relationships, indent=2)}
+
+Return ONLY valid JSON:
+
+{{
+ "steps":[
+  {{
+   "from":"Component",
+   "to":"Component",
+   "action":"Action description",
+   "mode":"sync | async"
+  }}
+ ]
+}}
+"""
+
+    return robust_llm_json(prompt).get("steps", [])
+
+
+def critique(components, relationships, nfrs):
+
+    prompt = f"""
+Components:
+{json.dumps(components, indent=2)}
+
+Relationships:
+{json.dumps(relationships, indent=2)}
+
+NFRs:
+{nfrs}
+
+Return ONLY valid JSON:
+
+{{
+ "issues":[]
+}}
+"""
+
+    return robust_llm_json(prompt).get("issues", [])
+
+
 # ================= ORCHESTRATOR =================
 
 def ai_generate_architecture(system, frs, nfrs, style):
+
     try:
+
         decisions = extract_decisions(system, frs, nfrs, style)
+
         components = generate_components(system, frs)
+
         relationships = generate_relationships(components)
+
         steps = generate_runtime_flow(system, components, relationships, style)
+
         source = "AI"
 
     except Exception as e:
+
         print("⚠️ AI failed, using fallback:", e)
+
         components = fallback_components(style)
+
         relationships = fallback_relationships(style)
-        steps = fallback_runtime_flow(style)   # 👈 ده المهم
-        decisions = [{
-            "name": "Fallback architecture",
-            "rationale": "AI output invalid"
-        }]
+
+        steps = fallback_runtime_flow(style)
+
+        decisions = [
+            {
+                "name": "Fallback Architecture",
+                "rationale": "AI response invalid"
+            }
+        ]
+
         source = "FALLBACK"
 
     return {

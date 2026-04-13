@@ -1,92 +1,82 @@
 [
   {
-    "title": "Provide a comprehensive learning support system",
-    "description": "Conduct precise assessments, identify challenges related to reading and working memory, and deliver personalized AI-driven tutoring experiences.",
+    "description": "The user shall be able to Login as a prerequisite before accessing system functionalities",
     "source": {
       "page": null,
       "start_index": null
     },
-    "project_id": "proj_91ad1ff0"
+    "project_id": "proj_1d57f66b"
   },
   {
-    "title": "Conduct precise assessments",
-    "description": "Identify challenges related to reading and working memory.",
+    "description": "The user shall be able to participate in the screening test, after login",
     "source": {
       "page": null,
       "start_index": null
     },
-    "project_id": "proj_91ad1ff0"
+    "project_id": "proj_1d57f66b"
   },
   {
-    "title": "Deliver personalized AI-driven tutoring experiences",
-    "description": "Provide tailored educational interventions for individuals with learning disabilities.",
+    "description": "The user shall be able to view the classified screening test results, following the screening test",
     "source": {
       "page": null,
       "start_index": null
     },
-    "project_id": "proj_91ad1ff0"
+    "project_id": "proj_1d57f66b"
   },
   {
-    "title": "Emulate human teaching methods in mathematics",
-    "description": "Encourage reflection on both successful and challenging decisions made during interactive games.",
+    "description": "The user shall be able to view report summarizing the screening test results, following the screening test",
     "source": {
       "page": null,
       "start_index": null
     },
-    "project_id": "proj_91ad1ff0"
+    "project_id": "proj_1d57f66b"
   },
   {
-    "title": "Provide a tailored language tutoring environment",
-    "description": "Use personalized games, activities, and a user interface tailored to the unique needs of individuals with Dyslexia.",
+    "description": "The user shall be able to choose personalized educational content to support learning",
     "source": {
       "page": null,
       "start_index": null
     },
-    "project_id": "proj_91ad1ff0"
+    "project_id": "proj_1d57f66b"
   },
   {
-    "title": "Streamline the learning process",
-    "description": "Easing the burden on parents and teachers while supporting children’s development.",
+    "description": "The user shall be able to launch lessons through an internal service that automates the extraction of main keywords from selected content, thus preparing it for tutoring",
     "source": {
       "page": null,
       "start_index": null
     },
-    "project_id": "proj_91ad1ff0"
+    "project_id": "proj_1d57f66b"
   },
   {
-    "title": "Identify learning problems",
-    "description": "Use fuzzy neural network (FNN) to identify learning difficulties specifically Dyslexia, Dyscalculia and Dysgraphia.",
+    "description": "The user shall be able to engage in learning lessons tailored to their specific needs using personalized games and activities",
     "source": {
       "page": null,
       "start_index": null
     },
-    "project_id": "proj_91ad1ff0"
+    "project_id": "proj_1d57f66b"
   },
   {
-    "title": "Teach the student according to their preferences",
-    "description": "Use FNN to teach the student according to their preferences.",
+    "description": "The child doesn’t need to have prior language knowledge; the system automates language learning based on age and proficiency level",
     "source": {
       "page": null,
       "start_index": null
     },
-    "project_id": "proj_91ad1ff0"
+    "project_id": "proj_1d57f66b"
   },
   {
-    "title": "Create an interactive learning environment",
-    "description": "Integrate elements such as chat, games, and voice interactions.",
+    "description": "Users can initiate a screening test, view reports, and choose content for learning",
     "source": {
       "page": null,
       "start_index": null
     },
-    "project_id": "proj_91ad1ff0"
+    "project_id": "proj_1d57f66b"
   },
   {
-    "title": "Provide a roadmap for developers and a key reference for stakeholders",
-    "description": "Offer detailed insights into the functional and non-functional requirements essential for a successful system implementation.",
+    "description": "Users can navigate the lessons roadmap, choosing specific lessons tailored to their needs",
     "source": {
       "page": null,
       "start_index": null
     },
-    "project_id": "proj_91ad1ff0"
+    "project_id": "proj_1d57f66b"
   }
 ]

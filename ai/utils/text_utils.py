@@ -116,3 +116,10 @@ def extract_json_from_model_output(output: str) -> str:
                 return cleaned[start:i + 1]
 
     raise ValueError("Unbalanced JSON")
+
+
+def normalize_text(text):
+    text = text.lower()
+    text = text.replace("-", " ")
+    text = re.sub(r"[^a-zA-Z0-9\s]", "", text)
+    return text

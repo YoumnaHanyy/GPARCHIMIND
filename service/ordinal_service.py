@@ -5,7 +5,7 @@ from infrastructure.repositories.architecture_repository import get_architecture
 
 PREDICTIONS_PATH = "data/outputs/nfr_predictions_type_level.json"
 
-def execute_ordinal_method():
+def execute_ordinal_method(project_id):
     # 1️⃣ load predictions (generated earlier)
     with open(PREDICTIONS_PATH, "r", encoding="utf-8") as f:
         predictions = json.load(f)
@@ -17,10 +17,13 @@ def execute_ordinal_method():
     result = run_ordinal_method(predictions, architecture_data)
 
     # 4️⃣ save result to MongoDB
-    saved_id = save_ordinal_result({
+    saved_id = save_ordinal_result(
+        project_id,
+       {
         "method": "ordinal",
         "result": result
-    })
+       }
+    )
 
     return {
         "id": str(saved_id),

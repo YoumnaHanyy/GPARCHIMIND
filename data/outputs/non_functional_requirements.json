@@ -1,83 +1,32 @@
 [
   {
-    "title": "Scalability",
-    "description": "The system must be able to accommodate millions of students.",
-    "source": {
-      "page": null,
-      "start_index": null
-    },
-    "project_id": "proj_91ad1ff0"
+    "title": "Response Time",
+    "description": "The system must have low response times",
+    "project_id": "proj_1d57f66b"
   },
   {
     "title": "Accessibility",
-    "description": "The system must be accessible to individuals with learning disabilities.",
-    "source": {
-      "page": null,
-      "start_index": null
-    },
-    "project_id": "proj_91ad1ff0"
-  },
-  {
-    "title": "Usability",
-    "description": "The system must be user-friendly and easy to navigate.",
-    "source": {
-      "page": null,
-      "start_index": null
-    },
-    "project_id": "proj_91ad1ff0"
-  },
-  {
-    "title": "Data Privacy",
-    "description": "The system must comply with data privacy regulations.",
-    "source": {
-      "page": null,
-      "start_index": null
-    },
-    "project_id": "proj_91ad1ff0"
-  },
-  {
-    "title": "Security",
-    "description": "The system must ensure the security and integrity of user data.",
-    "source": {
-      "page": null,
-      "start_index": null
-    },
-    "project_id": "proj_91ad1ff0"
+    "description": "The system must adhere to accessibility standards",
+    "project_id": "proj_1d57f66b"
   },
   {
     "title": "Performance",
-    "description": "The system must perform efficiently and effectively.",
-    "source": {
-      "page": null,
-      "start_index": null
-    },
-    "project_id": "proj_91ad1ff0"
+    "description": "The system must deliver optimal performance, with minimal latency",
+    "project_id": "proj_1d57f66b"
   },
   {
-    "title": "Reliability",
-    "description": "The system must be reliable and consistent in its performance.",
-    "source": {
-      "page": null,
-      "start_index": null
-    },
-    "project_id": "proj_91ad1ff0"
+    "title": "Usability",
+    "description": "The system must have a user-friendly interface",
+    "project_id": "proj_1d57f66b"
+  },
+  {
+    "title": "Availability",
+    "description": "The system must be available 24/7",
+    "project_id": "proj_1d57f66b"
   },
   {
     "title": "Maintainability",
-    "description": "The system must be easy to maintain and update.",
-    "source": {
-      "page": null,
-      "start_index": null
-    },
-    "project_id": "proj_91ad1ff0"
-  },
-  {
-    "title": "Testability",
-    "description": "The system must be easy to test and validate.",
-    "source": {
-      "page": null,
-      "start_index": null
-    },
-    "project_id": "proj_91ad1ff0"
+    "description": "The system should be easily maintainable",
+    "project_id": "proj_1d57f66b"
   }
 ]

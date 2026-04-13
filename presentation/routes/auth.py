@@ -18,6 +18,7 @@ async def login(
     password: str = Form(...)
 ):
     try:
+
         user = db.Users.find_one({"Email": email})
 
         if not user:
@@ -51,7 +52,6 @@ async def login(
             status_code=303
         )
 
-
 # -------------------------
 # SIGNUP POST
 # -------------------------
@@ -68,6 +68,8 @@ async def signup(
     custom_role: str = Form(None)
 ):
     try:
+
+        # check if exists
         existing_user = db.Users.find_one({"Email": email})
 
         if existing_user:
@@ -76,30 +78,31 @@ async def signup(
                 status_code=303
             )
 
+        # hash password
         hashed_password = bcrypt.hashpw(
             password.encode("utf-8"),
             bcrypt.gensalt()
         )
 
         now = datetime.utcnow()
-
         if role == "others" and custom_role:
-            role = custom_role
+           role = custom_role
 
         new_user = {
-            "Fullname": fullname,
-            "Date_of_birth": dob,
-            "Nationality": nationality,
-            "Gender": gender,
-            "Email": email,
-            "password": hashed_password.decode("utf-8"),
-            "Role": role,
-            "created_at": now,
-            "updated_at": now
-        }
+    "Fullname": fullname,
+    "Date_of_birth": dob,
+    "Nationality": nationality,
+    "Gender": gender,
+    "Email": email,
+    "password": hashed_password.decode("utf-8"),
+    "Role": role,
+    "created_at": now,
+    "updated_at": now
+}
 
         result = db.Users.insert_one(new_user)
 
+        # create session
         request.session["user"] = {
             "id": str(result.inserted_id),
             "email": email,

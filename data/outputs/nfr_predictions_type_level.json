@@ -1,83 +1,56 @@
 [
   {
-    "description": "The system must be able to accommodate millions of students.",
-    "confidence": 0.9584578275680542,
-    "confirmed": false,
-    "predicted_level": "High",
-    "predicted_type": "SC",
-    "predicted_type_label": "Scalability",
-    "title": "Scalability"
-  },
-  {
-    "description": "The system must be accessible to individuals with learning disabilities.",
-    "confidence": 1.0,
-    "confirmed": true,
-    "predicted_level": "High",
-    "predicted_type": "A",
-    "predicted_type_label": "Availability",
-    "title": "Accessibility"
-  },
-  {
-    "description": "The system must be user-friendly and easy to navigate.",
-    "confidence": 0.9317547678947449,
-    "confirmed": false,
-    "predicted_level": "High",
-    "predicted_type": "US",
-    "predicted_type_label": "Usability",
-    "title": "Usability"
-  },
-  {
-    "description": "The system must comply with data privacy regulations.",
-    "confidence": 0.9766131639480591,
-    "confirmed": false,
-    "predicted_level": "High",
-    "predicted_type": "SE",
-    "predicted_type_label": "Security",
-    "title": "Data Privacy"
-  },
-  {
-    "description": "The system must ensure the security and integrity of user data.",
-    "confidence": 0.9822390079498291,
-    "confirmed": false,
-    "predicted_level": "High",
-    "predicted_type": "SE",
-    "predicted_type_label": "Security",
-    "title": "Security"
-  },
-  {
-    "description": "The system must perform efficiently and effectively.",
-    "confidence": 1.0,
-    "confirmed": true,
-    "predicted_level": "High",
-    "predicted_type": "A",
-    "predicted_type_label": "Availability",
-    "title": "Performance"
-  },
-  {
-    "description": "The system must be reliable and consistent in its performance.",
-    "confidence": 0.9430555105209351,
-    "confirmed": false,
-    "predicted_level": "High",
+    "title": "Response Time",
+    "description": "The system must have low response times",
     "predicted_type": "PE",
     "predicted_type_label": "Performance",
-    "title": "Reliability"
+    "confidence": 0.9414144158363342,
+    "predicted_level": " High",
+    "confirmed": false
   },
   {
-    "description": "The system must be easy to maintain and update.",
-    "confidence": 0.9706531763076782,
-    "confirmed": false,
+    "title": "Accessibility",
+    "description": "The system must adhere to accessibility standards",
+    "predicted_type": "US",
+    "predicted_type_label": "Usability",
+    "confidence": 0.8754207491874695,
+    "predicted_level": " High",
+    "confirmed": false
+  },
+  {
+    "title": "Performance",
+    "description": "The system must deliver optimal performance, with minimal latency",
+    "predicted_type": "PE",
+    "predicted_type_label": "Performance",
+    "confidence": 0.9455391764640808,
+    "predicted_level": " High",
+    "confirmed": false
+  },
+  {
+    "title": "Usability",
+    "description": "The system must have a user-friendly interface",
+    "predicted_type": "US",
+    "predicted_type_label": "Usability",
+    "confidence": 0.9070541262626648,
     "predicted_level": "High",
+    "confirmed": false
+  },
+  {
+    "title": "Availability",
+    "description": "The system must be available 24/7",
+    "predicted_type": "A",
+    "predicted_type_label": "Availability",
+    "confidence": 0.943867027759552,
+    "predicted_level": "High",
+    "confirmed": false
+  },
+  {
+    "title": "Maintainability",
+    "description": "The system should be easily maintainable",
     "predicted_type": "MN",
     "predicted_type_label": "Manageability",
-    "title": "Maintainability"
-  },
-  {
-    "description": "The system must be easy to test and validate.",
-    "confidence": 1.0,
-    "confirmed": true,
+    "confidence": 0.9123710989952087,
     "predicted_level": "High",
-    "predicted_type": "FT",
-    "predicted_type_label": "Fault Tolerance",
-    "title": "Testability"
+    "confirmed": false
   }
 ]
