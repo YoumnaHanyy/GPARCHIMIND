@@ -22,12 +22,17 @@ def generate_report(project_id: str):
     container_diagram = PROJECT_ROOT / "data" / "outputs" / "architecture_c4.png"
     process_diagram = PROJECT_ROOT / "data" / "outputs" / "process_view.png"
     deployment_diagram = PROJECT_ROOT / "data" / "outputs" / "deployment_view.png"
-
+    
     pdf_file = PROJECT_ROOT / "data" / "outputs" / "architecture_report.pdf"
-
+    usecase_diagram = PROJECT_ROOT / "data" / "outputs" / "usecase_view.png"
 
     hybrid_doc = db.hybrid_method.find_one({"project_id": project_id})
+    project_doc = db.projects.find_one({"project_id": project_id})
 
+    if project_doc:
+      project_name = project_doc.get("project_name", "Unknown Project")
+    else:
+      project_name = "Unknown Project"
     if not hybrid_doc or not hybrid_doc.get("selected_architecture"):
      architecture_style = "Not selected"
     else:
@@ -82,25 +87,23 @@ def generate_report(project_id: str):
         y -= 0.4 * cm
 
     def image_section(title_text, image_path):
-        nonlocal y
-        section(title_text)
-        if image_path.exists():
-            if y < 8 * cm:
-                new_page()
-            c.drawImage(
-                str(image_path),
-                2 * cm,
-                y - 7 * cm,
-                width=width - 4 * cm,
-                height=7 * cm,
-                preserveAspectRatio=True,
-                mask="auto"
-            )
-            y -= 7.8 * cm
-        else:
-            paragraph("Diagram not available.")
+     nonlocal y
+     new_page()  # 🔥 كل diagram في صفحة لوحده
 
-    # ---------- Title ----------
+     section(title_text)
+
+     if image_path.exists():
+        c.drawImage(
+            str(image_path),
+            1 * cm,
+            4 * cm,
+            width=width - 2 * cm,
+            height=height - 6 * cm,
+            preserveAspectRatio=True,
+            mask="auto"
+        )
+     else:
+        paragraph("Diagram not available.")    # ---------- Title ----------
     title("Architecture Design Report")
 
     paragraph(
@@ -127,19 +130,28 @@ def generate_report(project_id: str):
     with open(nfrs_file, "r", encoding="utf-8") as f:
      non_functional_requirements = json.load(f)
 
-    paragraph(f"System Name: {system_name}")
+    paragraph(f"Project Name: {project_name}")
     paragraph(f"Architecture Style: {architecture_style}")
 
 
     section("Functional Requirements")
-    bullet_list([fr["title"] for fr in functional_requirements])
+    bullet_list([
+    fr.get("title") or fr.get("description") or str(fr)
+    for fr in functional_requirements
+    ])
 
     section("Non-Functional Requirements")
 
     for nfr in non_functional_requirements:
-    # Title as bullet
-     paragraph(f"- {nfr['title']}")
-     paragraph(f"      Description: {nfr['description']}")
+     title = nfr.get("title") or "Unnamed Requirement"
+     desc = nfr.get("description") or ""
+
+    paragraph(f"- {title}")
+    paragraph(f"      Description: {desc}")
+
+
+
+   
 
 
 
@@ -169,6 +181,6 @@ def generate_report(project_id: str):
     image_section("4. Logical View (C4 Container Diagram)", container_diagram)
     image_section("5. Process View (Runtime Interaction)", process_diagram)
     image_section("6. Physical View (Deployment Diagram)", deployment_diagram)
-
+    image_section("7. Use Case View", usecase_diagram)
     c.save()
     return pdf_file

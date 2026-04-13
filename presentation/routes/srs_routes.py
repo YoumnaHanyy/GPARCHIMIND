@@ -2,7 +2,10 @@ from fastapi import APIRouter, UploadFile, Request, File
 from fastapi.responses import JSONResponse
 import os
 import uuid
+import fitz
+import pdfplumber
 import traceback
+from ai.inference.feature_extractor import generate_phase4
 from application.extraction.extraction_service import process_srs
 from ai.inference.predict_type_level import predict_and_save_nfr, predict_level_for_text
 from service.ordinal_service import execute_ordinal_method
@@ -15,7 +18,6 @@ from infrastructure.repositories.project_repo import update_project_progress, cr
 from infrastructure.repositories.weighted_repository import save_weighted_result
 from infrastructure.repositories.nfr_dataset_repository import NFRPredictionRepository
 from infrastructure.repositories.srs_repository import SRSRepository
-import pdfplumber
 from infrastructure.repositories.human_feedback_repository import save_new_confirmed_nfr
 from service.retrain_service import merge_and_retrain
 from infrastructure.database import db
@@ -24,11 +26,6 @@ router = APIRouter()
 
 UPLOAD_DIR = "uploads"
 os.makedirs(UPLOAD_DIR, exist_ok=True)
-
-
-
-
-
 def extract_text_from_pdf(pdf_path: str) -> str:
     text = ""
     with pdfplumber.open(pdf_path) as pdf:
@@ -291,7 +288,7 @@ async def confirm_nfr(request: Request):
 
     user_id = request.session.get("user", {}).get("id", "guest")
     create_project(project_id, user_id)
-
+    
     return {
         "status": "ok",
         "saved_count": confirmed_count,
@@ -301,7 +298,7 @@ async def confirm_nfr(request: Request):
         "weighted_method": weighted_result,
         "hybrid_method": hybrid_result,
         "nfr_predictions": clean_object_id(all_nfrs),
-        "phase4": phase4
+       
     }
 
 
