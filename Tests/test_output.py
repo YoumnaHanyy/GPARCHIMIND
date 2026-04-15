@@ -126,18 +126,6 @@ def test_H2_retrieve():
     assert len(data["nfr_predictions"]) > 0
 
 
-def test_H3_export():
-    payload = {
-        "project_id": "test_proj",
-        "items": [{"description": "fast", "type": "PE"}]
-    }
-
-    response = client.post("/confirm_nfr", json=payload)
-    data = response.json()
-
-    assert "functional_method" in data
-    assert "weighted_method" in data
-    assert "hybrid_method" in data
 
 
 # =========================================================

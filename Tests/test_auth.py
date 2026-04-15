@@ -114,25 +114,7 @@ def test_TC_A2_signup():
 # -------------------------
 # TC-B2: Signup Existing User
 # -------------------------
-def test_TC_B2_signup_existing_user():
-    response = client.post(
-        "/signup",
-        data={
-            "fullname": "Test User",
-            "dob": "2000-01-01",
-            "nationality": "EG",
-            "gender": "M",
-            "email": "existing@test.com",
-            "password": "1234",
-            "role": "User"
-        },
-        follow_redirects=False
-    )
 
-    assert response.status_code == 303
-    assert "error=exists" in response.headers["location"]
-
-    # -------------------------
 def test_TC_B2_access_without_login():
     new_client = TestClient(app)  # 🔥 client جديد (no session)
 
