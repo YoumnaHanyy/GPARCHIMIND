@@ -1,6 +1,50 @@
 from unittest.mock import patch, MagicMock
 from service.srs_extractor import SRSExtractor
+from presentation.routes.srs_routes import validate_pdf_file
+from io import BytesIO
+from fastapi import UploadFile
 
+
+def test_tc_c1_valid_pdf_upload():
+
+    # simulate valid PDF file
+    file = UploadFile(
+        filename="test.pdf",
+        file=BytesIO(b"%PDF-1.4 fake pdf content")
+    )
+
+    result = validate_pdf_file(file)
+
+    # =========================
+    # assertions
+    # =========================
+    assert result is None  # means file is valid
+
+
+
+
+
+
+def test_tc_d1_invalid_file_upload():
+
+  
+    # simulate invalid file (not PDF)
+    file = UploadFile(
+        filename="test.txt",
+        file=BytesIO(b"not a pdf")
+    )
+
+    result = validate_pdf_file(file)
+
+    # =========================
+    # assertions
+    # =========================
+    assert result is not None
+    assert "Invalid file format" in result
+
+
+
+    
 
 def test_tc_c2_extract_functional_requirements():
 
@@ -54,14 +98,6 @@ def test_tc_c2_extract_functional_requirements():
 
 
 
-
-
-
-
-
-
-from unittest.mock import patch, MagicMock
-from service.srs_extractor import SRSExtractor
 
 
 def test_tc_c3_extract_nfr():
