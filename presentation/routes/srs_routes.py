@@ -5,7 +5,7 @@ import uuid
 import traceback
 import fitz
 from application.extraction.extraction_service import process_srs
-from ai.inference.predict_type_level import predict_and_save_nfr, predict_level_for_text
+from ai.inference.predict_type_level import _save_nfr, predict_level_for_text
 from service.ordinal_service import execute_ordinal_method
 from service.binary_service import execute_binary_method
 from service.weighted_service import execute_weighted_method
@@ -134,7 +134,7 @@ async def extract_srs(request: Request, file: UploadFile = File(...)):
 
         create_project(project_id, user_id, project_name)
         # 3️⃣ Predict NFR Type + Level → Saves to BOTH MongoDB AND JSON
-        all_predictions = predict_and_save_nfr(project_id)
+        all_predictions = _save_nfr(project_id)
 
         if not all_predictions:
             raise ValueError("No NFR predictions generated")
