@@ -1,8 +1,17 @@
-def build_prompt(frs_text, nfrs_text):
+def build_prompt(frs_text, nfrs_text, architecture):
     return f"""
 You are a senior software architect.
 
 Your task is to analyze system requirements and assign a confidence score (0.0 to 1.0) for each architectural feature.
+
+----------------------------------------
+ARCHITECTURE CONTEXT:
+
+The system is expected to follow a **{architecture}** architecture style.
+
+You SHOULD take this into account when scoring features.
+Bias your reasoning toward characteristics commonly associated with this architecture,
+BUT do NOT ignore the actual requirements.
 
 ----------------------------------------
 RULES:
@@ -24,6 +33,18 @@ IMPORTANT DISTINCTIONS:
 - "Reliable" or "availability" → FAULT_TOLERANCE
 - "Maintainable" → HIGH_MAINTAINABILITY
 - "Scalable", "many users", "concurrent users" → HIGH_SCALABILITY
+
+----------------------------------------
+ARCHITECTURE HINTS:
+
+Use these as soft guidance (NOT strict rules):
+
+- EVENT_DRIVEN → EVENT_DRIVEN, ASYNC, LOW_COUPLING
+- LAYERED → MODULARITY, MAINTAINABILITY, SEPARATION
+- MICROSERVICES → DISTRIBUTED_SYSTEM, SCALABILITY, FAULT_TOLERANCE
+- CLIENT_SERVER → DISTRIBUTED_SYSTEM, SECURITY
+- PIPELINE → MODULARITY, DATA_FLOW
+- MONOLITH → HIGH_COUPLING_RISK, LOW_EXTENSIBILITY
 
 ----------------------------------------
 SCORING GUIDE:
@@ -58,24 +79,6 @@ OUTPUT FORMAT (STRICT):
 Return ONLY valid JSON.
 No explanation.
 No extra text.
-
-Example:
-
-{{
-  "EVENT_DRIVEN": 0.6,
-  "REAL_TIME": 0.5,
-  "HIGH_SCALABILITY": 0.9,
-  "LOW_LATENCY": 0.7,
-  "HIGH_EXTENSIBILITY": 0.3,
-  "HIGH_MAINTAINABILITY": 0.6,
-  "FLEXIBLE_CREATION": 0.2,
-  "DYNAMIC_BEHAVIOR": 0.6,
-  "DISTRIBUTED_SYSTEM": 0.7,
-  "FAULT_TOLERANCE": 0.8,
-  "HIGH_SECURITY": 0.9,
-  "MODULARITY": 0.7,
-  "HIGH_COUPLING_RISK": 0.2
-}}
 
 ----------------------------------------
 REQUIREMENTS:

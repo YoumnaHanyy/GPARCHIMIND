@@ -1,6 +1,5 @@
 
 RULES = {
-
     "Factory": {
         "core": [
             "UNKNOWN_OBJECT_TYPE",
@@ -70,7 +69,7 @@ RULES = {
             "CONTEXT_DEPENDENT",
             "CONTEXT_USES_STRATEGY",
             "CLIENT_SELECTS_STRATEGY",
-             "DYNAMIC_BEHAVIOR"   # 🔥 ضيفي ده
+             "DYNAMIC_BEHAVIOR"  
 
         ],
         "generic": [
@@ -147,6 +146,86 @@ RULES = {
             "UNIFIED_OPERATION_HANDLING",
             "SERVICE_OPERATION_ENCAPSULATION"
         ]
-    }
+    },
+
+    "Adapter": {
+    "core": [
+        "INCOMPATIBLE_INTERFACES",
+        "LEGACY_INTEGRATION",
+        "INTERFACE_CONVERSION"
+    ],
+    "generic": [
+        "REUSE_EXISTING_CODE",
+        "SYSTEM_INTEGRATION",
+        "WRAPPER_USAGE",
+        "COMPATIBILITY_LAYER"
+    ]
+},
+"Decorator": {
+    "core": [
+        "DYNAMIC_BEHAVIOR_EXTENSION",
+        "RUNTIME_FEATURE_ADDITION",
+        "WRAP_OBJECT"
+    ],
+    "generic": [
+        "OPEN_CLOSED_PRINCIPLE",
+        "FLEXIBLE_FEATURE_EXTENSION",
+        "AVOID_SUBCLASSING",
+        "COMPOSITION_OVER_INHERITANCE"
+    ]
+},
+"Facade": {
+    "core": [
+        "SIMPLIFIED_INTERFACE",
+        "COMPLEX_SYSTEM",
+        "SUBSYSTEM_ABSTRACTION"
+    ],
+    "generic": [
+        "REDUCE_COMPLEXITY",
+        "EASY_USAGE",
+        "LAYERED_ACCESS",
+        "DECOUPLE_CLIENT"
+    ]
+},
+"Proxy": {
+    "core": [
+        "CONTROLLED_ACCESS",
+        "REMOTE_ACCESS",
+        "LAZY_LOADING"
+    ],
+    "generic": [
+        "SECURITY_CONTROL",
+        "PERFORMANCE_OPTIMIZATION",
+        "ACCESS_WRAPPER",
+        "RESOURCE_MANAGEMENT"
+    ]
+},
+"State": {
+    "core": [
+        "STATE_DEPENDENT_BEHAVIOR",
+        "STATE_TRANSITIONS",
+        "OBJECT_CHANGES_BEHAVIOR"
+    ],
+    "generic": [
+        "AVOID_IF_ELSE_COMPLEXITY",
+        "ENCAPSULATE_STATE_LOGIC",
+        "CLEAN_STATE_MANAGEMENT",
+        "DYNAMIC_BEHAVIOR"
+    ]
+},
+
+"TemplateMethod": {
+    "core": [
+        "ALGORITHM_STRUCTURE",
+        "STEP_BY_STEP_PROCESS",
+        "FIXED_FLOW"
+    ],
+    "generic": [
+        "CODE_REUSE",
+        "EXTEND_STEPS",
+        "BASE_CLASS_CONTROL",
+        "STANDARDIZED_PROCESS"
+    ]
+},
 
 }
