@@ -937,9 +937,11 @@ function hideNfrInlineError() {
   function toggleSideMenu() {
     document.getElementById("sideMenu").classList.toggle("open");
   }
-  function backToDashboard(){
-  document.getElementById("uploadView").classList.add("hidden");
-  document.getElementById("dashboardView").classList.remove("hidden");
+  function backToDashboard() {
+  console.log("🔄 Hard refresh triggered");
+
+  // redirect with full reload
+  window.location.href = "/Dashboard";
 }
 function showErrorModal(message) {
 

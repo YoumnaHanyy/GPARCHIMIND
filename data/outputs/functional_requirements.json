@@ -1,82 +1,90 @@
 [
   {
-    "description": "The user shall be able to Login as a prerequisite before accessing system functionalities",
+    "description": "Admin should be able to view and manage user accounts, including user registration information",
     "source": {
       "page": null,
       "start_index": null
     },
-    "project_id": "proj_1d57f66b"
+    "project_id": "proj_b4ef831b"
   },
   {
-    "description": "The user shall be able to participate in the screening test, after login",
+    "description": "The system should ask follow-up questions to gain more information about users’ skills",
     "source": {
       "page": null,
       "start_index": null
     },
-    "project_id": "proj_1d57f66b"
+    "project_id": "proj_b4ef831b"
   },
   {
-    "description": "The user shall be able to view the classified screening test results, following the screening test",
+    "description": "User can give feedback after the job recommender model provides him with a suitable job",
     "source": {
       "page": null,
       "start_index": null
     },
-    "project_id": "proj_1d57f66b"
+    "project_id": "proj_b4ef831b"
   },
   {
-    "description": "The user shall be able to view report summarizing the screening test results, following the screening test",
+    "description": "Job recommender model will match the user skills with a specific job",
     "source": {
       "page": null,
       "start_index": null
     },
-    "project_id": "proj_1d57f66b"
+    "project_id": "proj_b4ef831b"
   },
   {
-    "description": "The user shall be able to choose personalized educational content to support learning",
+    "description": "User should be able to register using email and password",
     "source": {
       "page": null,
       "start_index": null
     },
-    "project_id": "proj_1d57f66b"
+    "project_id": "proj_b4ef831b"
   },
   {
-    "description": "The user shall be able to launch lessons through an internal service that automates the extraction of main keywords from selected content, thus preparing it for tutoring",
+    "description": "User can edit his profile",
     "source": {
       "page": null,
       "start_index": null
     },
-    "project_id": "proj_1d57f66b"
+    "project_id": "proj_b4ef831b"
   },
   {
-    "description": "The user shall be able to engage in learning lessons tailored to their specific needs using personalized games and activities",
+    "description": "User can conduct a conversation with the chatbot",
     "source": {
       "page": null,
       "start_index": null
     },
-    "project_id": "proj_1d57f66b"
+    "project_id": "proj_b4ef831b"
   },
   {
-    "description": "The child doesn’t need to have prior language knowledge; the system automates language learning based on age and proficiency level",
+    "description": "The system should allow users to enter their skills into the chat interface",
     "source": {
       "page": null,
       "start_index": null
     },
-    "project_id": "proj_1d57f66b"
+    "project_id": "proj_b4ef831b"
   },
   {
-    "description": "Users can initiate a screening test, view reports, and choose content for learning",
+    "description": "Admin should have access to a monitoring system that displays user-chatbot interactions in real-time",
     "source": {
       "page": null,
       "start_index": null
     },
-    "project_id": "proj_1d57f66b"
+    "project_id": "proj_b4ef831b"
   },
   {
-    "description": "Users can navigate the lessons roadmap, choosing specific lessons tailored to their needs",
+    "description": "Admin should have the ability to view user profiles",
     "source": {
       "page": null,
       "start_index": null
     },
-    "project_id": "proj_1d57f66b"
+    "project_id": "proj_b4ef831b"
+  },
+  {
+    "description": "Admin should be able to view and analyze user feedback received after the AI suggests suitable jobs",
+    "source": {
+      "page": null,
+      "start_index": null
+    },
+    "project_id": "proj_b4ef831b"
   }
 ]
