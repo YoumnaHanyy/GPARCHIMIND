@@ -7,6 +7,10 @@ from application.extraction.adl.validation.quality import validate_quality
 from application.extraction.adl.validation.domain import validate_domain
 from application.extraction.adl.verification.runner import run_verification
 from application.extraction.adl.verification.verification_report_generator import generate_verification_pdf
+from application.extraction.adl.validation.runner import run_validation
+from application.extraction.adl.validation.validation_report_generator import generate_validation_pdf
+from application.extraction.adl.validation.runner import run_validation
+from application.extraction.adl.validation.validation_report_generator import generate_validation_pdf
 
 
 
@@ -146,4 +150,43 @@ def test_tc_f7_generate_verification_report():
     assert report_path.endswith(".pdf")
 
     # 🔥 important
+    assert os.path.exists(report_path)
+
+
+    ###############
+
+
+
+def test_tc_f8_generate_validation_report_with_issues():
+
+    adl3 = {
+        "style": "Microservices",
+        "components": [
+            {"name": "A"}
+        ],
+        "relationships": [
+            {"source": "A", "target": "A", "type": "wrong-type"}  # ❌ self loop + invalid
+        ]
+    }
+
+    # 1️⃣ run validation
+    result = run_validation(adl3)
+
+    # لازم يفشل
+    assert result["status"] == "FAILED"
+
+    # 2️⃣ generate report
+    report_path = generate_validation_pdf(result)
+
+    # =========================
+    # 🔥 STRONG ASSERTIONS
+    # =========================
+
+    assert report_path is not None
+    assert report_path.endswith(".pdf")
+
+    # مهم جدًا
+    assert "problems" in report_path.lower()
+
+    # الملف فعلاً اتعمل
     assert os.path.exists(report_path)
