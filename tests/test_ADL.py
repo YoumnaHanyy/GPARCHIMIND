@@ -1,5 +1,6 @@
-
 from application.extraction.adl.adl_generator import generate_adl
+from application.extraction.adl.verification.correctness import verify_correctness
+from application.extraction.adl.verification.completeness import verify_completeness
 import os
 os.environ["HF_API_KEY"] = "fake_key"
 
@@ -55,123 +56,40 @@ def test_tc_f1_generate_adl():
     # source (AI or fallback)
     assert result["source"] in ["AI", "FALLBACK"]
 
+def test_tc_f2_components_valid():
+    adl = {
+        "components": [
+            {"name": "AuthService"},
+            {"name": "OrderService"}
+        ],
+        "relationships": [
+            {"source": "AuthService", "target": "OrderService", "type": "event-flow"}
+        ]
+    }
 
+    result = verify_completeness(adl)
 
+    assert result["status"] == "PASSED"
+    assert len(result["issues"]) == 0
 
-
-
-
-
-# def test_tc_f2_components_validation():
-#     req = {
-#         "system_name": "E-commerce",
-#         "functional_requirements": ["User login", "Place order"],
-#         "non_functional_requirements": ["Fast", "Secure"],
-#         "architecture_style": "microservices"
-#     }
-#
-#     result = generate_adl(req)
-#
-#     components = result["components"]
-#
-#     # =========================
-#     # 🔥 1. Check structure
-#     # =========================
-#     assert isinstance(components, list)
-#     assert len(components) > 0
-#
-#     # =========================
-#     # 🔥 2. Check fields exist
-#     # =========================
-#     for comp in components:
-#         assert "name" in comp
-#         assert "responsibility" in comp
-#
-#         assert comp["name"] != ""
-#         assert comp["responsibility"] != ""
-#
-#     # =========================
-#     # 🔥 3. Check duplicates
-#     # =========================
-#     names = [comp["name"] for comp in components]
-#
-#     assert len(names) == len(set(names))  # no duplicates
-#
-#
-#
-#
-#
-#
-#
-# def test_tc_f3_relationships_validation():
-#     req = {
-#         "system_name": "E-commerce",
-#         "functional_requirements": ["User login", "Place order"],
-#         "non_functional_requirements": ["Fast", "Secure"],
-#         "architecture_style": "microservices"
-#     }
-#
-#     result = generate_adl(req)
-#
-#     relationships = result["relationships"]
-#     components = result["components"]
-#
-#     # =========================
-#     # 🔥 1. basic structure
-#     # =========================
-#     assert isinstance(relationships, list)
-#
-#     # =========================
-#     # 🔥 2. fields exist
-#     # =========================
-#     for rel in relationships:
-#         assert "source" in rel
-#         assert "target" in rel
-#         assert "type" in rel
-#
-#         assert rel["source"] != ""
-#         assert rel["target"] != ""
-#         assert rel["type"] != ""
-#
-#     # =========================
-#     # 🔥 3. source/target valid
-#     # =========================
-#     component_names = [c["name"] for c in components]
-#
-#     for rel in relationships:
-#         assert rel["source"] in component_names
-#         assert rel["target"] in component_names
-#
-#
-#
-#
-# def test_tc_f4_adl_structure_validation():
-#     req = {
-#         "system_name": "E-commerce",
-#         "functional_requirements": ["User login", "Place order"],
-#         "non_functional_requirements": ["Fast", "Secure"],
-#         "architecture_style": "microservices"
-#     }
-#
-#     result = generate_adl(req)
-#
-#     components = result["components"]
-#     relationships = result["relationships"]
-#
-#     component_names = [c["name"] for c in components]
-#
-#     # =========================
-#     # 🔥 Validate relationships structure
-#     # =========================
-#     for rel in relationships:
-#
-#         # 1️⃣ source/target exist in components
-#         assert rel["source"] in component_names
-#         assert rel["target"] in component_names
-#
-#         # 2️⃣ no self-loop (optional but pro 🔥)
-#         assert rel["source"] != rel["target"]
-#
-#         # 3️⃣ type exists and valid
-#         assert "type" in rel
-#         assert rel["type"] in ["data-flow", "event-flow", "sync", "async", "request"]
+def test_tc_f3_relationship_integrity():
+   
+    adl = {
+        "components": [{"name": "AuthService"}],
+        "relationships": [
+            {
+                "source": "AuthService",
+                "target": "GhostService",  # Error: Target does not exist
+                "type": "undefined-flow"   # Error: Invalid relationship type
+            }
+        ]
+    }
+    
+    result = verify_correctness(adl)
+    
+    assert result["status"] == "FAILED"
+    violation_rules = [v["rule"] for v in result["violations"]]
+    
+    # Asserting rules defined in the FR-17 / TC-F3 requirements
+    assert "UNDEFINED_TARGET" in violation_rules
+    assert "INVALID_RELATIONSHIP_TYPE" in violation_rules

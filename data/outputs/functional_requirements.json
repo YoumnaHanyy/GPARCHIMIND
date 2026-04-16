@@ -1,6 +1,8 @@
 [
   {
-    "description": "User logs in",
+    "description": {
+      "description": "User logs in"
+    },
     "source": {
       "page": null,
       "start_index": null

@@ -5,7 +5,7 @@ import uuid
 import traceback
 import fitz
 from application.extraction.extraction_service import process_srs
-from ai.inference.predict_type_level import _save_nfr, predict_level_for_text
+from ai.inference.predict_type_level import predict_and_save_nfr, predict_level_for_text
 from service.ordinal_service import execute_ordinal_method
 from service.binary_service import execute_binary_method
 from service.weighted_service import execute_weighted_method
