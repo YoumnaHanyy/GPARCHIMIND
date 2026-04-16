@@ -6,7 +6,6 @@ def compute_nfr_statistics(nfr_predictions):
     returns ONLY freq_norm and must_norm
     """
 
-    from collections import Counter
 
     freq_counts = Counter(
         item["predicted_type"] for item in nfr_predictions

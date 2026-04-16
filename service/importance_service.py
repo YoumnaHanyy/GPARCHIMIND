@@ -2,6 +2,7 @@ import PyPDF2
 import nltk
 import re
 from collections import Counter
+from ai.inference.predict_type_level import predict_nfr_type_only
 
 nltk.download("punkt", quiet=True)
 

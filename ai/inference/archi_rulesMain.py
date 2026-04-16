@@ -11,7 +11,47 @@ from ai.inference.engine import (
 )
 
 
-# 🔹 تحويل الـ raw features → numeric features
+# =========================================
+# 🔥 SEMANTIC BOOST (NEW)
+# =========================================
+def semantic_boost(feature, evidence):
+    config = SEMANTIC_MAP.get(feature, {})
+
+    # safeguard
+    if not isinstance(config, dict):
+        return 0
+
+    score = 0
+
+    for text in evidence:
+        text = text.lower()
+
+        # 🔥 strong matches
+        for kw in config.get("strong", []):
+            if kw in text:
+                score += 0.3
+
+        # 🔥 medium matches
+        for kw in config.get("medium", []):
+            if kw in text:
+                score += 0.2
+
+        # 🔥 weak matches
+        for kw in config.get("weak", []):
+            if kw in text:
+                score += 0.1
+
+        # 🔥 tech keywords
+        for kw in config.get("tech", []):
+            if kw in text:
+                score += 0.25
+
+    return min(score, 0.5)
+
+
+# =========================================
+# 🔹 تحويل raw features → numeric
+# =========================================
 def extract_numeric_features(raw_features):
     numeric_features = {}
 
@@ -22,37 +62,24 @@ def extract_numeric_features(raw_features):
 
         score = 0
 
-        # 🔹 base score من supported/confidence
+        # 🔹 base score
         if supported is True:
             score = confidence
         elif supported == "partial":
-            score = confidence * 0.5
+            score = confidence * 0.75
 
-        # 🔥 semantic matching
-        keywords = SEMANTIC_MAP.get(key, [])
-        semantic_hit = False
-
-        for text in evidence:
-            text = text.lower()
-
-            for kw in keywords:
-                if kw in text:
-                    semantic_hit = True
-                    break
-
-            if semantic_hit:
-                break
-
-        # 🔥 لو semantic hit → نرفع القيمة
-        if semantic_hit:
-            score = max(score, 0.6)
+        # 🔥 NEW: semantic boost
+        boost = semantic_boost(key, evidence)
+        score = min(1.0, score + boost)
 
         numeric_features[key] = min(score, 1.0)
 
     return numeric_features
 
 
-# 🎯 الدالة الأساسية اللي هتستخدميها في المشروع الكبير
+# =========================================
+# 🎯 MAIN INFERENCE
+# =========================================
 def run_inference(input_data: dict):
     """
     Takes input JSON (dict) and returns:
@@ -68,7 +95,7 @@ def run_inference(input_data: dict):
 
     raw_features = input_data.get("features", input_data)
 
-    # 🔹 تحويل features
+    # 🔹 convert features
     features = extract_numeric_features(raw_features)
 
     # 🔹 pipeline
@@ -97,7 +124,9 @@ def run_inference(input_data: dict):
     }
 
 
-# 🧪 optional: لو حابة تشغليه standalone للتست
+# =========================================
+# 🧪 TEST / STANDALONE
+# =========================================
 def run_design_patterns(input_data):
     output = run_inference(input_data)
 
