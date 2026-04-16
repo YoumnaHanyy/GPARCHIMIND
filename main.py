@@ -236,9 +236,11 @@ def generate_architecture(project_id: str):
     with open("data/outputs/architecture_c4.puml", "w", encoding="utf-8") as f:
         f.write(convert_to_c4_plantuml(arch))
 
+    from ai.ai_usecase import generate_usecase_ai
+
+    uml = generate_usecase_ai(functional_requirements, arch["system"])
     with open("data/outputs/usecase_view.puml", "w", encoding="utf-8") as f:
-        f.write(convert_to_usecase_view(arch))
-    # ==========================================================
+     f.write(uml) # ==========================================================
     # 8. Render diagrams (PlantUML → PNG)
     # ==========================================================
     PLANTUML_JAR = os.path.join(
@@ -257,7 +259,8 @@ def generate_architecture(project_id: str):
         "data/outputs/dfd_context.puml",
         "data/outputs/process_view.puml",
         "data/outputs/deployment_view.puml",
-        "data/outputs/architecture_c4.puml"
+        "data/outputs/architecture_c4.puml",
+        "data/outputs/usecase_view.puml"
     ], check=True)
 
     # ==========================================================

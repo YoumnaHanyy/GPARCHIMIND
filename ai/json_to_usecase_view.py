@@ -22,20 +22,22 @@ def convert_to_usecase_view(arch):
 
     usecases = []
 
+    # 🎯 Generate use cases from components
     for c in arch.get("components", []):
         name = c["name"]
         resp = c.get("responsibility", "")
 
+        # fallback لو مفيش description
         label = resp if resp else f"Use {name}"
-        label = (label[:40] + "...") if len(label) > 40 else label
 
-        alias = f"{alias_of(name)}_{len(usecases)}"
+        alias = alias_of(name)
 
         lines.append(f'  usecase "{label}" as {alias}')
         usecases.append(alias)
 
     lines.append("}")
 
+    # 🔗 Actor relations
     for uc in usecases:
         lines.append(f'user --> {uc}')
 
