@@ -43,8 +43,8 @@ def validate_features(features, text):
             current = min(0.85, current + 0.15)
 
         # 🧠 weak signal correction (بس لو AI ضعيف جدًا)
-        if count == 0 and current < 0.3:
-            current = 0.3
+        if count == 0:
+            current = min(current, 0.2)
 
         # 🔒 strict features control
         if feature in strict_features:

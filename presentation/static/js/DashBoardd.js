@@ -376,18 +376,36 @@ async function saveSelectedArchitecture() {
     }
 }
 
-function renderDesignPatterns(data) {
-  if (!data || !data.phase4 || !data.phase4.top_patterns) {
-    return "<p class='text-muted'>No design patterns available.</p>";
-  }
+async function loadPhase4() {
+  const res = await fetch(`/phase4/${extractedData.project_id}`);
+  const data = await res.json();
 
+  console.log("PHASE4 RESPONSE:", data);
+
+  extractedData.phase4 = data.phase4;
+
+  renderPhase();
+}
+
+function renderDesignPatterns(data) {
+  if (
+    !data ||
+    !data.phase4 ||
+    !Array.isArray(data.phase4.top_patterns) ||
+    data.phase4.top_patterns.length === 0
+  ) {
+     return "<p class='text-muted'>Loading design patterns...</p>";
+  }
   let html = "<h5 class='section-header'>Recommended Design Patterns</h5>";
 
   data.phase4.top_patterns.forEach((p, idx) => {
     html += `
+    
       <div class="mb-4">
         <div class="req-title">${idx + 1}. ${p.pattern}</div>
-        <div class="req-desc">${p.reasons.join(", ")}</div>
+        <div class="req-desc">
+          ${Array.isArray(p.reasons) ? p.reasons.join(", ") : "No reasons available"}
+        </div>
       </div>
     `;
   });
@@ -463,7 +481,11 @@ console.log("Project ID:", extractedData?.project_id);
             document.getElementById('reportModal')
         );
         reportModal.show();
+        document.getElementById('reportModal').addEventListener('hidden.bs.modal', () => {
+        document.body.classList.remove('modal-open');
 
+        document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
+        });
         // 6. Cleanup el memory lma el modal ye2fel
          document
           .getElementById('reportModal')
@@ -502,7 +524,7 @@ function openPreviewModal() {
     frame.style.opacity = '1';
     
     const reportModal = new bootstrap.Modal(document.getElementById('reportModal'));
-    reportModal.show();
+    
 }
 
 
@@ -608,15 +630,19 @@ function changePhase(dir) {
     ).show();
     return;
   }
+    
 
-  if (dir === 1 && currentPhase < 4) {
+    if (dir === 1 && currentPhase < 4) {
     currentPhase++;
 
-    renderPhase(); // 🔥 مهم جدًا
+    if (currentPhase === 4) {
+       loadPhase4(); // 🔥 يستنى الداتا الأول
+    }
+
+    renderPhase(); // بعد ما الداتا وصلت
 
     syncProjectProgress();
     triggerLoading();
-
   } else if (dir === -1 && currentPhase > 1) {
     currentPhase--;
     renderPhase();
@@ -626,6 +652,8 @@ function changePhase(dir) {
     alert("Project Complete! Returning to dashboard.");
     location.reload();
   }
+  
+
 }
 
 
@@ -678,6 +706,7 @@ document.getElementById('processForm').onsubmit = async (e) => {
     // Store extracted data
     extractedData = data;
     window.currentProjectId = data.project_id;
+    
     if (data.srs_verified) {
     showSrsVerifiedBadge();
    }
@@ -864,7 +893,7 @@ async function submitNFRConfirmation() {
     extractedData.binary_method = confirmData.binary_method;
     extractedData.weighted_method = confirmData.weighted_method;
     extractedData.hybrid_method = confirmData.hybrid_method;
-    extractedData.phase4 = confirmData.phase4;
+    
     /* 6️⃣ Short delay for UX */
     setTimeout(() => {
       stopLoadingAnimation();

@@ -7,7 +7,7 @@ from fastapi.responses import StreamingResponse
 import io
 from application.extraction.adl.verification.runner import run_verification
 from application.extraction.adl.verification.verification_report_generator import generate_verification_pdf
-
+from ai.inference.feature_extractor import generate_phase4
 import zipfile
 from infrastructure.database import db
 from infrastructure.repositories.ADL_repository import save_architecture_report_pdf
@@ -23,6 +23,7 @@ from application.extraction.api.hybrid_route import router as hybrid_router
 from ai.json_to_c4_plantuml import convert_to_c4_plantuml
 from ai.ai_engine import ai_generate_architecture
 from ai.json_to_context_view import convert_to_context_view
+from ai.json_to_usecase_view import convert_to_usecase_view
 from application.extraction.adl.json_to_acme import convert_to_acme
 import os
 from fastapi import FastAPI, Request, UploadFile, File
@@ -235,7 +236,11 @@ def generate_architecture(project_id: str):
     with open("data/outputs/architecture_c4.puml", "w", encoding="utf-8") as f:
         f.write(convert_to_c4_plantuml(arch))
 
-    # ==========================================================
+    from ai.ai_usecase import generate_usecase_ai
+
+    uml = generate_usecase_ai(functional_requirements, arch["system"])
+    with open("data/outputs/usecase_view.puml", "w", encoding="utf-8") as f:
+     f.write(uml) # ==========================================================
     # 8. Render diagrams (PlantUML → PNG)
     # ==========================================================
     PLANTUML_JAR = os.path.join(
@@ -254,7 +259,8 @@ def generate_architecture(project_id: str):
         "data/outputs/dfd_context.puml",
         "data/outputs/process_view.puml",
         "data/outputs/deployment_view.puml",
-        "data/outputs/architecture_c4.puml"
+        "data/outputs/architecture_c4.puml",
+        "data/outputs/usecase_view.puml"
     ], check=True)
 
     # ==========================================================
@@ -349,6 +355,12 @@ async def dashboard(request: Request):
             "projects": projects   # 🔥 ده اللي كان ناقص
         }
     )
+
+@app.get("/phase4/{project_id}")
+def get_phase4(project_id: str):
+    return generate_phase4(project_id)
+
+
 @app.post("/logout")
 async def logout(request: Request):
     """

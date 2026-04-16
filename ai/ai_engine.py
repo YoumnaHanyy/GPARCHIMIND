@@ -36,18 +36,17 @@ def ask_llm(prompt: str, temperature=0.2):
 
 def extract_json(text: str):
     try:
-        match = re.search(r"\{.*\}", text, re.DOTALL)
-
-        if not match:
+       match = re.search(r"\{.*\}", text, re.DOTALL)
+       if not match:
             raise ValueError("No JSON object found")
 
-        json_str = match.group()
+       json_str = match.group()
 
         # remove trailing commas
-        json_str = re.sub(r",\s*}", "}", json_str)
-        json_str = re.sub(r",\s*]", "]", json_str)
+       json_str = re.sub(r",\s*}", "}", json_str)
+       json_str = re.sub(r",\s*]", "]", json_str)
 
-        return json.loads(json_str)
+       return json.loads(json_str)
 
     except Exception as e:
         raise ValueError(f"Invalid JSON returned by LLM: {e}")
@@ -59,24 +58,25 @@ def robust_llm_json(prompt, retries=4):
 
     last_error = None
 
-    for _ in range(retries):
+    for i in range(retries):
         try:
             response = ask_llm(prompt)
             return extract_json(response)
 
         except Exception as e:
             last_error = e
+
             prompt = f"""
 RETURN ONLY VALID JSON.
-NO explanations.
-NO markdown.
-NO comments.
+STRICT JSON ONLY.
+NO EXTRA TEXT.
+
+Fix any formatting issues.
 
 {prompt}
 """
 
     raise RuntimeError(f"LLM failed after {retries} attempts: {last_error}")
-
 
 # ================= FALLBACK COMPONENTS =================
 
@@ -249,7 +249,12 @@ Return ONLY valid JSON:
 }}
 """
 
-    return robust_llm_json(prompt).get("components", [])
+    data = robust_llm_json(prompt)
+
+    if isinstance(data, list):
+     return data
+
+    return data.get("components", [])
 
 
 def generate_relationships(components):
@@ -272,7 +277,12 @@ Return ONLY valid JSON:
 }}
 """
 
-    return robust_llm_json(prompt).get("relationships", [])
+    data = robust_llm_json(prompt)
+
+    if isinstance(data, list):
+     return data
+
+    return data.get("relationships", [])
 
 
 def generate_runtime_flow(system, components, relationships, style):
@@ -301,7 +311,12 @@ Return ONLY valid JSON:
 }}
 """
 
-    return robust_llm_json(prompt).get("steps", [])
+    data = robust_llm_json(prompt)
+
+    if isinstance(data, list):
+     return data
+
+    return data.get("steps", [])
 
 
 def critique(components, relationships, nfrs):
@@ -323,7 +338,12 @@ Return ONLY valid JSON:
 }}
 """
 
-    return robust_llm_json(prompt).get("issues", [])
+    data = robust_llm_json(prompt)
+
+    if isinstance(data, list):
+     return data
+
+    return data.get("issues", [])
 
 
 # ================= ORCHESTRATOR =================
