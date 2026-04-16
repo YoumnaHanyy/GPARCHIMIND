@@ -22,10 +22,10 @@ client = InferenceClient(
 def ask_llm(prompt: str, temperature=0.2):
     response = client.chat_completion(
         messages=[
-            {"role": "system", "content": "You are a senior production software architect."},
+            {"role": "system", "content": "You are a strict JSON generator. Return ONLY raw JSON. No explanation, no markdown, no extra text."},
             {"role": "user", "content": prompt}
         ],
-        max_tokens=900,
+        max_tokens=2000,
         temperature=temperature
     )
 
@@ -36,27 +36,32 @@ def ask_llm(prompt: str, temperature=0.2):
 
 def extract_json(text: str):
     try:
-       match = re.search(r"\{.*\}", text, re.DOTALL)
-       if not match:
-            raise ValueError("No JSON object found")
+        # نحاول direct parse
+        return json.loads(text)
 
-       json_str = match.group()
+    except:
+        pass
 
-        # remove trailing commas
-       json_str = re.sub(r",\s*}", "}", json_str)
-       json_str = re.sub(r",\s*]", "]", json_str)
+    try:
+        # نلقط أول JSON block مظبوط
+        start = text.find("{")
+        end = text.rfind("}") + 1
+        json_str = text[start:end]
 
-       return json.loads(json_str)
+        # تنظيف
+        json_str = re.sub(r",\s*}", "}", json_str)
+        json_str = re.sub(r",\s*]", "]", json_str)
+
+        return json.loads(json_str)
 
     except Exception as e:
         raise ValueError(f"Invalid JSON returned by LLM: {e}")
-
-
 # ================= ROBUST LLM JSON =================
 
 def robust_llm_json(prompt, retries=4):
 
     last_error = None
+    original_prompt = prompt
 
     for i in range(retries):
         try:
@@ -66,18 +71,26 @@ def robust_llm_json(prompt, retries=4):
         except Exception as e:
             last_error = e
 
+            # 🔥 FIX: self-healing بدل ما يعيد نفس الغلط
             prompt = f"""
-RETURN ONLY VALID JSON.
-STRICT JSON ONLY.
-NO EXTRA TEXT.
+The previous response was INVALID JSON.
 
-Fix any formatting issues.
+Error:
+{last_error}
 
-{prompt}
+Fix it and return ONLY valid JSON.
+
+STRICT RULES:
+- NO explanation
+- NO markdown
+- NO text before or after
+- ONLY RAW JSON
+
+Original request:
+{original_prompt}
 """
 
     raise RuntimeError(f"LLM failed after {retries} attempts: {last_error}")
-
 # ================= FALLBACK COMPONENTS =================
 
 def fallback_components(style):
@@ -237,7 +250,14 @@ System: {system}
 Functional Requirements:
 {frs}
 
-Return ONLY valid JSON:
+IMPORTANT:
+- Limit to maximum 8 components
+- Keep output short
+
+STRICT RULES:
+- RETURN JSON ONLY
+- NO explanation
+- NO markdown
 
 {{
  "components":[
@@ -264,7 +284,13 @@ Components:
 
 {json.dumps(components, indent=2)}
 
-Return ONLY valid JSON:
+IMPORTANT:
+- Keep it concise
+
+STRICT RULES:
+- RETURN JSON ONLY
+- NO explanation
+- NO markdown
 
 {{
  "relationships":[
@@ -297,7 +323,14 @@ Components:
 Relationships:
 {json.dumps(relationships, indent=2)}
 
-Return ONLY valid JSON:
+IMPORTANT:
+- Max 6 steps
+- Keep short
+
+STRICT RULES:
+- RETURN JSON ONLY
+- NO explanation
+- NO markdown
 
 {{
  "steps":[

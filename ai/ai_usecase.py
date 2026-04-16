@@ -118,4 +118,4 @@ Requirements:
 
     lines.append("@enduml")
 
-    return "\n".join(lines)
+    return "\n".join(lines),data
