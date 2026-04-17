@@ -5,6 +5,7 @@
   <title>ArchiMind Admin - Blueprint Edition</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   
   <style>
@@ -98,6 +99,83 @@
       <div class="h-1 w-20 bg-[var(--accent-main)] mt-2 rounded-full"></div>
     </div>
 
+
+    <div class="mt-10">
+  <h3 class="text-xl font-bold mb-4">📊 Architecture Usage</h3>
+
+  <div class="studio-card p-6">
+      <canvas id="archChart"
+        data-labels='{{ arch_labels | tojson | safe }}'
+        data-values='{{ arch_counts | tojson | safe }}'>
+</canvas>
+  </div>
+</div>
+
+
+
+    <div class="studio-card p-6 flex items-center gap-5">
+  <div class="icon-box">🏗️</div>
+  <div>
+    <p class="text-xs font-bold text-gray-400 uppercase tracking-widest">
+      Most Selected Architecture
+    </p>
+    <p class="text-xl font-bold stat-value">
+      {{ most_arch }}
+    </p>
+    <p class="text-xs text-gray-400 mt-1">
+      Selected {{ most_count }} times
+    </p>
+  </div>
+</div>
+
+
+<div class="studio-card p-6 flex items-center gap-5">
+  <div class="icon-box">📈</div>
+  <div>
+    <p class="text-xs font-bold text-gray-400 uppercase tracking-widest">
+      Generation Success Rate
+    </p>
+    <p class="text-xl font-bold stat-value">
+      {{ success_rate }}%
+    </p>
+
+    <p class="text-xs mt-1 
+    {% if success_rate >= 70 %}
+      text-green-500
+    {% else %}
+      text-red-500
+    {% endif %}
+    ">
+      {{ status }} ({{ generated }} / {{ total_projects }})
+    </p>
+  </div>
+</div>
+<div class="mt-10">
+  <h3 class="text-xl font-bold mb-4">⏱️ Recent Activity</h3>
+
+  <div class="studio-card p-6">
+    
+    {% for project in recent_projects %}
+    <div class="flex justify-between items-center py-2 border-b last:border-none">
+      
+      <div>
+        <p class="font-semibold text-sm">{{ project.project_name }}</p>
+        <p class="text-xs text-gray-400">
+          {{ project.created_at }}
+        </p>
+      </div>
+
+      <div class="text-xs font-bold text-[var(--accent-main)]">
+        {{ project.progress | default(0) }}%
+      </div>
+
+    </div>
+    {% endfor %}
+
+  </div>
+</div>
+
+
     <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
       <div class="studio-card p-6 flex items-center gap-5">
         <div class="icon-box">👥</div>
@@ -154,6 +232,7 @@
 
   </main>
 
+
   <script>
     
     function goToProjects() {
@@ -176,5 +255,28 @@ function goToUsers() {
       console.log("Retraining...");
     }
   </script>
+
+  <script>
+document.addEventListener("DOMContentLoaded", function () {
+
+  const canvas = document.getElementById("archChart");
+
+  const labels = JSON.parse(canvas.dataset.labels);
+  const data = JSON.parse(canvas.dataset.values);
+
+  new Chart(canvas, {
+    type: 'bar',
+    data: {
+      labels: labels,
+      datasets: [{
+        label: 'Usage Count',
+        data: data,
+        borderWidth: 1
+      }]
+    }
+  });
+
+});
+</script>
 </body>
 </html>

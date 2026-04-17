@@ -40,7 +40,6 @@
       box-shadow: 0 4px 20px rgba(0,0,0,0.03);
     }
 
-    /* Table Styling */
     .custom-table thead {
       border-bottom: 2px solid var(--accent-main);
     }
@@ -99,11 +98,11 @@
         Back
       </a>
       <div class="h-6 w-px bg-white/20"></div>
-      <h1 class="text-xl font-bold tracking-tighter">ArchiMind <span class="font-light opacity-80">Users</span></h1>
+      <h1 class="text-xl font-bold tracking-tighter"> <span class="font-light opacity-80">Users</span></h1>
     </div>
     
     <div class="flex items-center gap-3">
-        <img src="path/to/your/logo.png" alt="Logo" class="h-8 w-auto object-contain">
+        <img src="/static/images/Logo_black.png" alt="Logo" class="h-8 w-auto object-contain">
     </div>
   </nav>
 
@@ -128,6 +127,7 @@
               <th class="pl-8">Full Name</th>
               <th>Email Address</th>
               <th>Access Role</th>
+              <th>Projects</th> <!-- NEW COLUMN -->
               <th class="pr-8 text-right">Registered Date</th>
             </tr>
           </thead>
@@ -139,6 +139,21 @@
               <td>
                 <span class="role-badge">{{ user.Role }}</span>
               </td>
+
+              <!-- NEW COLUMN DATA -->
+              <td>
+  {% if user.projects %}
+    <button 
+      data-projects='{{ user.projects | tojson | safe }}'
+      onclick="openProjectsModal(this)"
+      class="px-4 py-1 text-xs font-bold rounded-full bg-[var(--accent-secondary)] text-white hover:opacity-80 transition">
+      View All Projects
+    </button>
+  {% else %}
+    <span class="text-gray-400 text-xs">No Projects</span>
+  {% endif %}
+</td>
+
               <td class="pr-8 text-right mono-text">{{ user.created_at }}</td>
             </tr>
             {% endfor %}
@@ -148,6 +163,56 @@
     </div>
 
   </main>
+  <div id="projectsModal" class="fixed inset-0 bg-black/40 hidden items-center justify-center z-50">
+  <div class="bg-white rounded-2xl p-6 w-[700px] max-h-[80vh] overflow-y-auto">
+
+    <div class="flex justify-between items-center mb-4">
+      <h3 class="text-lg font-bold">User Projects</h3>
+      <button onclick="closeProjectsModal()" class="text-gray-500 hover:text-red-500">✕</button>
+    </div>
+
+    <table class="w-full text-sm">
+      <thead class="border-b">
+        <tr class="text-left text-gray-500 text-xs uppercase">
+          <th class="py-2">Project ID</th>
+          <th>Name</th>
+          <th>Progress</th>
+        </tr>
+      </thead>
+      <tbody id="projectsTableBody"></tbody>
+    </table>
+
+  </div>
+</div>
+<script>
+function openProjectsModal(button) {
+  const projects = JSON.parse(button.getAttribute("data-projects"));
+
+  const modal = document.getElementById("projectsModal");
+  const tableBody = document.getElementById("projectsTableBody");
+
+  tableBody.innerHTML = "";
+
+  projects.forEach(p => {
+    tableBody.innerHTML += `
+      <tr class="border-b">
+        <td class="py-2 font-mono">${p.project_id}</td>
+        <td>${p.project_name || "-"}</td>
+        <td>${p.progress ?? 0}%</td>
+      </tr>
+    `;
+  });
+
+  modal.classList.remove("hidden");
+  modal.classList.add("flex");
+}
+
+function closeProjectsModal() {
+  const modal = document.getElementById("projectsModal");
+  modal.classList.add("hidden");
+  modal.classList.remove("flex");
+}
+</script>
 
 </body>
 </html>
