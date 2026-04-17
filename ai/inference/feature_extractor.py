@@ -9,7 +9,15 @@ from ai.inference.response_parser import parse_response
 from ai.utils.feature_keywords import FEATURE_KEYWORDS
 from infrastructure.repositories.design_pattern_repository import save_design_patterns
 # MODEL
-client = InferenceClient(model="meta-llama/Meta-Llama-3-8B-Instruct")
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+
+client = InferenceClient(
+    model="meta-llama/Meta-Llama-3-8B-Instruct",
+    token=os.getenv("HF_API_KEY")
+)
 
 ALL_FEATURES = [
     "EVENT_DRIVEN",
@@ -51,9 +59,8 @@ def format_requirements(frs, nfrs):
         
         for item in items:
             if isinstance(item, dict):
-                title = item.get("title", "")
                 desc = item.get("description", "")
-                result.append(f"{title}: {desc}")
+                result.append(f"{desc}")
             else:
                 result.append(str(item))
         
@@ -84,18 +91,21 @@ def call_llm(prompt):
 
     return response.choices[0].message.content
 
-def extract_features():
+def extract_features(project_id):
     frs, nfrs = load_requirements()
 
     frs_text, nfrs_text = format_requirements(frs, nfrs)
 
     full_text = frs_text + "\n" + nfrs_text
 
-    prompt = build_prompt(frs_text, nfrs_text)
+    # 🔥 نجيب architecture
+    architecture = load_selected_architecture(project_id)
 
-    # 🔁 MULTI-RUN (المهم)
+    # 🔥 fix هنا
+    prompt = build_prompt(frs_text, nfrs_text, architecture)
+
+    # 🔁 MULTI-RUN
     runs = []
-
     for _ in range(3):
         response = call_llm(prompt)
         parsed = parse_response(response)
@@ -103,7 +113,6 @@ def extract_features():
 
     # 🧠 average
     ai_features = {}
-
     for k in runs[0]:
         ai_features[k] = sum(r.get(k, 0.0) for r in runs) / len(runs)
 
@@ -112,16 +121,13 @@ def extract_features():
 
     # merge
     features = {}
-
     for k in set(ai_features) | set(validated):
         features[k] = max(
             ai_features.get(k, 0.0),
             validated.get(k, 0.0)
         )
 
-    features = ensure_all_features(features)
-
-    return features
+    return ensure_all_features(features)
 
 def match_keyword(word, text):
     return (
@@ -192,6 +198,8 @@ def get_latest_project_id():
 
     return doc["project_id"]
 def save_decisions(decisions, architecture="LAYERED"):
+    print("💾 SAVING ARCH:", architecture)
+
     output = {
         "architecture": architecture,
         "features": decisions
@@ -200,10 +208,9 @@ def save_decisions(decisions, architecture="LAYERED"):
     with open("data/outputs/feature_decisions.json", "w") as f:
         json.dump(output, f, indent=4)
 
-
-
+        
 def generate_phase4(project_id):
-    features = extract_features()
+    features = extract_features(project_id)
 
     frs, nfrs = load_requirements()
     frs_text, nfrs_text = format_requirements(frs, nfrs)
@@ -213,15 +220,21 @@ def generate_phase4(project_id):
 
     architecture = load_selected_architecture(project_id)
 
+    save_decisions(decisions, architecture)
+
     data = {
         "architecture": architecture,
         "features": decisions
     }
 
-    # 🔥 هنا بقى المهم
     patterns_result = run_design_patterns(data)
+
     save_design_patterns(
-    project_id,
-    patterns_result["top_patterns"]
-)
-    return patterns_result
+        project_id,
+        patterns_result["top_patterns"]
+    )
+
+    # 🔥🔥 أهم سطر
+    return {
+        "phase4": patterns_result
+    }

@@ -3,6 +3,24 @@ from .completeness import verify_completeness
 from .consistency import verify_consistency
 
 def run_verification(adl: dict):
+
+    style = adl.get("style")
+    if not style:
+        return {
+            "status": "NOT_VERIFIED",
+            "failed_layer": "consistency",
+            "details": {
+                "layer": "consistency",
+                "status": "FAILED",
+                "issues": [
+                    {
+                        "rule": "MISSING_STYLE",
+                        "message": "Architecture style is required."
+                    }
+                ]
+            }
+        }
+    
     correctness = verify_correctness(adl)
     if correctness["status"] == "FAILED":
         return {

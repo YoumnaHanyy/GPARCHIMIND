@@ -22,10 +22,10 @@ client = InferenceClient(
 def ask_llm(prompt: str, temperature=0.2):
     response = client.chat_completion(
         messages=[
-            {"role": "system", "content": "You are a senior production software architect."},
+            {"role": "system", "content": "You are a strict JSON generator. Return ONLY raw JSON. No explanation, no markdown, no extra text."},
             {"role": "user", "content": prompt}
         ],
-        max_tokens=900,
+        max_tokens=2000,
         temperature=temperature
     )
 
@@ -58,14 +58,17 @@ def extract_json(text: str):
 def robust_llm_json(prompt, retries=4):
 
     last_error = None
+    original_prompt = prompt
 
-    for _ in range(retries):
+    for i in range(retries):
         try:
             response = ask_llm(prompt)
             return extract_json(response)
 
         except Exception as e:
             last_error = e
+
+            # 🔥 FIX: self-healing بدل ما يعيد نفس الغلط
             prompt = f"""
 RETURN ONLY VALID JSON.
 NO explanations.
