@@ -22,7 +22,6 @@ from ai.json_to_deployment_view import convert_to_deployment_view
 from application.extraction.api.hybrid_route import router as hybrid_router
 from ai.json_to_c4_plantuml import convert_to_c4_plantuml
 from ai.ai_engine import ai_generate_architecture
-
 from ai.json_to_usecase_view import convert_to_usecase_view
 from application.extraction.adl.json_to_acme import convert_to_acme
 import os
@@ -123,6 +122,74 @@ def home(request: Request):
     )
 
 
+@app.get("/Admin", response_class=HTMLResponse)
+async def admin_dashboard(request: Request):
+ return templates.TemplateResponse("admin.html", {"request": request})
+
+@app.get("/admin/users", response_class=HTMLResponse)
+async def get_all_users(request: Request):
+    users = list(db.Users.find({}, {"password": 0}))
+
+    enriched_users = []
+
+    # 🔥 function تتحط جوه الفنكشن عادي
+    def serialize(obj):
+        if isinstance(obj, dict):
+            return {k: serialize(v) for k, v in obj.items()}
+        elif isinstance(obj, list):
+            return [serialize(i) for i in obj]
+        else:
+            return str(obj) if not isinstance(obj, (str, int, float, bool, type(None))) else obj
+
+    for user in users:
+        user_projects = get_user_projects(str(user["_id"]))
+
+        # 🔥 الحل النهائي
+        user_projects = serialize(user_projects)
+
+        user["projects"] = user_projects
+        enriched_users.append(user)
+
+    return templates.TemplateResponse(
+        "users.html",
+        {
+            "request": request,
+            "users": enriched_users
+        }
+    )
+
+
+@app.get("/admin/projects", response_class=HTMLResponse)
+async def get_all_projects(request: Request):
+    projects = list(db.projects.find({}, {"_id": 0}))
+
+    return templates.TemplateResponse(
+        "projects.html",
+        {
+            "request": request,
+            "projects": projects
+        }
+    )
+
+
+@app.get("/admin/download-adl/{project_id}")
+def download_adl(project_id: str):
+
+    doc = db.architecture_reports.find_one({"project_id": project_id})
+
+    if not doc:
+        raise HTTPException(status_code=404, detail="ADL not found")
+
+    return StreamingResponse(
+        io.BytesIO(doc["report_pdf"]),
+        media_type="application/pdf",
+        headers={
+            "Content-Disposition": f"attachment; filename={project_id}_adl.pdf"
+        }
+    )
+
+
+
 
 @app.get("/generate/{project_id}")
 def generate_architecture(project_id: str):
@@ -140,14 +207,21 @@ def generate_architecture(project_id: str):
         )
 
     selected_architecture = hybrid_doc["selected_architecture"]
+    project_doc = db.projects.find_one({"project_id": project_id})
+
+    if not project_doc or not project_doc.get("project_name"):
+     raise HTTPException(
+        status_code=400,
+        detail="Project name not found"
+    )
+
+    system_name = project_doc["project_name"]
 
     # ==========================================================
     # 2. Load input data
     # ==========================================================
     try:
-        with open("data/outputs/input/requirements.json", encoding="utf-8") as f:
-            requirements = json.load(f)
-
+        
         with open("data/outputs/functional_requirements.json", encoding="utf-8") as f:
             functional_requirements = json.load(f)
 
@@ -161,7 +235,7 @@ def generate_architecture(project_id: str):
     # 3. Generate architecture
     # ==========================================================
     arch = ai_generate_architecture(
-        requirements["system_name"],
+        system_name,
         functional_requirements,
         non_functional_requirements,
         selected_architecture
@@ -196,13 +270,13 @@ def generate_architecture(project_id: str):
     # ==========================================================
 # 5. VALIDATION (SUCCESSFUL BUT NOT RETURNED)
 # ==========================================================
+    validation_result = {}
+
     try:
-     validation_result = run_validation(arch)
-     generate_validation_pdf(validation_result)
+      validation_result = run_validation(arch)
+      generate_validation_pdf(validation_result)
     except Exception as e:
-     print("Validation skipped:", e)
-
-
+      print("Validation skipped:", e)
     # ==========================================================
     # 6. Persist architecture outputs
     # ==========================================================
@@ -268,7 +342,10 @@ def generate_architecture(project_id: str):
     # 9. Generate final architecture report
     # ==========================================================
     pdf_path = generate_report(project_id)
+    with open(pdf_path, "rb") as f:
+     pdf_bytes = f.read()
 
+    save_architecture_report_pdf(project_id, pdf_bytes)
     # ==========================================================
     # 10. Return SUCCESS output only
     # ==========================================================

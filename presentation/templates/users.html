@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Users Registry - ArchiMind</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --studio-bg: #ffffff;
+      --accent-main: #0e7e59;
+      --accent-secondary: #06b6d4;
+      --nav-dark: #064e3be2;
+      --glass-bg: rgba(255, 255, 255, 0.75);
+      --stroke: #374151;
+    }
+
+    body {
+      background-color: var(--studio-bg);
+      background-image: radial-gradient(#e5e7eb 1.5px, transparent 1.5px);
+      background-size: 30px 30px;
+      font-family: 'Space Grotesk', sans-serif;
+      color: #1f2937;
+      min-height: 100vh;
+    }
+
+    .blueprint-header {
+      background: var(--nav-dark);
+      backdrop-filter: blur(10px);
+      border-bottom: 3px solid var(--accent-main);
+    }
+
+    .studio-card {
+      background: var(--glass-bg);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(16, 185, 129, 0.1);
+      border-radius: 24px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+    }
+
+    .custom-table thead {
+      border-bottom: 2px solid var(--accent-main);
+    }
+    
+    .custom-table th {
+      color: var(--nav-dark);
+      font-weight: 700;
+      text-transform: uppercase;
+      font-size: 0.75rem;
+      letter-spacing: 1px;
+      padding: 1.5rem 1rem;
+    }
+
+    .custom-table tbody tr {
+      transition: all 0.2s ease;
+      border-bottom: 1px solid #f1f5f9;
+    }
+
+    .custom-table tbody tr:hover {
+      background-color: rgba(6, 182, 212, 0.04);
+      transform: scale(1.002);
+    }
+
+    .role-badge {
+      padding: 4px 12px;
+      border-radius: 50px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      background: rgba(14, 126, 89, 0.1);
+      color: var(--accent-main);
+      border: 1px solid rgba(14, 126, 89, 0.2);
+    }
+
+    .mono-text {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      color: #64748b;
+    }
+
+    .back-btn {
+        color: white;
+        opacity: 0.8;
+        transition: 0.3s;
+    }
+    .back-btn:hover { opacity: 1; transform: translateX(-3px); }
+  </style>
+</head>
+<body>
+
+  <nav class="blueprint-header sticky top-0 z-50 px-6 py-3 flex justify-between items-center text-white">
+    <div class="flex items-center gap-4">
+      <a href="/admin" class="back-btn flex items-center gap-2 text-sm font-medium">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+        </svg>
+        Back
+      </a>
+      <div class="h-6 w-px bg-white/20"></div>
+      <h1 class="text-xl font-bold tracking-tighter">ArchiMind <span class="font-light opacity-80">Users</span></h1>
+    </div>
+    
+    <div class="flex items-center gap-3">
+        <img src="path/to/your/logo.png" alt="Logo" class="h-8 w-auto object-contain">
+    </div>
+  </nav>
+
+  <main class="max-w-6xl mx-auto p-8 animate-fade-down">
+    
+    <div class="mb-8 flex justify-between items-end">
+      <div>
+        <h2 class="text-3xl font-bold text-[var(--nav-dark)]">User Registry</h2>
+        <p class="text-gray-500 text-sm">Review and manage all authenticated professional profiles.</p>
+      </div>
+      <div class="text-right">
+        <span class="text-xs font-bold text-gray-400 uppercase">System Capacity</span>
+        <p class="text-xl font-bold text-[var(--accent-main)]">Total: {{ users|length }}</p>
+      </div>
+    </div>
+
+    <div class="studio-card overflow-hidden">
+      <div class="overflow-x-auto">
+        <table class="w-full text-left custom-table border-collapse">
+          <thead>
+            <tr>
+              <th class="pl-8">Full Name</th>
+              <th>Email Address</th>
+              <th>Access Role</th>
+              <th>Projects</th> <!-- NEW COLUMN -->
+              <th class="pr-8 text-right">Registered Date</th>
+            </tr>
+          </thead>
+          <tbody class="text-sm">
+            {% for user in users %}
+            <tr>
+              <td class="py-5 pl-8 font-semibold text-slate-700">{{ user.Fullname }}</td>
+              <td class="mono-text">{{ user.Email }}</td>
+              <td>
+                <span class="role-badge">{{ user.Role }}</span>
+              </td>
+
+              <!-- NEW COLUMN DATA -->
+              <td>
+  {% if user.projects %}
+    <button 
+      data-projects='{{ user.projects | tojson | safe }}'
+      onclick="openProjectsModal(this)"
+      class="px-4 py-1 text-xs font-bold rounded-full bg-[var(--accent-secondary)] text-white hover:opacity-80 transition">
+      View All Projects
+    </button>
+  {% else %}
+    <span class="text-gray-400 text-xs">No Projects</span>
+  {% endif %}
+</td>
+
+              <td class="pr-8 text-right mono-text">{{ user.created_at }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+  <div id="projectsModal" class="fixed inset-0 bg-black/40 hidden items-center justify-center z-50">
+  <div class="bg-white rounded-2xl p-6 w-[700px] max-h-[80vh] overflow-y-auto">
+
+    <div class="flex justify-between items-center mb-4">
+      <h3 class="text-lg font-bold">User Projects</h3>
+      <button onclick="closeProjectsModal()" class="text-gray-500 hover:text-red-500">✕</button>
+    </div>
+
+    <table class="w-full text-sm">
+      <thead class="border-b">
+        <tr class="text-left text-gray-500 text-xs uppercase">
+          <th class="py-2">Project ID</th>
+          <th>Name</th>
+          <th>Progress</th>
+        </tr>
+      </thead>
+      <tbody id="projectsTableBody"></tbody>
+    </table>
+
+  </div>
+</div>
+<script>
+function openProjectsModal(button) {
+  const projects = JSON.parse(button.getAttribute("data-projects"));
+
+  const modal = document.getElementById("projectsModal");
+  const tableBody = document.getElementById("projectsTableBody");
+
+  tableBody.innerHTML = "";
+
+  projects.forEach(p => {
+    tableBody.innerHTML += `
+      <tr class="border-b">
+        <td class="py-2 font-mono">${p.project_id}</td>
+        <td>${p.project_name || "-"}</td>
+        <td>${p.progress ?? 0}%</td>
+      </tr>
+    `;
+  });
+
+  modal.classList.remove("hidden");
+  modal.classList.add("flex");
+}
+
+function closeProjectsModal() {
+  const modal = document.getElementById("projectsModal");
+  modal.classList.add("hidden");
+  modal.classList.remove("flex");
+}
+</script>
+
+</body>
+</html>
