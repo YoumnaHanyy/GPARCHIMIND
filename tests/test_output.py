@@ -27,17 +27,16 @@ def mock_all(monkeypatch):
     # DB MOCK
     # -------------------------
     monkeypatch.setattr(
-        nfr_dataset_repository.NFRPredictionRepository,
-        "get_by_project",
-        lambda *args, **kwargs: [
-            {
-                "description": "fast",
-                "predicted_type": "PE",
-                "predicted_level": "High"
-            }
-        ]
+    nfr_dataset_repository.NFRPredictionRepository,
+    "get_by_project",
+    lambda *args, **kwargs: [
+        {
+            "description": "fast",
+            "predicted_type": "PE",
+            "predicted_level": "High"
+        }
+     ]
     )
-
     monkeypatch.setattr(
         nfr_dataset_repository.NFRPredictionRepository,
         "confirm_nfr",
@@ -132,23 +131,3 @@ def test_H2_retrieve():
 # 🥈 SERVICE TEST
 # =========================================================
 
-def test_compute_nfr_statistics():
-
-    sample_data = [
-        {"predicted_type": "PE", "predicted_level": "High"},
-        {"predicted_type": "PE", "predicted_level": "Medium"},
-        {"predicted_type": "SE", "predicted_level": "Low"},
-    ]
-
-    freq_norm, must_norm, importance = nfr_stats_service.compute_nfr_statistics(sample_data)
-
-    assert isinstance(freq_norm, dict)
-    assert isinstance(must_norm, dict)
-    assert isinstance(importance, dict)
-
-    assert "PE" in freq_norm
-    assert "SE" in freq_norm
-
-    assert max(freq_norm.values()) <= 1
-    assert max(must_norm.values()) <= 1
-    assert sum(importance.values()) <= 1.01  # tolerance

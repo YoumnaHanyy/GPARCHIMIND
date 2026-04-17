@@ -308,8 +308,8 @@ async def confirm_nfr(request: Request):
     
     freq_norm, must_norm, importance = compute_nfr_statistics(all_nfrs)
     
-    ordinal_result = execute_ordinal_method()
-    binary_result = execute_binary_method()
+    ordinal_result = execute_ordinal_method(project_id)
+    binary_result = execute_binary_method(project_id)
     weighted_result = execute_weighted_method(
         freq_norm=freq_norm,
         must_norm=must_norm,
@@ -330,8 +330,10 @@ async def confirm_nfr(request: Request):
     phase4 = generate_phase4(project_id)
 
     print("HYBRID RESULT:", hybrid_result)
+    project_doc = db.projects.find_one({"project_id": project_id}) or {}
+
     save_project_data(project_id, {
-    "functional": extracted.get("functional", []),   # 👈 مهم
+    "functional": project_doc.get("functional", []),   # ✅ FIX
     "nfr_predictions": all_nfrs,
     "selectedArchitecture": hybrid_result,
     "functional_method": functional_result,
