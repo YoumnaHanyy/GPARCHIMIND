@@ -16,6 +16,17 @@ OUTPUT_PATH = os.path.join(BASE_OUTPUT, "nfr_predictions_type_level.json")
 MODEL_TYPE_PATH = "models/trained_nfr_type_model"
 MODEL_LEVEL_PATH = "models/trained_nfr_level_model"
 
+# 🔥 LOAD LEVEL MODEL ONCE ONLY
+
+#df_global = NFRDatasetRepository.load_nfr_dataset_from_mongo()
+
+#le_level = LabelEncoder()
+#le_level.fit(df_global["Level"])
+
+#tokenizer_level = BertTokenizer.from_pretrained(MODEL_LEVEL_PATH)
+#model_level = BertForSequenceClassification.from_pretrained(MODEL_LEVEL_PATH)
+
+#model_level.eval()
 
 def softmax_np(x: np.ndarray) -> np.ndarray:
     e = np.exp(x - np.max(x))
@@ -108,15 +119,16 @@ def predict_level_for_text(text: str) -> str:
     Predict ONLY level for a single NFR text
     Used after user confirms the type
     """
-    df = NFRDatasetRepository.load_nfr_dataset_from_mongo()
+    df_global = NFRDatasetRepository.load_nfr_dataset_from_mongo()
+
     le_level = LabelEncoder()
-    le_level.fit(df["Level"])
+    le_level.fit(df_global["Level"])
 
-    tokenizer = BertTokenizer.from_pretrained(MODEL_LEVEL_PATH)
-    model_level = BertForSequenceClassification.from_pretrained(
-        MODEL_LEVEL_PATH)
+    tokenizer_level = BertTokenizer.from_pretrained(MODEL_LEVEL_PATH)
+    model_level = BertForSequenceClassification.from_pretrained(MODEL_LEVEL_PATH)
+
     model_level.eval()
-
+    
     tokens = tokenizer(
         [text],
         padding=True,

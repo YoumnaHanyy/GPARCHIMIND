@@ -17,15 +17,16 @@ client = InferenceClient(
     token=HF_API_KEY
 )
 
-# ================= LLM CALL =================
+# ================= LLM HELPERS =================
+#tryyy
 
 def ask_llm(prompt: str, temperature=0.2):
     response = client.chat_completion(
         messages=[
-            {"role": "system", "content": "You are a senior production software architect."},
+            {"role": "system", "content": "You are a strict JSON generator. Return ONLY raw JSON. No explanation, no markdown, no extra text."},
             {"role": "user", "content": prompt}
         ],
-        max_tokens=900,
+        max_tokens=2000,
         temperature=temperature
     )
 
@@ -35,50 +36,41 @@ def ask_llm(prompt: str, temperature=0.2):
 # ================= SAFE JSON EXTRACTION =================
 
 def extract_json(text: str):
-    try:
-        match = re.search(r"\{.*\}", text, re.DOTALL)
+    start = text.find("{")
+    end = text.rfind("}")
+    if start != -1 and end != -1:
+        return json.loads(text[start:end + 1])
+    raise ValueError("Invalid JSON")
 
-        if not match:
-            raise ValueError("No JSON object found")
-
-        json_str = match.group()
-
-        # remove trailing commas
-        json_str = re.sub(r",\s*}", "}", json_str)
-        json_str = re.sub(r",\s*]", "]", json_str)
-
-        return json.loads(json_str)
-
-    except Exception as e:
-        raise ValueError(f"Invalid JSON returned by LLM: {e}")
-
-
-# ================= ROBUST LLM JSON =================
+# ================= SAFE JSON GENERATION =================
 
 def robust_llm_json(prompt, retries=4):
 
     last_error = None
+    original_prompt = prompt
 
-    for _ in range(retries):
+    for i in range(retries):
         try:
             response = ask_llm(prompt)
             return extract_json(response)
 
         except Exception as e:
             last_error = e
+
+            # 🔥 FIX: self-healing بدل ما يعيد نفس الغلط
             prompt = f"""
 RETURN ONLY VALID JSON.
 NO explanations.
 NO markdown.
 NO comments.
 
+TASK:
 {prompt}
 """
 
     raise RuntimeError(f"LLM failed after {retries} attempts: {last_error}")
 
-
-# ================= FALLBACK COMPONENTS =================
+# ================= FALLBACK (STYLE-AWARE) =================
 
 def fallback_components(style):
 
@@ -237,18 +229,9 @@ System: {system}
 Functional Requirements:
 {frs}
 
-Return ONLY valid JSON:
-
-{{
- "components":[
-  {{
-   "name":"Component name",
-   "responsibility":"Short responsibility"
-  }}
- ]
-}}
+Return JSON:
+{{ "components": [{{ "name": "...", "responsibility": "..." }}] }}
 """
-
     return robust_llm_json(prompt).get("components", [])
 
 
@@ -259,20 +242,27 @@ Components:
 
 {json.dumps(components, indent=2)}
 
-Return ONLY valid JSON:
-
-{{
- "relationships":[
-  {{
-   "source":"Component",
-   "target":"Component",
-   "type":"data-flow | event-flow"
-  }}
- ]
-}}
+Return JSON:
+{{ "relationships": [{{ "source": "...", "target": "...", "type": "data-flow | event-flow" }}] }}
 """
-
     return robust_llm_json(prompt).get("relationships", [])
+
+
+def critique(components, relationships, nfrs):
+    prompt = f"""
+Components:
+{components}
+
+Relationships:
+{relationships}
+
+NFRs:
+{nfrs}
+
+Return JSON:
+{{ "issues": [] }}
+"""
+    return robust_llm_json(prompt).get("issues", [])
 
 
 def generate_runtime_flow(system, components, relationships, style):
@@ -287,44 +277,59 @@ Components:
 Relationships:
 {json.dumps(relationships, indent=2)}
 
-Return ONLY valid JSON:
+Describe the runtime interaction flow as JSON.
 
+Return ONLY valid JSON in the following format:
 {{
- "steps":[
-  {{
-   "from":"Component",
-   "to":"Component",
-   "action":"Action description",
-   "mode":"sync | async"
-  }}
- ]
+  "steps": [
+    {{
+      "from": "Component name",
+      "to": "Component name",
+      "action": "Meaningful action name",
+      "mode": "sync | async"
+    }}
+  ]
 }}
 """
 
     return robust_llm_json(prompt).get("steps", [])
 
 
-def critique(components, relationships, nfrs):
 
-    prompt = f"""
-Components:
-{json.dumps(components, indent=2)}
+def fallback_runtime_flow(style):
+    style = style.lower()
 
-Relationships:
-{json.dumps(relationships, indent=2)}
+    if "event" in style:
+        return [
+            {
+                "from": "Order Service",
+                "to": "Message Broker",
+                "action": "Publish order created event",
+                "mode": "async"
+            },
+            {
+                "from": "Message Broker",
+                "to": "Notification Service",
+                "action": "Trigger user notification",
+                "mode": "async"
+            }
+        ]
 
-NFRs:
-{nfrs}
-
-Return ONLY valid JSON:
-
-{{
- "issues":[]
-}}
-"""
-
-    return robust_llm_json(prompt).get("issues", [])
-
+    # default layered
+    return [
+        {
+            "from": "API",
+            "to": "Service",
+            "action": "Process business request",
+            "mode": "sync"
+        },
+        {
+            "from": "Service",
+            "to": "Database",
+            "action": "Persist data",
+            "mode": "sync"
+        }
+    ]
 
 # ================= ORCHESTRATOR =================
 

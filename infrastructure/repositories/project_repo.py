@@ -3,10 +3,11 @@ from datetime import datetime
 
 projects_collection = db["projects"]
 
-def create_project(project_id: str, user_id):
+def create_project(project_id: str, user_id, project_name=None):
     doc = {
         "project_id": project_id,
         "user_id": user_id,
+        "project_name": project_name,
         "status": "in_progress",
         "progress": 0,
         "current_phase": 1,

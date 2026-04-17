@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>ArchiMind Admin - Blueprint Edition</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  
+  <style>
+    /* دمج الـ Variables بتاعتك */
+    :root {
+      --studio-bg: #ffffff;
+      --accent-main: #0e7e59;
+      --accent-secondary: #06b6d4;
+      --nav-dark: #064e3be2;
+      --glass-bg: rgba(255, 255, 255, 0.75);
+      --stroke: #374151;
+      --scribble: #6366f1;
+    }
+
+    body {
+      background-color: var(--studio-bg);
+      background-image: radial-gradient(#e5e7eb 1.5px, transparent 1.5px);
+      background-size: 30px 30px;
+      font-family: 'Space Grotesk', sans-serif;
+      color: #1f2937;
+    }
+
+    .blueprint-header {
+      background: var(--nav-dark);
+      backdrop-filter: blur(10px);
+      border-bottom: 3px solid var(--accent-main);
+    }
+
+    .studio-card {
+      background: var(--glass-bg);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(16, 185, 129, 0.1);
+      border-radius: 24px;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+    }
+
+    .studio-card:hover {
+      transform: translateY(-5px);
+      border-color: var(--accent-secondary);
+      box-shadow: 0 12px 30px rgba(0,0,0,0.08);
+    }
+
+    .create-btn {
+      background: linear-gradient(135deg, var(--accent-main), var(--accent-secondary));
+      color: white; border: none; padding: 12px 30px; border-radius: 50px;
+      font-weight: 700; transition: 0.3s; box-shadow: 0 10px 20px rgba(16, 185, 129, 0.2);
+    }
+
+    .create-btn:hover { transform: scale(1.05); color: white; box-shadow: 0 15px 25px rgba(6, 182, 212, 0.3); }
+
+    .stat-value {
+      font-family: 'JetBrains Mono', monospace;
+      background: linear-gradient(to right, var(--accent-main), var(--accent-secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .icon-box {
+      background: rgba(16, 185, 129, 0.1);
+      color: var(--accent-main);
+      width: 50px; height: 50px;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: 14px;
+      font-size: 1.5rem;
+    }
+  </style>
+</head>
+<body>
+
+ <nav class="blueprint-header sticky top-0 z-50 px-6 py-3 flex justify-between items-center text-white">
+    <div class="flex items-center gap-3">
+      
+      <img src="/static/images/Logo_black.png" alt="ArchiMind Logo" class="h-9 w-auto object-contain">
+      
+
+    </div>
+    
+    <div class="flex items-center gap-6">
+      <span class="text-sm opacity-70 font-medium">System Status: <span class="text-emerald-400">● Active</span></span>
+      <button onclick="logout()" class="bg-white/10 hover:bg-red-500/20 border border-white/20 px-4 py-1.5 rounded-full text-xs font-bold transition-all">
+        TERMINATE SESSION
+      </button>
+    </div>
+  </nav>
+
+ <main class="max-w-7xl mx-auto p-8">
+  
+  <div class="mb-12 flex justify-between items-end animate-fade-down">
+    <div>
+      <h2 class="text-4xl font-bold text-[var(--nav-dark)] tracking-tight">System Insights</h2>
+      <p class="text-gray-500 mt-1 font-medium text-sm">Real-time architectural generation analytics</p>
+      <div class="h-1.5 w-24 bg-gradient-to-right from-[var(--accent-main)] to-[var(--accent-secondary)] mt-4 rounded-full"></div>
+    </div>
+    <div class="hidden md:block text-right">
+      
+      
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+    <div class="studio-card p-6 flex items-center gap-5 border-l-4 border-l-[var(--accent-main)]">
+      <div class="icon-box shrink-0">👥</div>
+      <div>
+        <p class="text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em]">Total Users</p>
+        <p class="text-3xl font-bold stat-value leading-none mt-1" id="usersCount">25</p>
+      </div>
+    </div>
+
+    <div class="studio-card p-6 flex items-center gap-5 border-l-4 border-l-[var(--accent-secondary)]">
+      <div class="icon-box shrink-0">📁</div>
+      <div>
+        <p class="text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em]">Active Projects</p>
+        <p class="text-3xl font-bold stat-value leading-none mt-1" id="projectsCount">12</p>
+      </div>
+    </div>
+
+    <div class="studio-card p-6 flex items-center gap-5 border-l-4 border-l-[var(--scribble)]">
+      <div class="icon-box shrink-0">📐</div>
+      <div>
+        <p class="text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em]">Generations</p>
+        <p class="text-3xl font-bold stat-value leading-none mt-1" id="archCount">40</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-12">
+    
+    <div class="lg:col-span-8">
+      <div class="flex items-center justify-between mb-4 px-2">
+        <h3 class="text-lg font-bold flex items-center gap-2">
+          <span class="w-2 h-6 bg-[var(--accent-main)] rounded-full"></span>
+          📊 Architecture Usage
+        </h3>
+      </div>
+      <div class="studio-card p-8 h-[450px] flex items-center justify-center">
+        <canvas id="archChart" 
+                data-labels='{{ arch_labels | tojson | safe }}' 
+                data-values='{{ arch_counts | tojson | safe }}'>
+        </canvas>
+      </div>
+    </div>
+
+    <div class="lg:col-span-4 flex flex-col gap-6">
+      <h3 class="text-lg font-bold mb-4 invisible text-white">Metrics</h3>
+      
+      <div class="studio-card p-6 relative overflow-hidden group">
+        <div class="absolute right-[-10px] top-[-10px] opacity-10 text-6-xl group-hover:scale-110 transition-transform">🏗️</div>
+        <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Top Performer</p>
+        <p class="text-2xl font-bold text-[var(--nav-dark)] truncate">{{ most_arch }}</p>
+        <div class="flex items-center gap-2 mt-4 bg-[var(--accent-main)]/5 w-fit px-3 py-1 rounded-full">
+          <span class="text-[var(--accent-main)] font-bold text-sm">{{ most_count }}</span>
+          <span class="text-xs text-gray-500 font-medium whitespace-nowrap">Deployments</span>
+        </div>
+      </div>
+
+      <div class="studio-card p-6">
+        <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Gen-Success Rate</p>
+        <div class="flex items-end justify-between mb-2">
+          <p class="text-4xl font-bold stat-value">{{ success_rate }}%</p>
+          <p class="text-xs font-bold {% if success_rate >= 70 %}text-emerald-500{% else %}text-red-500{% endif %} uppercase">
+            {{ status }}
+          </p>
+        </div>
+        <div class="w-full bg-gray-100 h-2 rounded-full overflow-hidden">
+          <div class="bg-gradient-to-r from-[var(--accent-main)] to-[var(--accent-secondary)] h-full transition-all duration-1000" 
+               ></div>
+        </div>
+        <p class="text-[10px] text-gray-400 mt-3 font-medium">Total: {{ generated }} of {{ total_projects }} finalized</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+    
+    <div class="flex flex-col">
+      <h3 class="text-lg font-bold mb-4 flex items-center gap-2">
+        <span class="w-2 h-6 bg-[var(--accent-secondary)] rounded-full"></span>
+        ⏱️ Activity Log
+      </h3>
+      <div class="studio-card p-4 flex-grow">
+        <div class="space-y-1">
+          {% for project in recent_projects %}
+          <div class="group flex justify-between items-center p-3 hover:bg-gray-50/50 rounded-xl transition-colors">
+            <div class="flex items-center gap-4">
+              <div class="w-10 h-10 rounded-lg bg-gray-100 flex items-center justify-center font-bold text-[var(--accent-main)] group-hover:bg-[var(--accent-main)] group-hover:text-white transition-all">
+                {{ project.project_name[0] | upper }}
+              </div>
+              <div>
+                <p class="font-bold text-sm text-gray-800">{{ project.project_name }}</p>
+                <p class="text-[10px] text-gray-400 font-medium uppercase">{{ project.created_at }}</p>
+              </div>
+            </div>
+            <div class="text-right">
+              <div class="text-xs font-mono font-bold text-[var(--accent-main)] bg-[var(--accent-main)]/10 px-2 py-1 rounded">
+                {{ project.progress | default(0) }}%
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <h3 class="text-lg font-bold mb-4">⚙️ Control Center</h3>
+      <div class="grid grid-cols-2 gap-4">
+        <div class="studio-card p-6 text-center hover:bg-white transition-all group">
+           <div class="text-2xl mb-3 group-hover:scale-125 transition-transform">👥</div>
+           <p class="font-bold text-sm mb-4">User Registry</p>
+           <button onclick="goToUsers()" class="create-btn w-full text-[10px] py-2 px-0 shadow-none">MANAGEMENT</button>
+        </div>
+        <div class="studio-card p-6 text-center hover:bg-white transition-all group">
+           <div class="text-2xl mb-3 group-hover:scale-125 transition-transform">📂</div>
+           <p class="font-bold text-sm mb-4">Project Repo</p>
+           <button onclick="goToProjects()" class="create-btn w-full text-[10px] py-2 px-0 shadow-none">BROWSE ALL</button>
+        </div>
+        <div class="studio-card p-6 col-span-2 border-dashed border-2 flex items-center justify-between group">
+           <div class="text-left">
+             <h4 class="font-bold text-sm">Neural Retraining</h4>
+             <p class="text-[10px] text-gray-400">Optimize AI with new datasets</p>
+           </div>
+           <button onclick="triggerRetrain()" class="px-6 py-2 rounded-full font-bold text-[10px] border-2 border-[var(--scribble)] text-[var(--scribble)] hover:bg-[var(--scribble)] hover:text-white transition-all">
+             INITIALIZE
+           </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+  <script>
+    
+    function goToProjects() {
+  window.location.href = "/admin/projects";
+}
+function goToUsers() {
+  window.location.href = "/admin/users";
+}
+
+    function logout() {
+      document.body.classList.add('page-exit');
+      setTimeout(() => {
+        alert("Session Terminated");
+        window.location.href = '/Login';
+      }, 500);
+    }
+
+    function triggerRetrain() {
+      // Animation Logic here
+      console.log("Retraining...");
+    }
+  </script>
+
+  <script>
+document.addEventListener("DOMContentLoaded", function () {
+
+  const canvas = document.getElementById("archChart");
+
+  const labels = JSON.parse(canvas.dataset.labels);
+  const data = JSON.parse(canvas.dataset.values);
+
+  new Chart(canvas, {
+    type: 'bar',
+    data: {
+      labels: labels,
+      datasets: [{
+        label: 'Usage Count',
+        data: data,
+        borderWidth: 1
+      }]
+    }
+  });
+
+});
+</script>
+</body>
+</html>

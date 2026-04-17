@@ -2,7 +2,11 @@ from fastapi import APIRouter, UploadFile, Request, File
 from fastapi.responses import JSONResponse
 import os
 import uuid
+import fitz
+import pdfplumber
 import traceback
+
+from ai.inference.feature_extractor import generate_phase4
 from application.extraction.extraction_service import process_srs
 from ai.inference.predict_type_level import predict_and_save_nfr, predict_level_for_text
 from service.ordinal_service import execute_ordinal_method
@@ -14,16 +18,21 @@ from service.hybrid_service import execute_hybrid_method
 from infrastructure.repositories.project_repo import update_project_progress, create_project
 from infrastructure.repositories.weighted_repository import save_weighted_result
 from infrastructure.repositories.nfr_dataset_repository import NFRPredictionRepository
-import pdfplumber
-
-
+from infrastructure.repositories.srs_repository import SRSRepository
+from infrastructure.repositories.human_feedback_repository import save_new_confirmed_nfr
+from service.retrain_service import merge_and_retrain
+from infrastructure.database import db
+from service.retrain_service import run_retrain_async
 router = APIRouter()
 
 UPLOAD_DIR = "uploads"
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 
 
-
+def validate_pdf_file(file: UploadFile):
+    if not file.filename.lower().endswith(".pdf"):
+        return "Invalid file format. Please upload a valid PDF document."
+    return None
 
 
 def extract_text_from_pdf(pdf_path: str) -> str:
@@ -68,15 +77,38 @@ async def extract_srs(request: Request, file: UploadFile = File(...)):
     try:
         if not file:
             return JSONResponse(status_code=400, content={"error": "No file uploaded"})
+        # ✅ USE VALIDATION FUNCTION
+        validation_error = validate_pdf_file(file)
+        if validation_error:
+            return JSONResponse(
+                status_code=400,
+                content={"error": validation_error}
+            )
 
         # 1️⃣ Save PDF
         pdf_path = os.path.join(UPLOAD_DIR, f"{project_id}.pdf")
+        file_bytes = await file.read()
+
         with open(pdf_path, "wb") as f:
-            f.write(await file.read())
+          f.write(file_bytes)
         
         # ✅ STRUCTURE CHECK (HERE ONLY)
         pdf_text = extract_text_from_pdf(pdf_path)
+
+        pdf_doc = fitz.open(pdf_path)
+        num_pages = len(pdf_doc)
+        pdf_doc.close()
         has_fr, has_nfr = check_srs_sections(pdf_text)
+        user_id = request.session.get("user", {}).get("id", "guest")
+        status = "verified" if (has_fr and has_nfr) else "error"
+        SRSRepository.save_srs(
+              file_bytes=file_bytes,
+              filename=file.filename,
+              project_id=project_id,
+              user_id=user_id,
+              num_pages=num_pages,
+              status=status
+        )
 
         if not has_fr or not has_nfr:
          return JSONResponse(
@@ -94,14 +126,17 @@ async def extract_srs(request: Request, file: UploadFile = File(...)):
         extraction_result = process_srs(
             pdf_path=pdf_path,
             project_id=project_id,
-            hf_key=os.getenv("HF_API_KEY")
+            hf_key=None
         )
-
+        
         if not extraction_result:
             raise ValueError("process_srs returned empty result")
+        project_name = extraction_result.get("project_name", "Unknown Project")
+        user_id = request.session.get("user", {}).get("id", "guest")
 
+        create_project(project_id, user_id, project_name)
         # 3️⃣ Predict NFR Type + Level → Saves to BOTH MongoDB AND JSON
-        all_predictions = predict_and_save_nfr(project_id)
+        all_predictions =predict_and_save_nfr(project_id)
 
         if not all_predictions:
             raise ValueError("No NFR predictions generated")
@@ -109,8 +144,49 @@ async def extract_srs(request: Request, file: UploadFile = File(...)):
         # 4️⃣ Get high and low confidence from MongoDB
         high_confidence = NFRPredictionRepository.get_high_confidence(project_id)
         low_confidence = NFRPredictionRepository.get_low_confidence(project_id)
-
         print(f"📊 High confidence: {len(high_confidence)}, Low confidence: {len(low_confidence)}")
+        if len(low_confidence) == 0:
+            print("⚡ No low confidence → auto running architecture")
+
+            all_nfrs = high_confidence
+
+            functional_result = execute_functional_method(project_id)
+    
+            freq_norm, must_norm, importance = compute_nfr_statistics(all_nfrs)
+    
+            ordinal_result = execute_ordinal_method(project_id)
+            binary_result = execute_binary_method(project_id)
+    
+            weighted_result = execute_weighted_method(
+                freq_norm=freq_norm,
+                must_norm=must_norm,
+                importance=importance
+            )
+    
+            hybrid_result = execute_hybrid_method(
+                project_id,
+                functional_result,
+                ordinal_result,
+                binary_result,
+                weighted_result
+            )
+
+            save_weighted_result(project_id, weighted_result)
+
+            return {
+                "project_id": project_id,
+                "srs_verified": True,
+                "functional": clean_object_id(extraction_result.get("functional", [])),
+                "nfr_predictions": clean_object_id(high_confidence),
+                "low_confidence_nfrs": [],
+                "needs_confirmation": False,
+                "functional_method": functional_result,
+                "ordinal_method": ordinal_result.get("result"),
+                "binary_method": binary_result,
+                "weighted_method": weighted_result,
+                "hybrid_method": hybrid_result
+            }
+        
 
         # 5️⃣ Return data to frontend
         return {
@@ -185,8 +261,19 @@ async def confirm_nfr(request: Request):
         )
 
         if success:
-            confirmed_count += 1
+           confirmed_count += 1
+           save_new_confirmed_nfr({
+                "description": description,
+                "confirmed_type": confirmed_type,
+                "predicted_level": predicted_level
+        })
+    
+    count = db.new_nfr_confirmed.count_documents({})
 
+    print(f"📊 New feedback count: {count}")
+
+    if count >= 3:
+        run_retrain_async()
     # Get ALL predictions from MongoDB (high confidence + confirmed)
     all_nfrs = NFRPredictionRepository.get_by_project(project_id)
 
@@ -226,7 +313,8 @@ async def confirm_nfr(request: Request):
         "binary_method": binary_result,
         "weighted_method": weighted_result,
         "hybrid_method": hybrid_result,
-        "nfr_predictions": clean_object_id(all_nfrs)
+        "nfr_predictions": clean_object_id(all_nfrs),
+       
     }
 
 

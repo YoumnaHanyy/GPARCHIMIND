@@ -22,20 +22,39 @@ BINARY_VECTOR_COLLECTION = "binary_results"  # optional if saved
 # ============================================================
 
 def load_architecture_dataset():
-    """
-    Collection: ArchitectureDataset
-    Each document:
-    {
-        "Architecture Style": "...",
-        "PE": 0/1,
-        "SC": 0/1,
-        ...
-    }
-    """
     collection = db[ARCH_COLLECTION]
-    docs = list(collection.find({}, {"_id": 0}))
-    return pd.DataFrame(docs)
 
+    docs = list(
+        collection.find(
+            {},
+            {"_id": 0, "Architecture": 1, "Type": 1, "label": 1}
+        )
+    )
+
+    # 🧠 build binary vectors manually
+    arch_map = {}
+
+    for doc in docs:
+        arch = doc.get("Architecture")
+        nfr = doc.get("Type")
+        label = doc.get("label", 0)
+
+        if not arch or nfr not in NFR_ORDER:
+            continue
+
+        if arch not in arch_map:
+            arch_map[arch] = {k: 0 for k in NFR_ORDER}
+
+        arch_map[arch][nfr] = int(label)
+
+    # convert to DataFrame
+    rows = []
+    for arch, vec in arch_map.items():
+        row = {"Architecture": arch}
+        row.update(vec)
+        rows.append(row)
+
+    return pd.DataFrame(rows)
 
 # ============================================================
 # 3️⃣ Compute Architecture Scores (Binary Distance)
@@ -49,7 +68,7 @@ def compute_architecture_scores(binary_vector, arch_df):
     results = []
 
     for _, row in arch_df.iterrows():
-        arch_name = row["Architecture Style"]
+        arch_name = row["Architecture"]
 
         arch_vec = row[NFR_ORDER].values.astype(int)
         srs_vec = np.array([binary_vector[nfr] for nfr in NFR_ORDER])
