@@ -122,6 +122,54 @@ def home(request: Request):
     )
 
 
+@app.get("/Admin", response_class=HTMLResponse)
+async def admin_dashboard(request: Request):
+ return templates.TemplateResponse("admin.html", {"request": request})
+ 
+@app.get("/admin/users", response_class=HTMLResponse)
+async def get_all_users(request: Request):
+    users = list(db.Users.find({}, {"password": 0}))  # نشيل الباسورد
+
+    return templates.TemplateResponse(
+        "users.html",
+        {
+            "request": request,
+            "users": users
+        }
+    )
+
+
+@app.get("/admin/projects", response_class=HTMLResponse)
+async def get_all_projects(request: Request):
+    projects = list(db.projects.find({}, {"_id": 0}))
+
+    return templates.TemplateResponse(
+        "projects.html",
+        {
+            "request": request,
+            "projects": projects
+        }
+    )
+
+
+@app.get("/admin/download-adl/{project_id}")
+def download_adl(project_id: str):
+
+    doc = db.architecture_reports.find_one({"project_id": project_id})
+
+    if not doc:
+        raise HTTPException(status_code=404, detail="ADL not found")
+
+    return StreamingResponse(
+        io.BytesIO(doc["report_pdf"]),
+        media_type="application/pdf",
+        headers={
+            "Content-Disposition": f"attachment; filename={project_id}_adl.pdf"
+        }
+    )
+
+
+
 
 @app.get("/generate/{project_id}")
 def generate_architecture(project_id: str):
@@ -274,7 +322,10 @@ def generate_architecture(project_id: str):
     # 9. Generate final architecture report
     # ==========================================================
     pdf_path = generate_report(project_id)
+    with open(pdf_path, "rb") as f:
+     pdf_bytes = f.read()
 
+    save_architecture_report_pdf(project_id, pdf_bytes)
     # ==========================================================
     # 10. Return SUCCESS output only
     # ==========================================================

@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Global Projects Repository - ArchiMind</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --studio-bg: #ffffff;
+      --accent-main: #0e7e59;
+      --accent-secondary: #06b6d4;
+      --nav-dark: #064e3be2;
+      --glass-bg: rgba(255, 255, 255, 0.85);
+    }
+
+    body {
+      background-color: var(--studio-bg);
+      background-image: radial-gradient(#e5e7eb 1.5px, transparent 1.5px);
+      background-size: 30px 30px;
+      font-family: 'Space Grotesk', sans-serif;
+      color: #1f2937;
+      min-height: 100vh;
+    }
+
+    .blueprint-header {
+      background: var(--nav-dark);
+      backdrop-filter: blur(10px);
+      border-bottom: 4px solid var(--accent-main);
+    }
+
+    .studio-card {
+      background: var(--glass-bg);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(14, 126, 89, 0.1);
+      border-radius: 24px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.02);
+    }
+
+    .custom-table thead th {
+      text-transform: uppercase;
+      font-size: 0.7rem;
+      letter-spacing: 1.5px;
+      color: #64748b;
+      padding: 1.5rem 1rem;
+      border-bottom: 2px solid var(--accent-main);
+    }
+
+    .custom-table tbody tr {
+      transition: all 0.2s;
+      border-bottom: 1px solid #f1f5f9;
+    }
+
+    .custom-table tbody tr:hover {
+      background: rgba(6, 182, 212, 0.03);
+    }
+
+    .status-badge {
+      padding: 4px 12px;
+      border-radius: 50px;
+      font-size: 0.65rem;
+      font-weight: 700;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      color: #475569;
+    }
+
+    .download-btn {
+      background: var(--nav-dark);
+      color: white;
+      padding: 6px 16px;
+      border-radius: 8px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      transition: 0.3s;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .download-btn:hover {
+      background: var(--accent-secondary);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(6, 182, 212, 0.2);
+    }
+
+    .mono-data {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+    }
+
+    /* التعديل هنا: شيلنا الـ Dynamic Width من الـ CSS خالص عشان الـ Editor ميزعلش */
+    .progress-bar-container {
+      width: 80px;
+      height: 6px;
+      background: #f1f5f9;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent-main), var(--accent-secondary));
+      border-radius: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="blueprint-header sticky top-0 z-50 px-6 py-3 flex justify-between items-center text-white">
+    <div class="flex items-center gap-4">
+      <a href="/admin" class="opacity-70 hover:opacity-100 transition-all">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+        </svg>
+      </a>
+      <div class="h-6 w-px bg-white/20"></div>
+      <h1 class="text-xl font-bold tracking-tighter">ArchiMind <span class="font-light opacity-80 text-sm tracking-normal ml-1">Global Repository</span></h1>
+    </div>
+    <img src="path/to/your/logo.png" alt="Logo" class="h-8 w-auto">
+  </nav>
+
+  <main class="max-w-7xl mx-auto p-8 lg:p-12">
+    
+    <div class="mb-10 flex justify-between items-end">
+      <div>
+        <h2 class="text-3xl font-bold text-slate-800">📁 Projects Registry</h2>
+        <p class="text-slate-500 mt-1">Full administrative access to all generated blueprints and assets.</p>
+      </div>
+      <div class="bg-white px-5 py-2 rounded-2xl border border-slate-100 shadow-sm text-right">
+        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">System Load</span>
+        <p class="text-2xl font-bold text-[var(--accent-main)]">{{ projects|length }} <span class="text-xs font-normal text-slate-400">Items</span></p>
+      </div>
+    </div>
+
+    <div class="studio-card overflow-hidden">
+      <div class="overflow-x-auto">
+        <table class="w-full text-left custom-table border-collapse">
+          <thead>
+            <tr class="bg-slate-50/50">
+              <th class="pl-8">Project Name</th>
+              <th>Status</th>
+              <th>Progress</th>
+              <th>Timestamp</th>
+              <th class="pr-8 text-right">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for project in projects %}
+            <tr>
+              <td class="py-5 pl-8">
+                <span class="font-bold text-slate-700 block text-base">{{ project.project_name }}</span>
+                <span class="text-[10px] text-slate-400 font-mono tracking-tighter">REF-ID: {{ project.project_id }}</span>
+              </td>
+              <td>
+                <span class="status-badge">{{ project.status }}</span>
+              </td>
+              <td>
+                <div class="flex items-center gap-3">
+                    <div class="progress-bar-container">
+    <div class="progress-bar-fill" data-progress="{{ project.progress | default(0) }}"></div>
+</div>
+                    <span class="mono-data font-bold text-slate-600 text-xs">{{ project.progress }}%</span>
+                </div>
+              </td>
+              <td class="mono-data text-slate-400 text-[11px]">
+                {{ project.created_at }}
+              </td>
+              <td class="pr-8 text-right">
+                <a href="/admin/download-adl/{{ project.project_id }}" class="download-btn">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                  </svg>
+                  DOWNLOAD ADL
+                </a>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    {% if not projects %}
+    <div class="text-center py-32 opacity-20 grayscale">
+        <p class="text-7xl mb-6">📂</p>
+        <p class="text-xl font-bold tracking-[0.2em] uppercase">Repository Isolated / Empty</p>
+    </div>
+    {% endif %}
+
+  </main>
+<script>
+document.querySelectorAll('.progress-bar-fill').forEach(el => {
+  let val = el.getAttribute('data-progress') || 0;
+  el.style.width = val + "%";
+});
+</script>
+</body>
+
+</html>
