@@ -128,8 +128,7 @@ def predict_level_for_text(text: str) -> str:
     model_level = BertForSequenceClassification.from_pretrained(MODEL_LEVEL_PATH)
 
     model_level.eval()
-    
-    tokens = tokenizer(
+    tokens = tokenizer_level(
         [text],
         padding=True,
         truncation=True,

@@ -376,62 +376,6 @@ async function saveSelectedArchitecture() {
     }
 }
 
-async function loadPhase4() {
-  const res = await fetch(`/phase4/${extractedData.project_id}`);
-  const data = await res.json();
-
-  console.log("PHASE4 RESPONSE:", data);
-
-  extractedData.phase4 = data.phase4;
-
-  renderPhase();
-}
-
-function renderDesignPatterns(data) {
-  if (
-    !data ||
-    !data.phase4 ||
-    !Array.isArray(data.phase4.top_patterns) ||
-    data.phase4.top_patterns.length === 0
-  ) {
-     return "<p class='text-muted'>Loading design patterns...</p>";
-  }
-  let html = "<h5 class='section-header'>Recommended Design Patterns</h5>";
-
-  data.phase4.top_patterns.forEach((p, idx) => {
-    html += `
-    
-      <div class="mb-4">
-        <div class="req-title">${idx + 1}. ${p.pattern}</div>
-        <div class="req-desc">
-          ${Array.isArray(p.reasons) ? p.reasons.join(", ") : "No reasons available"}
-        </div>
-      </div>
-    `;
-  });
-
-  return html;
-}
-
-function renderCodeSkeleton(data) {
-  if (!data || !data.phase4 || !data.phase4.code) {
-    return "<p class='text-muted'>No code generated.</p>";
-  }
-
-  return `
-    <h5 class="section-header">Generated Code Skeleton</h5>
-
-    <div class="code-box position-relative">
-      <button class="copy-btn" onclick="copyCode()">Copy</button>
-      <pre><code id="generatedCode">${data.phase4.code}</code></pre>
-    </div>
-
-    <div class="mt-4 text-center">
-      <button class="btn btn-success px-4 me-2" onclick="downloadCode()">Download</button>
-      <button class="btn btn-outline-light px-4" onclick="regenerateCode()">Regenerate</button>
-    </div>
-  `;
-}
   /* =======================
      TAB RENDERING
   ======================= */
@@ -630,17 +574,9 @@ function changePhase(dir) {
     ).show();
     return;
   }
-    
 
-    if (dir === 1 && currentPhase < 4) {
+  if (dir === 1 && currentPhase < 3) {
     currentPhase++;
-
-    if (currentPhase === 4) {
-       loadPhase4(); // 🔥 يستنى الداتا الأول
-    }
-
-    renderPhase(); // بعد ما الداتا وصلت
-
     syncProjectProgress();
     triggerLoading();
   } else if (dir === -1 && currentPhase > 1) {
@@ -896,7 +832,7 @@ async function submitNFRConfirmation() {
     extractedData.binary_method = confirmData.binary_method;
     extractedData.weighted_method = confirmData.weighted_method;
     extractedData.hybrid_method = confirmData.hybrid_method;
-    
+
     /* 6️⃣ Short delay for UX */
     setTimeout(() => {
       stopLoadingAnimation();
@@ -969,9 +905,11 @@ function hideNfrInlineError() {
   function toggleSideMenu() {
     document.getElementById("sideMenu").classList.toggle("open");
   }
-  function backToDashboard(){
-  document.getElementById("uploadView").classList.add("hidden");
-  document.getElementById("dashboardView").classList.remove("hidden");
+  function backToDashboard() {
+  console.log("🔄 Hard refresh triggered");
+
+  // redirect with full reload
+  window.location.href = "/Dashboard";
 }
 function showErrorModal(message) {
 
@@ -1035,22 +973,8 @@ async function syncProjectProgress() {
   }
 }
 
-
-function copyCode() {
-  const code = document.getElementById("generatedCode").innerText;
-  navigator.clipboard.writeText(code);
-}
-
-function downloadCode() {
-  const code = document.getElementById("generatedCode").innerText;
-  const blob = new Blob([code], { type: "text/plain" });
-
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(blob);
-  a.download = "skeleton.js";
-  a.click();
-}
-
-function regenerateCode() {
-  alert("Regenerating code...");
+const disposition = response.headers.get("Content-Disposition") || "";
+const isProblemReport = disposition.includes("problems");
+if (isProblemReport) {
+  alert("⚠️ Architecture has verification/validation issues. Please review the report.");
 }
