@@ -22,7 +22,6 @@ from ai.json_to_deployment_view import convert_to_deployment_view
 from application.extraction.api.hybrid_route import router as hybrid_router
 from ai.json_to_c4_plantuml import convert_to_c4_plantuml
 from ai.ai_engine import ai_generate_architecture
-
 from ai.json_to_usecase_view import convert_to_usecase_view
 from application.extraction.adl.json_to_acme import convert_to_acme
 import os
@@ -140,14 +139,21 @@ def generate_architecture(project_id: str):
         )
 
     selected_architecture = hybrid_doc["selected_architecture"]
+    project_doc = db.projects.find_one({"project_id": project_id})
+
+    if not project_doc or not project_doc.get("project_name"):
+     raise HTTPException(
+        status_code=400,
+        detail="Project name not found"
+    )
+
+    system_name = project_doc["project_name"]
 
     # ==========================================================
     # 2. Load input data
     # ==========================================================
     try:
-        with open("data/outputs/input/requirements.json", encoding="utf-8") as f:
-            requirements = json.load(f)
-
+        
         with open("data/outputs/functional_requirements.json", encoding="utf-8") as f:
             functional_requirements = json.load(f)
 
@@ -161,7 +167,7 @@ def generate_architecture(project_id: str):
     # 3. Generate architecture
     # ==========================================================
     arch = ai_generate_architecture(
-        requirements["system_name"],
+        system_name,
         functional_requirements,
         non_functional_requirements,
         selected_architecture
@@ -196,13 +202,13 @@ def generate_architecture(project_id: str):
     # ==========================================================
 # 5. VALIDATION (SUCCESSFUL BUT NOT RETURNED)
 # ==========================================================
+    validation_result = {}
+
     try:
-     validation_result = run_validation(arch)
-     generate_validation_pdf(validation_result)
+      validation_result = run_validation(arch)
+      generate_validation_pdf(validation_result)
     except Exception as e:
-     print("Validation skipped:", e)
-
-
+      print("Validation skipped:", e)
     # ==========================================================
     # 6. Persist architecture outputs
     # ==========================================================
