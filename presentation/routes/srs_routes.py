@@ -5,6 +5,7 @@ import uuid
 import fitz
 import pdfplumber
 import traceback
+from ai.inference.feature_extractor import generate_phase4
 from application.extraction.extraction_service import process_srs
 from ai.inference.predict_type_level import predict_and_save_nfr, predict_level_for_text
 from service.ordinal_service import execute_ordinal_method
@@ -16,9 +17,11 @@ from service.hybrid_service import execute_hybrid_method
 from infrastructure.repositories.project_repo import update_project_progress, create_project
 from infrastructure.repositories.weighted_repository import save_weighted_result
 from infrastructure.repositories.nfr_dataset_repository import NFRPredictionRepository
-import pdfplumber
-
-
+from infrastructure.repositories.srs_repository import SRSRepository
+from infrastructure.repositories.human_feedback_repository import save_new_confirmed_nfr
+from service.retrain_service import merge_and_retrain
+from infrastructure.database import db
+from service.retrain_service import run_retrain_async
 router = APIRouter()
 
 UPLOAD_DIR = "uploads"
@@ -147,8 +150,8 @@ async def extract_srs(request: Request, file: UploadFile = File(...)):
     
             freq_norm, must_norm, importance = compute_nfr_statistics(all_nfrs)
     
-            ordinal_result = execute_ordinal_method()
-            binary_result = execute_binary_method()
+            ordinal_result = execute_ordinal_method(project_id)
+            binary_result = execute_binary_method(project_id)
     
             weighted_result = execute_weighted_method(
                 freq_norm=freq_norm,
