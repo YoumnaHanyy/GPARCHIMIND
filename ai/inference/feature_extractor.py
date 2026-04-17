@@ -9,7 +9,15 @@ from ai.inference.response_parser import parse_response
 from ai.utils.feature_keywords import FEATURE_KEYWORDS
 from infrastructure.repositories.design_pattern_repository import save_design_patterns
 # MODEL
-client = InferenceClient(model="meta-llama/Meta-Llama-3-8B-Instruct")
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+
+client = InferenceClient(
+    model="meta-llama/Meta-Llama-3-8B-Instruct",
+    token=os.getenv("HF_API_KEY")
+)
 
 ALL_FEATURES = [
     "EVENT_DRIVEN",
