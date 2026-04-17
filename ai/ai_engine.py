@@ -18,6 +18,7 @@ client = InferenceClient(
 )
 
 # ================= LLM HELPERS =================
+#tryyy
 
 def ask_llm(prompt: str, temperature=0.2):
     response = client.chat_completion(
@@ -35,28 +36,13 @@ def ask_llm(prompt: str, temperature=0.2):
 # ================= SAFE JSON EXTRACTION =================
 
 def extract_json(text: str):
-    try:
-        # نحاول direct parse
-        return json.loads(text)
+    start = text.find("{")
+    end = text.rfind("}")
+    if start != -1 and end != -1:
+        return json.loads(text[start:end + 1])
+    raise ValueError("Invalid JSON")
 
-    except:
-        pass
-
-    try:
-        # نلقط أول JSON block مظبوط
-        start = text.find("{")
-        end = text.rfind("}") + 1
-        json_str = text[start:end]
-
-        # تنظيف
-        json_str = re.sub(r",\s*}", "}", json_str)
-        json_str = re.sub(r",\s*]", "]", json_str)
-
-        return json.loads(json_str)
-
-    except Exception as e:
-        raise ValueError(f"Invalid JSON returned by LLM: {e}")
-# ================= ROBUST LLM JSON =================
+# ================= SAFE JSON GENERATION =================
 
 def robust_llm_json(prompt, retries=4):
 
@@ -73,25 +59,18 @@ def robust_llm_json(prompt, retries=4):
 
             # 🔥 FIX: self-healing بدل ما يعيد نفس الغلط
             prompt = f"""
-The previous response was INVALID JSON.
+RETURN ONLY VALID JSON.
+NO explanations.
+NO markdown.
+NO comments.
 
-Error:
-{last_error}
-
-Fix it and return ONLY valid JSON.
-
-STRICT RULES:
-- NO explanation
-- NO markdown
-- NO text before or after
-- ONLY RAW JSON
-
-Original request:
-{original_prompt}
+TASK:
+{prompt}
 """
 
     raise RuntimeError(f"LLM failed after {retries} attempts: {last_error}")
-# ================= FALLBACK COMPONENTS =================
+
+# ================= FALLBACK (STYLE-AWARE) =================
 
 def fallback_components(style):
 
@@ -250,31 +229,10 @@ System: {system}
 Functional Requirements:
 {frs}
 
-IMPORTANT:
-- Limit to maximum 8 components
-- Keep output short
-
-STRICT RULES:
-- RETURN JSON ONLY
-- NO explanation
-- NO markdown
-
-{{
- "components":[
-  {{
-   "name":"Component name",
-   "responsibility":"Short responsibility"
-  }}
- ]
-}}
+Return JSON:
+{{ "components": [{{ "name": "...", "responsibility": "..." }}] }}
 """
-
-    data = robust_llm_json(prompt)
-
-    if isinstance(data, list):
-     return data
-
-    return data.get("components", [])
+    return robust_llm_json(prompt).get("components", [])
 
 
 def generate_relationships(components):
@@ -284,31 +242,27 @@ Components:
 
 {json.dumps(components, indent=2)}
 
-IMPORTANT:
-- Keep it concise
-
-STRICT RULES:
-- RETURN JSON ONLY
-- NO explanation
-- NO markdown
-
-{{
- "relationships":[
-  {{
-   "source":"Component",
-   "target":"Component",
-   "type":"data-flow | event-flow"
-  }}
- ]
-}}
+Return JSON:
+{{ "relationships": [{{ "source": "...", "target": "...", "type": "data-flow | event-flow" }}] }}
 """
+    return robust_llm_json(prompt).get("relationships", [])
 
-    data = robust_llm_json(prompt)
 
-    if isinstance(data, list):
-     return data
+def critique(components, relationships, nfrs):
+    prompt = f"""
+Components:
+{components}
 
-    return data.get("relationships", [])
+Relationships:
+{relationships}
+
+NFRs:
+{nfrs}
+
+Return JSON:
+{{ "issues": [] }}
+"""
+    return robust_llm_json(prompt).get("issues", [])
 
 
 def generate_runtime_flow(system, components, relationships, style):
@@ -323,61 +277,59 @@ Components:
 Relationships:
 {json.dumps(relationships, indent=2)}
 
-IMPORTANT:
-- Max 6 steps
-- Keep short
+Describe the runtime interaction flow as JSON.
 
-STRICT RULES:
-- RETURN JSON ONLY
-- NO explanation
-- NO markdown
-
+Return ONLY valid JSON in the following format:
 {{
- "steps":[
-  {{
-   "from":"Component",
-   "to":"Component",
-   "action":"Action description",
-   "mode":"sync | async"
-  }}
- ]
+  "steps": [
+    {{
+      "from": "Component name",
+      "to": "Component name",
+      "action": "Meaningful action name",
+      "mode": "sync | async"
+    }}
+  ]
 }}
 """
 
-    data = robust_llm_json(prompt)
-
-    if isinstance(data, list):
-     return data
-
-    return data.get("steps", [])
+    return robust_llm_json(prompt).get("steps", [])
 
 
-def critique(components, relationships, nfrs):
 
-    prompt = f"""
-Components:
-{json.dumps(components, indent=2)}
+def fallback_runtime_flow(style):
+    style = style.lower()
 
-Relationships:
-{json.dumps(relationships, indent=2)}
+    if "event" in style:
+        return [
+            {
+                "from": "Order Service",
+                "to": "Message Broker",
+                "action": "Publish order created event",
+                "mode": "async"
+            },
+            {
+                "from": "Message Broker",
+                "to": "Notification Service",
+                "action": "Trigger user notification",
+                "mode": "async"
+            }
+        ]
 
-NFRs:
-{nfrs}
-
-Return ONLY valid JSON:
-
-{{
- "issues":[]
-}}
-"""
-
-    data = robust_llm_json(prompt)
-
-    if isinstance(data, list):
-     return data
-
-    return data.get("issues", [])
-
+    # default layered
+    return [
+        {
+            "from": "API",
+            "to": "Service",
+            "action": "Process business request",
+            "mode": "sync"
+        },
+        {
+            "from": "Service",
+            "to": "Database",
+            "action": "Persist data",
+            "mode": "sync"
+        }
+    ]
 
 # ================= ORCHESTRATOR =================
 
