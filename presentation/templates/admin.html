@@ -92,146 +92,151 @@
     </div>
   </nav>
 
-  <main class="max-w-7xl mx-auto p-8">
-    
-    <div class="mb-10 animate-fade-down">
-      <h2 class="text-3xl font-bold text-[var(--nav-dark)]">System Insights</h2>
-      <div class="h-1 w-20 bg-[var(--accent-main)] mt-2 rounded-full"></div>
+ <main class="max-w-7xl mx-auto p-8">
+  
+  <div class="mb-12 flex justify-between items-end animate-fade-down">
+    <div>
+      <h2 class="text-4xl font-bold text-[var(--nav-dark)] tracking-tight">System Insights</h2>
+      <p class="text-gray-500 mt-1 font-medium text-sm">Real-time architectural generation analytics</p>
+      <div class="h-1.5 w-24 bg-gradient-to-right from-[var(--accent-main)] to-[var(--accent-secondary)] mt-4 rounded-full"></div>
     </div>
-
-
-    <div class="mt-10">
-  <h3 class="text-xl font-bold mb-4">📊 Architecture Usage</h3>
-
-  <div class="studio-card p-6">
-      <canvas id="archChart"
-        data-labels='{{ arch_labels | tojson | safe }}'
-        data-values='{{ arch_counts | tojson | safe }}'>
-</canvas>
-  </div>
-</div>
-
-
-
-    <div class="studio-card p-6 flex items-center gap-5">
-  <div class="icon-box">🏗️</div>
-  <div>
-    <p class="text-xs font-bold text-gray-400 uppercase tracking-widest">
-      Most Selected Architecture
-    </p>
-    <p class="text-xl font-bold stat-value">
-      {{ most_arch }}
-    </p>
-    <p class="text-xs text-gray-400 mt-1">
-      Selected {{ most_count }} times
-    </p>
-  </div>
-</div>
-
-
-<div class="studio-card p-6 flex items-center gap-5">
-  <div class="icon-box">📈</div>
-  <div>
-    <p class="text-xs font-bold text-gray-400 uppercase tracking-widest">
-      Generation Success Rate
-    </p>
-    <p class="text-xl font-bold stat-value">
-      {{ success_rate }}%
-    </p>
-
-    <p class="text-xs mt-1 
-    {% if success_rate >= 70 %}
-      text-green-500
-    {% else %}
-      text-red-500
-    {% endif %}
-    ">
-      {{ status }} ({{ generated }} / {{ total_projects }})
-    </p>
-  </div>
-</div>
-<div class="mt-10">
-  <h3 class="text-xl font-bold mb-4">⏱️ Recent Activity</h3>
-
-  <div class="studio-card p-6">
-    
-    {% for project in recent_projects %}
-    <div class="flex justify-between items-center py-2 border-b last:border-none">
+    <div class="hidden md:block text-right">
       
+      
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+    <div class="studio-card p-6 flex items-center gap-5 border-l-4 border-l-[var(--accent-main)]">
+      <div class="icon-box shrink-0">👥</div>
       <div>
-        <p class="font-semibold text-sm">{{ project.project_name }}</p>
-        <p class="text-xs text-gray-400">
-          {{ project.created_at }}
-        </p>
+        <p class="text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em]">Total Users</p>
+        <p class="text-3xl font-bold stat-value leading-none mt-1" id="usersCount">25</p>
       </div>
-
-      <div class="text-xs font-bold text-[var(--accent-main)]">
-        {{ project.progress | default(0) }}%
-      </div>
-
     </div>
-    {% endfor %}
 
+    <div class="studio-card p-6 flex items-center gap-5 border-l-4 border-l-[var(--accent-secondary)]">
+      <div class="icon-box shrink-0">📁</div>
+      <div>
+        <p class="text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em]">Active Projects</p>
+        <p class="text-3xl font-bold stat-value leading-none mt-1" id="projectsCount">12</p>
+      </div>
+    </div>
+
+    <div class="studio-card p-6 flex items-center gap-5 border-l-4 border-l-[var(--scribble)]">
+      <div class="icon-box shrink-0">📐</div>
+      <div>
+        <p class="text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em]">Generations</p>
+        <p class="text-3xl font-bold stat-value leading-none mt-1" id="archCount">40</p>
+      </div>
+    </div>
   </div>
-</div>
 
-
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
-      <div class="studio-card p-6 flex items-center gap-5">
-        <div class="icon-box">👥</div>
-        <div>
-          <p class="text-xs font-bold text-gray-400 uppercase tracking-widest">Total Users</p>
-          <p class="text-4xl font-bold stat-value" id="usersCount">25</p>
-        </div>
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-12">
+    
+    <div class="lg:col-span-8">
+      <div class="flex items-center justify-between mb-4 px-2">
+        <h3 class="text-lg font-bold flex items-center gap-2">
+          <span class="w-2 h-6 bg-[var(--accent-main)] rounded-full"></span>
+          📊 Architecture Usage
+        </h3>
       </div>
-
-      <div class="studio-card p-6 flex items-center gap-5">
-        <div class="icon-box">📁</div>
-        <div>
-          <p class="text-xs font-bold text-gray-400 uppercase tracking-widest">Active Projects</p>
-          <p class="text-4xl font-bold stat-value" id="projectsCount">12</p>
-        </div>
-      </div>
-
-      <div class="studio-card p-6 flex items-center gap-5">
-        <div class="icon-box">📐</div>
-        <div>
-          <p class="text-xs font-bold text-gray-400 uppercase tracking-widest">Generations</p>
-          <p class="text-4xl font-bold stat-value" id="archCount">40</p>
-        </div>
+      <div class="studio-card p-8 h-[450px] flex items-center justify-center">
+        <canvas id="archChart" 
+                data-labels='{{ arch_labels | tojson | safe }}' 
+                data-values='{{ arch_counts | tojson | safe }}'>
+        </canvas>
       </div>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+    <div class="lg:col-span-4 flex flex-col gap-6">
+      <h3 class="text-lg font-bold mb-4 invisible text-white">Metrics</h3>
       
-      <div class="studio-card p-8 text-center flex flex-col items-center">
-        <h3 class="text-lg font-bold mb-2">User Registry</h3>
-        <p class="text-sm text-gray-500 mb-8 px-4">Audit and manage professional access credentials.</p>
-        <button onclick="goToUsers()" class="create-btn w-full text-sm">
-  ACCESS REGISTRY
-</button>
+      <div class="studio-card p-6 relative overflow-hidden group">
+        <div class="absolute right-[-10px] top-[-10px] opacity-10 text-6-xl group-hover:scale-110 transition-transform">🏗️</div>
+        <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Top Performer</p>
+        <p class="text-2xl font-bold text-[var(--nav-dark)] truncate">{{ most_arch }}</p>
+        <div class="flex items-center gap-2 mt-4 bg-[var(--accent-main)]/5 w-fit px-3 py-1 rounded-full">
+          <span class="text-[var(--accent-main)] font-bold text-sm">{{ most_count }}</span>
+          <span class="text-xs text-gray-500 font-medium whitespace-nowrap">Deployments</span>
+        </div>
       </div>
 
-      <div class="studio-card p-8 text-center flex flex-col items-center">
-        <h3 class="text-lg font-bold mb-2">Project Repository</h3>
-        <p class="text-sm text-gray-500 mb-8 px-4">Global oversight of all architectural blueprints.</p>
-        <button onclick="goToProjects()" class="create-btn w-full text-sm">
-  OPEN REPOSITORY
-</button>
+      <div class="studio-card p-6">
+        <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Gen-Success Rate</p>
+        <div class="flex items-end justify-between mb-2">
+          <p class="text-4xl font-bold stat-value">{{ success_rate }}%</p>
+          <p class="text-xs font-bold {% if success_rate >= 70 %}text-emerald-500{% else %}text-red-500{% endif %} uppercase">
+            {{ status }}
+          </p>
+        </div>
+        <div class="w-full bg-gray-100 h-2 rounded-full overflow-hidden">
+          <div class="bg-gradient-to-r from-[var(--accent-main)] to-[var(--accent-secondary)] h-full transition-all duration-1000" 
+               ></div>
+        </div>
+        <p class="text-[10px] text-gray-400 mt-3 font-medium">Total: {{ generated }} of {{ total_projects }} finalized</p>
       </div>
+    </div>
+  </div>
 
-      <div class="studio-card p-8 text-center flex flex-col items-center border-dashed border-2">
-        <h3 class="text-lg font-bold mb-2">Neural Retraining</h3>
-        <p class="text-sm text-gray-500 mb-8 px-4">Trigger model optimization based on new datasets.</p>
-        <button onclick="triggerRetrain()" class="w-full py-3 rounded-full font-bold text-sm border-2 border-[var(--scribble)] text-[var(--scribble)] hover:bg-[var(--scribble)] hover:text-white transition-all">
-          INITIALIZE RETRAINING
-        </button>
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+    
+    <div class="flex flex-col">
+      <h3 class="text-lg font-bold mb-4 flex items-center gap-2">
+        <span class="w-2 h-6 bg-[var(--accent-secondary)] rounded-full"></span>
+        ⏱️ Activity Log
+      </h3>
+      <div class="studio-card p-4 flex-grow">
+        <div class="space-y-1">
+          {% for project in recent_projects %}
+          <div class="group flex justify-between items-center p-3 hover:bg-gray-50/50 rounded-xl transition-colors">
+            <div class="flex items-center gap-4">
+              <div class="w-10 h-10 rounded-lg bg-gray-100 flex items-center justify-center font-bold text-[var(--accent-main)] group-hover:bg-[var(--accent-main)] group-hover:text-white transition-all">
+                {{ project.project_name[0] | upper }}
+              </div>
+              <div>
+                <p class="font-bold text-sm text-gray-800">{{ project.project_name }}</p>
+                <p class="text-[10px] text-gray-400 font-medium uppercase">{{ project.created_at }}</p>
+              </div>
+            </div>
+            <div class="text-right">
+              <div class="text-xs font-mono font-bold text-[var(--accent-main)] bg-[var(--accent-main)]/10 px-2 py-1 rounded">
+                {{ project.progress | default(0) }}%
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
       </div>
-
     </div>
 
-  </main>
+    <div>
+      <h3 class="text-lg font-bold mb-4">⚙️ Control Center</h3>
+      <div class="grid grid-cols-2 gap-4">
+        <div class="studio-card p-6 text-center hover:bg-white transition-all group">
+           <div class="text-2xl mb-3 group-hover:scale-125 transition-transform">👥</div>
+           <p class="font-bold text-sm mb-4">User Registry</p>
+           <button onclick="goToUsers()" class="create-btn w-full text-[10px] py-2 px-0 shadow-none">MANAGEMENT</button>
+        </div>
+        <div class="studio-card p-6 text-center hover:bg-white transition-all group">
+           <div class="text-2xl mb-3 group-hover:scale-125 transition-transform">📂</div>
+           <p class="font-bold text-sm mb-4">Project Repo</p>
+           <button onclick="goToProjects()" class="create-btn w-full text-[10px] py-2 px-0 shadow-none">BROWSE ALL</button>
+        </div>
+        <div class="studio-card p-6 col-span-2 border-dashed border-2 flex items-center justify-between group">
+           <div class="text-left">
+             <h4 class="font-bold text-sm">Neural Retraining</h4>
+             <p class="text-[10px] text-gray-400">Optimize AI with new datasets</p>
+           </div>
+           <button onclick="triggerRetrain()" class="px-6 py-2 rounded-full font-bold text-[10px] border-2 border-[var(--scribble)] text-[var(--scribble)] hover:bg-[var(--scribble)] hover:text-white transition-all">
+             INITIALIZE
+           </button>
+        </div>
+      </div>
+    </div>
+  </div>
 
+</main>
 
   <script>
     
