@@ -13,7 +13,7 @@ def generate_report(project_id: str):
     PRIMARY_COLOR = HexColor("#1A365D")    # Dark Blue (Enterprise style)
     SECONDARY_COLOR = HexColor("#4A5568")  # Slate Gray
     BG_ACCENT = HexColor("#F7FAFC")       # Ultra Light Gray for boxes
-    
+                                                                
     BASE_DIR = Path(__file__).resolve()
     PROJECT_ROOT = BASE_DIR.parents[3]
 
