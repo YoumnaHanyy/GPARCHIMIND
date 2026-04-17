@@ -725,7 +725,10 @@ document.getElementById('processForm').onsubmit = async (e) => {
       showResults();
     }
 
+
   } catch (err) {
+      console.log("🔥 ERROR FROM BACKEND:", err);
+
     stopLoadingAnimation();
     loading.classList.add('hidden');
     document.getElementById('step-upload').classList.remove('hidden');
@@ -736,7 +739,7 @@ document.getElementById('processForm').onsubmit = async (e) => {
     if (msg.toLowerCase().includes("pdf")) {
       friendlyMsg = "Invalid file format. Please upload a valid PDF document.";
     } else if (msg.toLowerCase().includes("timeout")) {
-      friendlyMsg = "The process took too long. Please try again later.";
+      friendlyMsg = "The process took too long. Please try again later.";                            
     }
 
     showErrorModal(friendlyMsg);
