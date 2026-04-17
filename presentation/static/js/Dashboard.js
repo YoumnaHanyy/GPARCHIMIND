@@ -1024,3 +1024,109 @@ function downloadCode() {
 function regenerateCode() {
   alert("Regenerating code...");
 }
+
+function openProject(projectId) {
+  console.log("📂 Opening project:", projectId);
+
+  fetch(`/get_project/${projectId}`)
+    .then(res => res.json())
+    .then(data => {
+
+      console.log("DATA:", data); // مهم للديباج
+
+      if (data.error) {
+        alert("Failed to load project");
+        return;
+      }
+
+      // ======================
+      // 1. Restore state
+      // ======================
+      extractedData = {
+        functional: data.functional || [],
+        nfr_predictions: data.nfr_predictions || [],
+        functional_method: data.functional_method,
+        ordinal_method: data.ordinal_method,
+        binary_method: data.binary_method,
+        weighted_method: data.weighted_method,
+        hybrid_method: data.hybrid_method
+      };
+
+      currentPhase = data.current_phase || 1;
+      selectedArchitecture = data.selectedArchitecture || null;
+
+      window.currentProjectId = projectId;
+
+      // ======================
+      // 2. Switch UI
+      // ======================
+      document.getElementById('dashboardView').classList.add('hidden');
+      document.getElementById('uploadView').classList.remove('hidden');
+
+      // 🔥 أهم سطر (يخفي upload UI)
+      document.getElementById("step-upload").classList.add("hidden");
+
+      // ======================
+      // 3. Show results UI
+      // ======================
+      document.getElementById('progressSection').classList.remove('hidden');
+      document.getElementById('resultContent').classList.remove('hidden');
+
+      // ======================
+      // 4. Render correct phase
+      // ======================
+      renderPhase();
+
+      console.log("✅ Project restored successfully");
+    })
+    .catch(err => {
+      console.error("❌ Error loading project:", err);
+    });
+}  console.log("📂 Opening project:", projectId);
+
+  fetch(`/get_project/${projectId}`)
+    .then(res => res.json())
+    .then(data => {
+
+      if (data.error) {
+        alert("Failed to load project");
+        return;
+      }
+
+      // ======================
+      // 1. Restore state
+      // ======================
+      extractedData = {
+  functional: data.functional || [],
+  nfr_predictions: data.nfr_predictions || [],
+  functional_method: data.functional_method,
+  ordinal_method: data.ordinal_method,
+  binary_method: data.binary_method,
+  weighted_method: data.weighted_method,
+  hybrid_method: data.hybrid_method
+};
+
+currentPhase = data.current_phase || 1;
+      selectedArchitecture = data.selectedArchitecture || null;
+
+      window.currentProjectId = projectId;
+
+      // ======================
+      // 2. Switch UI
+      // ======================
+      document.getElementById('dashboardView').classList.add('hidden');
+      document.getElementById('uploadView').classList.remove('hidden');
+
+      // ======================
+      // 3. Show results
+      // ======================
+      document.getElementById('progressSection').classList.remove('hidden');
+      document.getElementById('resultContent').classList.remove('hidden');
+
+      renderPhase();
+
+      console.log("✅ Project loaded successfully");
+    })
+    .catch(err => {
+      console.error("❌ Error loading project:", err);
+    });

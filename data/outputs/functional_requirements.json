@@ -1,67 +1,51 @@
 [
   {
-    "description": "Admin should be able to view and manage user accounts, including user registration information",
+    "description": "User can conduct a conversation with the chatbot where he will provide the bot with his skills and then will receive a suitable job based on his provided skills",
     "source": {
       "page": null,
       "start_index": null
     },
-    "project_id": "proj_b4ef831b"
+    "project_id": "proj_7ddffc05"
   },
   {
-    "description": "The system should ask follow-up questions to gain more information about users’ skills",
+    "description": "The input will first undergoes all the pre-processing techniques mentioned starting from removing unimportant characters, lowercasing, removing stopwords, lemmatization",
     "source": {
       "page": null,
       "start_index": null
     },
-    "project_id": "proj_b4ef831b"
+    "project_id": "proj_7ddffc05"
   },
   {
-    "description": "User can give feedback after the job recommender model provides him with a suitable job",
+    "description": "Users will share their skills and interests with the bot, and the system will intelligently analyze and extract pertinent details from the user’s responses",
     "source": {
       "page": null,
       "start_index": null
     },
-    "project_id": "proj_b4ef831b"
+    "project_id": "proj_7ddffc05"
   },
   {
-    "description": "Job recommender model will match the user skills with a specific job",
+    "description": "User should be able to conduct a conversation with the chatbot",
     "source": {
       "page": null,
       "start_index": null
     },
-    "project_id": "proj_b4ef831b"
+    "project_id": "proj_7ddffc05"
   },
   {
-    "description": "User should be able to register using email and password",
+    "description": "Users should be able to use mobile phones",
     "source": {
       "page": null,
       "start_index": null
     },
-    "project_id": "proj_b4ef831b"
+    "project_id": "proj_7ddffc05"
   },
   {
-    "description": "User can edit his profile",
+    "description": "Users should be able to converse in English with the chatbot",
     "source": {
       "page": null,
       "start_index": null
     },
-    "project_id": "proj_b4ef831b"
-  },
-  {
-    "description": "User can conduct a conversation with the chatbot",
-    "source": {
-      "page": null,
-      "start_index": null
-    },
-    "project_id": "proj_b4ef831b"
-  },
-  {
-    "description": "The system should allow users to enter their skills into the chat interface",
-    "source": {
-      "page": null,
-      "start_index": null
-    },
-    "project_id": "proj_b4ef831b"
+    "project_id": "proj_7ddffc05"
   },
   {
     "description": "Admin should have access to a monitoring system that displays user-chatbot interactions in real-time",
@@ -69,15 +53,79 @@
       "page": null,
       "start_index": null
     },
-    "project_id": "proj_b4ef831b"
+    "project_id": "proj_7ddffc05"
   },
   {
-    "description": "Admin should have the ability to view user profiles",
+    "description": "Admin should be able to view and manage user accounts, including user registration information",
     "source": {
       "page": null,
       "start_index": null
     },
-    "project_id": "proj_b4ef831b"
+    "project_id": "proj_7ddffc05"
+  },
+  {
+    "description": "User can edit his profile",
+    "source": {
+      "page": null,
+      "start_index": null
+    },
+    "project_id": "proj_7ddffc05"
+  },
+  {
+    "description": "The system should ask follow-up questions to gain more information about users’ skills",
+    "source": {
+      "page": null,
+      "start_index": null
+    },
+    "project_id": "proj_7ddffc05"
+  },
+  {
+    "description": "Job recommender model will match the user skills with a specific job",
+    "source": {
+      "page": null,
+      "start_index": null
+    },
+    "project_id": "proj_7ddffc05"
+  },
+  {
+    "description": "User can give feedback after the job recommender model provides him with a suitable job",
+    "source": {
+      "page": null,
+      "start_index": null
+    },
+    "project_id": "proj_7ddffc05"
+  },
+  {
+    "description": "User will conduct a conversation with the chatbot in which he will provide his skills manually and then his skills will be extracted",
+    "source": {
+      "page": null,
+      "start_index": null
+    },
+    "project_id": "proj_7ddffc05"
+  },
+  {
+    "description": "The system should allow users to enter their skills into the chat interface",
+    "source": {
+      "page": null,
+      "start_index": null
+    },
+    "project_id": "proj_7ddffc05"
+  },
+  {
+    "description": "User should be able to register using email and password",
+    "source": {
+      "page": null,
+      "start_index": null
+    },
+    "project_id": "proj_7ddffc05"
+  },
+  {
+    "description": "Admin should be able to view user profiles",
+    "source": {
+      "page": null,
+      "start_index": null
+    },
+    "project_id": "proj_7ddffc05"
   },
   {
     "description": "Admin should be able to view and analyze user feedback received after the AI suggests suitable jobs",
@@ -85,6 +133,6 @@
       "page": null,
       "start_index": null
     },
-    "project_id": "proj_b4ef831b"
+    "project_id": "proj_7ddffc05"
   }
 ]

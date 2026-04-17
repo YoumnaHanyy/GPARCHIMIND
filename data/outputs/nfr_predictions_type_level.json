@@ -4,7 +4,7 @@
     "description": "The User’s chat history can only be accessible through his account and will not be visible to other users",
     "predicted_type": "US",
     "predicted_type_label": "Usability",
-    "confidence": 0.46848148107528687,
+    "confidence": 0.4684816896915436,
     "predicted_level": "Low",
     "confirmed": false
   },
@@ -18,29 +18,20 @@
     "confirmed": false
   },
   {
-    "title": "Design Constraints",
-    "description": "The system should be designed to handle connection interruption and data loss",
-    "predicted_type": "A",
-    "predicted_type_label": "Availability",
-    "confidence": 0.9492068290710449,
-    "predicted_level": "High",
-    "confirmed": false
-  },
-  {
     "title": "Performance",
-    "description": "The system should be able to process user input and provide job recommendations in a timely manner",
+    "description": "The system might not find suitable job offers based on the job recommendation",
     "predicted_type": "US",
     "predicted_type_label": "Usability",
-    "confidence": 0.5980256199836731,
-    "predicted_level": "High",
+    "confidence": 0.8784484267234802,
+    "predicted_level": "Medium",
     "confirmed": false
   },
   {
-    "title": "Scalability",
-    "description": "The system should be able to handle a large number of users and job listings",
-    "predicted_type": "SC",
-    "predicted_type_label": "Scalability",
-    "confidence": 0.9776875376701355,
+    "title": "Design Constraints",
+    "description": "Dependency The function ID:06 depends on ID:03 Risk Connection interruption, the data is lost and user needs to re-fill the form",
+    "predicted_type": "SE",
+    "predicted_type_label": "Security",
+    "confidence": 0.32590654492378235,
     "predicted_level": "Medium",
     "confirmed": false
   }

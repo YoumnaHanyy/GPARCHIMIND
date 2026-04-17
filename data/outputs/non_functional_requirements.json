@@ -2,26 +2,21 @@
   {
     "title": "Security",
     "description": "The User’s chat history can only be accessible through his account and will not be visible to other users",
-    "project_id": "proj_b4ef831b"
+    "project_id": "proj_7ddffc05"
   },
   {
     "title": "Usability",
     "description": "The system interface should be designed for seamless user interaction",
-    "project_id": "proj_b4ef831b"
-  },
-  {
-    "title": "Design Constraints",
-    "description": "The system should be designed to handle connection interruption and data loss",
-    "project_id": "proj_b4ef831b"
+    "project_id": "proj_7ddffc05"
   },
   {
     "title": "Performance",
-    "description": "The system should be able to process user input and provide job recommendations in a timely manner",
-    "project_id": "proj_b4ef831b"
+    "description": "The system might not find suitable job offers based on the job recommendation",
+    "project_id": "proj_7ddffc05"
   },
   {
-    "title": "Scalability",
-    "description": "The system should be able to handle a large number of users and job listings",
-    "project_id": "proj_b4ef831b"
+    "title": "Design Constraints",
+    "description": "Dependency The function ID:06 depends on ID:03 Risk Connection interruption, the data is lost and user needs to re-fill the form",
+    "project_id": "proj_7ddffc05"
   }
 ]
