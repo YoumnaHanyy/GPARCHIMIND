@@ -6,181 +6,229 @@ def generate_report(project_id: str):
     from reportlab.lib.pagesizes import A4
     from reportlab.pdfgen import canvas
     from reportlab.lib.units import cm
+    from reportlab.pdfbase.pdfmetrics import stringWidth
+    from reportlab.lib.colors import HexColor, white, lightgrey
 
+    # --- Configuration & Colors ---
+    PRIMARY_COLOR = HexColor("#1A365D")    # Dark Blue (Enterprise style)
+    SECONDARY_COLOR = HexColor("#4A5568")  # Slate Gray
+    BG_ACCENT = HexColor("#F7FAFC")       # Ultra Light Gray for boxes
+    
     BASE_DIR = Path(__file__).resolve()
     PROJECT_ROOT = BASE_DIR.parents[3]
 
-
+    # =========================
+    # 📂 Files (Same as original)
+    # =========================
     requirements_file = PROJECT_ROOT / "data" / "outputs" / "input" / "requirements.json"
     frs_file = PROJECT_ROOT / "data" / "outputs" / "functional_requirements.json"
     nfrs_file = PROJECT_ROOT / "data" / "outputs" / "non_functional_requirements.json"
-
     acme_file = PROJECT_ROOT / "data" / "outputs" / "architecture.acme"
 
-    context_diagram = PROJECT_ROOT / "data" / "outputs" / "context_view.png"
- 
     container_diagram = PROJECT_ROOT / "data" / "outputs" / "architecture_c4.png"
     process_diagram = PROJECT_ROOT / "data" / "outputs" / "process_view.png"
     deployment_diagram = PROJECT_ROOT / "data" / "outputs" / "deployment_view.png"
-    
-    pdf_file = PROJECT_ROOT / "data" / "outputs" / "architecture_report.pdf"
     usecase_diagram = PROJECT_ROOT / "data" / "outputs" / "usecase_view.png"
 
+    pdf_file = PROJECT_ROOT / "data" / "outputs" / "architecture_report.pdf"
+
+    # =========================
+    # 🧠 Load DB Data
+    # =========================
     hybrid_doc = db.hybrid_method.find_one({"project_id": project_id})
     project_doc = db.projects.find_one({"project_id": project_id})
 
-    if project_doc:
-      project_name = project_doc.get("project_name", "Unknown Project")
-    else:
-      project_name = "Unknown Project"
-    if not hybrid_doc or not hybrid_doc.get("selected_architecture"):
-     architecture_style = "Not selected"
-    else:
-     architecture_style = hybrid_doc["selected_architecture"].replace("_", " ").title()
+    project_name = project_doc.get("project_name", "Unknown Project") if project_doc else "Unknown Project"
+    architecture_style = (
+        hybrid_doc["selected_architecture"].replace("_", " ").title()
+        if hybrid_doc and hybrid_doc.get("selected_architecture")
+        else "Not selected"
+    )
 
+    # =========================
+    # 📄 Canvas & Helpers
+    # =========================
     c = canvas.Canvas(str(pdf_file), pagesize=A4)
     width, height = A4
     y = height - 2 * cm
 
-    # ---------- Helpers ----------
+    def draw_footer():
+        c.saveState()
+        c.setFont("Helvetica", 8)
+        c.setFillColor(SECONDARY_COLOR)
+        c.setStrokeColor(lightgrey)
+        c.line(2 * cm, 1.5 * cm, width - 2 * cm, 1.5 * cm)
+        c.drawString(2 * cm, 1 * cm, f"ArchiMind - {project_name}")
+        c.drawRightString(width - 2 * cm, 1 * cm, f"Page {c.getPageNumber()}")
+        c.restoreState()
+
     def new_page():
         nonlocal y
+        draw_footer()
         c.showPage()
         y = height - 2 * cm
 
-    def title(text):
-        nonlocal y
-        if y < 3 * cm:
-            new_page()
-        c.setFont("Helvetica-Bold", 20)
-        c.drawString(2 * cm, y, text)
-        y -= 1.2 * cm
+    def wrap_text(text, font_name, font_size, max_width):
+        words = str(text).split()
+        lines = []
+        current_line = ""
+        for word in words:
+            test_line = current_line + (" " if current_line else "") + word
+            if stringWidth(test_line, font_name, font_size) <= max_width:
+                current_line = test_line
+            else:
+                lines.append(current_line)
+                current_line = word
+        if current_line: lines.append(current_line)
+        return lines
 
-    def section(text):
-        nonlocal y
-        if y < 3 * cm:
-            new_page()
-        c.setFont("Helvetica-Bold", 14)
-        c.drawString(2 * cm, y, text)
-        y -= 0.8 * cm
-        c.line(2 * cm, y, width - 2 * cm, y)
-        y -= 0.8 * cm
+    def cover_page():
+        # Header Graphic
+        c.setFillColor(PRIMARY_COLOR)
+        c.rect(0, height - 10 * cm, width, 10 * cm, fill=1, stroke=0)
+        
+        c.setFillColor(white)
+        c.setFont("Helvetica-Bold", 32)
+        c.drawString(2 * cm, height - 5 * cm, "Architecture")
+        c.drawString(2 * cm, height - 6.5 * cm, "Specification Report")
 
-    def paragraph(text):
+        # Project Info
+        c.setFillColor(SECONDARY_COLOR)
+        c.setFont("Helvetica-Bold", 18)
+        c.drawString(2 * cm, height - 12 * cm, f"Project: {project_name}")
+        
+        c.setFont("Helvetica", 14)
+        c.drawString(2 * cm, height - 13 * cm, f"Target Architecture: {architecture_style}")
+        
+        # Bottom text
+        c.setFont("Helvetica-Oblique", 10)
+        c.drawCentredString(width / 2, 2 * cm, "This document was automatically generated by ArchiMind AI")
+        c.showPage()
+
+    def section_title(text):
         nonlocal y
-        c.setFont("Helvetica", 11)
-        for line in text.split("\n"):
+        if y < 4 * cm: new_page()
+        y -= 0.5 * cm
+        c.setFillColor(PRIMARY_COLOR)
+        c.setFont("Helvetica-Bold", 18)
+        c.drawString(2 * cm, y, text)
+        y -= 0.3 * cm
+        c.setStrokeColor(PRIMARY_COLOR)
+        c.setLineWidth(1.5)
+        c.line(2 * cm, y, 5 * cm, y) # Stylish short line
+        y -= 1 * cm
+
+    def paragraph(text, font_style="Helvetica", size=11, color=SECONDARY_COLOR, indent=2):
+        nonlocal y
+        c.setFillColor(color)
+        c.setFont(font_style, size)
+        max_w = width - 4 * cm
+        lines = wrap_text(text, font_style, size, max_w)
+        
+        for line in lines:
             if y < 2 * cm:
                 new_page()
-            c.drawString(2 * cm, y, line)
+                c.setFillColor(color)
+                c.setFont(font_style, size)
+            c.drawString(indent * cm, y, line)
             y -= 0.6 * cm
-        y -= 0.4 * cm
+        y -= 0.2 * cm
 
-    def bullet_list(items):
-        nonlocal y
-        c.setFont("Helvetica", 11)
-        for item in items:
-            if y < 2 * cm:
-                new_page()
-            c.drawString(2.4 * cm, y, f"- {item}")
-            y -= 0.6 * cm
-        y -= 0.4 * cm
+    # =========================
+    # 🟣 Execution
+    # =========================
+    cover_page()
+    y = height - 2 * cm # Reset Y for first content page
 
-    def image_section(title_text, image_path):
-     nonlocal y
-     new_page()  # 🔥 كل diagram في صفحة لوحده
-
-     section(title_text)
-
-     if image_path.exists():
-        c.drawImage(
-            str(image_path),
-            1 * cm,
-            4 * cm,
-            width=width - 2 * cm,
-            height=height - 6 * cm,
-            preserveAspectRatio=True,
-            mask="auto"
-        )
-     else:
-        paragraph("Diagram not available.")    # ---------- Title ----------
-    title("Architecture Design Report")
-
-    paragraph(
-        "This document presents the architectural design of the system, "
-        "including its context, logical structure, runtime behavior, "
-        "and physical deployment."
-    )
-
-    # ---------- Requirements ----------
-    section("1. System Requirements")
-
-    # ---- Load system info ----
-    with open(requirements_file, "r", encoding="utf-8") as f:
-      req = json.load(f)
-
-    system_name = req.get("system_name")
+    # --- 1. System Overview ---
+    section_title("1. System Overview")
+    paragraph("This comprehensive architectural report details the functional and non-functional requirements, logical structure, and deployment strategies for the proposed system.")
     
+    paragraph(f"Project Name: {project_name}", font_style="Helvetica-Bold")
+    paragraph(f"Selected Architecture Style: {architecture_style}", font_style="Helvetica-Bold")
 
-# ---- Load FRs ----
-    with open(frs_file, "r", encoding="utf-8") as f:
-      functional_requirements = json.load(f)
+    # Functional Requirements
+    section_title("Functional Requirements")
+    try:
+        with open(frs_file, "r", encoding="utf-8") as f:
+            fr_data = json.load(f)
+            for item in fr_data:
+                txt = item.get("title") or item.get("description") or str(item)
+                paragraph(f"• {txt}", indent=2.5)
+    except Exception:
+        paragraph("Functional requirements data not found.")
 
-# ---- Load NFRs ----
-    with open(nfrs_file, "r", encoding="utf-8") as f:
-     non_functional_requirements = json.load(f)
+    # Non-Functional Requirements
+    section_title("Non-Functional Requirements")
+    try:
+        with open(nfrs_file, "r", encoding="utf-8") as f:
+            nfr_data = json.load(f)
+            for nfr in nfr_data:
+                title = nfr.get("title", "Requirement")
+                desc = nfr.get("description", "")
+                paragraph(f"{title}: {desc}", font_style="Helvetica-Bold", size=10)
+    except Exception:
+        paragraph("Non-functional requirements data not found.")
 
-    paragraph(f"Project Name: {project_name}")
-    paragraph(f"Architecture Style: {architecture_style}")
-
-
-    section("Functional Requirements")
-    bullet_list([
-    fr.get("title") or fr.get("description") or str(fr)
-    for fr in functional_requirements
-    ])
-
-    section("Non-Functional Requirements")
-
-    for nfr in non_functional_requirements:
-     title = nfr.get("title") or "Unnamed Requirement"
-     desc = nfr.get("description") or ""
-
-    paragraph(f"- {title}")
-    paragraph(f"      Description: {desc}")
-
-
-
-   
-
-
-
-
-
-
-    # ---------- ACME ----------
-    section("2. Formal Architecture Specification (ACME ADL)")
-    paragraph(
-        "The following section provides a formal architectural specification "
-        "using ACME ADL, capturing components, connectors, and architectural properties."
-    )
-
-    with open(acme_file, "r", encoding="utf-8") as f:
-        c.setFont("Courier", 9)
-        for line in f:
-            if y < 2 * cm:
+    # --- 2. ACME ---
+    new_page()
+    section_title("2. Architecture Specification (ACME)")
+    paragraph("The following section provides the Formal ADL (Architecture Description Language) snippet using the ACME standard:")
+    
+    # Gray background box for code
+    if acme_file.exists():
+        y -= 0.5 * cm
+        c.setFillColor(BG_ACCENT)
+        c.rect(1.8 * cm, 3 * cm, width - 3.6 * cm, y - 3.5 * cm, fill=1, stroke=0)
+        
+        code_y = y - 0.5 * cm
+        with open(acme_file, "r", encoding="utf-8") as f:
+            c.setFillColor(HexColor("#2D3748")) # Darker code color
+            c.setFont("Courier", 9)
+            for line in f:
+             if code_y < 3.5 * cm:
                 new_page()
+                c.setFillColor(HexColor("#2D3748"))
                 c.setFont("Courier", 9)
-            c.drawString(2 * cm, y, line.rstrip())
-            y -= 0.45 * cm
-        y -= 0.6 * cm
+                code_y = height - 2 * cm
 
-    # ---------- Views ----------
-    image_section("3. Context View", context_diagram)
-    
-    image_section("4. Logical View (C4 Container Diagram)", container_diagram)
-    image_section("5. Process View (Runtime Interaction)", process_diagram)
-    image_section("6. Physical View (Deployment Diagram)", deployment_diagram)
-    image_section("7. Use Case View", usecase_diagram)
+             c.drawString(2.2 * cm, code_y, line.strip())
+             code_y -= 0.4 * cm
+        y = 2.5 * cm # Move cursor below the box
+
+    # --- 3. Diagrams ---
+    diagram_list = [
+        ("3. Logical View (C4)", container_diagram, "High-level architectural components and their interactions."),
+        ("4. Process View", process_diagram, "Dynamic behavior and runtime flow of the system."),
+        ("5. Deployment View", deployment_diagram, "Mapping of software to physical hardware nodes."),
+        ("6. Use Case View", usecase_diagram, "User-centric interaction scenarios.")
+    ]
+
+    for title, img_path, desc in diagram_list:
+        new_page()
+        section_title(title)
+        paragraph(desc)
+        
+        if img_path.exists():
+            # Draw image with a light border for professional look
+            c.setStrokeColor(lightgrey)
+            c.setLineWidth(0.5)
+            c.rect(1.5 * cm, 4.5 * cm, width - 3 * cm, height - 10 * cm, fill=0, stroke=1)
+            c.drawImage(
+                str(img_path),
+                1.6 * cm, 4.6 * cm,
+                width=width - 3.2 * cm,
+                height=height - 10.2 * cm,
+                preserveAspectRatio=True,
+                mask="auto"
+            )
+        else:
+            paragraph("[Diagram Asset Missing]", font_style="Helvetica-Bold", color=HexColor("#E53E3E"))
+
+    # =========================
+    # 💾 Finalize
+    # =========================
+    draw_footer()
     c.save()
+
     return pdf_file

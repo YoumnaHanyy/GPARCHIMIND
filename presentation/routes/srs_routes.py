@@ -6,7 +6,6 @@ import fitz
 import pdfplumber
 import traceback
 from ai.inference.feature_extractor import generate_phase4
-import fitz
 from application.extraction.extraction_service import process_srs
 from ai.inference.predict_type_level import predict_and_save_nfr, predict_level_for_text
 from service.ordinal_service import execute_ordinal_method
@@ -23,11 +22,15 @@ from infrastructure.repositories.human_feedback_repository import save_new_confi
 from service.retrain_service import merge_and_retrain
 from infrastructure.database import db
 from service.retrain_service import run_retrain_async
-from ai.inference.feature_extractor import generate_phase4
 router = APIRouter()
 
 UPLOAD_DIR = "uploads"
 os.makedirs(UPLOAD_DIR, exist_ok=True)
+
+
+
+
+
 def extract_text_from_pdf(pdf_path: str) -> str:
     text = ""
     with pdfplumber.open(pdf_path) as pdf:
@@ -70,6 +73,13 @@ async def extract_srs(request: Request, file: UploadFile = File(...)):
     try:
         if not file:
             return JSONResponse(status_code=400, content={"error": "No file uploaded"})
+        # ✅ USE VALIDATION FUNCTION
+        validation_error = validate_pdf_file(file)
+        if validation_error:
+            return JSONResponse(
+                status_code=400,
+                content={"error": validation_error}
+            )
 
         # 1️⃣ Save PDF
         pdf_path = os.path.join(UPLOAD_DIR, f"{project_id}.pdf")
@@ -122,7 +132,7 @@ async def extract_srs(request: Request, file: UploadFile = File(...)):
 
         create_project(project_id, user_id, project_name)
         # 3️⃣ Predict NFR Type + Level → Saves to BOTH MongoDB AND JSON
-        all_predictions = predict_and_save_nfr(project_id)
+        all_predictions = _save_nfr(project_id)
 
         if not all_predictions:
             raise ValueError("No NFR predictions generated")

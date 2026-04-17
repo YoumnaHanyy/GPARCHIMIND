@@ -22,7 +22,7 @@ from ai.json_to_deployment_view import convert_to_deployment_view
 from application.extraction.api.hybrid_route import router as hybrid_router
 from ai.json_to_c4_plantuml import convert_to_c4_plantuml
 from ai.ai_engine import ai_generate_architecture
-from ai.json_to_context_view import convert_to_context_view
+
 from ai.json_to_usecase_view import convert_to_usecase_view
 from application.extraction.adl.json_to_acme import convert_to_acme
 import os
@@ -43,6 +43,7 @@ from infrastructure.repositories.project_repo import get_user_projects
 from infrastructure.database import db
 from pathlib import Path
 import subprocess
+from ai.ai_usecase import generate_usecase_ai
 import json
 # Import API routes
 from fastapi.responses import HTMLResponse
@@ -221,8 +222,9 @@ def generate_architecture(project_id: str):
     # ==========================================================
     # 7. Generate PlantUML views
     # ==========================================================
-    with open("data/outputs/context_view.puml", "w", encoding="utf-8") as f:
-        f.write(convert_to_context_view(arch))
+    uml, data = generate_usecase_ai(functional_requirements, arch["system"])
+    if not data or not data.get("actors"):
+     data = {"actors": ["User"], "usecases": []}
 
     with open("data/outputs/dfd_context.puml", "w", encoding="utf-8") as f:
         f.write(convert_to_dfd_context(arch))
@@ -236,9 +238,9 @@ def generate_architecture(project_id: str):
     with open("data/outputs/architecture_c4.puml", "w", encoding="utf-8") as f:
         f.write(convert_to_c4_plantuml(arch))
 
-    from ai.ai_usecase import generate_usecase_ai
+    
 
-    uml = generate_usecase_ai(functional_requirements, arch["system"])
+   
     with open("data/outputs/usecase_view.puml", "w", encoding="utf-8") as f:
      f.write(uml) # ==========================================================
     # 8. Render diagrams (PlantUML → PNG)
@@ -255,7 +257,6 @@ def generate_architecture(project_id: str):
         "-jar",
         PLANTUML_JAR,
         "-tpng",
-        "data/outputs/context_view.puml",
         "data/outputs/dfd_context.puml",
         "data/outputs/process_view.puml",
         "data/outputs/deployment_view.puml",
