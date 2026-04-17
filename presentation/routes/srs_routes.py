@@ -5,6 +5,7 @@ import uuid
 import fitz
 import pdfplumber
 import traceback
+
 from ai.inference.feature_extractor import generate_phase4
 from application.extraction.extraction_service import process_srs
 from ai.inference.predict_type_level import predict_and_save_nfr, predict_level_for_text
@@ -28,7 +29,10 @@ UPLOAD_DIR = "uploads"
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 
 
-
+def validate_pdf_file(file: UploadFile):
+    if not file.filename.lower().endswith(".pdf"):
+        return "Invalid file format. Please upload a valid PDF document."
+    return None
 
 
 def extract_text_from_pdf(pdf_path: str) -> str:
@@ -132,7 +136,7 @@ async def extract_srs(request: Request, file: UploadFile = File(...)):
 
         create_project(project_id, user_id, project_name)
         # 3️⃣ Predict NFR Type + Level → Saves to BOTH MongoDB AND JSON
-        all_predictions = _save_nfr(project_id)
+        all_predictions =predict_and_save_nfr(project_id)
 
         if not all_predictions:
             raise ValueError("No NFR predictions generated")
