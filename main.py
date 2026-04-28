@@ -124,8 +124,92 @@ def home(request: Request):
 
 @app.get("/Admin", response_class=HTMLResponse)
 async def admin_dashboard(request: Request):
- return templates.TemplateResponse("admin.html", {"request": request})
 
+    # 📊 most selected architecture (top 1)
+    pipeline = [
+        {
+            "$match": {
+                "selected_architecture": {
+                    "$nin": ["Unknown", None, ""]
+                }
+            }
+        },
+        {
+            "$group": {
+                "_id": "$selected_architecture",
+                "count": {"$sum": 1}
+            }
+        },
+        {"$sort": {"count": -1}},
+        {"$limit": 1}
+    ]
+
+    result = list(db.hybrid_method.aggregate(pipeline))
+
+    most_arch = result[0]["_id"] if result else "N/A"
+    most_count = result[0]["count"] if result else 0
+
+    # 📈 success based on progress ≥ 70%
+    total_projects = db.projects.count_documents({})
+
+    successful_projects = db.projects.count_documents({
+        "progress": {"$gte": 70}
+    })
+
+    success_rate = 0
+    status = "Needs Improvement"
+
+    if total_projects > 0:
+        success_rate = int((successful_projects / total_projects) * 100)
+
+        if success_rate >= 70:
+            status = "Good"
+
+    # ⏱️ recent projects
+    recent_projects = list(
+        db.projects.find({}, {"_id": 0})
+        .sort("created_at", -1)
+        .limit(5)
+    )
+
+    # 📊 chart data (ALL architectures)
+    arch_pipeline = [
+        {
+            "$match": {
+                "selected_architecture": {
+                    "$nin": ["Unknown", None, ""]
+                }
+            }
+        },
+        {
+            "$group": {
+                "_id": "$selected_architecture",
+                "count": {"$sum": 1}
+            }
+        },
+        {"$sort": {"count": -1}}
+    ]
+
+    arch_data = list(db.hybrid_method.aggregate(arch_pipeline))
+
+    arch_labels = [item["_id"] for item in arch_data]
+    arch_counts = [item["count"] for item in arch_data]
+
+    return templates.TemplateResponse(
+        "admin.html",
+        {
+            "request": request,
+            "most_arch": most_arch,
+            "most_count": most_count,
+            "success_rate": success_rate,
+            "generated": successful_projects,
+            "total_projects": total_projects,
+            "status": status,
+            "recent_projects": recent_projects,
+            "arch_labels": arch_labels,
+            "arch_counts": arch_counts
+        }
+    )
 @app.get("/admin/users", response_class=HTMLResponse)
 async def get_all_users(request: Request):
     users = list(db.Users.find({}, {"password": 0}))
