@@ -1,83 +1,83 @@
 [
   {
-    "description": "The system MUST respond to user input within 2 seconds.",
-    "confidence": 0.951166570186615,
-    "confirmed": false,
-    "predicted_level": " High",
-    "predicted_type": "PE",
-    "predicted_type_label": "Performance",
-    "title": "Performance"
-  },
-  {
-    "description": "The system SHALL be available 99.99% of the time.",
-    "confidence": 0.9322946071624756,
-    "confirmed": false,
-    "predicted_level": "High",
-    "predicted_type": "A",
-    "predicted_type_label": "Availability",
-    "title": "Reliability"
-  },
-  {
-    "description": "The system MUST protect user data and MUST NOT store sensitive information.",
-    "confidence": 0.9683277606964111,
-    "confirmed": false,
-    "predicted_level": " High",
-    "predicted_type": "SE",
-    "predicted_type_label": "Security",
-    "title": "Security"
-  },
-  {
-    "description": "The system MUST NOT collect or store user data without consent.",
-    "confidence": 0.9572402238845825,
-    "confirmed": false,
-    "predicted_level": "High",
-    "predicted_type": "SE",
-    "predicted_type_label": "Security",
-    "title": "Privacy"
-  },
-  {
-    "description": "The system SHOULD be able to handle 1000 concurrent users.",
-    "confidence": 1.0,
-    "confirmed": true,
-    "predicted_level": "High",
-    "predicted_type": "SE",
-    "predicted_type_label": "Security",
-    "title": "Scalability"
-  },
-  {
-    "description": "The system MUST be user-friendly and MUST provide clear instructions.",
-    "confidence": 0.9158769845962524,
-    "confirmed": false,
-    "predicted_level": "High",
+    "title": "Fault Tolerance",
+    "description": "Unexpected errors should be handled by the system, and users should get informative error messages",
     "predicted_type": "US",
     "predicted_type_label": "Usability",
-    "title": "Usability"
+    "confidence": 0.9859112501144409,
+    "predicted_level": "High",
+    "confirmed": false
   },
   {
-    "description": "The system SHOULD be easy to modify and update.",
-    "confidence": 0.9196155667304993,
-    "confirmed": false,
+    "title": "Compatibility",
+    "description": "The system should be compatible with the majority of web browsers, including Edge, Firefox, Safari, and Chrome",
+    "predicted_type": "PO",
+    "predicted_type_label": "Portability",
+    "confidence": 0.8968908190727234,
     "predicted_level": "Medium",
+    "confirmed": false
+  },
+  {
+    "title": "Scalability",
+    "description": "The system must support at least 100 concurrent users without exhibiting a discernible decrease in performance",
+    "predicted_type": "PE",
+    "predicted_type_label": "Performance",
+    "confidence": 0.5698563456535339,
+    "predicted_level": "High",
+    "confirmed": false
+  },
+  {
+    "title": "Usability",
+    "description": "The user interface must be easy to use and give applicants and recruiters clear instructions and help",
+    "predicted_type": "US",
+    "predicted_type_label": "Usability",
+    "confidence": 0.984348714351654,
+    "predicted_level": "Medium",
+    "confirmed": false
+  },
+  {
+    "title": "Reliability",
+    "description": "The system should be up and running 99.9% of the time",
+    "predicted_type": "A",
+    "predicted_type_label": "Availability",
+    "confidence": 0.9761112332344055,
+    "predicted_level": "High",
+    "confirmed": false
+  },
+  {
+    "title": "Performance",
+    "description": "The system must respond to user input in less than two seconds",
+    "predicted_type": "PE",
+    "predicted_type_label": "Performance",
+    "confidence": 0.9878249168395996,
+    "predicted_level": "High",
+    "confirmed": false
+  },
+  {
+    "title": "Maintainability",
+    "description": "Code should be modular, follow best practices for coding, and have extensive documentation to facilitate maintenance",
     "predicted_type": "MN",
     "predicted_type_label": "Manageability",
-    "title": "Maintainability"
-  },
-  {
-    "description": "The system MUST be compatible with major web browsers.",
-    "confidence": 1.0,
-    "confirmed": true,
-    "predicted_level": "Low",
-    "predicted_type": "MD",
-    "predicted_type_label": "Modularity",
-    "title": "Compatibility"
-  },
-  {
-    "description": "The system MUST integrate with HR module from Odoo ERP software.",
-    "confidence": 1.0,
-    "confirmed": true,
+    "confidence": 0.982100784778595,
     "predicted_level": "High",
+    "confirmed": false
+  },
+  {
+    "title": "Privacy",
+    "description": "The system needs to adhere to data protection regulations to guarantee the confidentiality of user, CVS, and evaluation data",
+    "predicted_type": "SE",
+    "predicted_type_label": "Security",
+    "confidence": 0.9839749932289124,
+    "predicted_level": "Low",
+    "confirmed": false
+  },
+  {
+    "title": "Integration",
+    "description": "The system ought to have the ability to interface with external services, such as ChatGPT, to verify the screening questions",
     "predicted_type": "O",
     "predicted_type_label": "Operational",
-    "title": "Integration"
+    "confidence": 0.9820273518562317,
+    "predicted_level": "High",
+    "confirmed": false
   }
 ]

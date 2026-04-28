@@ -1,12 +1,106 @@
 [
   {
-    "description": {
-      "description": "User logs in"
-    },
+    "description": "The similarity between the applicant’s CV and the job vacancy is determined using cosine similarity and Jaccard similarity, resulting in a percentage rating that reflects the applicant’s suitability for the position",
     "source": {
       "page": null,
       "start_index": null
     },
-    "project_id": 2
+    "project_id": "proj_042f065d"
+  },
+  {
+    "description": "The applicants shall view the CV rating",
+    "source": {
+      "page": null,
+      "start_index": null
+    },
+    "project_id": "proj_042f065d"
+  },
+  {
+    "description": "Verify applicant answers to screening questions with ChatGPT to ensure a consistent and fair assessment of all applicants",
+    "source": {
+      "page": null,
+      "start_index": null
+    },
+    "project_id": "proj_042f065d"
+  },
+  {
+    "description": "The system shall create an algorithm that takes the average of the CV ranking and the validation of the screening questions to determine the outcome and present the result as a total score that represents the applicant’s overall compatibility",
+    "source": {
+      "page": null,
+      "start_index": null
+    },
+    "project_id": "proj_042f065d"
+  },
+  {
+    "description": "The system shall utilize the Spacy Python library to accurately extract relevant CV content using natural language processing",
+    "source": {
+      "page": null,
+      "start_index": null
+    },
+    "project_id": "proj_042f065d"
+  },
+  {
+    "description": "The system shall use ChatGPT to verify the applicant’s answers against model answers for screening questions and record the outcomes for every screening question",
+    "source": {
+      "page": null,
+      "start_index": null
+    },
+    "project_id": "proj_042f065d"
+  },
+  {
+    "description": "The applicants shall submit their CVs",
+    "source": {
+      "page": null,
+      "start_index": null
+    },
+    "project_id": "proj_042f065d"
+  },
+  {
+    "description": "The applicants shall answer the provided screening questions",
+    "source": {
+      "page": null,
+      "start_index": null
+    },
+    "project_id": "proj_042f065d"
+  },
+  {
+    "description": "The applicants shall view the final ranking which are CV score and questions score",
+    "source": {
+      "page": null,
+      "start_index": null
+    },
+    "project_id": "proj_042f065d"
+  },
+  {
+    "description": "The system shall create an approach that uses cosine similarity and Jaccard similarity to compare the parsed CV and the required job vacancy to determine the degree of fit and provide a percentage rating of the applicant’s suitability",
+    "source": {
+      "page": null,
+      "start_index": null
+    },
+    "project_id": "proj_042f065d"
+  },
+  {
+    "description": "The system shall create a user-friendly interface that is simple to understand and use for both recruiters and applicants",
+    "source": {
+      "page": null,
+      "start_index": null
+    },
+    "project_id": "proj_042f065d"
+  },
+  {
+    "description": "The applicants shall be able to create an account and log in to the system with their personal information",
+    "source": {
+      "page": null,
+      "start_index": null
+    },
+    "project_id": "proj_042f065d"
+  },
+  {
+    "description": "The system shall allow applicants to edit their parsed CV data after uploading it",
+    "source": {
+      "page": null,
+      "start_index": null
+    },
+    "project_id": "proj_042f065d"
   }
 ]
