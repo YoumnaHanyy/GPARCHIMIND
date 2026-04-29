@@ -1,27 +1,67 @@
 [
   {
-    "description": "The similarity between the applicant’s CV and the job vacancy is determined using cosine similarity and Jaccard similarity, resulting in a percentage rating that reflects the applicant’s suitability for the position",
+    "description": "The applicant gets a full ranking on his CV and questions score",
     "source": {
       "page": null,
       "start_index": null
     },
-    "project_id": "proj_042f065d"
+    "project_id": "temp_proj"
   },
   {
-    "description": "The applicants shall view the CV rating",
+    "description": "The system allows applicants to answer screening questions that are written by the recruiter",
     "source": {
       "page": null,
       "start_index": null
     },
-    "project_id": "proj_042f065d"
+    "project_id": "temp_proj"
   },
   {
-    "description": "Verify applicant answers to screening questions with ChatGPT to ensure a consistent and fair assessment of all applicants",
+    "description": "The applicants shall edit the profile by re-uploading the CV",
     "source": {
       "page": null,
       "start_index": null
     },
-    "project_id": "proj_042f065d"
+    "project_id": "temp_proj"
+  },
+  {
+    "description": "The recruiter will be able to create screening questions, answers, and job requirements",
+    "source": {
+      "page": null,
+      "start_index": null
+    },
+    "project_id": "temp_proj"
+  },
+  {
+    "description": "Recruiters will be able to find applicants whose resumes closely match the job requirements by using the cosine and jaccard similarity methods, which provides an objective CV ranking",
+    "source": {
+      "page": null,
+      "start_index": null
+    },
+    "project_id": "temp_proj"
+  },
+  {
+    "description": "The system then rates the parsed CV against the job vacancy criteria using the cosine similarity rule and Jaccard similarity, giving it a percentage of similarity",
+    "source": {
+      "page": null,
+      "start_index": null
+    },
+    "project_id": "temp_proj"
+  },
+  {
+    "description": "The system generates a percentage-based result, providing a fair evaluation of each applicant",
+    "source": {
+      "page": null,
+      "start_index": null
+    },
+    "project_id": "temp_proj"
+  },
+  {
+    "description": "The system uses ChatGPT to verify the applicant’s answers against model answers for screening questions and record the outcomes for every screening question",
+    "source": {
+      "page": null,
+      "start_index": null
+    },
+    "project_id": "temp_proj"
   },
   {
     "description": "The system shall create an algorithm that takes the average of the CV ranking and the validation of the screening questions to determine the outcome and present the result as a total score that represents the applicant’s overall compatibility",
@@ -29,7 +69,7 @@
       "page": null,
       "start_index": null
     },
-    "project_id": "proj_042f065d"
+    "project_id": "temp_proj"
   },
   {
     "description": "The system shall utilize the Spacy Python library to accurately extract relevant CV content using natural language processing",
@@ -37,31 +77,15 @@
       "page": null,
       "start_index": null
     },
-    "project_id": "proj_042f065d"
+    "project_id": "temp_proj"
   },
   {
-    "description": "The system shall use ChatGPT to verify the applicant’s answers against model answers for screening questions and record the outcomes for every screening question",
+    "description": "The applicants shall view the parsing results and edit them",
     "source": {
       "page": null,
       "start_index": null
     },
-    "project_id": "proj_042f065d"
-  },
-  {
-    "description": "The applicants shall submit their CVs",
-    "source": {
-      "page": null,
-      "start_index": null
-    },
-    "project_id": "proj_042f065d"
-  },
-  {
-    "description": "The applicants shall answer the provided screening questions",
-    "source": {
-      "page": null,
-      "start_index": null
-    },
-    "project_id": "proj_042f065d"
+    "project_id": "temp_proj"
   },
   {
     "description": "The applicants shall view the final ranking which are CV score and questions score",
@@ -69,38 +93,78 @@
       "page": null,
       "start_index": null
     },
-    "project_id": "proj_042f065d"
+    "project_id": "temp_proj"
   },
   {
-    "description": "The system shall create an approach that uses cosine similarity and Jaccard similarity to compare the parsed CV and the required job vacancy to determine the degree of fit and provide a percentage rating of the applicant’s suitability",
+    "description": "The applicants shall answer the provided screening questions",
     "source": {
       "page": null,
       "start_index": null
     },
-    "project_id": "proj_042f065d"
+    "project_id": "temp_proj"
   },
   {
-    "description": "The system shall create a user-friendly interface that is simple to understand and use for both recruiters and applicants",
+    "description": "The applicants shall submit their CVs",
     "source": {
       "page": null,
       "start_index": null
     },
-    "project_id": "proj_042f065d"
+    "project_id": "temp_proj"
   },
   {
-    "description": "The applicants shall be able to create an account and log in to the system with their personal information",
+    "description": "The recruiter will create a job vacancy according to the newly opened job vacancy",
     "source": {
       "page": null,
       "start_index": null
     },
-    "project_id": "proj_042f065d"
+    "project_id": "temp_proj"
   },
   {
-    "description": "The system shall allow applicants to edit their parsed CV data after uploading it",
+    "description": "The recruiter will create a screening question",
     "source": {
       "page": null,
       "start_index": null
     },
-    "project_id": "proj_042f065d"
+    "project_id": "temp_proj"
+  },
+  {
+    "description": "The recruiter shall be able to assign each job position a set of screening questions",
+    "source": {
+      "page": null,
+      "start_index": null
+    },
+    "project_id": "temp_proj"
+  },
+  {
+    "description": "The recruiter shall be able to assign each screening question its model answer",
+    "source": {
+      "page": null,
+      "start_index": null
+    },
+    "project_id": "temp_proj"
+  },
+  {
+    "description": "The recruiter shall be able to provide job vacancies as well as the technical stack, skills, and experience for each job position",
+    "source": {
+      "page": null,
+      "start_index": null
+    },
+    "project_id": "temp_proj"
+  },
+  {
+    "description": "The system allows applicants to know if they are qualified for a certain job or not",
+    "source": {
+      "page": null,
+      "start_index": null
+    },
+    "project_id": "temp_proj"
+  },
+  {
+    "description": "The system allows recruiters to track applicants during the recruiting process and manage applications",
+    "source": {
+      "page": null,
+      "start_index": null
+    },
+    "project_id": "temp_proj"
   }
 ]

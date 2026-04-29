@@ -1,4 +1,4 @@
-from fastapi import APIRouter, UploadFile, Request, File
+from fastapi import APIRouter, UploadFile, Request, File, Form
 from fastapi.responses import JSONResponse
 
 import os
@@ -8,6 +8,7 @@ import fitz
 import pdfplumber
 
 from application.extraction.extraction_service import process_srs
+from application.extraction.adl.json_to_acme import convert_to_acme
 from ai.inference.predict_type_level import predict_and_save_nfr, predict_level_for_text
 
 from service.ordinal_service import execute_ordinal_method
@@ -26,6 +27,8 @@ from infrastructure.repositories.human_feedback_repository import save_new_confi
 from service.retrain_service import merge_and_retrain, run_retrain_async
 from infrastructure.database import db
 from ai.inference.feature_extractor import generate_phase4
+from ai.ai_engine import ai_generate_architecture
+
 
 router = APIRouter()
 
@@ -376,3 +379,47 @@ async def update_progress(request: Request):
     )
 
     return {"status": "ok"}
+
+
+
+
+
+
+
+@router.post("/adl/generate")
+async def adl_generate(file: UploadFile = File(...), architecture: str = Form(...)):
+    try:
+        # 1) احفظي الملف مؤقتًا
+        file_bytes = await file.read()
+        temp_path = os.path.join(UPLOAD_DIR, f"adl_{uuid.uuid4().hex}.pdf")
+        with open(temp_path, "wb") as f:
+            f.write(file_bytes)
+
+        # 2) استخدمي نفس extraction الحقيقي
+        extraction_result = process_srs(
+            pdf_path=temp_path,
+            project_id="temp_proj",
+            hf_key=None
+        )
+
+        frs = extraction_result.get("functional", [])
+        nfrs = predict_and_save_nfr("temp_proj")
+        # 3) generate ADL
+        adl = ai_generate_architecture(
+            "UserSystem",
+            frs,
+            nfrs,
+            architecture
+        )
+
+        print("🔥 FRS:", frs)
+        print("🔥 NFRS:", nfrs)
+        print("🔥 ADL:", adl)
+
+        # (اختياري) تحويل لـ ACME
+        adl_acme = convert_to_acme(adl)
+
+        return {"adl": adl_acme}
+
+    except Exception as e:
+        return {"error": str(e)}

@@ -38,6 +38,55 @@ window.addEventListener('DOMContentLoaded', () => {
     tabs: ["Design Patterns", "Code Skeleton"] 
   }
   };
+function generateStandaloneADL() {
+  const fileInput = document.getElementById("adlFileInput");
+  const arch = document.getElementById("adlArchitecture").value;
+
+  if (!fileInput.files.length || !arch) {
+    alert("Please upload SRS file and select architecture");
+    return;
+  }
+
+  const formData = new FormData();
+  formData.append("file", fileInput.files[0]);
+  formData.append("architecture", arch);
+
+  fetch("/adl/generate", {
+    method: "POST",
+    body: formData
+  })
+  .then(res => res.json())
+  .then(data => {
+    const output = document.getElementById("adlStandaloneOutput");
+    output.classList.remove("hidden");
+    output.textContent = data.adl || "No output returned";
+  })
+  .catch(err => {
+    console.error(err);
+    alert("Error generating ADL");
+  });
+}
+
+
+function openADLGenerator() {
+  document.getElementById("dashboardView").classList.add("hidden");
+  document.getElementById("uploadView").classList.add("hidden");
+
+  document.getElementById("adlView").classList.remove("hidden");
+}
+
+function checkADLInputs() {
+  const file = document.getElementById("adlFileInput").files.length;
+  const arch = document.getElementById("adlArchitecture").value;
+
+  const btn = document.getElementById("generateAdlBtn");
+
+  if (file && arch) {
+    btn.disabled = false;
+  } else {
+    btn.disabled = true;
+  }
+}
 
   function showUploader() {
     document.getElementById('dashboardView').classList.add('hidden');
@@ -971,6 +1020,7 @@ function hideNfrInlineError() {
   }
   function backToDashboard(){
   document.getElementById("uploadView").classList.add("hidden");
+  document.getElementById("adlView").classList.add("hidden"); // ✅ دي الجديدة
   document.getElementById("dashboardView").classList.remove("hidden");
 }
 function showErrorModal(message) {
