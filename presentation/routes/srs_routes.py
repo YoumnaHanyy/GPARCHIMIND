@@ -1,5 +1,11 @@
 from fastapi import APIRouter, UploadFile, Request, File, Form
 from fastapi.responses import JSONResponse
+from fastapi.responses import FileResponse
+
+
+
+from fastapi.responses import FileResponse
+from fpdf import FPDF # مكتبة لتوليد PDF بسيط
 
 import os
 import uuid
@@ -423,3 +429,59 @@ async def adl_generate(file: UploadFile = File(...), architecture: str = Form(..
 
     except Exception as e:
         return {"error": str(e)}
+    
+
+
+
+@router.post("/adl/generate-pdf") # تأكدي أن المسار مطابق للي في الـ JS
+async def adl_generate_pdf(file: UploadFile = File(...), architecture: str = Form(...)):
+    try:
+        # 1) حفظ الملف مؤقتًا
+        file_bytes = await file.read()
+        temp_id = uuid.uuid4().hex
+        temp_path = os.path.join(UPLOAD_DIR, f"adl_{temp_id}.pdf")
+        with open(temp_path, "wb") as f:
+            f.write(file_bytes)
+
+        # 2) استخراج البيانات (نفس منطقك القديم)
+        extraction_result = process_srs(
+            pdf_path=temp_path,
+            project_id="temp_proj",
+            hf_key=None
+        )
+
+        frs = extraction_result.get("functional", [])
+        nfrs = predict_and_save_nfr("temp_proj")
+        
+        # 3) توليد الـ ADL
+        adl_content = ai_generate_architecture(
+            "UserSystem",
+            frs,
+            nfrs,
+            architecture
+        )
+        adl_acme = convert_to_acme(adl_content)
+
+        # 4) 🔥 توليد ملف PDF حقيقي يحتوي على النص
+        pdf = FPDF()
+        pdf.add_page()
+        pdf.set_font("Arial", size=12)
+        pdf.cell(200, 10, txt=f"Architecture Style: {architecture}", ln=True, align='C')
+        pdf.ln(10)
+        
+        # إضافة نص الـ ADL (تنظيفه ليتناسب مع PDF)
+        pdf.multi_cell(0, 10, txt=adl_acme.encode('latin-1', 'replace').decode('latin-1'))
+
+        pdf_output_path = os.path.join(UPLOAD_DIR, f"report_{temp_id}.pdf")
+        pdf.output(pdf_output_path)
+
+        # 5) إرجاع الملف للمتصفح
+        return FileResponse(
+            path=pdf_output_path, 
+            filename="architecture_report.pdf", 
+            media_type='application/pdf'
+        )
+
+    except Exception as e:
+        traceback.print_exc()
+        return JSONResponse(status_code=500, content={"error": str(e)})

@@ -51,22 +51,40 @@ function generateStandaloneADL() {
   formData.append("file", fileInput.files[0]);
   formData.append("architecture", arch);
 
-  fetch("/adl/generate", {
+  // إظهار اللودر (اختياري)
+  startLoadingAnimation();
+
+  fetch("/adl/generate-pdf", { // تأكدي أن الـ URL هو نفسه اللي في الـ FastAPI
     method: "POST",
     body: formData
   })
-  .then(res => res.json())
-  .then(data => {
-    const output = document.getElementById("adlStandaloneOutput");
-    output.classList.remove("hidden");
-    output.textContent = data.adl || "No output returned";
+  .then(res => {
+    stopLoadingAnimation();
+    if (!res.ok) throw new Error("Server error");
+    return res.blob(); // بنستلم الملف كـ binary data
+  })
+  .then(blob => {
+    const url = window.URL.createObjectURL(blob);
+    
+    // لفتح الملف في tab جديد:
+    window.open(url);
+
+    // أو للتحميل المباشر:
+    /*
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "Architecture_Report.pdf";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    */
   })
   .catch(err => {
+    stopLoadingAnimation();
     console.error(err);
-    alert("Error generating ADL");
+    alert("Error generating PDF: " + err.message);
   });
 }
-
 
 function openADLGenerator() {
   document.getElementById("dashboardView").classList.add("hidden");
