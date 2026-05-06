@@ -32,6 +32,12 @@ router = APIRouter()
 
 UPLOAD_DIR = "uploads"
 os.makedirs(UPLOAD_DIR, exist_ok=True)
+
+def validate_pdf_file(file: UploadFile):
+    if not file.filename.lower().endswith(".pdf"):
+        return "Invalid file format. Please upload a valid PDF document."
+    return None
+
 def extract_text_from_pdf(pdf_path: str) -> str:
     text = ""
     with pdfplumber.open(pdf_path) as pdf:
