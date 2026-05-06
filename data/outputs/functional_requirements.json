@@ -1,11 +1,19 @@
 [
   {
-    "description": "The system shall use ChatGPT to verify the applicant’s answers against model answers for screening questions and record the outcomes for every screening question",
+    "description": "Recruiters shall be able to assign each screening question its model answer",
     "source": {
       "page": null,
       "start_index": null
     },
-    "project_id": "temp_proj"
+    "project_id": "adl_743599cd"
+  },
+  {
+    "description": "The applicants shall answer the provided screening questions",
+    "source": {
+      "page": null,
+      "start_index": null
+    },
+    "project_id": "adl_743599cd"
   },
   {
     "description": "The system shall create an approach that uses cosine similarity and Jaccard similarity to compare the parsed CV and the required job vacancy to determine the degree of fit and provide a percentage rating of the applicant’s suitability",
@@ -13,23 +21,39 @@
       "page": null,
       "start_index": null
     },
-    "project_id": "temp_proj"
+    "project_id": "adl_743599cd"
   },
   {
-    "description": "The system shall utilize the Spacy Python library to accurately extract relevant CV content using natural language processing",
+    "description": "The system shall use ChatGPT to verify the applicant’s answers against model answers for screening questions and record the outcomes for every screening question",
     "source": {
       "page": null,
       "start_index": null
     },
-    "project_id": "temp_proj"
+    "project_id": "adl_743599cd"
   },
   {
-    "description": "The system shall create an algorithm that takes the average of the CV ranking and the validation of the screening questions to determine the outcome and present the result as a total score that represents the applicant’s overall compatibility",
+    "description": "The applicants shall view the parsing results and edit them",
     "source": {
       "page": null,
       "start_index": null
     },
-    "project_id": "temp_proj"
+    "project_id": "adl_743599cd"
+  },
+  {
+    "description": "The applicants shall view the final ranking which are CV score and questions score",
+    "source": {
+      "page": null,
+      "start_index": null
+    },
+    "project_id": "adl_743599cd"
+  },
+  {
+    "description": "The applicants shall submit their CVs",
+    "source": {
+      "page": null,
+      "start_index": null
+    },
+    "project_id": "adl_743599cd"
   },
   {
     "description": "The applicants shall be able to create an account and log in to the system with their personal information",
@@ -37,62 +61,54 @@
       "page": null,
       "start_index": null
     },
-    "project_id": "temp_proj"
+    "project_id": "adl_743599cd"
   },
   {
-    "description": "The applicants shall be able to upload their CVs to be parsed and analyzed",
+    "description": "The system shall utilize the Spacy Python library to accurately extract relevant CV content using natural language processing",
     "source": {
       "page": null,
       "start_index": null
     },
-    "project_id": "temp_proj"
+    "project_id": "adl_743599cd"
   },
   {
-    "description": "The system shall allow applicants to edit their parsed CV data",
+    "description": "The system shall create an algorithm that takes the average of the CV ranking and the validation of the screening questions to determine the outcome and present the result as a total score that represents the applicant’s overall compatibility",
     "source": {
       "page": null,
       "start_index": null
     },
-    "project_id": "temp_proj"
+    "project_id": "adl_743599cd"
   },
   {
-    "description": "The system shall provide a set of screening questions to the applicants",
+    "description": "Recruiters shall be able to provide job vacancies as well as the technical stack, skills, and experience for each job position",
     "source": {
       "page": null,
       "start_index": null
     },
-    "project_id": "temp_proj"
+    "project_id": "adl_743599cd"
   },
   {
-    "description": "The system shall allow applicants to answer the screening questions",
+    "description": "Recruiters shall be able to assign each job position a set of screening questions",
     "source": {
       "page": null,
       "start_index": null
     },
-    "project_id": "temp_proj"
+    "project_id": "adl_743599cd"
   },
   {
-    "description": "The system shall create a job vacancy according to the newly opened job vacancy",
+    "description": "The system shall allow applicants to know if they are qualified for a certain job or not",
     "source": {
       "page": null,
       "start_index": null
     },
-    "project_id": "temp_proj"
+    "project_id": "adl_743599cd"
   },
   {
-    "description": "The system shall allow recruiters to create screening questions and model answers for these questions",
+    "description": "The system shall allow applicants to upload CVs to be compared to job requirements added by the recruiter, and the final score will be shown to the applicant at the end",
     "source": {
       "page": null,
       "start_index": null
     },
-    "project_id": "temp_proj"
-  },
-  {
-    "description": "The system shall allow recruiters to view the applicant’s final reports",
-    "source": {
-      "page": null,
-      "start_index": null
-    },
-    "project_id": "temp_proj"
+    "project_id": "adl_743599cd"
   }
 ]

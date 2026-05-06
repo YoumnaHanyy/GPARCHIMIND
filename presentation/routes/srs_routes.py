@@ -1,21 +1,23 @@
 from fastapi import APIRouter, UploadFile, Request, File, Form
 from fastapi.responses import JSONResponse
 from fastapi.responses import FileResponse
+from fastapi.responses import HTMLResponse
+from fastapi.templating import Jinja2Templates
 
 
-
-from fastapi.responses import FileResponse
-from fpdf import FPDF # مكتبة لتوليد PDF بسيط
 
 import os
 import uuid
 import traceback
 import fitz
 import pdfplumber
+import subprocess
+from pathlib import Path
 
 from application.extraction.extraction_service import process_srs
 from application.extraction.adl.json_to_acme import convert_to_acme
 from ai.inference.predict_type_level import predict_and_save_nfr, predict_level_for_text
+from application.extraction.reporting.report_generator import generate_report
 
 from service.ordinal_service import execute_ordinal_method
 from service.binary_service import execute_binary_method
@@ -29,13 +31,24 @@ from infrastructure.repositories.weighted_repository import save_weighted_result
 from infrastructure.repositories.nfr_dataset_repository import NFRPredictionRepository
 from infrastructure.repositories.srs_repository import SRSRepository
 from infrastructure.repositories.human_feedback_repository import save_new_confirmed_nfr
+from infrastructure.repositories.project_repo import get_user_adl_projects
 
 from service.retrain_service import merge_and_retrain, run_retrain_async
 from infrastructure.database import db
 from ai.inference.feature_extractor import generate_phase4
 from ai.ai_engine import ai_generate_architecture
+from infrastructure.repositories.project_repo import create_project
 
 
+
+from ai.json_to_c4_plantuml import convert_to_c4_plantuml
+from ai.json_to_process_view import convert_to_process_view
+from ai.json_to_deployment_view import convert_to_deployment_view
+from ai.json_to_usecase_view import convert_to_usecase_view
+
+
+
+templates = Jinja2Templates(directory="presentation/templates")
 router = APIRouter()
 
 UPLOAD_DIR = "uploads"
@@ -433,55 +446,221 @@ async def adl_generate(file: UploadFile = File(...), architecture: str = Form(..
 
 
 
-@router.post("/adl/generate-pdf") # تأكدي أن المسار مطابق للي في الـ JS
-async def adl_generate_pdf(file: UploadFile = File(...), architecture: str = Form(...)):
+@router.post("/adl/generate-pdf")
+async def adl_generate_pdf(
+    request: Request,
+    file: UploadFile = File(...),
+    architecture: str = Form(...)
+):
     try:
-        # 1) حفظ الملف مؤقتًا
+
+        # =========================
+        # Require logged-in user
+        # =========================
+        user = request.session.get("user")
+
+        if not user:
+            return JSONResponse(
+                status_code=401,
+                content={
+                    "error": "User not authenticated"
+                }
+            )
+
+        user_id = user["id"]
+
+        # =========================
+        # Create unique project
+        # =========================
+        project_id = f"adl_{uuid.uuid4().hex[:8]}"
+
+        # =========================
+        # Save uploaded file
+        # =========================
         file_bytes = await file.read()
-        temp_id = uuid.uuid4().hex
-        temp_path = os.path.join(UPLOAD_DIR, f"adl_{temp_id}.pdf")
+
+        temp_path = os.path.join(
+            UPLOAD_DIR,
+            f"{project_id}.pdf"
+        )
+
         with open(temp_path, "wb") as f:
             f.write(file_bytes)
 
-        # 2) استخراج البيانات (نفس منطقك القديم)
+        # =========================
+        # Extract SRS
+        # =========================
         extraction_result = process_srs(
             pdf_path=temp_path,
-            project_id="temp_proj",
+            project_id=project_id,
             hf_key=None
         )
 
+        # =========================
+        # Get project name
+        # =========================
+        project_name = extraction_result.get(
+            "project_name",
+            "Architecture Project"
+        )
+
+        # =========================
+        # Create project in DB
+        # =========================
+        create_project(
+            project_id,
+            user_id,
+            project_name,
+            "adl_reusable"
+
+        )
+
+        # =========================
+        # Predict NFRs
+        # =========================
+        nfrs = predict_and_save_nfr(project_id)
+
         frs = extraction_result.get("functional", [])
-        nfrs = predict_and_save_nfr("temp_proj")
-        
-        # 3) توليد الـ ADL
-        adl_content = ai_generate_architecture(
-            "UserSystem",
+
+        # =========================
+        # Generate ADL
+        # =========================
+        adl_result = ai_generate_architecture(
+            project_name,
             frs,
             nfrs,
             architecture
         )
-        adl_acme = convert_to_acme(adl_content)
 
-        # 4) 🔥 توليد ملف PDF حقيقي يحتوي على النص
-        pdf = FPDF()
-        pdf.add_page()
-        pdf.set_font("Arial", size=12)
-        pdf.cell(200, 10, txt=f"Architecture Style: {architecture}", ln=True, align='C')
-        pdf.ln(10)
-        
-        # إضافة نص الـ ADL (تنظيفه ليتناسب مع PDF)
-        pdf.multi_cell(0, 10, txt=adl_acme.encode('latin-1', 'replace').decode('latin-1'))
+        # =========================
+        # Convert to ACME
+        # =========================
+        adl_acme = convert_to_acme(adl_result)
 
-        pdf_output_path = os.path.join(UPLOAD_DIR, f"report_{temp_id}.pdf")
-        pdf.output(pdf_output_path)
+        # =========================
+        # Save ACME file
+        # =========================
+        acme_path = os.path.join(
+            "data",
+            "outputs",
+            "architecture.acme"
+        )
 
-        # 5) إرجاع الملف للمتصفح
+        with open(acme_path, "w", encoding="utf-8") as f:
+            f.write(adl_acme)
+
+        # =========================
+        # Save hybrid architecture result
+        # =========================
+        db.hybrid_method.update_one(
+            {"project_id": project_id},
+            {
+                "$set": {
+                    "project_id": project_id,
+                    "selected_architecture": architecture
+                }
+            },
+            upsert=True
+        )
+
+        # =========================
+        # Save project data
+        # =========================
+        save_project_data(project_id, {
+            "functional": frs,
+            "nfr_predictions": nfrs,
+            "selectedArchitecture": architecture
+        })
+
+        # =========================
+        # Generate PlantUML Views
+        # =========================
+        c4_puml = convert_to_c4_plantuml(adl_result)
+
+        process_puml = convert_to_process_view(adl_result)
+
+        deployment_puml = convert_to_deployment_view(adl_result)
+
+        usecase_puml = convert_to_usecase_view(adl_result)
+
+        outputs_dir = Path("data/outputs")
+        outputs_dir.mkdir(parents=True, exist_ok=True)
+
+        c4_file = outputs_dir / "architecture_c4.puml"
+        process_file = outputs_dir / "process_view.puml"
+        deployment_file = outputs_dir / "deployment_view.puml"
+        usecase_file = outputs_dir / "usecase_view.puml"
+
+        c4_file.write_text(c4_puml, encoding="utf-8")
+        process_file.write_text(process_puml, encoding="utf-8")
+        deployment_file.write_text(deployment_puml, encoding="utf-8")
+        usecase_file.write_text(usecase_puml, encoding="utf-8")
+
+        # =========================
+        # Render PNGs using PlantUML
+        # =========================
+        subprocess.run([
+            r"C:\Program Files\Java\jdk-24\bin\java.exe",
+            "-jar",
+            "C:\\plantuml\\plantuml.jar",
+            "-tpng",
+            "data/outputs/dfd_context.puml",
+            "data/outputs/process_view.puml",
+            "data/outputs/deployment_view.puml",
+            "data/outputs/architecture_c4.puml",
+            "data/outputs/usecase_view.puml"
+        ])
+
+        # =========================
+        # Generate FINAL REPORT
+        # =========================
+        pdf_path = generate_report(project_id)
+
         return FileResponse(
-            path=pdf_output_path, 
-            filename="architecture_report.pdf", 
-            media_type='application/pdf'
+            path=str(pdf_path),
+            filename="architecture_report.pdf",
+            media_type="application/pdf"
         )
 
     except Exception as e:
         traceback.print_exc()
-        return JSONResponse(status_code=500, content={"error": str(e)})
+
+        return JSONResponse(
+            status_code=500,
+            content={
+                "error": str(e)
+            }
+        )
+    
+
+
+@router.get("/adl-dashboard")
+async def adl_dashboard(request: Request):
+
+    user = request.session.get("user")
+
+    if not user:
+        return RedirectResponse("/Login")
+
+    projects = get_user_adl_projects(user["id"])
+
+    return templates.TemplateResponse(
+        "adl_dashboard.html",
+        {
+            "request": request,
+            "projects": projects,
+            "user": user
+        }
+    )
+
+
+
+@router.get("/adl-generator", response_class=HTMLResponse)
+async def adl_generator(request: Request):
+
+    return templates.TemplateResponse(
+        "adl_generator.html",
+        {
+            "request": request
+        }
+    )

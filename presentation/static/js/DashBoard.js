@@ -67,7 +67,12 @@ function generateStandaloneADL() {
     const url = window.URL.createObjectURL(blob);
     
     // لفتح الملف في tab جديد:
-    window.open(url);
+    const a = document.createElement("a");
+a.href = url;
+a.download = "Architecture_Report.pdf";
+document.body.appendChild(a);
+a.click();
+a.remove();
 
     // أو للتحميل المباشر:
     /*
@@ -87,10 +92,7 @@ function generateStandaloneADL() {
 }
 
 function openADLGenerator() {
-  document.getElementById("dashboardView").classList.add("hidden");
-  document.getElementById("uploadView").classList.add("hidden");
-
-  document.getElementById("adlView").classList.remove("hidden");
+  window.location.href = "/adl-dashboard";
 }
 
 function checkADLInputs() {
