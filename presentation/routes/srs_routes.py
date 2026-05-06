@@ -1,40 +1,37 @@
 from fastapi import APIRouter, UploadFile, Request, File
 from fastapi.responses import JSONResponse
+
 import os
 import uuid
+import traceback
 import fitz
 import pdfplumber
 import traceback
-
 from ai.inference.feature_extractor import generate_phase4
 from application.extraction.extraction_service import process_srs
 from ai.inference.predict_type_level import predict_and_save_nfr, predict_level_for_text
+
 from service.ordinal_service import execute_ordinal_method
 from service.binary_service import execute_binary_method
 from service.weighted_service import execute_weighted_method
 from service.nfr_stats_service import compute_nfr_statistics
 from service.functional_service import execute_functional_method
 from service.hybrid_service import execute_hybrid_method
-from infrastructure.repositories.project_repo import update_project_progress, create_project
+
+from infrastructure.repositories.project_repo import update_project_progress, create_project, save_project_data
 from infrastructure.repositories.weighted_repository import save_weighted_result
 from infrastructure.repositories.nfr_dataset_repository import NFRPredictionRepository
 from infrastructure.repositories.srs_repository import SRSRepository
 from infrastructure.repositories.human_feedback_repository import save_new_confirmed_nfr
-from service.retrain_service import merge_and_retrain
+
+from service.retrain_service import merge_and_retrain, run_retrain_async
 from infrastructure.database import db
-from service.retrain_service import run_retrain_async
+from ai.inference.feature_extractor import generate_phase4
+
 router = APIRouter()
 
 UPLOAD_DIR = "uploads"
 os.makedirs(UPLOAD_DIR, exist_ok=True)
-
-
-def validate_pdf_file(file: UploadFile):
-    if not file.filename.lower().endswith(".pdf"):
-        return "Invalid file format. Please upload a valid PDF document."
-    return None
-
-
 def extract_text_from_pdf(pdf_path: str) -> str:
     text = ""
     with pdfplumber.open(pdf_path) as pdf:
@@ -68,6 +65,17 @@ def clean_object_id(items: list):
         item.pop("_id", None)
         cleaned.append(item)
     return cleaned
+
+@router.get("/get_project/{project_id}")
+def get_project_api(project_id: str):
+    project = db.projects.find_one({"project_id": project_id})
+    print("PROJECT FROM DB:", project)
+
+    if not project:
+        return {"error": "Project not found"}
+
+    project.pop("_id", None)
+    return project
 
 
 @router.post("/extract")
@@ -144,6 +152,11 @@ async def extract_srs(request: Request, file: UploadFile = File(...)):
         # 4️⃣ Get high and low confidence from MongoDB
         high_confidence = NFRPredictionRepository.get_high_confidence(project_id)
         low_confidence = NFRPredictionRepository.get_low_confidence(project_id)
+
+        save_project_data(project_id, {
+         "functional": extraction_result.get("functional", []),
+         "nfr_predictions": high_confidence
+})
         print(f"📊 High confidence: {len(high_confidence)}, Low confidence: {len(low_confidence)}")
         if len(low_confidence) == 0:
             print("⚡ No low confidence → auto running architecture")
@@ -172,6 +185,17 @@ async def extract_srs(request: Request, file: UploadFile = File(...)):
             )
 
             save_weighted_result(project_id, weighted_result)
+
+            save_project_data(project_id, {
+    "functional": extraction_result.get("functional", []),
+    "nfr_predictions": high_confidence,
+    "functional_method": functional_result,
+    "ordinal_method": ordinal_result.get("result"),
+    "binary_method": binary_result,
+    "weighted_method": weighted_result,
+    "hybrid_method": hybrid_result,
+    "selectedArchitecture": hybrid_result
+})
 
             return {
                 "project_id": project_id,
@@ -304,7 +328,7 @@ async def confirm_nfr(request: Request):
 
     user_id = request.session.get("user", {}).get("id", "guest")
     create_project(project_id, user_id)
-
+    
     return {
         "status": "ok",
         "saved_count": confirmed_count,
@@ -314,7 +338,7 @@ async def confirm_nfr(request: Request):
         "weighted_method": weighted_result,
         "hybrid_method": hybrid_result,
         "nfr_predictions": clean_object_id(all_nfrs),
-       
+        "phase4": phase4
     }
 
 
