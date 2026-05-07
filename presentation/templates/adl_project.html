@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <title>ADL Workspace</title>
+
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+  >
+
+  <link
+    rel="stylesheet"
+    href="/static/css/Dashboard.css"
+  >
+
+</head>
+
+<body>
+
+<header class="blueprint-header">
+
+  <div class="container d-flex justify-content-between align-items-center">
+
+    <img
+      src="/static/images/Logo_b&w.png"
+      style="height:60px;width:140px;"
+    >
+
+    <button
+      class="btn btn-outline-light"
+      onclick="window.location.href='/adl-dashboard'"
+    >
+      Back
+    </button>
+
+  </div>
+
+</header>
+
+
+<div class="container py-5">
+
+  <!-- PROJECT INFO -->
+  <div class="studio-card p-5 mb-4">
+
+    <h2 class="fw-bold mb-3">
+      {{ project.project_name }}
+    </h2>
+
+    <div class="row">
+
+      <div class="col-md-4">
+        <h6 class="text-muted">
+          Architecture
+        </h6>
+
+        <p class="fw-bold">
+          {{ project.selectedArchitecture }}
+        </p>
+      </div>
+
+      <div class="col-md-4">
+        <h6 class="text-muted">
+          Functional Requirements
+        </h6>
+
+        <p class="fw-bold">
+          {{ project.functional|length }}
+        </p>
+      </div>
+
+      <div class="col-md-4">
+        <h6 class="text-muted">
+          NFR Predictions
+        </h6>
+
+        <p class="fw-bold">
+          {{ project.nfr_predictions|length }}
+        </p>
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- ACTIONS -->
+  <div class="row g-4">
+
+    <!-- VIEW PDF -->
+    <div class="col-md-12">
+
+      <div class="studio-card p-4 text-center h-100">
+
+        <h4 class="fw-bold mb-3">
+          Architecture Blueprint
+        </h4>
+
+        <p class="text-muted">
+          Open generated ADL report
+        </p>
+
+        <button
+          class="create-btn"
+          onclick="openPDF('{{ project.project_id }}')"
+        >
+          View ADL
+        </button>
+
+      </div>
+
+    </div>
+
+
+  
+
+  </div>
+
+</div>
+
+
+<!-- PDF MODAL -->
+<div
+  class="modal fade"
+  id="pdfModal"
+  tabindex="-1"
+>
+
+  <div class="modal-dialog modal-xl modal-dialog-centered">
+
+    <div
+      class="modal-content"
+      style="
+        height:95vh;
+        border-radius:20px;
+      "
+    >
+
+      <div
+        class="d-flex justify-content-between align-items-center p-3"
+        style="
+          background:#0f7b5f;
+          color:white;
+        "
+      >
+
+        <h4 class="m-0">
+          ADL ARCHITECTURE BLUEPRINT
+        </h4>
+
+        <button
+          class="btn-close btn-close-white"
+          data-bs-dismiss="modal"
+        ></button>
+
+      </div>
+
+      <iframe
+        id="pdfViewer"
+        style="
+          width:100%;
+          height:100%;
+          border:none;
+        "
+      ></iframe>
+
+    </div>
+
+  </div>
+
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+
+<script>
+
+function openPDF(projectId) {
+
+  const iframe =
+    document.getElementById("pdfViewer");
+
+  iframe.src =
+    `/adl-project/${projectId}/download`;
+
+  const modalElement =
+    document.getElementById("pdfModal");
+
+  const modal =
+    new bootstrap.Modal(modalElement);
+
+  modal.show();
+}
+
+</script>
+
+
+
+</body>
+</html>

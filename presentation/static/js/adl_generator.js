@@ -83,31 +83,19 @@ async function generateStandaloneADL() {
       window.URL.createObjectURL(blob);
 
 
-    const a =
-      document.createElement("a");
-
-    a.href = url;
-
-    a.download =
-      "Architecture_Report.pdf";
-
-    document.body.appendChild(a);
-
-    a.click();
-
-    a.remove();
-
-    window.URL.revokeObjectURL(url);
+// OPEN PDF IN MODAL
+document.getElementById(
+  "pdfViewer"
+).src = url;
 
 
-    // GO BACK TO DASHBOARD
-    setTimeout(() => {
+// OPEN MODAL
+const pdfModal =
+  new bootstrap.Modal(
+    document.getElementById("pdfModal")
+  );
 
-      window.location.href =
-        "/adl-dashboard";
-
-    }, 1000);
-
+pdfModal.show();
 
   } catch (err) {
 

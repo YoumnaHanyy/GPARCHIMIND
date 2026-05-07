@@ -115,6 +115,9 @@ async function generateStandaloneADL() {
 
 function openProject(projectId) {
 
+
+  
+
   window.location.href =
-    `/Dashboard?project_id=${projectId}`;
+    `/adl-project/${projectId}`;
 }

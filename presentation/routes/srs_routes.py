@@ -3,6 +3,7 @@ from fastapi.responses import JSONResponse
 from fastapi.responses import FileResponse
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
+from fastapi.responses import RedirectResponse
 
 
 
@@ -32,6 +33,8 @@ from infrastructure.repositories.nfr_dataset_repository import NFRPredictionRepo
 from infrastructure.repositories.srs_repository import SRSRepository
 from infrastructure.repositories.human_feedback_repository import save_new_confirmed_nfr
 from infrastructure.repositories.project_repo import get_user_adl_projects
+from infrastructure.repositories.project_repo import get_project
+from infrastructure.repositories.ADL_repository import save_architecture_report_pdf
 
 from service.retrain_service import merge_and_retrain, run_retrain_async
 from infrastructure.database import db
@@ -615,6 +618,18 @@ async def adl_generate_pdf(
         # Generate FINAL REPORT
         # =========================
         pdf_path = generate_report(project_id)
+        with open(pdf_path, "rb") as pdf_file:
+              pdf_bytes = pdf_file.read()
+
+        save_architecture_report_pdf(
+            project_id,
+            pdf_bytes
+)
+        update_project_progress(
+    project_id,
+    100,
+    1
+)
 
         return FileResponse(
             path=str(pdf_path),
@@ -664,3 +679,91 @@ async def adl_generator(request: Request):
             "request": request
         }
     )
+
+
+
+@router.get("/adl-project/{project_id}")
+async def open_adl_project(
+    request: Request,
+    project_id: str
+):
+
+    user = request.session.get("user")
+
+    if not user:
+        return RedirectResponse("/Login")
+
+    project = get_project(project_id)
+
+    if not project:
+        return HTMLResponse(
+            content="Project not found",
+            status_code=404
+        )
+
+    return templates.TemplateResponse(
+        "adl_project.html",
+        {
+            "request": request,
+            "project": project
+        }
+    )
+
+
+
+@router.get("/adl-project/{project_id}")
+async def open_adl_project(
+    request: Request,
+    project_id: str
+):
+
+    user = request.session.get("user")
+
+    if not user:
+        return RedirectResponse("/Login")
+
+    project = get_project(project_id)
+
+    if not project:
+        return HTMLResponse(
+            content="Project not found",
+            status_code=404
+        )
+
+    return templates.TemplateResponse(
+        "adl_project.html",
+        {
+            "request": request,
+            "project": project
+        }
+    )
+
+
+@router.get("/adl-project/{project_id}/download")
+async def download_adl_report(project_id: str):
+
+    report = db.architecture_reports.find_one({
+        "project_id": project_id
+    })
+
+    if not report:
+        return JSONResponse(
+            status_code=404,
+            content={"error": "PDF not found"}
+        )
+
+    pdf_bytes = report["report_pdf"]
+
+    temp_pdf = os.path.join(
+        "data",
+        "outputs",
+        f"{project_id}.pdf"
+    )
+
+    with open(temp_pdf, "wb") as f:
+        f.write(pdf_bytes)
+
+    return FileResponse(
+    path=temp_pdf,
+    media_type="application/pdf"
+)
