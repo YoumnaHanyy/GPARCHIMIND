@@ -17,7 +17,7 @@ from service.weighted_service import execute_weighted_method
 from service.nfr_stats_service import compute_nfr_statistics
 from service.functional_service import execute_functional_method
 from service.hybrid_service import execute_hybrid_method
-
+from application.extraction.skeleton.skeleton_service import generate_code_skeleton
 from infrastructure.repositories.project_repo import update_project_progress, create_project, save_project_data
 from infrastructure.repositories.weighted_repository import save_weighted_result
 from infrastructure.repositories.nfr_dataset_repository import NFRPredictionRepository
@@ -202,10 +202,15 @@ async def extract_srs(request: Request, file: UploadFile = File(...)):
     "hybrid_method": hybrid_result,
     "selectedArchitecture": hybrid_result
 })
-
+            code_skeleton = generate_code_skeleton(
+    selected_architecture=hybrid_result,
+    functional_requirements=extraction_result.get("functional", []),
+    non_functional_requirements=all_nfrs
+)
             return {
                 "project_id": project_id,
                 "srs_verified": True,
+                "code_skeleton": code_skeleton,
                 "functional": clean_object_id(extraction_result.get("functional", [])),
                 "nfr_predictions": clean_object_id(high_confidence),
                 "low_confidence_nfrs": [],

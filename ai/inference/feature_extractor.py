@@ -11,7 +11,9 @@ from infrastructure.repositories.design_pattern_repository import save_design_pa
 import os
 from huggingface_hub import InferenceClient
 from dotenv import load_dotenv
-
+from application.extraction.skeleton.generator import (
+    generate_code_skeleton
+)
 load_dotenv()
 
 client = InferenceClient(
@@ -219,7 +221,7 @@ def generate_phase4(project_id):
     decisions = build_feature_decision(features, full_text)
 
     architecture = load_selected_architecture(project_id)
-
+    
     save_decisions(decisions, architecture)
 
     data = {
@@ -233,8 +235,15 @@ def generate_phase4(project_id):
         project_id,
         patterns_result["top_patterns"]
     )
-
+    code = generate_code_skeleton(
+    architecture=architecture,
+    functional=frs,
+    nfrs=nfrs,
+    patterns=patterns_result["top_patterns"]
+    )
     # 🔥🔥 أهم سطر
+
+    patterns_result["code"] = code
     return {
-        "phase4": patterns_result
+        "phase4": patterns_result,
     }

@@ -339,7 +339,9 @@
             <ul class="nav nav-pills mb-4 justify-content-center border-bottom pb-3" id="dynamicTabs"></ul>
 
             <div id="tabContentBox" class="result-section animate-pop"></div>
-
+            <div id="skeletonSection" class="hidden">
+                <pre id="skeletonResult"></pre>
+            </div>
             <div class="d-flex justify-content-between mt-5">
                 <button class="btn btn-light rounded-pill px-4 fw-bold" id="btnPrev" onclick="changePhase(-1)">Previous</button>
                 <button class="create-btn" id="btnNext" onclick="changePhase(1)">Next Phase</button>
