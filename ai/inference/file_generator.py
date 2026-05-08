@@ -760,3 +760,358 @@ Example:
     cleaned = re.sub(r"```json|```", "", output).strip()
 
     return json.loads(cleaned)
+
+def generate_microkernel_project_files(requirements):
+
+    joined_requirements = "\n".join(requirements)
+
+    prompt = f"""
+You are a senior software architect.
+
+Based on Microkernel Architecture principles.
+
+The architecture should:
+- contain a minimal core system
+- support extensibility through plugins
+- isolate optional features as plugins
+- use interfaces/contracts between core and plugins
+
+Given these Microkernel functional requirements:
+
+{joined_requirements}
+
+Generate suitable files and folders for a Microkernel architecture.
+
+Return ONLY valid JSON.
+
+Focus only on:
+- core
+- plugins
+- interfaces
+- services
+- shared
+- config
+
+Rules:
+- core contains the minimal system kernel
+- plugins contain optional/extensible features
+- interfaces contain plugin contracts/interfaces
+- services contain internal core services
+- shared contains common utilities/constants
+- config contains centralized configuration
+
+Example:
+
+{{
+  "core": [
+    "kernel.py",
+    "plugin_manager.py",
+    "system_loader.py"
+  ],
+
+  "plugins": {{
+
+    "authentication_plugin": [
+      "auth_plugin.py"
+    ],
+
+    "video_plugin": [
+      "video_plugin.py"
+    ],
+
+    "analytics_plugin": [
+      "analytics_plugin.py"
+    ]
+  }},
+
+  "interfaces": [
+    "plugin_interface.py",
+    "service_interface.py"
+  ],
+
+  "services": [
+    "kernel_service.py",
+    "plugin_registry_service.py"
+  ],
+
+  "shared": [
+    "helpers.py",
+    "constants.py"
+  ],
+
+  "config": [
+    "system_config.py",
+    "plugin_config.py"
+  ]
+}}
+"""
+
+    output = generate(prompt)
+
+    cleaned = re.sub(r"```json|```", "", output).strip()
+
+    return json.loads(cleaned)
+
+def generate_event_bus_project_files(requirements):
+
+    joined_requirements = "\n".join(requirements)
+
+    prompt = f"""
+You are a senior software architect.
+
+Based on Event-Bus / Event-Broker architecture principles.
+
+The architecture should:
+- support asynchronous communication
+- use producers and consumers
+- exchange events through a broker/event bus
+- decouple services/components
+- organize communication around events/topics
+
+Given these Event-Bus functional requirements:
+
+{joined_requirements}
+
+Generate suitable files and folders for an Event-Bus architecture.
+
+Return ONLY valid JSON.
+
+Focus only on:
+- producers
+- consumers
+- events
+- broker
+- channels
+- handlers
+- shared
+- monitoring
+
+Rules:
+- producers publish events
+- consumers subscribe to events
+- events define event payloads/types
+- broker handles event routing/distribution
+- channels define topics/event streams
+- handlers process events
+- shared contains common DTOs/constants
+- monitoring contains tracing/logging/event monitoring
+
+Example:
+
+{{
+  "producers": [
+    "video_event_producer.py",
+    "notification_producer.py"
+  ],
+
+  "consumers": [
+    "analytics_consumer.py",
+    "email_consumer.py"
+  ],
+
+  "events": [
+    "video_generated_event.py",
+    "user_registered_event.py"
+  ],
+
+  "broker": [
+    "event_bus.py",
+    "message_broker.py"
+  ],
+
+  "channels": [
+    "video_channel.py",
+    "notification_channel.py"
+  ],
+
+  "handlers": [
+    "video_event_handler.py",
+    "notification_handler.py"
+  ],
+
+  "shared": [
+    "shared_dtos.py",
+    "constants.py"
+  ],
+
+  "monitoring": [
+    "event_monitor.py",
+    "tracing.py"
+  ]
+}}
+"""
+
+    output = generate(prompt)
+
+    cleaned = re.sub(r"```json|```", "", output).strip()
+
+    return json.loads(cleaned)
+
+def generate_event_driven_project_files(requirements):
+
+    joined_requirements = "\n".join(requirements)
+
+    prompt = f"""
+You are a senior software architect.
+
+Based on Event-Driven / Messaging architecture principles.
+
+The architecture should:
+- support asynchronous communication
+- organize communication around events
+- separate event producers and consumers
+- support distributed messaging systems
+- process events independently
+
+Given these Event-Driven functional requirements:
+
+{joined_requirements}
+
+Generate suitable files and folders for an Event-Driven architecture.
+
+Return ONLY valid JSON.
+
+Focus only on:
+- event_producers
+- event_consumers
+- event_channels
+- event_processing
+- messaging_infrastructure
+- shared
+
+Rules:
+- event_producers publish events/messages
+- event_consumers consume events/messages
+- event_channels represent queues/topics/streams
+- event_processing contains handlers/processors/workflows
+- messaging_infrastructure contains brokers/dispatchers/routers
+- shared contains shared DTOs/constants
+
+Example:
+
+{{
+  "event_producers": [
+    "video_event_producer.py",
+    "notification_event_producer.py"
+  ],
+
+  "event_consumers": [
+    "analytics_event_consumer.py",
+    "email_event_consumer.py"
+  ],
+
+  "event_channels": [
+    "video_channel.py",
+    "notification_topic.py"
+  ],
+
+  "event_processing": [
+    "video_event_processor.py",
+    "notification_workflow.py"
+  ],
+
+  "messaging_infrastructure": [
+    "event_bus.py",
+    "message_router.py",
+    "broker_manager.py"
+  ],
+
+  "shared": [
+    "shared_dtos.py",
+    "constants.py"
+  ]
+}}
+"""
+
+    output = generate(prompt)
+
+    cleaned = re.sub(r"```json|```", "", output).strip()
+
+    return json.loads(cleaned)
+
+def generate_serverless_project_files(requirements):
+
+    joined_requirements = "\n".join(requirements)
+
+    prompt = f"""
+You are a senior software architect.
+
+Based on Traditional Serverless / Function-as-a-Service (FaaS) architecture principles.
+
+The architecture should:
+- organize the system around stateless functions
+- support event-driven execution
+- use cloud/serverless integrations
+- support triggers and workflows
+- minimize infrastructure management
+
+Given these Serverless functional requirements:
+
+{joined_requirements}
+
+Generate suitable files and folders for a traditional serverless architecture.
+
+Return ONLY valid JSON.
+
+Focus only on:
+- functions
+- triggers
+- events
+- integrations
+- workflows
+- shared
+- deployment
+
+Rules:
+- functions contain stateless serverless functions
+- triggers contain API/event/queue triggers
+- events contain event payload definitions
+- integrations contain external/cloud integrations
+- workflows contain orchestration/pipelines
+- shared contains shared DTOs/constants
+- deployment contains deployment/configuration files
+
+Example:
+
+{{
+  "functions": [
+    "auth_function.py",
+    "video_generation_function.py",
+    "notification_function.py"
+  ],
+
+  "triggers": [
+    "api_trigger.py",
+    "queue_trigger.py"
+  ],
+
+  "events": [
+    "video_generated_event.py",
+    "user_registered_event.py"
+  ],
+
+  "integrations": [
+    "openai_integration.py",
+    "stripe_integration.py"
+  ],
+
+  "workflows": [
+    "video_processing_workflow.py"
+  ],
+
+  "shared": [
+    "shared_dtos.py",
+    "constants.py"
+  ],
+
+  "deployment": [
+    "deployment_pipeline.py"
+  ]
+}}
+"""
+
+    output = generate(prompt)
+
+    cleaned = re.sub(r"```json|```", "", output).strip()
+
+    return json.loads(cleaned)

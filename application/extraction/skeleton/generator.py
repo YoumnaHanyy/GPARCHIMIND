@@ -6,6 +6,10 @@ from application.extraction.skeleton.styles.monolithic_generator import generate
 from application.extraction.skeleton.styles.microservices_generator import generate_microservices
 from application.extraction.skeleton.styles.hexagonal_generator import generate_hexagonal
 from application.extraction.skeleton.styles.soa_generator import generate_soa
+from application.extraction.skeleton.styles.microkernel_generator import generate_microkernel
+from application.extraction.skeleton.styles.event_bus_generator import generate_event_bus
+from application.extraction.skeleton.styles.event_driven_generator import generate_event_driven
+from application.extraction.skeleton.styles.serverless_generator import generate_serverless
 
 def generate_code_skeleton(
     architecture,
@@ -54,6 +58,7 @@ def generate_code_skeleton(
         )
     elif architecture == "REST/ RESOURCE-ORIENTED":
         return generate_rest(functional,nfrs,patterns)
+    
     elif architecture == "HEXAGONAL (PORTS& ADAPTERS)":
 
        return generate_hexagonal(
@@ -68,4 +73,32 @@ def generate_code_skeleton(
         nfrs,
         patterns
         )
+    elif architecture == "MICROKERNAL (PLUG-IN)":
+
+       return generate_microkernel(
+        functional,
+        nfrs,
+        patterns
+       )
+    elif architecture == "EVENT-BUS/EVENT BROKER":
+
+       return generate_event_bus(
+         functional,
+         nfrs,
+         patterns
+        )
+    elif architecture == "EVENT-DRIVEN/ MESSAGING":
+
+      return generate_event_driven(
+        functional,
+        nfrs,
+        patterns
+      )
+    elif architecture == "SERVERLESS/FAAS":
+
+       return generate_serverless(
+        functional,
+        nfrs,
+        patterns
+       )
     return "Architecture not supported yet"
