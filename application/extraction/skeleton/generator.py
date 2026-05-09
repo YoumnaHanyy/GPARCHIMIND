@@ -10,7 +10,10 @@ from application.extraction.skeleton.styles.microkernel_generator import generat
 from application.extraction.skeleton.styles.event_bus_generator import generate_event_bus
 from application.extraction.skeleton.styles.event_driven_generator import generate_event_driven
 from application.extraction.skeleton.styles.serverless_generator import generate_serverless
-
+from application.extraction.skeleton.styles.component_based_generator import generate_component_based
+from application.extraction.skeleton.styles.pipe_filter_generator import generate_pipe_filter
+from application.extraction.skeleton.styles.broker_generator import generate_broker
+from application.extraction.skeleton.styles.space_based_generator import generate_space_based
 def generate_code_skeleton(
     architecture,
     functional,
@@ -97,6 +100,34 @@ def generate_code_skeleton(
     elif architecture == "SERVERLESS/FAAS":
 
        return generate_serverless(
+        functional,
+        nfrs,
+        patterns
+       )
+    elif architecture == "COMPONENT BASED":
+
+       return generate_component_based(
+        functional,
+        nfrs,
+        patterns
+       )
+    elif architecture == "PIPE AND- FILTER":
+
+       return generate_pipe_filter(
+        functional,
+        nfrs,
+        patterns
+       )
+    elif architecture == "BROKER (MIDDLEWARE)":
+
+       return generate_broker(
+        functional,
+        nfrs,
+        patterns
+       )
+    elif architecture == "SPACE BASED":
+
+       return generate_space_based(
         functional,
         nfrs,
         patterns

@@ -1115,3 +1115,327 @@ Example:
     cleaned = re.sub(r"```json|```", "", output).strip()
 
     return json.loads(cleaned)
+
+def generate_component_based_project_files(requirements):
+
+    joined_requirements = "\n".join(requirements)
+
+    prompt = f"""
+You are a senior software architect.
+
+Based on Component-Based Software Engineering (CBSE) principles.
+
+The architecture should:
+- organize the system around reusable components
+- separate components using interfaces/contracts
+- support modularity and composability
+- support component communication/connectors
+
+Given these Component-Based functional requirements:
+
+{joined_requirements}
+
+Generate suitable files and folders for a Component-Based architecture.
+
+Return ONLY valid JSON.
+
+Focus only on:
+- components
+- interfaces
+- connectors
+- services
+- shared
+- configuration
+
+Rules:
+- components contain reusable business components
+- interfaces contain component contracts/interfaces
+- connectors manage communication between components
+- services contain supporting/internal services
+- shared contains shared DTOs/constants
+- configuration contains component registration/configuration
+
+Example:
+
+{{
+  "components": [
+    "authentication_component.py",
+    "video_processing_component.py",
+    "analytics_component.py"
+  ],
+
+  "interfaces": [
+    "authentication_interface.py",
+    "video_interface.py"
+  ],
+
+  "connectors": [
+    "component_connector.py",
+    "event_connector.py"
+  ],
+
+  "services": [
+    "component_registry_service.py"
+  ],
+
+  "shared": [
+    "shared_dtos.py",
+    "constants.py"
+  ],
+
+  "configuration": [
+    "component_config.py",
+    "registry_config.py"
+  ]
+}}
+"""
+
+    output = generate(prompt)
+
+    cleaned = re.sub(r"```json|```", "", output).strip()
+
+    return json.loads(cleaned)
+
+def generate_pipe_filter_project_files(requirements):
+
+    joined_requirements = "\n".join(requirements)
+
+    prompt = f"""
+You are a senior software architect.
+
+Based on Pipe-and-Filter architecture principles.
+
+The architecture should:
+- organize the system around independent filters
+- process data through sequential stages
+- use pipes for communication between filters
+- support reusable processing pipelines
+
+Given these Pipe-and-Filter functional requirements:
+
+{joined_requirements}
+
+Generate suitable files and folders for a Pipe-and-Filter architecture.
+
+Return ONLY valid JSON.
+
+Focus only on:
+- filters
+- pipes
+- pipelines
+- processors
+- shared
+- monitoring
+
+Rules:
+- filters contain independent transformation stages
+- pipes contain communication/dataflow channels
+- pipelines contain ordered workflow pipelines
+- processors contain execution/processing logic
+- shared contains shared DTOs/constants
+- monitoring contains tracing/logging/error tracking
+
+Example:
+
+{{
+  "filters": [
+    "validation_filter.py",
+    "text_cleaning_filter.py",
+    "image_processing_filter.py"
+  ],
+
+  "pipes": [
+    "data_pipe.py",
+    "stream_pipe.py"
+  ],
+
+  "pipelines": [
+    "analytics_pipeline.py",
+    "image_pipeline.py"
+  ],
+
+  "processors": [
+    "pipeline_executor.py",
+    "data_processor.py"
+  ],
+
+  "shared": [
+    "shared_dtos.py",
+    "constants.py"
+  ],
+
+  "monitoring": [
+    "pipeline_logger.py",
+    "pipeline_monitor.py"
+  ]
+}}
+"""
+
+    output = generate(prompt)
+
+    cleaned = re.sub(r"```json|```", "", output).strip()
+
+    return json.loads(cleaned)
+
+def generate_broker_project_files(requirements):
+
+    joined_requirements = "\n".join(requirements)
+
+    prompt = f"""
+You are a senior software architect.
+
+Based on Broker Architecture principles.
+
+The architecture should:
+- separate clients and servers
+- use brokers for request mediation
+- support distributed communication
+- support message-based interaction
+
+Given these Broker functional requirements:
+
+{joined_requirements}
+
+Generate suitable files and folders for a Broker architecture.
+
+Return ONLY valid JSON.
+
+Focus only on:
+- clients
+- brokers
+- servers
+- communication
+- messaging
+- shared
+
+Rules:
+- clients request distributed services
+- brokers mediate and route requests
+- servers provide services/resources
+- communication contains communication/protocol logic
+- messaging contains message transport/event messaging
+- shared contains shared DTOs/contracts/constants
+
+Example:
+
+{{
+  "clients": [
+    "user_client.py",
+    "analytics_client.py"
+  ],
+
+  "brokers": [
+    "service_broker.py",
+    "request_router.py"
+  ],
+
+  "servers": [
+    "authentication_server.py",
+    "video_server.py"
+  ],
+
+  "communication": [
+    "protocol_manager.py",
+    "network_connector.py"
+  ],
+
+  "messaging": [
+    "message_dispatcher.py",
+    "event_transport.py"
+  ],
+
+  "shared": [
+    "shared_dtos.py",
+    "contracts.py"
+  ]
+}}
+"""
+
+    output = generate(prompt)
+
+    cleaned = re.sub(r"```json|```", "", output).strip()
+
+    return json.loads(cleaned)
+
+# ai/inference/file_generator.py
+
+def generate_space_based_project_files(requirements):
+
+    joined_requirements = "\n".join(requirements)
+
+    prompt = f"""
+You are a senior software architect.
+
+Based on Space-Based Architecture principles.
+
+The architecture should:
+- support high scalability
+- distribute processing across processing units
+- use distributed in-memory data grids
+- support asynchronous messaging
+- avoid centralized database bottlenecks
+
+Given these Space-Based functional requirements:
+
+{joined_requirements}
+
+Generate suitable files and folders for a Space-Based architecture.
+
+Return ONLY valid JSON.
+
+Focus only on:
+- processing_units
+- data_grid
+- messaging_grid
+- virtualized_middleware
+- deployment_manager
+- shared
+
+Rules:
+- processing_units contain distributed business logic units
+- data_grid contains distributed caching/data replication logic
+- messaging_grid contains async communication/event messaging
+- virtualized_middleware contains runtime/load balancing middleware
+- deployment_manager contains scaling/deployment management
+- shared contains shared DTOs/constants/contracts
+
+Example:
+
+{{
+  "processing_units": [
+    "video_processing_unit.py",
+    "analytics_processing_unit.py"
+  ],
+
+  "data_grid": [
+    "distributed_cache.py",
+    "replication_manager.py"
+  ],
+
+  "messaging_grid": [
+    "event_dispatcher.py",
+    "message_router.py"
+  ],
+
+  "virtualized_middleware": [
+    "load_balancer.py",
+    "runtime_manager.py"
+  ],
+
+  "deployment_manager": [
+    "scaling_manager.py",
+    "deployment_controller.py"
+  ],
+
+  "shared": [
+    "shared_dtos.py",
+    "constants.py"
+  ]
+}}
+"""
+
+    output = generate(prompt)
+
+    cleaned = re.sub(r"```json|```", "", output).strip()
+
+    return json.loads(cleaned)
