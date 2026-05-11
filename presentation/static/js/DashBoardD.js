@@ -427,7 +427,7 @@ function renderCodeSkeleton(data) {
     </div>
 
     <div class="mt-4 text-center">
-      <button class="btn btn-success px-4 me-2" onclick="downloadCode()">Download</button>
+      <button class="btn btn-success px-4 me-2" onclick="downloadCodeSKELETON()">Download</button>
       <button class="btn btn-outline-light px-4" onclick="regenerateCode()">Regenerate</button>
     </div>
   `;
@@ -1041,14 +1041,34 @@ function copyCode() {
   navigator.clipboard.writeText(code);
 }
 
-function downloadCode() {
+async function downloadCodeSKELETON() {
+
   const code = document.getElementById("generatedCode").innerText;
-  const blob = new Blob([code], { type: "text/plain" });
+
+  const response = await fetch("/download-skeleton", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      tree: code
+    })
+  });
+
+  const blob = await response.blob();
+
+  const url = window.URL.createObjectURL(blob);
 
   const a = document.createElement("a");
-  a.href = URL.createObjectURL(blob);
-  a.download = "skeleton.js";
+
+  a.href = url;
+  a.download = "code_skeleton.zip";
+
+  document.body.appendChild(a);
+
   a.click();
+
+  a.remove();
 }
 
 function regenerateCode() {
