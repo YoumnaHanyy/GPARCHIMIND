@@ -1,16 +1,22 @@
 from ai.inference.file_generator import (
     generate_project_files,
     generate_nfr_files,
-    generate_pattern_files
+    generate_pattern_files,
+    get_main_file
 )
 
-def generate_rest(functional, nfrs, patterns):
+def generate_rest(
+    functional,
+    nfrs,
+    patterns,
+    language="python"
+):
 
-    code = """
+    code = f"""
 REST_API/
 │
 
-└── main.py
+└── {get_main_file(language)}
 """
 
     requirements = []
@@ -26,7 +32,7 @@ REST_API/
 
     try:
 
-        parsed = generate_project_files(requirements)
+        parsed = generate_project_files(requirements,language)
 
         for folder, files in parsed.items():
 
@@ -43,7 +49,7 @@ REST_API/
 
     try:
 
-        nfr_result = generate_nfr_files(nfrs)
+        nfr_result = generate_nfr_files(nfrs, language)
 
         for folder, files in nfr_result.items():
 
@@ -61,7 +67,7 @@ REST_API/
 
     try:
 
-        pattern_result = generate_pattern_files(patterns,requirements)
+        pattern_result = generate_pattern_files(patterns, requirements, language)
 
         patterns_folder = pattern_result.get("patterns", {})
 

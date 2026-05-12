@@ -235,15 +235,7 @@ def generate_phase4(project_id):
         project_id,
         patterns_result["top_patterns"]
     )
-    code = generate_code_skeleton(
-    architecture=architecture,
-    functional=frs,
-    nfrs=nfrs,
-    patterns=patterns_result["top_patterns"]
-    )
-    # 🔥🔥 أهم سطر
-
-    patterns_result["code"] = code
+    
     return {
         "phase4": patterns_result,
     }

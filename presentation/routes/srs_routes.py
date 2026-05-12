@@ -10,14 +10,20 @@ import traceback
 from ai.inference.feature_extractor import generate_phase4
 from application.extraction.extraction_service import process_srs
 from ai.inference.predict_type_level import predict_and_save_nfr, predict_level_for_text
-
+from infrastructure.repositories.code_skeleton_repository import (
+    save_code_skeleton
+)
+from infrastructure.repositories.code_skeleton_repository import (
+    get_code_skeleton
+)
 from service.ordinal_service import execute_ordinal_method
 from service.binary_service import execute_binary_method
 from service.weighted_service import execute_weighted_method
 from service.nfr_stats_service import compute_nfr_statistics
 from service.functional_service import execute_functional_method
 from service.hybrid_service import execute_hybrid_method
-from application.extraction.skeleton.skeleton_service import generate_code_skeleton
+from application.extraction.skeleton.generator import generate_code_skeleton
+from ai.inference.feature_extractor import load_selected_architecture, load_requirements
 from infrastructure.repositories.project_repo import update_project_progress, create_project, save_project_data
 from infrastructure.repositories.weighted_repository import save_weighted_result
 from infrastructure.repositories.nfr_dataset_repository import NFRPredictionRepository
@@ -81,6 +87,14 @@ def get_project_api(project_id: str):
         return {"error": "Project not found"}
 
     project.pop("_id", None)
+    skeleton = get_code_skeleton(project_id)
+
+    if skeleton:
+
+       skeleton.pop("_id", None)
+
+       project["code_skeleton"] = skeleton.get("tree")
+       project["selected_language"] = skeleton.get("language")
     return project
 
 
@@ -202,15 +216,10 @@ async def extract_srs(request: Request, file: UploadFile = File(...)):
     "hybrid_method": hybrid_result,
     "selectedArchitecture": hybrid_result
 })
-            code_skeleton = generate_code_skeleton(
-    selected_architecture=hybrid_result,
-    functional_requirements=extraction_result.get("functional", []),
-    non_functional_requirements=all_nfrs
-)
+
             return {
                 "project_id": project_id,
                 "srs_verified": True,
-                "code_skeleton": code_skeleton,
                 "functional": clean_object_id(extraction_result.get("functional", [])),
                 "nfr_predictions": clean_object_id(high_confidence),
                 "low_confidence_nfrs": [],
@@ -251,7 +260,42 @@ async def extract_srs(request: Request, file: UploadFile = File(...)):
             }
         )
 
+@router.post("/generate-skeleton")
+async def generate_skeleton(request: Request):
 
+    body = await request.json()
+
+    project_id = body.get("project_id")
+    language = body.get("language", "python")
+
+    architecture = load_selected_architecture(project_id)
+
+    frs, nfrs = load_requirements()
+
+    patterns_doc = db.design_patterns.find_one({
+        "project_id": project_id
+    })
+
+    patterns = []
+
+    if patterns_doc:
+        patterns = patterns_doc.get("patterns", [])
+
+    code = generate_code_skeleton(
+        architecture=architecture,
+        functional=frs,
+        nfrs=nfrs,
+        patterns=patterns,
+        language=language
+    )
+    save_code_skeleton(
+    project_id=project_id,
+    language=language,
+    tree=code
+)
+    return {
+        "code": code
+    }
 @router.post("/confirm_nfr")
 async def confirm_nfr(request: Request):
     """

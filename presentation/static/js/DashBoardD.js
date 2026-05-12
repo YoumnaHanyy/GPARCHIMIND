@@ -2,6 +2,7 @@
 let currentPhase = 1;
 let extractedData = null;
 let pendingConfirmation = false; 
+let generatedSkeletonHTML = null;
 // Add defensive check
 window.addEventListener('DOMContentLoaded', () => {
   console.log("Dashboard initialized");
@@ -414,23 +415,176 @@ function renderDesignPatterns(data) {
 }
 
 function renderCodeSkeleton(data) {
-  if (!data || !data.phase4 || !data.phase4.code) {
-    return "<p class='text-muted'>No code generated.</p>";
+  if (generatedSkeletonHTML) {
+    return `
+      <h5 class="section-header mb-4">
+        <i class="bi bi-braces me-2 text-success"></i>Generated Code Skeleton
+      </h5>
+      <div id="generatedSkeletonBox">
+        ${generatedSkeletonHTML}
+      </div>
+    `;
   }
 
   return `
-    <h5 class="section-header">Generated Code Skeleton</h5>
+    <h5 class="section-header mb-4">
+      <i class="bi bi-braces me-2 text-success"></i>Code Skeleton Generator
+    </h5>
+    <div id="generatedSkeletonBox" class="skeleton-glass-panel">
+      <div class="text-center">
+        <div class="mb-4">
+          <i class="bi bi-code-square" style="font-size: 2.5rem; color: var(--accent-main); opacity: 0.8;"></i>
+        </div>
+        <h4 class="mb-2 fw-bold" style="color: var(--nav-dark);">
+          Select Language Framework
+        </h4>
+        <p class="text-muted mb-4 small">Generate a structural blueprint based on your architectural choices.</p>
 
-    <div class="code-box position-relative">
-      <button class="copy-btn" onclick="copyCode()">Copy</button>
-      <pre><code id="generatedCode">${data.phase4.code}</code></pre>
-    </div>
+        <select id="languageSelect" class="custom-select-glass w-50 mx-auto mb-4 d-block">
+          <option value="" disabled selected>Choose a programming language...</option>
+          <option value="python">Python</option>
+          <option value="java">Java</option>
+          <option value="javascript">JavaScript / Node.js</option>
+          <option value="typescript">TypeScript</option>
+          <option value="csharp">C# / .NET</option>
+          <option value="go">Go</option>
+          <option value="php">PHP</option>
+          <option value="ruby">Ruby</option>
+          <option value="kotlin">Kotlin</option>
+          <option value="swift">Swift</option>
+        </select>
 
-    <div class="mt-4 text-center">
-      <button class="btn btn-success px-4 me-2" onclick="downloadCodeSKELETON()">Download</button>
-      <button class="btn btn-outline-light px-4" onclick="regenerateCode()">Regenerate</button>
+        <button
+  id="generateSkeletonBtn"
+  class="btn-generate-pulse mt-2"
+  onclick="generateSkeletonWithLanguage()">
+          <i class="bi bi-cpu me-2"></i>Generate Blueprint
+        </button>
+      </div>
     </div>
   `;
+}
+
+async function generateSkeletonWithLanguage() {
+  const selectEl = document.getElementById("languageSelect");
+  const language = selectEl.value;
+
+  if(!language) {
+      alert("Please select a language first!");
+      return;
+  }
+
+  const box = document.getElementById("generatedSkeletonBox");
+  const generateBtn =
+  document.getElementById("generateSkeletonBtn");
+
+generateBtn.innerHTML = `
+  <span
+    class="spinner-border spinner-border-sm me-2">
+  </span>
+  Generating...
+`;
+
+generateBtn.disabled = true;
+  // Cinematic Loading State
+  box.innerHTML = `
+    <div class="skeleton-glass-panel">
+      <div class="d-flex align-items-center mb-4 text-muted">
+        <div class="spinner-border spinner-border-sm me-3 text-success" role="status"></div>
+        <span class="fw-semibold tracking-wider text-uppercase">Compiling architectural tree...</span>
+      </div>
+      <div class="code-display-area">
+        <div class="skeleton-loader-line"></div>
+        <div class="skeleton-loader-line medium"></div>
+        <div class="skeleton-loader-line"></div>
+        <div class="skeleton-loader-line short"></div>
+        <div class="skeleton-loader-line medium"></div>
+      </div>
+    </div>
+  `;
+
+  try {
+    const response = await fetch("/generate-skeleton", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        project_id: extractedData.project_id,
+        language: language
+      })
+    });
+
+    const data = await response.json();
+
+    // The Final Generated View
+    generatedSkeletonHTML = `
+      <div class="skeleton-glass-panel">
+        <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-3">
+          <button class="code-action-btn" onclick="backToLanguageSelection()">
+            <i class="bi bi-arrow-left"></i> Back
+          </button>
+          
+          <div class="d-flex gap-2">
+            <button
+  class="code-action-btn skeleton-main-btn"
+  id="copyCodeBtn"
+  onclick="copyCode()">
+              <i class="bi bi-clipboard"></i> <span>Copy</span>
+            </button>
+            <button
+  class="code-action-btn skeleton-main-btn"
+  id="downloadBtn" onclick="downloadCodeSKELETON()">
+              <i class="bi bi-download"></i> Download .zip
+            </button>
+          </div>
+        </div>
+
+        <div class="code-display-area animate-fade-down">
+          <pre><code id="generatedCode">${data.code}</code></pre>
+        </div>
+      </div>
+    `;
+    
+    box.innerHTML = generatedSkeletonHTML;
+
+  } catch (error) {
+    box.innerHTML = `
+      <div class="alert alert-danger" role="alert">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i> Failed to generate skeleton. Please try again.
+        <br><button class="btn btn-sm btn-outline-danger mt-2" onclick="backToLanguageSelection()">Go Back</button>
+      </div>
+    `;
+  }
+}
+
+function backToLanguageSelection() {
+  generatedSkeletonHTML = null; // Reset state
+  renderPhase(); // Re-render to show the pristine selection screen
+}
+
+function copyCode() {
+  const code = document.getElementById("generatedCode").innerText;
+  navigator.clipboard.writeText(code).then(() => {
+    // Visual feedback for copying
+    const copyBtn = document.getElementById("copyCodeBtn");
+    const originalHTML = copyBtn.innerHTML;
+    
+    copyBtn.innerHTML = `
+  <i class="bi bi-check2-all"></i>
+  <span>Copied</span>
+`;
+
+copyBtn.style.background =
+  "linear-gradient(135deg,#10b981,#06b6d4)";
+copyBtn.style.color = "white";
+    copyBtn.style.color = "#10b981";
+    copyBtn.style.borderColor = "#10b981";
+    copyBtn.style.background = "#ecfdf5";
+    
+    setTimeout(() => {
+      copyBtn.innerHTML = originalHTML;
+      copyBtn.style = ""; // Reset inline styles
+    }, 2000);
+  });
 }
   /* =======================
      TAB RENDERING
@@ -1036,32 +1190,47 @@ async function syncProjectProgress() {
 }
 
 
-function copyCode() {
-  const code = document.getElementById("generatedCode").innerText;
-  navigator.clipboard.writeText(code);
-}
-
 async function downloadCodeSKELETON() {
 
-  const code = document.getElementById("generatedCode").innerText;
+  const btn =
+    document.getElementById("downloadBtn");
 
-  const response = await fetch("/download-skeleton", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      tree: code
-    })
-  });
+  btn.innerHTML = `
+    <span
+      class="spinner-border spinner-border-sm me-2">
+    </span>
+    Downloading
+  `;
+
+  const code =
+    document.getElementById(
+      "generatedCode"
+    ).innerText;
+
+  const response = await fetch(
+    "/download-skeleton",
+    {
+      method: "POST",
+
+      headers: {
+        "Content-Type": "application/json"
+      },
+
+      body: JSON.stringify({
+        tree: code
+      })
+    }
+  );
 
   const blob = await response.blob();
 
-  const url = window.URL.createObjectURL(blob);
+  const url =
+    window.URL.createObjectURL(blob);
 
   const a = document.createElement("a");
 
   a.href = url;
+
   a.download = "code_skeleton.zip";
 
   document.body.appendChild(a);
@@ -1069,12 +1238,16 @@ async function downloadCodeSKELETON() {
   a.click();
 
   a.remove();
+
+  btn.innerHTML = `
+    <i class="bi bi-check-circle-fill"></i>
+    Downloaded
+  `;
 }
 
 function regenerateCode() {
   alert("Regenerating code...");
 }
-
 
 function openProject(projectId) {
   console.log("📂 Opening project:", projectId);

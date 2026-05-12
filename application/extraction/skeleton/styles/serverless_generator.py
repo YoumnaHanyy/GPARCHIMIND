@@ -1,13 +1,15 @@
 from ai.inference.file_generator import (
     generate_serverless_project_files,
     generate_nfr_files,
-    generate_pattern_files
+    generate_pattern_files,
+    get_main_file
 )
 
 
-def generate_serverless(functional, nfrs, patterns):
+def generate_serverless(functional, nfrs, patterns,
+    language="python"):
 
-    code = """
+    code = f"""
 SERVERLESS/
 │
 
@@ -29,7 +31,7 @@ SERVERLESS/
 
     try:
 
-        parsed = generate_serverless_project_files(requirements)
+        parsed = generate_serverless_project_files(requirements,language)
 
         for folder, files in parsed.items():
 
@@ -47,7 +49,7 @@ SERVERLESS/
 
     try:
 
-        nfr_result = generate_nfr_files(nfrs)
+        nfr_result = generate_nfr_files(nfrs, language)
 
         for folder, files in nfr_result.items():
 
@@ -67,7 +69,8 @@ SERVERLESS/
 
         pattern_result = generate_pattern_files(
             patterns,
-            requirements
+            requirements,
+            language
         )
 
         patterns_folder = pattern_result.get("patterns", {})

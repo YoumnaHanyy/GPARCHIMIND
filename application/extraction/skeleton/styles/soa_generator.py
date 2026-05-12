@@ -1,17 +1,19 @@
 from ai.inference.file_generator import (
     generate_soa_project_files,
     generate_nfr_files,
-    generate_pattern_files
+    generate_pattern_files,
+    get_main_file
 )
 
 
-def generate_soa(functional, nfrs, patterns):
+def generate_soa(functional, nfrs, patterns,
+    language="python"):
 
-    code = """
+    code = f"""
 SOA/
 │
 
-└── main.py
+└── {get_main_file(language)}
 """
 
     requirements = []
@@ -29,7 +31,7 @@ SOA/
 
     try:
 
-        parsed = generate_soa_project_files(requirements)
+        parsed = generate_soa_project_files(requirements,language)
 
         for folder, files in parsed.items():
 
@@ -47,7 +49,7 @@ SOA/
 
     try:
 
-        nfr_result = generate_nfr_files(nfrs)
+        nfr_result = generate_nfr_files(nfrs, language)
 
         for folder, files in nfr_result.items():
 
@@ -67,7 +69,8 @@ SOA/
 
         pattern_result = generate_pattern_files(
             patterns,
-            requirements
+            requirements,
+            language
         )
 
         patterns_folder = pattern_result.get("patterns", {})

@@ -3,17 +3,19 @@
 from ai.inference.file_generator import (
     generate_space_based_project_files,
     generate_nfr_files,
-    generate_pattern_files
+    generate_pattern_files,
+    get_main_file
 )
 
 
-def generate_space_based(functional, nfrs, patterns):
+def generate_space_based(functional, nfrs, patterns,
+    language="python"):
 
-    code = """
+    code = f"""
 SPACE_BASED/
 │
 
-└── main.py
+└── {get_main_file(language)}
 """
 
     requirements = []
@@ -31,7 +33,7 @@ SPACE_BASED/
 
     try:
 
-        parsed = generate_space_based_project_files(requirements)
+        parsed = generate_space_based_project_files(requirements,language)
 
         for folder, files in parsed.items():
 
@@ -49,7 +51,7 @@ SPACE_BASED/
 
     try:
 
-        nfr_result = generate_nfr_files(nfrs)
+        nfr_result = generate_nfr_files(nfrs, language)
 
         for folder, files in nfr_result.items():
 
@@ -69,7 +71,8 @@ SPACE_BASED/
 
         pattern_result = generate_pattern_files(
             patterns,
-            requirements
+            requirements,
+            language
         )
 
         patterns_folder = pattern_result.get("patterns", {})

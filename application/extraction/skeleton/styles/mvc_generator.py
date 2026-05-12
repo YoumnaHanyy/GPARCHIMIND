@@ -1,17 +1,23 @@
 from ai.inference.file_generator import (
     generate_mvc_project_files,
     generate_nfr_files,
-    generate_pattern_files
+    generate_pattern_files,
+    get_main_file
 )
 
 
-def generate_mvc(functional, nfrs, patterns):
+def generate_mvc(
+    functional,
+    nfrs,
+    patterns,
+    language="python"
+):
 
-    code = """
+    code = f"""
 MVC/
 │
 
-└── app.py
+└── {get_main_file(language)}
 """
 
     requirements = []
@@ -29,7 +35,7 @@ MVC/
 
     try:
 
-        parsed = generate_mvc_project_files(requirements)
+        parsed = generate_mvc_project_files(requirements,language)
 
         for folder, files in parsed.items():
 
@@ -47,7 +53,7 @@ MVC/
 
     try:
 
-        nfr_result = generate_nfr_files(nfrs)
+        nfr_result = generate_nfr_files(nfrs, language)
 
         for folder, files in nfr_result.items():
 
@@ -65,7 +71,7 @@ MVC/
 
     try:
 
-        pattern_result = generate_pattern_files(patterns,requirements)
+        pattern_result = generate_pattern_files(patterns, requirements, language)
 
         patterns_folder = pattern_result.get("patterns", {})
 

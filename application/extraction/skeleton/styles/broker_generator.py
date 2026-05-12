@@ -1,18 +1,18 @@
-
 from ai.inference.file_generator import (
     generate_broker_project_files,
     generate_nfr_files,
-    generate_pattern_files
+    generate_pattern_files,
+    get_main_file
 )
 
 
-def generate_broker(functional, nfrs, patterns):
+def generate_broker(functional, nfrs, patterns, language="python"):
 
-    code = """
+    code = f"""
 BROKER/
 │
 
-└── main.py
+└── {get_main_file(language)}
 """
 
     requirements = []
@@ -30,7 +30,7 @@ BROKER/
 
     try:
 
-        parsed = generate_broker_project_files(requirements)
+        parsed = generate_broker_project_files(requirements,language)
 
         for folder, files in parsed.items():
 
@@ -48,7 +48,7 @@ BROKER/
 
     try:
 
-        nfr_result = generate_nfr_files(nfrs)
+        nfr_result = generate_nfr_files(nfrs, language)
 
         for folder, files in nfr_result.items():
 
@@ -68,7 +68,8 @@ BROKER/
 
         pattern_result = generate_pattern_files(
             patterns,
-            requirements
+            requirements,
+            language
         )
 
         patterns_folder = pattern_result.get("patterns", {})

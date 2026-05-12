@@ -1137,3 +1137,189 @@ body {
     color: white;
     box-shadow: 0 0 15px rgba(6, 182, 212, 0.4);
 }
+
+.language-modal {
+
+  display: none;
+
+  position: fixed;
+
+  z-index: 9999;
+
+  left: 0;
+  top: 0;
+
+  width: 100%;
+  height: 100%;
+
+  background: rgba(0,0,0,0.5);
+
+  justify-content: center;
+  align-items: center;
+}
+
+.language-modal-content {
+
+  background: white;
+
+  padding: 30px;
+
+  border-radius: 12px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+
+  min-width: 300px;
+}
+/* ========================================
+   CODE SKELETON & IDE AESTHETICS
+   ======================================== */
+.skeleton-glass-panel {
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(16, 185, 129, 0.15);
+  border-radius: 20px;
+  padding: 35px 30px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+  animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.code-display-area {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 24px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.9rem;
+  color: #1e293b;
+  overflow-x: auto;
+  position: relative;
+  box-shadow: inset 0 2px 15px rgba(0,0,0,0.02);
+  /* Subtle architectural blueprint grid background */
+  background-image: radial-gradient(#e5e7eb 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+.code-display-area code {
+  background: rgba(255, 255, 255, 0.85); /* Legibility overlay */
+  display: block;
+  padding: 15px;
+  border-radius: 8px;
+  line-height: 1.6;
+}
+
+.custom-select-glass {
+  appearance: none;
+  background: #ffffff url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230e7e59' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e") no-repeat right 1rem center/1em;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 14px 20px;
+  font-size: 1rem;
+  color: var(--nav-dark);
+  font-weight: 500;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+  cursor: pointer;
+}
+
+.custom-select-glass:focus {
+  border-color: var(--accent-main);
+  outline: none;
+  box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
+}
+
+.code-action-btn {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  color: #475569;
+  padding: 8px 18px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.skeleton-main-btn {
+
+  background: linear-gradient(
+    135deg,
+    var(--accent-main),
+    var(--accent-secondary)
+  );
+
+  color: white;
+
+  border: none;
+
+  padding: 10px 22px;
+
+  border-radius: 12px;
+
+  font-weight: 700;
+
+  transition: 0.25s ease;
+
+  box-shadow:
+    0 8px 18px rgba(16,185,129,0.18);
+}
+
+.skeleton-main-btn:hover {
+
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 12px 22px rgba(16,185,129,0.25);
+
+  color: white;
+}
+.code-action-btn:hover {
+  background: #f8fafc;
+  color: var(--accent-main);
+  border-color: var(--accent-main);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(16, 185, 129, 0.1);
+}
+
+.code-action-btn:active {
+  transform: translateY(0);
+}
+
+.btn-generate-pulse {
+  background: linear-gradient(135deg, var(--accent-main), var(--accent-secondary));
+  color: white;
+  border: none;
+  padding: 14px 40px;
+  border-radius: 50px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  transition: 0.3s;
+  box-shadow: 0 10px 20px rgba(16, 185, 129, 0.2);
+}
+
+.btn-generate-pulse:hover {
+  transform: scale(1.03);
+  box-shadow: 0 15px 25px rgba(16, 185, 129, 0.3);
+  color: white;
+}
+
+/* Cinematic Loading Lines for Code Skeleton */
+.skeleton-loader-line {
+  height: 14px;
+  background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%);
+  background-size: 200% 100%;
+  animation: shimmerSkeleton 1.5s infinite linear;
+  border-radius: 8px;
+  margin-bottom: 16px;
+}
+
+.skeleton-loader-line.short { width: 40%; }
+.skeleton-loader-line.medium { width: 70%; }
+
+@keyframes shimmerSkeleton {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}

@@ -14,122 +14,67 @@ from application.extraction.skeleton.styles.component_based_generator import gen
 from application.extraction.skeleton.styles.pipe_filter_generator import generate_pipe_filter
 from application.extraction.skeleton.styles.broker_generator import generate_broker
 from application.extraction.skeleton.styles.space_based_generator import generate_space_based
+
+
 def generate_code_skeleton(
     architecture,
     functional,
     nfrs,
-    patterns
+    patterns,
+    language="python"
 ):
 
     architecture = architecture.upper()
 
     print("ARCHITECTURE =", architecture)
+    print("LANGUAGE     =", language)
 
     if architecture == "MVC (MODEL-VIEW-CONTROLLER)":
-        return generate_mvc(
-    functional,
-    nfrs,
-    patterns
-)
+        return generate_mvc(functional, nfrs, patterns, language)
 
     elif architecture == "LAYERED (N-TIER)":
-        return generate_layered(
-    functional,
-    nfrs,
-    patterns
-)
+        return generate_layered(functional, nfrs, patterns, language)
+
     elif architecture == "CLIENT-SERVER":
+        return generate_client_server(functional, nfrs, patterns, language)
 
-        return generate_client_server(
-          functional,
-          nfrs,
-          patterns
-        )
     elif architecture == "MONOLITHIC":
+        return generate_monolithic(functional, nfrs, patterns, language)
 
-        return generate_monolithic(
-          functional,
-          nfrs,
-          patterns
-        )
     elif architecture == "MICROSERVICES":
+        return generate_microservices(functional, nfrs, patterns, language)
 
-        return generate_microservices(
-           functional,
-           nfrs,
-           patterns
-        )
     elif architecture == "REST/ RESOURCE-ORIENTED":
-        return generate_rest(functional,nfrs,patterns)
-    
+        return generate_rest(functional, nfrs, patterns, language)
+
     elif architecture == "HEXAGONAL (PORTS& ADAPTERS)":
+        return generate_hexagonal(functional, nfrs, patterns, language)
 
-       return generate_hexagonal(
-        functional,
-        nfrs,
-        patterns
-       )
     elif architecture == "SERVICE ORIENTED (SOA)":
+        return generate_soa(functional, nfrs, patterns, language)
 
-       return generate_soa(
-        functional,
-        nfrs,
-        patterns
-        )
     elif architecture == "MICROKERNAL (PLUG-IN)":
+        return generate_microkernel(functional, nfrs, patterns, language)
 
-       return generate_microkernel(
-        functional,
-        nfrs,
-        patterns
-       )
     elif architecture == "EVENT-BUS/EVENT BROKER":
+        return generate_event_bus(functional, nfrs, patterns, language)
 
-       return generate_event_bus(
-         functional,
-         nfrs,
-         patterns
-        )
     elif architecture == "EVENT-DRIVEN/ MESSAGING":
+        return generate_event_driven(functional, nfrs, patterns, language)
 
-      return generate_event_driven(
-        functional,
-        nfrs,
-        patterns
-      )
     elif architecture == "SERVERLESS/FAAS":
+        return generate_serverless(functional, nfrs, patterns, language)
 
-       return generate_serverless(
-        functional,
-        nfrs,
-        patterns
-       )
     elif architecture == "COMPONENT BASED":
+        return generate_component_based(functional, nfrs, patterns, language)
 
-       return generate_component_based(
-        functional,
-        nfrs,
-        patterns
-       )
     elif architecture == "PIPE AND- FILTER":
+        return generate_pipe_filter(functional, nfrs, patterns, language)
 
-       return generate_pipe_filter(
-        functional,
-        nfrs,
-        patterns
-       )
     elif architecture == "BROKER (MIDDLEWARE)":
+        return generate_broker(functional, nfrs, patterns, language)
 
-       return generate_broker(
-        functional,
-        nfrs,
-        patterns
-       )
     elif architecture == "SPACE BASED":
+        return generate_space_based(functional, nfrs, patterns, language)
 
-       return generate_space_based(
-        functional,
-        nfrs,
-        patterns
-       )
     return "Architecture not supported yet"

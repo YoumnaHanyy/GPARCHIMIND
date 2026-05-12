@@ -1,17 +1,19 @@
 from ai.inference.file_generator import (
     generate_component_based_project_files,
     generate_nfr_files,
-    generate_pattern_files
+    generate_pattern_files,
+    get_main_file
 )
 
 
-def generate_component_based(functional, nfrs, patterns):
+def generate_component_based(functional, nfrs, patterns,
+    language="python"):
 
-    code = """
+    code = f"""
 COMPONENT_BASED/
 │
 
-└── main.py
+└── {get_main_file(language)}
 """
 
     requirements = []
@@ -29,7 +31,7 @@ COMPONENT_BASED/
 
     try:
 
-        parsed = generate_component_based_project_files(requirements)
+        parsed = generate_component_based_project_files(requirements,language)
 
         for folder, files in parsed.items():
 
@@ -47,7 +49,7 @@ COMPONENT_BASED/
 
     try:
 
-        nfr_result = generate_nfr_files(nfrs)
+        nfr_result = generate_nfr_files(nfrs, language)
 
         for folder, files in nfr_result.items():
 
@@ -67,7 +69,8 @@ COMPONENT_BASED/
 
         pattern_result = generate_pattern_files(
             patterns,
-            requirements
+            requirements,
+            language
         )
 
         patterns_folder = pattern_result.get("patterns", {})
