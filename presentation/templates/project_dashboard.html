@@ -743,6 +743,14 @@
             <button id="viewResultsBtn" class="btn btn-outline-secondary d-none" onclick="viewLastResults()">
                 <i class="bi bi-eye me-2"></i> View Last Results
             </button>
+            <button id="saveChangesBtn"
+        class="btn btn-success d-none"
+        onclick="saveUpdatedRequirements('{{ project.project_id }}')">
+
+    <i class="bi bi-check2-circle me-2"></i>
+    Save Updates
+
+</button>
             <button class="btn-primary-custom" onclick="reevaluateArchitecture('{{ project.project_id }}')">
                 <i class="bi bi-arrow-repeat me-2"></i> Run Re-Evaluation
             </button>
@@ -853,7 +861,25 @@ function hasChanges(currentFRs, currentNFRs){
 
 let evalModalInstance = null;
 let savedResultsHTML = "";
+function monitorRequirementChanges(){
 
+    const saveBtn =
+        document.getElementById("saveChangesBtn");
+
+    document.addEventListener("input", () => {
+        saveBtn.classList.remove("d-none");
+    });
+
+    document.addEventListener("change", () => {
+        saveBtn.classList.remove("d-none");
+    });
+
+}
+
+window.addEventListener(
+    "DOMContentLoaded",
+    monitorRequirementChanges
+);
 const previousHybridArchitectures = [
     {% for arch in hybrid_results %}
         "{{ arch.Architecture }}",
@@ -884,7 +910,127 @@ function normalizeArchitectureName(name){
         .replace(/\s+/g, " ")
         .trim();
 }
+async function saveUpdatedRequirements(projectId){
 
+    const frInputs =
+        document.querySelectorAll(".fr-input");
+
+    let frs = [];
+
+    frInputs.forEach((input, index) => {
+
+        if(input.value.trim() !== ""){
+
+            frs.push({
+                id: `FR-${index + 1}`,
+                description: input.value.trim()
+            });
+
+        }
+
+    });
+
+    const nfrItems =
+        document.querySelectorAll(".nfr-item");
+
+    let nfrs = [];
+
+    nfrItems.forEach((item) => {
+
+        const type =
+            item.querySelector(".nfr-type").value;
+
+        const desc =
+            item.querySelector(".nfr-description").value;
+
+        if(type && desc.trim() !== ""){
+
+            nfrs.push({
+                title: type,
+                description: desc.trim()
+            });
+
+        }
+
+    });
+
+    const saveBtn =
+        document.getElementById("saveChangesBtn");
+
+    saveBtn.innerHTML = `
+        <span class="spinner-border spinner-border-sm me-2"></span>
+        Saving...
+    `;
+
+    saveBtn.disabled = true;
+
+    try{
+
+        const response =
+            await fetch(`/project/${projectId}/save-updates`, {
+
+                method:"POST",
+
+                headers:{
+                    "Content-Type":"application/json"
+                },
+
+                body: JSON.stringify({
+                    functional: frs,
+                    nfr_predictions: nfrs
+                })
+
+            });
+
+        const data = await response.json();
+
+        saveBtn.innerHTML = `
+            <i class="bi bi-check2-all me-2"></i>
+            Saved
+        `;
+
+        saveBtn.classList.remove("btn-success");
+        saveBtn.classList.add("btn-dark");
+
+        // UPDATE ORIGINALS
+        originalFRs =
+            frs.map(fr => fr.description.trim());
+
+        originalNFRs =
+            nfrs.map(nfr => ({
+                title: nfr.title,
+                description: nfr.description.trim()
+            }));
+
+        setTimeout(() => {
+
+            saveBtn.classList.add("d-none");
+
+            saveBtn.innerHTML = `
+                <i class="bi bi-check2-circle me-2"></i>
+                Save Updates
+            `;
+
+            saveBtn.disabled = false;
+
+            saveBtn.classList.remove("btn-dark");
+            saveBtn.classList.add("btn-success");
+
+        }, 1500);
+
+    }
+    catch(error){
+
+        console.error(error);
+
+        saveBtn.innerHTML = `
+            <i class="bi bi-x-circle me-2"></i>
+            Failed
+        `;
+
+        saveBtn.disabled = false;
+    }
+}
 async function reevaluateArchitecture(projectId){
 
     const frInputs =

@@ -5,8 +5,8 @@ from pydantic import BaseModel
 from fastapi import HTTPException
 from fastapi.responses import StreamingResponse
 import io
+from datetime import datetime
 from service.functional_service import execute_functional_method
-
 from service.ordinal_service import execute_ordinal_method
 
 from service.binary_service import execute_binary_method
@@ -642,6 +642,126 @@ async def reevaluate_architecture(
 
             content={
 
+                "error": str(e)
+            }
+        )
+    
+
+
+# ==========================================
+# SAVE UPDATED REQUIREMENTS
+# ==========================================
+
+@app.post("/project/{project_id}/save-updates")
+async def save_project_updates(
+    request: Request,
+    project_id: str
+):
+
+    try:
+
+        body = await request.json()
+
+        functional = body.get("functional", [])
+
+        nfr_predictions = body.get("nfr_predictions", [])
+
+        # ==========================================
+        # DELETE OLD DATA
+        # ==========================================
+
+        db.fr_extracted.delete_many({
+            "project_id": project_id
+        })
+
+        db.nfr_extracted.delete_many({
+            "project_id": project_id
+        })
+
+        db.nfr_predictions.delete_many({
+            "project_id": project_id
+        })
+
+        # ==========================================
+        # SAVE FUNCTIONAL REQUIREMENTS
+        # ==========================================
+
+        for fr in functional:
+
+            db.fr_extracted.insert_one({
+
+                "project_id": project_id,
+
+                "description":
+                    fr.get("description", "")
+            })
+
+        # ==========================================
+        # SAVE NFRS
+        # ==========================================
+
+        for nfr in nfr_predictions:
+
+            predicted_type =nfr.get("title", "")
+
+            predicted_level = predict_level_for_text(
+                    nfr.get("description", "")
+                )
+
+            db.nfr_extracted.insert_one({
+
+                "project_id": project_id,
+
+                "title": predicted_type,
+
+                "description":
+                    nfr.get("description", "")
+            })
+
+            db.nfr_predictions.insert_one({
+
+                "project_id": project_id,
+
+                "description":
+                    nfr.get("description", ""),
+
+                "predicted_type":
+                    predicted_type,
+
+                "predicted_level":
+                    predicted_level,
+
+                "confidence": 1.0
+            })
+
+        # ==========================================
+        # UPDATE PROJECT DATE
+        # ==========================================
+
+        db.projects.update_one(
+
+            {"project_id": project_id},
+
+            {
+                "$set": {
+                    "updated_at": datetime.utcnow()
+                }
+            }
+        )
+
+        return {
+            "status": "success"
+        }
+
+    except Exception as e:
+
+        traceback.print_exc()
+
+        return JSONResponse(
+
+            status_code=500,
+
+            content={
                 "error": str(e)
             }
         )
