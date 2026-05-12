@@ -1159,10 +1159,7 @@ async function reevaluateArchitecture(projectId){
                                 <p class="text-muted mb-0" style="line-height:1.8;">
                                     The reevaluation process indicates that the
                                     architectural recommendations remained stable
-                                    despite the updated requirements. The current
-                                    architecture set still satisfies the project's
-                                    functional and non-functional constraints with
-                                    strong alignment and architectural consistency.
+                                    despite the updated requirements.
                                 </p>
                                 `
 
@@ -1171,13 +1168,9 @@ async function reevaluateArchitecture(projectId){
                                 `
                                 <p class="text-muted mb-0" style="line-height:1.8;">
                                     The reevaluation process detected architectural
-                                    evolution caused by the updated requirements and
-                                    quality attributes. The hybrid evaluation methods
-                                    identified changes in architectural suitability,
-                                    scalability priorities, and system constraints,
-                                    resulting in a refined set of recommended
-                                    architectures better aligned with the new
-                                    project conditions.
+                                    evolution caused by updated requirements and
+                                    quality attributes, resulting in refined
+                                    architecture recommendations.
                                 </p>
                                 `
                             }
@@ -1215,6 +1208,134 @@ async function reevaluateArchitecture(projectId){
                                 <div class="arch-score">
                                     Final Score:
                                     ${item.Score || item.FinalScore || 0}%
+                                </div>
+
+                            </div>
+
+                        `).join("")}
+
+                    </div>
+
+                </div>
+
+                <!-- FUNCTIONAL -->
+                <div class="tab-pane fade" id="func-pane">
+
+                    <div class="result-container">
+
+                        <div class="result-header">
+                            Functional Method
+                        </div>
+
+                        <div class="result-divider"></div>
+
+                        ${(data.functional_method?.top_architectures || []).map((item, index) => `
+
+                            <div class="arch-list-item">
+
+                                <div class="arch-title">
+                                    ${index + 1}.
+                                    ${(item.Architecture || 'Unknown').toUpperCase()}
+                                </div>
+
+                                <div class="arch-score">
+                                    Score: ${item.Score || 0}
+                                </div>
+
+                            </div>
+
+                        `).join("")}
+
+                    </div>
+
+                </div>
+
+                <!-- ORDINAL -->
+                <div class="tab-pane fade" id="ord-pane">
+
+                    <div class="result-container">
+
+                        <div class="result-header">
+                            Ordinal Method
+                        </div>
+
+                        <div class="result-divider"></div>
+
+                        ${(data.ordinal_method || []).map((item, index) => `
+
+                            <div class="arch-list-item">
+
+                                <div class="arch-title">
+                                    ${index + 1}.
+                                    ${(item.architecture || 'Unknown').toUpperCase()}
+                                </div>
+
+                                <div class="arch-score">
+                                    Score: ${item.matched_nfrs || 0}
+                                </div>
+
+                            </div>
+
+                        `).join("")}
+
+                    </div>
+
+                </div>
+
+                <!-- BINARY -->
+                <div class="tab-pane fade" id="bin-pane">
+
+                    <div class="result-container">
+
+                        <div class="result-header">
+                            Binary Method
+                        </div>
+
+                        <div class="result-divider"></div>
+
+                        ${(data.binary_method?.top_5_architectures || []).map((item, index) => `
+
+                            <div class="arch-list-item">
+
+                                <div class="arch-title">
+                                    ${index + 1}.
+                                    ${(item.architecture || 'Unknown').toUpperCase()}
+                                </div>
+
+                                <div class="arch-score">
+                                    Score: ${item.score || 0}
+                                </div>
+
+                            </div>
+
+                        `).join("")}
+
+                    </div>
+
+                </div>
+
+                <!-- WEIGHTED -->
+                <div class="tab-pane fade" id="weight-pane">
+
+                    <div class="result-container">
+
+                        <div class="result-header">
+                            Weighted Method
+                        </div>
+
+                        <div class="result-divider"></div>
+
+                        ${(data.weighted_method?.top_architectures || []).map((item, index) => `
+
+                            <div class="arch-list-item">
+
+                                <div class="arch-title">
+                                    ${index + 1}.
+                                    ${(item.Architecture || 'Unknown').toUpperCase()}
+                                </div>
+
+                                <div class="arch-score">
+                                    Score: ${item.Score || 0}
                                 </div>
 
                             </div>
