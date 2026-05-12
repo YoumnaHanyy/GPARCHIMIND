@@ -88,40 +88,59 @@
   </div>
 
 
-  <!-- ACTIONS -->
-  <div class="row g-4">
+ <!-- ACTIONS -->
+<div class="row g-4">
 
-    <!-- VIEW PDF -->
-    <div class="col-md-12">
+  <!-- ADL REPORT -->
+  <div class="col-md-6">
 
-      <div class="studio-card p-4 text-center h-100">
+    <div class="studio-card p-5 text-center h-100 d-flex flex-column justify-content-center">
 
-        <h4 class="fw-bold mb-3">
-          Architecture Blueprint
-        </h4>
+      <h3 class="fw-bold mb-3">
+        Architecture Blueprint
+      </h3>
 
-        <p class="text-muted">
-          Open generated ADL report
-        </p>
+      <p class="text-muted mb-4">
+        Open generated ADL report
+      </p>
 
-        <button
-          class="create-btn"
-          onclick="openPDF('{{ project.project_id }}')"
-        >
-          View ADL
-        </button>
-
-      </div>
+      <button
+        class="create-btn align-self-center"
+        onclick="openPDF('{{ project.project_id }}')"
+      >
+        View ADL
+      </button>
 
     </div>
 
+  </div>
 
-  
+
+  <!-- VALIDATION REPORT -->
+  <div class="col-md-6">
+
+    <div class="studio-card p-5 text-center h-100 d-flex flex-column justify-content-center">
+
+      <h3 class="fw-bold mb-3">
+        Validation Report
+      </h3>
+
+      <p class="text-muted mb-4">
+        Open architecture validation analysis
+      </p>
+
+      <button
+        class="create-btn align-self-center"
+        onclick="openValidationPDF('{{ project.project_id }}')"
+      >
+        View Validation
+      </button>
+
+    </div>
 
   </div>
 
 </div>
-
 
 <!-- PDF MODAL -->
 <div
@@ -195,8 +214,29 @@ function openPDF(projectId) {
   modal.show();
 }
 
-</script>
 
+
+
+
+
+function openValidationPDF(projectId) {
+
+  const iframe =
+    document.getElementById("pdfViewer");
+
+  iframe.src =
+    `/adl-project/${projectId}/validation-report`;
+
+  const modalElement =
+    document.getElementById("pdfModal");
+
+  const modal =
+    new bootstrap.Modal(modalElement);
+
+  modal.show();
+}
+
+</script>
 
 
 </body>

@@ -1,47 +1,52 @@
 [
   {
-    "title": "Maintainability",
-    "description": "Code should be modular, follow best practices for coding, and have extensive documentation to facilitate maintenance",
-    "project_id": "adl_66a8ee81"
-  },
-  {
-    "title": "Data Privacy",
-    "description": "To guarantee the confidentiality of user, CVS, and evaluation data, the system needs to adhere to data protection regulations",
-    "project_id": "adl_66a8ee81"
+    "title": "Usability",
+    "description": "The user interface must be easy to use and give applicants and recruiters clear instructions and help",
+    "project_id": "adl_116bf856"
   },
   {
     "title": "Fault Tolerance",
     "description": "Unexpected errors should be handled by the system, and users should get informative error messages",
-    "project_id": "adl_66a8ee81"
-  },
-  {
-    "title": "Scalability",
-    "description": "The database must be designed to grow along with the volume of CVS and assessment data that are gathered",
-    "project_id": "adl_66a8ee81"
+    "project_id": "adl_116bf856"
   },
   {
     "title": "Performance",
-    "description": "To ensure a smooth and efficient user experience, the system must respond to user input in less than two seconds",
-    "project_id": "adl_66a8ee81"
+    "description": "The system must respond to user input in less than two seconds",
+    "project_id": "adl_116bf856"
   },
   {
     "title": "Reliability",
-    "description": "The system should be up and running 99.9% of the time",
-    "project_id": "adl_66a8ee81"
+    "description": "The system should be up and running 99% of the time",
+    "project_id": "adl_116bf856"
   },
   {
-    "title": "Usability",
-    "description": "The user interface must be easy to use and give applicants and recruiters clear instructions and help",
-    "project_id": "adl_66a8ee81"
+    "title": "Scalability",
+    "description": "The system must support at least 100 concurrent users without exhibiting a discernible decrease in performance",
+    "project_id": "adl_116bf856"
+  },
+  {
+    "title": "Maintainability",
+    "description": "Code should be modular, follow best practices for coding, and have extensive documentation to facilitate maintenance",
+    "project_id": "adl_116bf856"
   },
   {
     "title": "Compatibility",
-    "description": "The majority of web browsers, including Edge, Firefox, Safari, and Chrome, ought to work with the system",
-    "project_id": "adl_66a8ee81"
+    "description": "The system ought to have the ability to interface with external services, such as ChatGPT, to verify the screening questions",
+    "project_id": "adl_116bf856"
   },
   {
-    "title": "Standards Compliance",
-    "description": "The ResuFit website can work with online browsers such as Edge, Firefox, Safari, and Chrome",
-    "project_id": "adl_66a8ee81"
+    "title": "Data Privacy",
+    "description": "To guarantee the confidentiality of user, CVS, and evaluation data, the system needs to adhere to data protection regulations",
+    "project_id": "adl_116bf856"
+  },
+  {
+    "title": "Database Scalability",
+    "description": "The database must be designed to grow along with the volume of CVS and assessment data that are gathered",
+    "project_id": "adl_116bf856"
+  },
+  {
+    "title": "Cross-browser compatibility",
+    "description": "The majority of web browsers, including Edge, Firefox, Safari, and Chrome, ought to work with the system",
+    "project_id": "adl_116bf856"
   }
 ]

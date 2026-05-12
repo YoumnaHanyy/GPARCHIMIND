@@ -15,6 +15,10 @@ import pdfplumber
 import subprocess
 from pathlib import Path
 
+
+
+from application.extraction.adl.validation.runner import run_validation
+from application.extraction.adl.validation.validation_report_generator import generate_validation_pdf
 from application.extraction.extraction_service import process_srs
 from application.extraction.adl.json_to_acme import convert_to_acme
 from ai.inference.predict_type_level import predict_and_save_nfr, predict_level_for_text
@@ -35,6 +39,8 @@ from infrastructure.repositories.human_feedback_repository import save_new_confi
 from infrastructure.repositories.project_repo import get_user_adl_projects
 from infrastructure.repositories.project_repo import get_project
 from infrastructure.repositories.ADL_repository import save_architecture_report_pdf
+from infrastructure.repositories.validation_report_repository import save_validation_report_pdf
+
 
 from service.retrain_service import merge_and_retrain, run_retrain_async
 from infrastructure.database import db
@@ -48,6 +54,9 @@ from ai.json_to_c4_plantuml import convert_to_c4_plantuml
 from ai.json_to_process_view import convert_to_process_view
 from ai.json_to_deployment_view import convert_to_deployment_view
 from ai.json_to_usecase_view import convert_to_usecase_view
+
+
+
 
 
 
@@ -625,11 +634,42 @@ async def adl_generate_pdf(
             project_id,
             pdf_bytes
 )
+# =========================
+        # RUN VALIDATION
+        # =========================
+        validation_result = run_validation(
+            adl_result
+        )
+
+        # =========================
+        # GENERATE VALIDATION PDF
+        # =========================
+        validation_pdf_path = generate_validation_pdf(
+            validation_result
+        )
+
+        # =========================
+        # READ VALIDATION PDF
+        # =========================
+        with open(validation_pdf_path, "rb") as f:
+            validation_pdf_bytes = f.read()
+            
+
+        # =========================
+        # SAVE VALIDATION REPORT
+        # =========================
+        save_validation_report_pdf(
+            project_id,
+            validation_pdf_bytes
+        )
+        print("VALIDATION PDF SAVED:", project_id)
+        
         update_project_progress(
     project_id,
     100,
     1
 )
+       
 
         return FileResponse(
             path=str(pdf_path),
@@ -767,3 +807,35 @@ async def download_adl_report(project_id: str):
     path=temp_pdf,
     media_type="application/pdf"
 )
+
+
+@router.get(
+    "/adl-project/{project_id}/validation-report"
+)
+async def open_validation_report(project_id: str):
+
+    report = db.validation_reports.find_one({
+        "project_id": project_id
+    })
+
+    if not report:
+        return JSONResponse(
+            status_code=404,
+            content={"error": "Validation report not found"}
+        )
+
+    pdf_bytes = report["report_pdf"]
+
+    temp_pdf = os.path.join(
+        "data",
+        "outputs",
+        f"{project_id}_validation.pdf"
+    )
+
+    with open(temp_pdf, "wb") as f:
+        f.write(pdf_bytes)
+
+    return FileResponse(
+        path=temp_pdf,
+        media_type="application/pdf"
+    )
