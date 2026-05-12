@@ -4,220 +4,509 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
   <title>ArchiMind - Generate ADL</title>
 
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="/static/css/Dashboard.css">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Fira+Code:wght@300;400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 
+  <style>
+    :root {
+      --green-dark:   #0f6b4f;
+      --green-mid:    #138a64;
+      --green-light:  #1aaa7a;
+      --green-accent: #10c97d;
+      --green-pale:   #e6f7f1;
+      --green-mist:   #f0faf6;
+
+      --bg:           #f5f7f6;
+      --surface:      #ffffff;
+      --border:       #dde8e3;
+      --border-dark:  #b8d4c8;
+      --text:         #0d1f18;
+      --text-mid:     #3a5a4a;
+      --text-dim:     #7a9e8e;
+
+      --shadow-sm: 0 1px 3px rgba(15,107,79,.07), 0 1px 2px rgba(15,107,79,.04);
+      --shadow-md: 0 4px 16px rgba(15,107,79,.10), 0 2px 6px rgba(15,107,79,.06);
+      --shadow-lg: 0 12px 40px rgba(15,107,79,.14), 0 4px 12px rgba(15,107,79,.08);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      min-height: 100vh;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: radial-gradient(circle, rgba(15,107,79,.12) 1px, transparent 1px);
+      background-size: 28px 28px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── HEADER ── */
+    .adl-header {
+      position: relative;
+      z-index: 100;
+      background: var(--green-dark);
+      height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2.5rem;
+      box-shadow: 0 2px 12px rgba(15,107,79,.3);
+    }
+
+    .adl-header img { height: 64px; width: auto; }
+
+    .back-btn {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: .8rem;
+      font-weight: 600;
+      letter-spacing: .04em;
+      color: rgba(255,255,255,.9);
+      border: 1.5px solid rgba(255,255,255,.35);
+      background: transparent;
+      padding: .5rem 1.3rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all .2s;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: .4rem;
+    }
+    .back-btn:hover {
+      background: rgba(255,255,255,.12);
+      border-color: rgba(255,255,255,.65);
+      color: #fff;
+    }
+
+    /* ── PAGE WRAP ── */
+    .page-wrap {
+      position: relative;
+      z-index: 1;
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 3.5rem 1.5rem 5rem;
+    }
+
+    /* ── BREADCRUMB ── */
+    .breadcrumb-bar {
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+      font-size: .72rem;
+      font-weight: 600;
+      color: var(--text-dim);
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      margin-bottom: 1.8rem;
+      animation: fadeUp .4s ease both;
+    }
+    .breadcrumb-bar .active { color: var(--green-light); }
+
+    /* ── FORM CARD ── */
+    .form-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2.8rem;
+      box-shadow: var(--shadow-md);
+      position: relative;
+      overflow: hidden;
+      animation: fadeUp .45s ease .05s both;
+    }
+
+    .form-card::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 4px;
+      background: linear-gradient(180deg, var(--green-accent), var(--green-dark));
+      border-radius: 16px 0 0 16px;
+    }
+
+    .form-card::after {
+      content: '';
+      position: absolute;
+      top: -60px; right: -60px;
+      width: 240px; height: 240px;
+      background: radial-gradient(circle, rgba(16,201,125,.06) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    /* ── CARD HEADER ── */
+    .card-eyebrow {
+      font-size: .67rem;
+      font-weight: 700;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      color: var(--green-light);
+      margin-bottom: .6rem;
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+    }
+    .card-eyebrow::before {
+      content: '';
+      width: 18px; height: 2px;
+      background: var(--green-accent);
+      border-radius: 2px;
+    }
+
+    .card-title {
+      font-size: clamp(1.3rem, 3vw, 1.8rem);
+      font-weight: 800;
+      color: var(--text);
+      letter-spacing: -.03em;
+      margin-bottom: .5rem;
+      line-height: 1.2;
+    }
+
+    .card-subtitle {
+      font-size: .83rem;
+      color: var(--text-dim);
+      line-height: 1.6;
+      margin-bottom: 2rem;
+      font-weight: 400;
+    }
+
+    /* ── DIVIDER ── */
+    .form-divider {
+      height: 1px;
+      background: var(--border);
+      margin-bottom: 2rem;
+    }
+
+    /* ── FIELD LABEL ── */
+    .field-label {
+      font-size: .7rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--text-mid);
+      margin-bottom: .55rem;
+      display: flex;
+      align-items: center;
+      gap: .4rem;
+    }
+    .field-label i { color: var(--green-mid); font-size: .85rem; }
+
+    /* ── FILE INPUT ── */
+    .file-drop {
+      border: 2px dashed rgba(16,201,125,.35);
+      border-radius: 12px;
+      padding: 1.8rem 1.5rem;
+      text-align: center;
+      background: var(--green-mist);
+      transition: border-color .2s, background .2s;
+      cursor: pointer;
+      position: relative;
+      margin-bottom: 1.5rem;
+    }
+    .file-drop:hover {
+      border-color: var(--green-accent);
+      background: var(--green-pale);
+    }
+    .file-drop input[type="file"] {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+      width: 100%;
+      height: 100%;
+    }
+    .file-drop-icon {
+      width: 44px; height: 44px;
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto .75rem;
+    }
+    .file-drop-icon i { font-size: 1.1rem; color: var(--green-mid); }
+    .file-drop-text {
+      font-size: .82rem;
+      color: var(--text-mid);
+      font-weight: 500;
+    }
+    .file-drop-hint {
+      font-size: .72rem;
+      color: var(--text-dim);
+      margin-top: .3rem;
+    }
+    .file-name {
+      font-size: .78rem;
+      font-family: 'Fira Code', monospace;
+      color: var(--green-mid);
+      margin-top: .5rem;
+      font-weight: 500;
+    }
+
+    /* ── SELECT ── */
+    .styled-select {
+      width: 100%;
+      padding: .75rem 1rem;
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      background: var(--surface);
+      color: var(--text);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: .88rem;
+      font-weight: 500;
+      appearance: none;
+      -webkit-appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%237a9e8e' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 1rem center;
+      cursor: pointer;
+      transition: border-color .2s, box-shadow .2s;
+      margin-bottom: 2rem;
+    }
+    .styled-select:focus {
+      outline: none;
+      border-color: var(--green-accent);
+      box-shadow: 0 0 0 3px rgba(16,201,125,.12);
+    }
+    .styled-select option { color: var(--text); }
+
+    /* ── GENERATE BUTTON ── */
+    .generate-btn {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: .88rem;
+      font-weight: 700;
+      letter-spacing: .02em;
+      color: #fff;
+      background: var(--green-dark);
+      border: none;
+      padding: .85rem 1.5rem;
+      border-radius: 10px;
+      cursor: pointer;
+      width: 100%;
+      transition: background .2s, box-shadow .2s, transform .15s, opacity .2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: .5rem;
+    }
+    .generate-btn svg {
+      width: 16px; height: 16px;
+      stroke: currentColor; fill: none;
+      stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round;
+      transition: transform .2s;
+    }
+    .generate-btn:hover:not(:disabled) {
+      background: var(--green-light);
+      box-shadow: 0 4px 14px rgba(15,107,79,.28);
+      transform: translateY(-1px);
+    }
+    .generate-btn:hover:not(:disabled) svg { transform: translateX(3px); }
+    .generate-btn:active:not(:disabled) { transform: translateY(0); }
+    .generate-btn:disabled {
+      opacity: .45;
+      cursor: not-allowed;
+    }
+
+    /* ── MODAL ── */
+    .modal-content {
+      border: 1px solid var(--border) !important;
+      border-radius: 16px !important;
+      overflow: hidden;
+      box-shadow: var(--shadow-lg) !important;
+      height: 92vh;
+      display: flex !important;
+      flex-direction: column !important;
+    }
+
+    .modal-topbar {
+      background: var(--green-dark);
+      padding: 1rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+
+    .modal-topbar-left {
+      display: flex;
+      align-items: center;
+      gap: .65rem;
+    }
+
+    .modal-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--green-accent);
+      animation: pulse 2.2s infinite;
+    }
+
+    .modal-topbar-title {
+      font-size: .75rem;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.9);
+    }
+
+    .modal-close-btn {
+      width: 30px; height: 30px;
+      border-radius: 50%;
+      border: 1.5px solid rgba(255,255,255,.25);
+      background: transparent;
+      color: rgba(255,255,255,.7);
+      cursor: pointer;
+      font-size: .85rem;
+      display: flex; align-items: center; justify-content: center;
+      transition: background .2s, color .2s;
+    }
+    .modal-close-btn:hover { background: rgba(255,255,255,.15); color: #fff; }
+
+    .modal-iframe-wrap { flex: 1; overflow: hidden; }
+    .modal-iframe-wrap iframe { width: 100%; height: 100%; border: none; display: block; }
+    .modal-dialog { max-width: 1120px; }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50%       { opacity: .4; transform: scale(.85); }
+    }
+  </style>
 </head>
 
 <body>
 
-<header class="blueprint-header">
-  <div class="container d-flex justify-content-between align-items-center">
+<header class="adl-header">
+  <img src="/static/images/Logo_b&w.png" alt="ArchiMind">
+  <a class="back-btn" href="/adl-dashboard">
+    ← Back
+  </a>
+</header>
 
-    <div class="brand">
-      <img src="/static/images/Logo_b&w.png"
-           style="height: 60px; width: 140px;">
+<div class="page-wrap">
+
+  <div class="breadcrumb-bar">
+    ADL Dashboard <span style="color:var(--border-dark);margin:0 .2rem">/</span>
+  
+    <span class="active">Generate</span>
+  </div>
+
+  <div class="form-card">
+
+    <div class="card-eyebrow">New Project</div>
+    <h2 class="card-title">ADL Generation</h2>
+    <p class="card-subtitle">Generate architecture directly from SRS without full pipeline</p>
+
+    <div class="form-divider"></div>
+
+    <!-- FILE -->
+    <div class="field-label">
+      <i class="bi bi-file-earmark-pdf"></i>
+      SRS Document
+    </div>
+    <div class="file-drop" id="fileDrop">
+      <input
+        type="file"
+        id="adlFileInput"
+        accept=".pdf"
+        onchange="handleFileChange(this)"
+      >
+      <div class="file-drop-icon">
+        <i class="bi bi-upload"></i>
+      </div>
+      <div class="file-drop-text">Drop your PDF here or click to browse</div>
+      <div class="file-drop-hint">Supports .pdf files only</div>
+      <div class="file-name" id="fileName"></div>
     </div>
 
-    <button
-      class="btn btn-outline-light rounded-circle"
-      style="width:40px;height:40px;"
-      onclick="window.location.href='/adl-dashboard'"
+    <!-- ARCHITECTURE -->
+    <div class="field-label">
+      <i class="bi bi-diagram-3"></i>
+      Architecture Style
+    </div>
+    <select
+      id="adlArchitecture"
+      class="styled-select"
+      onchange="checkADLInputs()"
     >
-      <i class="bi bi-arrow-left"></i>
+      <option value="">Select Architecture Style</option>
+      <option value="Monolithic">Monolithic</option>
+      <option value="Layered">Layered</option>
+      <option value="Client-Server">Client-Server</option>
+      <option value="Microservices">Microservices</option>
+      <option value="Service-Oriented Architecture">Service-Oriented Architecture</option>
+      <option value="Event-Driven">Event-Driven</option>
+      <option value="Microkernel">Microkernel</option>
+      <option value="Component-Based">Component-Based</option>
+      <option value="Pipe-and-Filter">Pipe-and-Filter</option>
+      <option value="Broker">Broker</option>
+      <option value="Peer-to-Peer">Peer-to-Peer</option>
+      <option value="Blackboard">Blackboard</option>
+      <option value="MVC">MVC</option>
+      <option value="Space-Based">Space-Based</option>
+      <option value="REST">REST</option>
+      <option value="Hexagonal">Hexagonal</option>
+      <option value="Serverless">Serverless</option>
+      <option value="Event-Bus">Event-Bus</option>
+    </select>
+
+    <!-- BUTTON -->
+    <button
+      class="generate-btn"
+      id="generateAdlBtn"
+      onclick="generateStandaloneADL()"
+      disabled
+    >
+      Generate ADL
+      <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
     </button>
 
   </div>
-</header>
 
-<div class="container py-5">
+</div>
 
-  <div class="row justify-content-center">
-
-    <div class="col-lg-8">
-
-      <div class="studio-card p-5 animate-pop">
-
-        <h2 class="fw-bold text-center mb-3">
-          ADL Generation
-        </h2>
-
-        <p class="text-muted text-center mb-4">
-          Generate architecture directly from SRS without full pipeline
-        </p>
-
-        <!-- FILE -->
-        <input
-          type="file"
-          id="adlFileInput"
-          class="form-control mb-3"
-          accept=".pdf"
-          onchange="checkADLInputs()"
-        >
-
-        <!-- ARCHITECTURE -->
-        <select
-          id="adlArchitecture"
-          class="form-select mb-4"
-          onchange="checkADLInputs()"
-        >
-          <option value="">Select Architecture Style</option>
-
-         <option value="Monolithic">
-    Monolithic
-  </option>
-
-  <option value="Layered">
-    Layered
-  </option>
-
-  <option value="Client-Server">
-    Client-Server
-  </option>
-
-  <option value="Microservices">
-    Microservices
-  </option>
-
-  <option value="Service-Oriented Architecture">
-    Service-Oriented Architecture
-  </option>
-
-  <option value="Event-Driven">
-    Event-Driven
-  </option>
-
-  <option value="Microkernel">
-    Microkernel
-  </option>
-
-  <option value="Component-Based">
-    Component-Based
-  </option>
-
-  <option value="Pipe-and-Filter">
-    Pipe-and-Filter
-  </option>
-
-  <option value="Broker">
-    Broker
-  </option>
-
-  <option value="Peer-to-Peer">
-    Peer-to-Peer
-  </option>
-
-  <option value="Blackboard">
-    Blackboard
-  </option>
-
-  <option value="MVC">
-    MVC
-  </option>
-
-  <option value="Space-Based">
-    Space-Based
-  </option>
-
-  <option value="REST">
-    REST
-  </option>
-
-  <option value="Hexagonal">
-    Hexagonal
-  </option>
-
-  <option value="Serverless">
-    Serverless
-  </option>
-
-  <option value="Event-Bus">
-    Event-Bus
-  </option>
-
-        </select>
-
-        <!-- BUTTON -->
-        <button
-          class="create-btn w-100"
-          id="generateAdlBtn"
-          onclick="generateStandaloneADL()"
-          disabled
-        >
-          Generate ADL
-        </button>
-
+<!-- PDF VIEWER MODAL -->
+<div class="modal fade" id="pdfModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-xl modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-topbar">
+        <div class="modal-topbar-left">
+          <div class="modal-dot"></div>
+          <span class="modal-topbar-title">ADL Architecture Blueprint</span>
+        </div>
+        <button class="modal-close-btn" data-bs-dismiss="modal">✕</button>
       </div>
-
+      <div class="modal-iframe-wrap">
+        <iframe id="pdfViewer"></iframe>
+      </div>
     </div>
-
   </div>
-
 </div>
 
 <script src="/static/js/adl_generator.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-
-<!-- PDF VIEWER MODAL -->
-<div
-  class="modal fade"
-  id="pdfModal"
-  tabindex="-1"
-  aria-hidden="true"
->
-  <div class="modal-dialog modal-xl modal-dialog-centered">
-
-    <div
-      class="modal-content"
-      style="
-        height: 95vh;
-        border-radius: 20px;
-        overflow: hidden;
-      "
-    >
-
-      <!-- HEADER -->
-      <div
-        class="d-flex justify-content-between align-items-center px-4 py-3"
-        style="
-          background: #0f7b5f;
-          color: white;
-        "
-      >
-
-        <h4 class="m-0 fw-bold">
-          ADL ARCHITECTURE BLUEPRINT
-        </h4>
-
-        <button
-          type="button"
-          class="btn-close btn-close-white"
-          data-bs-dismiss="modal"
-        ></button>
-
-      </div>
-
-      <!-- PDF -->
-      <div style="flex:1; height:100%;">
-
-        <iframe
-          id="pdfViewer"
-          width="100%"
-          height="100%"
-          style="border:none;"
-        ></iframe>
-
-      </div>
-
-    </div>
-
-  </div>
-</div>
-
+<script>
+  function handleFileChange(input) {
+    const fileName = document.getElementById('fileName');
+    if (input.files && input.files[0]) {
+      fileName.textContent = input.files[0].name;
+    } else {
+      fileName.textContent = '';
+    }
+    checkADLInputs();
+  }
+</script>
 
 </body>
 </html>
