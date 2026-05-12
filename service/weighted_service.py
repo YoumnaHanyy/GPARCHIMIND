@@ -7,7 +7,7 @@ from infrastructure.repositories.architecture_repository import get_architecture
 def execute_weighted_method(freq_norm, must_norm, importance):
     total_weights = compute_total_nfr_weight(freq_norm, must_norm, importance)
 
-    arch_data = get_architecture_dataset()  # 👈 list of dicts
+    arch_data = get_architecture_dataset() 
     scores = {}
 
     for row in arch_data:

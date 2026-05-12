@@ -1,0 +1,916 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>{{ project.project_name }}</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    
+    <link rel="stylesheet" href="/static/css/Dashboard.css">
+
+    <style>
+        :root {
+            /* Professional Enterprise Palette */
+            --bg-body: #f8fafc;
+            --surface: #ffffff;
+            --primary: #0f766e; /* Deep sophisticated teal */
+            --primary-hover: #115e59;
+            --primary-light: #ccfbf1;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            --focus-ring: rgba(15, 118, 110, 0.25);
+            --danger-light: #fee2e2;
+            --danger-text: #b91c1c;
+            --warning-light: #fef3c7;
+            --warning-text: #b45309;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            background-image: radial-gradient(var(--border-color) 1px, transparent 1px);
+            background-size: 24px 24px;
+            font-family: 'Inter', sans-serif;
+            color: var(--text-main);
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* --- ANIMATIONS --- */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-fade-up { animation: fadeUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        
+        .stagger-1 { animation-delay: 0.1s; opacity: 0; }
+        .stagger-2 { animation-delay: 0.2s; opacity: 0; }
+        .stagger-3 { animation-delay: 0.3s; opacity: 0; }
+
+        /* --- UI COMPONENTS --- */
+        .dashboard-card {
+            background: var(--surface);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.03);
+            transition: box-shadow 0.2s ease, border-color 0.2s ease;
+        }
+
+        .dashboard-card:hover {
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03);
+        }
+
+        .header-card {
+            background: linear-gradient(to right, #ffffff, #f8fafc);
+            border-left: 4px solid var(--primary);
+        }
+
+        /* --- BUTTONS --- */
+        .btn-primary-custom {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 4px rgba(15, 118, 110, 0.2);
+        }
+
+        .btn-primary-custom:hover {
+            background-color: var(--primary-hover);
+            color: white;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px rgba(15, 118, 110, 0.25);
+        }
+
+        .btn-icon-add {
+            background: var(--primary-light);
+            color: var(--primary);
+            border: 1px solid transparent;
+            width: 36px; height: 36px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .btn-icon-add:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* --- PROGRESS BAR --- */
+        .progress-wrapper { width: 100%; }
+        .progress { 
+            height: 6px; 
+            background: var(--border-color); 
+            border-radius: 4px; 
+            overflow: hidden; 
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
+        }
+        .progress-bar-fill { 
+            background-color: var(--primary);
+            height: 100%;
+            border-radius: 4px;
+            transition: width 1s cubic-bezier(0.4, 0, 0.2, 1); 
+        }
+
+        /* --- TYPOGRAPHY & HEADERS --- */
+        .section-header {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-main);
+            margin-bottom: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-header i { color: var(--text-muted); font-size: 1.1rem; }
+
+        .text-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+        }
+
+        /* --- BADGES & ITEMS --- */
+        .badge-arch {
+            background: #f1f5f9;
+            color: #334155;
+            border: 1px solid var(--border-color);
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-weight: 500;
+            font-size: 0.85rem;
+        }
+
+        .badge-status {
+            background: var(--warning-light);
+            color: var(--warning-text);
+            border: 1px solid rgba(180, 83, 9, 0.2);
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-weight: 500;
+            font-size: 0.85rem;
+        }
+
+        .data-list-item {
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 0.9rem;
+            color: var(--text-main);
+        }
+        .data-list-item:last-child { border-bottom: none; }
+
+        .arch-recommendation {
+            background: var(--surface);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 12px 16px;
+            margin-bottom: 12px;
+            transition: border-color 0.2s ease;
+            border-left: 3px solid var(--primary);
+        }
+        .arch-recommendation:hover { border-color: var(--primary); }
+
+        .history-card {
+            background: #f8fafc;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 16px;
+            height: 100%;
+        }
+
+        /* --- FORMS & INPUTS --- */
+        .form-control, .form-select {
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            padding: 10px 14px;
+            font-size: 0.95rem;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+            transition: all 0.2s;
+        }
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px var(--focus-ring);
+        }
+        
+        .input-group-text {
+            background: #f8fafc;
+            border-color: var(--border-color);
+            color: var(--text-muted);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .custom-input-card {
+            background: #ffffff;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+        }
+
+        /* --- SCROLLABLE CONTAINERS --- */
+        .scrollable-reqs {
+            max-height: 380px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding-right: 8px;
+        }
+
+        .scrollable-reqs::-webkit-scrollbar {
+            width: 6px;
+        }
+        .scrollable-reqs::-webkit-scrollbar-track {
+            background: var(--bg-body);
+            border-radius: 4px;
+        }
+        .scrollable-reqs::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        .scrollable-reqs::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        /* --- NEW MODAL UI STYLES --- */
+        .modal-custom-tabs {
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 24px;
+            padding-bottom: 8px;
+        }
+        .modal-custom-tabs .nav-link {
+            color: #64748b;
+            font-weight: 600;
+            border-radius: 12px;
+            padding: 10px 20px;
+            margin-right: 8px;
+            border: none;
+            background: transparent;
+            transition: all 0.2s ease;
+        }
+        .modal-custom-tabs .nav-link:hover {
+            color: #0f766e;
+            background: #f1f5f9;
+        }
+        .modal-custom-tabs .nav-link.active {
+            background-color: #e6f4ea;
+            color: #115e59;
+        }
+        .result-container {
+            background: #f8fafc;
+            border-radius: 8px;
+            border-left: 6px solid #115e59;
+            padding: 32px 40px;
+            font-family: 'JetBrains Mono', monospace;
+        }
+        .result-header {
+            color: #115e59;
+            font-weight: 700;
+            font-size: 1.4rem;
+            margin-bottom: 16px;
+        }
+        .result-divider {
+            border-top: 2px solid #115e59;
+            margin: 0 0 24px 0;
+            opacity: 1;
+        }
+        .arch-list-item {
+            margin-bottom: 28px;
+        }
+        .arch-list-item:last-child {
+            margin-bottom: 0;
+        }
+        .arch-title {
+            font-weight: 700;
+            color: #115e59;
+            font-size: 1.15rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+        .badge-recommended {
+            background-color: #198754;
+            color: white;
+            font-size: 0.75rem;
+            padding: 4px 10px;
+            border-radius: 6px;
+            text-transform: capitalize;
+            font-weight: 600;
+            font-family: 'Inter', sans-serif;
+        }
+        .arch-score {
+            color: #475569;
+            font-size: 1rem;
+        }
+    </style>
+</head>
+
+<body>
+
+<header class="blueprint-header">
+  <div class="container d-flex justify-content-between align-items-center">
+
+    <div class="brand">
+        <img src="/static/images/Logo_b&w.png" style="height: 60px; width: 140px;" alt="ArchiMind Logo">
+    </div>
+
+    <div class="d-flex align-items-center gap-3">
+        <div class="dropdown">
+          <button
+            class="btn p-0 border-0 d-flex align-items-center justify-content-center avatar-trigger"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            <div class="avatar-circle-sm">
+              {{ user['name'][0]|upper }}
+            </div>
+          </button>
+
+          <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0 animate-fade-down">
+            <li class="px-3 py-3 bg-light-soft">
+              <div class="d-flex align-items-center gap-3">
+                <div class="avatar-circle-sm">{{ user['name'][0]|upper }}</div>
+                <div>
+                  <h6 class="mb-0 fw-bold" style="font-size: 0.9rem;">{{ user['name'] }}</h6>
+                  <small class="text-muted">{{ user['role'] }}</small>
+                </div>
+              </div>
+            </li>
+            <li><hr class="dropdown-divider opacity-50"></li>
+            <li><a class="dropdown-item" href="#"><i class="bi bi-person-gear me-2"></i> Account Settings</a></li>
+            <li><a class="dropdown-item" href="#"><i class="bi bi-shield-check me-2"></i> Security</a></li>
+            <li><hr class="dropdown-divider opacity-50"></li>
+            <li>
+              <a class="dropdown-item text-danger fw-bold" href="#" onclick="logoutAnimated()">
+                <i class="bi bi-box-arrow-right me-2"></i> Log out
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <button
+            class="btn btn-outline-secondary rounded-circle"
+            style="width:40px;height:40px;"
+            onclick="toggleSideMenu()"
+        >
+            <i class="bi bi-list fs-5"></i>
+        </button>
+    </div>
+  </div>
+</header>
+
+<div id="sideMenu" class="side-menu">
+  <div class="side-menu-header">
+    <div class="d-flex align-items-center gap-3">
+      <div class="avatar-circle-lg">
+        {{ user['name'][0]|upper }}
+      </div>
+      <div class="user-meta">
+        <h6 class="mb-0 fw-bold">{{ user['name'] }}</h6>
+        <small class="text-muted text-uppercase fw-semibold" style="font-size: 0.7rem; letter-spacing: 0.5px;">
+            {{ user['role'] }}
+        </small>
+      </div>
+    </div>
+    <button class="close-menu-btn" onclick="toggleSideMenu()">
+      <i class="bi bi-x-lg"></i>
+    </button>
+  </div>
+
+  <ul class="side-menu-list">
+    <li><i class="bi bi-house-door"></i> Home</li>
+    <li><i class="bi bi-layers"></i> Architectural Patterns</li>
+    <li><i class="bi bi-star"></i> Starred Projects</li>
+    <li><i class="bi bi-bell"></i> Notifications</li>
+    <li><i class="bi bi-gear"></i> Settings</li>
+    <hr class="my-3 opacity-10">
+    <li class="text-danger" onclick="logoutAnimated()"><i class="bi bi-door-open"></i> Logout</li>
+  </ul>
+</div>
+<div class="container py-5">
+
+    <div class="dashboard-card header-card p-4 p-md-5 mb-4 animate-fade-up">
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+            <div>
+                <h1 class="fw-bold mb-1 fs-3 text-dark">
+                    {{ project.project_name }}
+                </h1>
+                <p class="text-muted mb-0 fs-6">
+                    Continuous Architecture Evaluation Dashboard
+                </p>
+            </div>
+            <div>
+                <span class="badge-arch d-inline-flex align-items-center">
+                    <i class="bi bi-cpu me-2 text-muted"></i> 
+                    Selected Architecture: <span class="fw-bold ms-1 text-dark">{{ selected_architecture }}</span>
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4 mb-4">
+        <div class="col-lg-4 animate-fade-up stagger-1">
+            <div class="dashboard-card p-4 h-100">
+                <div class="section-header">
+                    <i class="bi bi-bar-chart"></i> Project Progress
+                </div>
+                
+                <div class="progress-wrapper mb-4">
+                    <div class="d-flex justify-content-between mb-2 text-label">
+                        <span>Completion</span>
+                        <span class="text-dark">{{ project.progress }}%</span>
+                    </div>
+                    <div class="progress">
+                        <div class="progress-bar-fill" style="width: {{ project.progress }}%"></div>
+                    </div>
+                </div>
+
+                <div class="mt-auto border-top pt-3">
+                    <div class="text-label mb-1">Current Phase</div>
+                    <span class="badge bg-dark text-white fw-medium px-3 py-2 rounded-2" style="font-size: 0.85rem;">
+                        Phase {{ project.current_phase }}
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 animate-fade-up stagger-2">
+            <div class="dashboard-card p-4 h-100">
+                <div class="section-header">
+                    <i class="bi bi-diagram-3"></i> Hybrid Recommendation
+                </div>
+
+                <div class="mt-2">
+                    {% if hybrid_results %}
+                        {% for arch in hybrid_results %}
+                        <div class="arch-recommendation arch-item">
+                            <h6 class="fw-semibold mb-1 fs-6 text-dark">
+                                {{ arch.Architecture }}
+                            </h6>
+                            <div class="text-muted" style="font-size: 0.8rem;">
+                                Recommended System Architecture
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="text-center text-muted py-4">
+                            <i class="bi bi-inbox fs-3 d-block mb-2 text-secondary opacity-50"></i>
+                            <span class="fs-6">No hybrid recommendations.</span>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 animate-fade-up stagger-3">
+            <div class="dashboard-card p-4 h-100">
+                <div class="section-header">
+                    <i class="bi bi-shield-check"></i> System Status
+                </div>
+                <p class="text-muted mb-4" style="font-size: 0.9rem; line-height: 1.5;">
+                    Actively monitoring functional and non-functional requirements to detect architectural drift.
+                </p>
+                <div class="mt-auto">
+                    <span class="badge-status d-inline-flex align-items-center">
+                        <span class="spinner-grow spinner-grow-sm me-2 text-warning" style="width: 10px; height: 10px;" role="status"></span>
+                        Continuous Evaluation Enabled
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4 mb-4">
+        <div class="col-lg-6 animate-fade-up stagger-1">
+            <div class="dashboard-card p-4 h-100">
+                <div class="section-header">
+                    <i class="bi bi-list-check"></i> Functional Requirements
+                </div>
+                <div class="px-2">
+                    {% if frs %}
+                        {% for fr in frs %}
+                        <div class="data-list-item d-flex">
+                            <i class="bi bi-check2 text-success me-3 mt-1"></i>
+                            <span>{{ fr.description }}</span>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="text-muted text-center py-4 fs-6">No Functional Requirements Found</div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6 animate-fade-up stagger-2">
+            <div class="dashboard-card p-4 h-100">
+                <div class="section-header">
+                    <i class="bi bi-gear"></i> Non-Functional Requirements
+                </div>
+                <div class="px-2">
+                    {% if nfrs %}
+                        {% for nfr in nfrs %}
+                        <div class="data-list-item">
+                            <div class="fw-semibold text-dark mb-1" style="font-size: 0.85rem;">
+                                {{ nfr.title }}
+                            </div>
+                            <div class="text-muted" style="font-size: 0.9rem;">
+                                {{ nfr.description }}
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="text-muted text-center py-4 fs-6">No Non-Functional Requirements Found</div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="dashboard-card p-4 mb-5 animate-fade-up stagger-3">
+        <div class="section-header">
+            <i class="bi bi-clock-history"></i> Architecture Evolution History
+        </div>
+
+        <div class="row g-3 mt-2">
+            {% if architecture_history %}
+                {% for item in architecture_history %}
+                <div class="col-md-6 col-lg-4">
+                    <div class="history-card">
+                        <div class="text-label mb-1">Version {{ item.version }}</div>
+                        <div class="fw-semibold text-dark fs-6">{{ item.architecture }}</div>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="col-12">
+                    <p class="text-muted mb-0">No historical architecture data available.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="dashboard-card p-4 p-md-5 mb-5 border-0 shadow-sm animate-fade-up" style="background: #ffffff;">
+        <div class="border-bottom pb-4 mb-4">
+            <h3 class="fw-bold fs-4 text-dark mb-2">Re-Evaluation Workspace</h3>
+            <p class="text-muted mb-0">Modify or append specifications below to dynamically recalculate the optimal architecture.</p>
+        </div>
+
+        <div class="row g-5">
+            <div class="col-lg-6">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="fw-semibold fs-6 text-dark m-0">Functional Specs</h5>
+                    <button class="btn-icon-add" onclick="addFRField()" title="Add Functional Requirement">
+                        <i class="bi bi-plus-lg"></i>
+                    </button>
+                </div>
+
+                <div id="frContainer" class="scrollable-reqs pb-2">
+                    {% if frs %}
+                        {% for fr in frs %}
+                        <div class="input-group mb-3 fr-item">
+                            <span class="input-group-text">FR-{{ loop.index }}</span>
+                            <input type="text" class="form-control fr-input" value="{{ fr.description }}">
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="input-group mb-3 fr-item">
+                            <span class="input-group-text">FR-01</span>
+                            <input type="text" class="form-control fr-input" placeholder="Enter functional requirement">
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="col-lg-6">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="fw-semibold fs-6 text-dark m-0">Non-Functional Specs</h5>
+                    <button class="btn-icon-add" onclick="addNFRField()" title="Add Non-Functional Requirement">
+                        <i class="bi bi-plus-lg"></i>
+                    </button>
+                </div>
+
+                <div id="nfrContainer" class="scrollable-reqs pb-2">
+                    {% if nfrs %}
+                        {% for nfr in nfrs %}
+                        <div class="custom-input-card nfr-item">
+                            <div class="mb-3">
+                                <label class="text-label mb-2 d-block">Constraint Type</label>
+                                <select class="form-select nfr-type">
+                                    <option value="Scalability" {% if nfr.title == "Scalability" %}selected{% endif %}>Scalability</option>
+                                    <option value="Security" {% if nfr.title == "Security" %}selected{% endif %}>Security</option>
+                                    <option value="Performance" {% if nfr.title == "Performance" %}selected{% endif %}>Performance</option>
+                                    <option value="Maintainability" {% if nfr.title == "Maintainability" %}selected{% endif %}>Maintainability</option>
+                                    <option value="Availability" {% if nfr.title == "Availability" %}selected{% endif %}>Availability</option>
+                                    <option value="Usability" {% if nfr.title == "Usability" %}selected{% endif %}>Usability</option>
+                                    <option value="Reliability" {% if nfr.title == "Reliability" %}selected{% endif %}>Reliability</option>
+                                    <option value="Portability" {% if nfr.title == "Portability" %}selected{% endif %}>Portability</option>
+                                    <option value="Modularity" {% if nfr.title == "Modularity" %}selected{% endif %}>Modularity</option>
+                                    <option value="Interoperability" {% if nfr.title == "Interoperability" %}selected{% endif %}>Interoperability</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="text-label mb-2 d-block">Specification Detail</label>
+                                <textarea class="form-control nfr-description" rows="2">{{ nfr.description }}</textarea>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="custom-input-card nfr-item">
+                            <div class="mb-3">
+                                <label class="text-label mb-2 d-block">Constraint Type</label>
+                                <select class="form-select nfr-type">
+                                    <option value="">Select Category</option>
+                                    <option>Scalability</option>
+                                    <option>Security</option>
+                                    <option>Performance</option>
+                                    <option>Maintainability</option>
+                                    <option>Availability</option>
+                                    <option>Usability</option>
+                                    <option>Reliability</option>
+                                    <option>Portability</option>
+                                    <option>Modularity</option>
+                                    <option>Interoperability</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="text-label mb-2 d-block">Specification Detail</label>
+                                <textarea class="form-control nfr-description" rows="2" placeholder="e.g., The system must handle 10k concurrent users..."></textarea>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-4 pt-4 border-top d-flex justify-content-end gap-3">
+            <button id="viewResultsBtn" class="btn btn-outline-secondary d-none" onclick="viewLastResults()">
+                <i class="bi bi-eye me-2"></i> View Last Results
+            </button>
+            <button class="btn-primary-custom" onclick="reevaluateArchitecture('{{ project.project_id }}')">
+                <i class="bi bi-arrow-repeat me-2"></i> Run Re-Evaluation
+            </button>
+        </div>
+    </div>
+
+</div>
+
+<div class="modal fade" id="evaluationModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+  <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content border-0 shadow-lg" style="background-color: var(--surface); border-radius: 16px;">
+      <div class="modal-header border-0 pb-0 pt-4 px-4 px-md-5">
+        <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close" style="background-color: #f1f5f9; border-radius: 50%; padding: 12px; margin-right: 0;"></button>
+      </div>
+      <div class="modal-body p-4 p-md-5 pt-2" id="evaluationModalBody">
+        </div>
+    </div>
+  </div>
+</div>
+
+<script>
+let frCounter = {{ frs|length if frs else 1 }};
+
+function addFRField() {
+    frCounter++;
+    const container = document.getElementById("frContainer");
+    const field = document.createElement("div");
+    
+    field.className = "input-group mb-3 fr-item animate-fade-up";
+    field.innerHTML = `
+        <span class="input-group-text">FR-${String(frCounter).padStart(2, '0')}</span>
+        <input type="text" class="form-control fr-input" placeholder="Enter functional requirement">
+    `;
+    container.appendChild(field);
+    container.scrollTop = container.scrollHeight;
+}
+
+function addNFRField() {
+    const container = document.getElementById("nfrContainer");
+    const field = document.createElement("div");
+    
+    field.className = "custom-input-card nfr-item animate-fade-up";
+    field.innerHTML = `
+        <div class="mb-3">
+            <label class="text-label mb-2 d-block">Constraint Type</label>
+            <select class="form-select nfr-type">
+                <option value="">Select Category</option>
+                <option>Scalability</option>
+                <option>Security</option>
+                <option>Performance</option>
+                <option>Maintainability</option>
+                <option>Availability</option>
+                <option>Usability</option>
+                <option>Reliability</option>
+                <option>Portability</option>
+                <option>Modularity</option>
+                <option>Interoperability</option>
+            </select>
+        </div>
+        <div>
+            <label class="text-label mb-2 d-block">Specification Detail</label>
+            <textarea class="form-control nfr-description" rows="2" placeholder="e.g., The system must handle 10k concurrent users..."></textarea>
+        </div>
+    `;
+    container.appendChild(field);
+    container.scrollTop = container.scrollHeight;
+}
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+
+let evalModalInstance = null;
+let savedResultsHTML = "";
+
+function viewLastResults() {
+    if (!evalModalInstance) {
+        evalModalInstance = new bootstrap.Modal(document.getElementById('evaluationModal'));
+    }
+    document.getElementById("evaluationModalBody").innerHTML = savedResultsHTML;
+    evalModalInstance.show();
+}
+
+async function reevaluateArchitecture(projectId){
+
+    const frInputs = document.querySelectorAll(".fr-input");
+    let frs = [];
+    frInputs.forEach((input, index) => {
+        if(input.value.trim() !== ""){
+            frs.push({
+                id: `FR-${index + 1}`,
+                description: input.value.trim()
+            });
+        }
+    });
+
+    const nfrItems = document.querySelectorAll(".nfr-item");
+    let nfrs = [];
+    nfrItems.forEach((item) => {
+        const type = item.querySelector(".nfr-type").value;
+        const desc = item.querySelector(".nfr-description").value;
+        if(type && desc.trim() !== ""){
+            nfrs.push({
+                title: type,
+                description: desc.trim()
+            });
+        }
+    });
+
+    if (!evalModalInstance) {
+        evalModalInstance = new bootstrap.Modal(document.getElementById('evaluationModal'));
+    }
+
+    const modalBody = document.getElementById("evaluationModalBody");
+    
+    modalBody.innerHTML = `
+    <div class="text-center py-5 my-5">
+        <div class="spinner-border text-success mb-4" style="width:3rem;height:3rem;"></div>
+        <h4 class="fw-bold" style="font-family: 'JetBrains Mono', monospace; color: #115e59;">Running Re-Evaluation...</h4>
+        <p class="text-muted mb-0">Recomputing architectures based on the new constraints.</p>
+    </div>
+    `;
+
+    evalModalInstance.show();
+
+    try {
+        const response = await fetch(`/project/${projectId}/reevaluate`, {
+            method:"POST",
+            headers:{"Content-Type":"application/json"},
+            body:JSON.stringify({ frs: frs, nfrs: nfrs })
+        });
+
+        const data = await response.json();
+
+        // New UI matching the image
+        savedResultsHTML = `
+        <div class="animate-fade-up">
+            <ul class="nav nav-pills modal-custom-tabs" id="evalTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="hybrid-tab" data-bs-toggle="tab" data-bs-target="#hybrid-pane" type="button" role="tab">Suggested Architecture</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="func-tab" data-bs-toggle="tab" data-bs-target="#func-pane" type="button" role="tab">Functional Method</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="ord-tab" data-bs-toggle="tab" data-bs-target="#ord-pane" type="button" role="tab">Ordinal Method</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="bin-tab" data-bs-toggle="tab" data-bs-target="#bin-pane" type="button" role="tab">Binary Method</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="weight-tab" data-bs-toggle="tab" data-bs-target="#weight-pane" type="button" role="tab">Weighted Method</button>
+                </li>
+            </ul>
+
+            <div class="tab-content" id="evalTabsContent">
+                
+                <div class="tab-pane fade show active" id="hybrid-pane" role="tabpanel">
+                    <div class="result-container">
+                        <div class="result-header">Top Recommended Architectures</div>
+                        <div class="result-divider"></div>
+                        <p class="text-muted mb-5" style="font-size: 0.95rem;">Aggregated from Functional, Ordinal, Binary, and Weighted methods.</p>
+
+                        ${(data.hybrid_method || []).map((item, index) => `
+                            <div class="arch-list-item">
+                                <div class="arch-title">
+                                    ${index + 1}. ${(item.Architecture || 'Unknown').toUpperCase()}
+                                    ${index === 0 ? '<span class="badge-recommended">Recommended</span>' : ''}
+                                </div>
+                                <div class="arch-score">Final Score: ${item.Score || item.FinalScore || 0}%</div>
+                            </div>
+                        `).join("")}
+                    </div>
+                </div>
+
+                <div class="tab-pane fade" id="func-pane" role="tabpanel">
+                    <div class="result-container">
+                        <div class="result-header">Functional Method</div>
+                        <div class="result-divider"></div>
+                        ${(data.functional_method?.top_architectures || []).map((item, index) => `
+                            <div class="arch-list-item">
+                                <div class="arch-title">${index + 1}. ${(item.Architecture || 'Unknown').toUpperCase()}</div>
+                                <div class="arch-score">Score: ${item.Score || 0}</div>
+                            </div>
+                        `).join("")}
+                    </div>
+                </div>
+
+                <div class="tab-pane fade" id="ord-pane" role="tabpanel">
+                    <div class="result-container">
+                        <div class="result-header">Ordinal Method</div>
+                        <div class="result-divider"></div>
+                        ${(data.ordinal_method || []).map((item, index) => `
+                            <div class="arch-list-item">
+                                <div class="arch-title">${index + 1}. ${(item.architecture || 'Unknown').toUpperCase()}</div>
+                                <div class="arch-score">Score: ${item.matched_nfrs || 0}</div>
+                            </div>
+                        `).join("")}
+                    </div>
+                </div>
+
+                <div class="tab-pane fade" id="bin-pane" role="tabpanel">
+                    <div class="result-container">
+                        <div class="result-header">Binary Method</div>
+                        <div class="result-divider"></div>
+                        ${(data.binary_method?.top_5_architectures || []).map((item, index) => `
+                            <div class="arch-list-item">
+                                <div class="arch-title">${index + 1}. ${(item.architecture || 'Unknown').toUpperCase()}</div>
+                                <div class="arch-score">Score: ${item.score || 0}</div>
+                            </div>
+                        `).join("")}
+                    </div>
+                </div>
+
+                <div class="tab-pane fade" id="weight-pane" role="tabpanel">
+                    <div class="result-container">
+                        <div class="result-header">Weighted Method</div>
+                        <div class="result-divider"></div>
+                        ${(data.weighted_method?.top_architectures || []).map((item, index) => `
+                            <div class="arch-list-item">
+                                <div class="arch-title">${index + 1}. ${(item.Architecture || 'Unknown').toUpperCase()}</div>
+                                <div class="arch-score">Score: ${item.Score || 0}</div>
+                            </div>
+                        `).join("")}
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        `;
+
+        modalBody.innerHTML = savedResultsHTML;
+        document.getElementById("viewResultsBtn").classList.remove("d-none");
+
+    } catch(error){
+        console.error(error);
+        modalBody.innerHTML = `
+        <div class="text-center py-5">
+            <i class="bi bi-x-circle text-danger fs-1 mb-3"></i>
+            <h4 class="fw-bold text-danger">Re-Evaluation Failed</h4>
+            <p class="text-muted mb-0">${error}</p>
+        </div>
+        `;
+    }
+}
+</script>
+
+</body>
+</html>

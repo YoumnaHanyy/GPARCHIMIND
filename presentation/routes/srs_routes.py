@@ -168,15 +168,55 @@ async def extract_srs(request: Request, file: UploadFile = File(...)):
             freq_norm, must_norm, importance = compute_nfr_statistics(all_nfrs)
     
             ordinal_result = execute_ordinal_method(project_id)
-            binary_result = execute_binary_method(project_id)
+
+# ==========================================
+# BUILD BINARY VECTOR
+# ==========================================
+
+            binary_vector = {
+
+             "PE": 0,
+             "SC": 0,
+             "MN": 0,
+             "A": 0,
+             "SE": 0,
+             "US": 0,
+             "PO": 0,
+             "O": 0
+            }
+
+        for pred in all_nfrs:
+
+         nfr_type = pred.get(
+        "predicted_type",
+        ""
+    )
+
+        if nfr_type in binary_vector:
+
+         binary_vector[nfr_type] = 1
+
+        print("BINARY VECTOR:", binary_vector)
+
+# ==========================================
+# EXECUTE BINARY METHOD
+# ==========================================
+
+        binary_result = execute_binary_method(
+
+            project_id,
+
+            binary_vector
+        )
+            
     
-            weighted_result = execute_weighted_method(
+        weighted_result = execute_weighted_method(
                 freq_norm=freq_norm,
                 must_norm=must_norm,
                 importance=importance
             )
     
-            hybrid_result = execute_hybrid_method(
+        hybrid_result = execute_hybrid_method(
                 project_id,
                 functional_result,
                 ordinal_result,
@@ -184,9 +224,9 @@ async def extract_srs(request: Request, file: UploadFile = File(...)):
                 weighted_result
             )
 
-            save_weighted_result(project_id, weighted_result)
+        save_weighted_result(project_id, weighted_result)
 
-            save_project_data(project_id, {
+        save_project_data(project_id, {
     "functional": extraction_result.get("functional", []),
     "nfr_predictions": high_confidence,
     "functional_method": functional_result,
@@ -197,7 +237,7 @@ async def extract_srs(request: Request, file: UploadFile = File(...)):
     "selectedArchitecture": hybrid_result
 })
 
-            return {
+        return {
                 "project_id": project_id,
                 "srs_verified": True,
                 "functional": clean_object_id(extraction_result.get("functional", [])),
