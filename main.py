@@ -765,6 +765,53 @@ async def save_project_updates(
                 "error": str(e)
             }
         )
+    
+
+
+
+@app.post("/project/{project_id}/save-architectures")
+async def save_updated_architectures(
+    request: Request,
+    project_id: str
+):
+
+    try:
+
+        body = await request.json()
+
+        hybrid_method = \
+            body.get("hybrid_method", [])
+
+        selected_architecture = \
+            body.get(
+                "selected_architecture"
+            )
+
+        save_hybrid_result(
+            project_id,
+            hybrid_method,
+            selected_architecture
+        )
+
+        return {
+            "status": "success"
+        }
+
+    except Exception as e:
+
+        traceback.print_exc()
+
+        return JSONResponse(
+
+            status_code=500,
+
+            content={
+                "error": str(e)
+            }
+        )
+    
+
+
 @app.get("/admin/projects", response_class=HTMLResponse)
 async def get_all_projects(request: Request):
     projects = list(db.projects.find({}, {"_id": 0}))
