@@ -340,7 +340,11 @@ async def open_project(
 
             # 🔥 ONLY HYBRID
             "hybrid_results": hybrid_results,
-            "selected_architecture": selected_architecture
+            "selected_architecture": selected_architecture,
+            "requirement_drift":
+            project.get(
+                "requirement_drift"
+            )
         }
     )
 # ==========================================
