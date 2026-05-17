@@ -5,6 +5,24 @@ from pydantic import BaseModel
 from fastapi import HTTPException
 from fastapi.responses import StreamingResponse
 import io
+from datetime import datetime
+from service.functional_service import execute_functional_method
+from service.ordinal_service import execute_ordinal_method
+
+from service.binary_service import execute_binary_method
+
+from service.weighted_service import execute_weighted_method
+
+from service.hybrid_service import execute_hybrid_method
+
+from service.nfr_stats_service import compute_nfr_statistics
+
+from infrastructure.repositories.weighted_repository import save_weighted_result
+
+from ai.inference.predict_type_level import predict_and_save_nfr, predict_level_for_text
+
+import traceback
+from fastapi.responses import JSONResponse
 from application.extraction.adl.verification.runner import run_verification
 from application.extraction.adl.verification.verification_report_generator import generate_verification_pdf
 from ai.inference.feature_extractor import generate_phase4
@@ -242,6 +260,561 @@ async def get_all_users(request: Request):
             "users": enriched_users
         }
     )
+@app.get("/project/{project_id}", response_class=HTMLResponse)
+async def open_project(
+    request: Request,
+    project_id: str
+):
+
+    # ==========================================
+    # PROJECT
+    # ==========================================
+
+    project = db.projects.find_one(
+        {"project_id": project_id}
+    )
+
+    # ==========================================
+    # HYBRID RESULT ONLY
+    # ==========================================
+
+    hybrid_doc = db.hybrid_method.find_one(
+        {"project_id": project_id}
+    )
+
+    print("HYBRID DOC:", hybrid_doc)
+
+    # ==========================================
+    # REQUIREMENTS
+    # ==========================================
+
+    frs = list(
+        db.fr_extracted.find(
+            {"project_id": project_id},
+            {"_id": 0}
+        )
+    )
+
+    nfrs = list(
+        db.nfr_extracted.find(
+            {"project_id": project_id},
+            {"_id": 0}
+        )
+    )
+
+    # ==========================================
+    # HYBRID RESULTS
+    # ==========================================
+
+    hybrid_results = []
+
+    selected_architecture = "Unknown"
+
+    if hybrid_doc:
+
+        hybrid_results = hybrid_doc.get(
+            "top_architectures",
+            []
+        )
+
+        selected_architecture = hybrid_doc.get(
+            "selected_architecture",
+            "Unknown"
+        )
+
+    print("TOP HYBRID:", hybrid_results)
+
+    # ==========================================
+    # TEMPLATE
+    # ==========================================
+
+    return templates.TemplateResponse(
+
+        "project_dashboard.html",
+
+        {
+            "request": request,
+            "user": request.session.get("user"),
+            "project": project,
+            "frs": frs,
+            "nfrs": nfrs,
+
+            # 🔥 ONLY HYBRID
+            "hybrid_results": hybrid_results,
+            "selected_architecture": selected_architecture,
+            "requirement_drift":
+            project.get(
+                "requirement_drift"
+            )
+        }
+    )
+# ==========================================
+# RE-EVALUATE ARCHITECTURE
+# ==========================================
+# ==========================================
+# RE-EVALUATE ARCHITECTURE
+# ==========================================
+
+@app.post("/project/{project_id}/reevaluate")
+async def reevaluate_architecture(
+    request: Request,
+    project_id: str
+):
+
+    try:
+
+        body = await request.json()
+
+        new_frs = body.get("frs", [])
+        new_nfrs = body.get("nfrs", [])
+
+        print("NEW FRS:", new_frs)
+        print("NEW NFRS:", new_nfrs)
+
+        # ==========================================
+        # SAVE FUNCTIONAL REQUIREMENTS
+        # ==========================================
+
+        for fr in new_frs:
+
+            
+            description = fr.get(
+        "description",
+        ""
+    ).strip()
+
+    # 🔥 check if already exists
+            existing_fr = db.fr_extracted.find_one({
+
+        "project_id": project_id,
+
+        "description": description
+    })
+
+    # 🔥 insert only if not exists
+        if not existing_fr:
+
+           db.fr_extracted.insert_one({
+
+            "project_id": project_id,
+
+            "description": description
+        })
+
+        # ==========================================
+        # SAVE NFRS
+        # ==========================================
+
+        all_predictions = []
+
+        for nfr in new_nfrs:
+
+            predicted_type = nfr.get("title")
+
+            predicted_level = predict_level_for_text(
+                nfr.get("description", "")
+            )
+
+            nfr_doc = {
+
+                "project_id": project_id,
+
+                "description":
+                    nfr.get("description", ""),
+
+                "predicted_type":
+                    predicted_type,
+
+                "predicted_level":
+                    predicted_level,
+
+                "confidence":
+                    1.0
+            }
+
+            existing_nfr = db.nfr_predictions.find_one({
+
+             "project_id": project_id,
+
+             "description":
+                 nfr_doc["description"]
+            })
+
+            if not existing_nfr:
+
+               db.nfr_predictions.insert_one(
+        nfr_doc
+    )
+
+            all_predictions.append(
+                nfr_doc
+            )
+
+        # ==========================================
+        # GET ALL SAVED NFR PREDICTIONS
+        # ==========================================
+
+        saved_predictions = list(
+
+            db.nfr_predictions.find(
+
+                {"project_id": project_id},
+
+                {"_id": 0}
+            )
+        )
+
+        print("SAVED PREDICTIONS:", saved_predictions)
+
+        # ==========================================
+        # FUNCTIONAL METHOD
+        # ==========================================
+
+        functional_result = execute_functional_method(
+            project_id
+        )
+
+        print("FUNCTIONAL:", functional_result)
+
+        # ==========================================
+        # COMPUTE NFR STATISTICS
+        # ==========================================
+
+        freq_norm, must_norm, importance = \
+            compute_nfr_statistics(
+                saved_predictions
+            )
+
+        # ==========================================
+        # ORDINAL METHOD
+        # ==========================================
+
+        ordinal_result = execute_ordinal_method(
+            project_id
+        )
+
+        print("ORDINAL:", ordinal_result)
+
+        # ==========================================
+        # NFR TYPE MAPPING
+        # ==========================================
+
+        TYPE_MAPPING = {
+
+            "Performance": "PE",
+
+            "Scalability": "SC",
+
+            "Maintainability": "MN",
+
+            "Availability": "A",
+
+            "Security": "SE",
+
+            "Usability": "US",
+
+            "Portability": "PO",
+
+            "Reliability": "O",
+
+            "Modularity": "MN",
+
+            "Interoperability": "SC"
+        }
+
+        # ==========================================
+        # BUILD BINARY VECTOR
+        # ==========================================
+
+        binary_vector = {
+
+            "PE": 0,
+            "SC": 0,
+            "MN": 0,
+            "A": 0,
+            "SE": 0,
+            "US": 0,
+            "PO": 0,
+            "O": 0
+        }
+
+        for pred in saved_predictions:
+
+            original_type = pred.get(
+                "predicted_type",
+                ""
+            )
+
+            mapped_type = TYPE_MAPPING.get(
+                original_type,
+                ""
+            )
+
+            if mapped_type in binary_vector:
+
+                binary_vector[mapped_type] = 1
+
+        print("BINARY VECTOR:", binary_vector)
+
+        # ==========================================
+        # BINARY METHOD
+        # ==========================================
+
+        binary_result = execute_binary_method(
+
+            project_id,
+
+            binary_vector
+        )
+
+        print("BINARY:", binary_result)
+
+        # ==========================================
+        # WEIGHTED METHOD
+        # ==========================================
+
+        weighted_result = execute_weighted_method(
+
+            freq_norm=freq_norm,
+
+            must_norm=must_norm,
+
+            importance=importance
+        )
+
+        save_weighted_result(
+
+            project_id,
+
+            weighted_result
+        )
+
+        print("WEIGHTED:", weighted_result)
+
+        # ==========================================
+        # HYBRID METHOD
+        # ==========================================
+
+        hybrid_result = execute_hybrid_method(
+
+            project_id,
+
+            functional_result,
+
+            ordinal_result,
+
+            binary_result,
+
+            weighted_result
+        )
+
+        print("HYBRID:", hybrid_result)
+
+        # ==========================================
+        # RETURN RESULTS
+        # ==========================================
+
+        return {
+
+            "status": "success",
+
+            "functional_method":
+                functional_result,
+
+            "ordinal_method":
+                ordinal_result.get(
+                    "result",
+                    []
+                ),
+
+            "binary_method":
+                binary_result,
+
+            "weighted_method":
+                weighted_result,
+
+            "hybrid_method":
+                hybrid_result
+        }
+
+    except Exception as e:
+
+        traceback.print_exc()
+
+        return JSONResponse(
+
+            status_code=500,
+
+            content={
+
+                "error": str(e)
+            }
+        )
+    
+
+
+# ==========================================
+# SAVE UPDATED REQUIREMENTS
+# ==========================================
+
+@app.post("/project/{project_id}/save-updates")
+async def save_project_updates(
+    request: Request,
+    project_id: str
+):
+
+    try:
+
+        body = await request.json()
+
+        functional = body.get("functional", [])
+
+        nfr_predictions = body.get("nfr_predictions", [])
+
+        # ==========================================
+        # DELETE OLD DATA
+        # ==========================================
+
+        db.fr_extracted.delete_many({
+            "project_id": project_id
+        })
+
+        db.nfr_extracted.delete_many({
+            "project_id": project_id
+        })
+
+        db.nfr_predictions.delete_many({
+            "project_id": project_id
+        })
+
+        # ==========================================
+        # SAVE FUNCTIONAL REQUIREMENTS
+        # ==========================================
+
+        for fr in functional:
+
+            db.fr_extracted.insert_one({
+
+                "project_id": project_id,
+
+                "description":
+                    fr.get("description", "")
+            })
+
+        # ==========================================
+        # SAVE NFRS
+        # ==========================================
+
+        for nfr in nfr_predictions:
+
+            predicted_type =nfr.get("title", "")
+
+            predicted_level = predict_level_for_text(
+                    nfr.get("description", "")
+                )
+
+            db.nfr_extracted.insert_one({
+
+                "project_id": project_id,
+
+                "title": predicted_type,
+
+                "description":
+                    nfr.get("description", "")
+            })
+
+            db.nfr_predictions.insert_one({
+
+                "project_id": project_id,
+
+                "description":
+                    nfr.get("description", ""),
+
+                "predicted_type":
+                    predicted_type,
+
+                "predicted_level":
+                    predicted_level,
+
+                "confidence": 1.0
+            })
+
+        # ==========================================
+        # UPDATE PROJECT DATE
+        # ==========================================
+
+        db.projects.update_one(
+
+            {"project_id": project_id},
+
+            {
+                "$set": {
+                    "updated_at": datetime.utcnow()
+                }
+            }
+        )
+
+        return {
+            "status": "success"
+        }
+
+    except Exception as e:
+
+        traceback.print_exc()
+
+        return JSONResponse(
+
+            status_code=500,
+
+            content={
+                "error": str(e)
+            }
+        )
+    
+
+
+
+@app.post("/project/{project_id}/save-architectures")
+async def save_updated_architectures(
+    request: Request,
+    project_id: str
+):
+
+    try:
+
+        body = await request.json()
+
+        hybrid_method = \
+            body.get("hybrid_method", [])
+
+        selected_architecture = \
+            body.get(
+                "selected_architecture"
+            )
+
+        save_hybrid_result(
+            project_id,
+            hybrid_method,
+            selected_architecture
+        )
+
+        return {
+            "status": "success"
+        }
+
+    except Exception as e:
+
+        traceback.print_exc()
+
+        return JSONResponse(
+
+            status_code=500,
+
+            content={
+                "error": str(e)
+            }
+        )
+    
 
 
 @app.get("/admin/projects", response_class=HTMLResponse)
@@ -284,7 +857,7 @@ def generate_architecture(project_id: str):
     # 1. Load selected architecture style
     # ==========================================================
     hybrid_doc = db.hybrid_method.find_one({"project_id": project_id})
-
+    
     if not hybrid_doc or not hybrid_doc.get("selected_architecture"):
         raise HTTPException(
             status_code=400,
