@@ -206,56 +206,6 @@ async def extract_srs(request: Request, file: UploadFile = File(...)):
         # AI REQUIREMENT DRIFT DETECTION
         # ==========================================
 
-        from service.requirement_drift_service import (
-            RequirementDriftService
-        )
-
-        drift_result = None
-
-        old_project = db.projects.find_one({
-
-            "project_name":
-                extraction_result.get(
-                    "project_name"
-                )
-        })
-
-        if old_project:
-
-            old_frs = old_project.get(
-                "functional",
-                []
-            )
-
-            old_nfrs = old_project.get(
-                "nfr_predictions",
-                []
-            )
-
-            new_frs = extraction_result.get(
-                "functional",
-                []
-            )
-
-            new_nfrs = extraction_result.get(
-                "non_functional",
-                []
-            )
-
-            drift_result = \
-                RequirementDriftService.detect_changes(
-
-                    old_frs,
-                    old_nfrs,
-
-                    new_frs,
-                    new_nfrs
-                )
-
-            print("===================================")
-            print("AI REQUIREMENT DRIFT RESULT")
-            print("===================================")
-            print(drift_result)
 
         # ==========================================
         # PROJECT INFO
@@ -308,8 +258,6 @@ async def extract_srs(request: Request, file: UploadFile = File(...)):
             )
 
         save_project_data(project_id, {
-"requirement_drift":
-    drift_result,
             "functional":
                 extraction_result.get(
                     "functional",
@@ -466,9 +414,6 @@ async def extract_srs(request: Request, file: UploadFile = File(...)):
 
                 "project_id":
                     project_id,
-
-                "requirement_drift":
-                    drift_result,
 
                 "srs_verified":
                     True,
