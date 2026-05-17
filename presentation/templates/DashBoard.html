@@ -8,7 +8,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-    <link rel="stylesheet" href="/static/css/Dashboard.css">
+    <link rel="stylesheet" href="/static/css/DashboardD.css">
 </head>
 
 <body>
@@ -166,7 +166,7 @@
         </div>
         
         <div class="project-details mb-4">
-          <h5 class="project-title mb-1 text-truncate">{{ project.project_id }}</h5>
+          <h5 class="project-title mb-1 text-truncate">{{ project.project_name }}</h5>
           <p class="project-date text-muted mb-0" style="font-size: 0.85rem;">
             <i class="bi bi-calendar3 me-2"></i>{{ project.created_at.strftime('%d %b, %Y') }}
           </p>
@@ -339,7 +339,9 @@
             <ul class="nav nav-pills mb-4 justify-content-center border-bottom pb-3" id="dynamicTabs"></ul>
 
             <div id="tabContentBox" class="result-section animate-pop"></div>
-
+            <div id="skeletonSection" class="hidden">
+                <pre id="skeletonResult"></pre>
+            </div>
             <div class="d-flex justify-content-between mt-5">
                 <button class="btn btn-light rounded-pill px-4 fw-bold" id="btnPrev" onclick="changePhase(-1)">Previous</button>
                 <button class="create-btn" id="btnNext" onclick="changePhase(1)">Next Phase</button>
@@ -503,7 +505,7 @@
 </div>
 
 
-<script src="/static/js/Dashboard.js"></script>
+<script src="/static/js/Dashboardd.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function(){

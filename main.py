@@ -55,6 +55,7 @@ import time
 from service.retrain_service import merge_and_retrain
 from infrastructure.database import db
 from service.retrain_service import run_retrain_async
+from presentation.routes.download_routes import router as download_router
 
 def auto_retrain_loop():
     while True:
@@ -79,7 +80,7 @@ app = FastAPI(
     description="AI-driven Architecture Recommendation System",
     version="1.0.0"
 )
-
+app.include_router(download_router)
 app.add_middleware(
     SessionMiddleware,
     secret_key=os.getenv("SECRET_KEY", "super-secret-key-change-this-in-production"),

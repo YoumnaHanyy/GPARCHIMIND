@@ -3,36 +3,37 @@ from fastapi.responses import JSONResponse
 
 import os
 import uuid
+import traceback
 import fitz
 import pdfplumber
 import traceback
+
+from ai.inference.feature_extractor import generate_phase4
 from application.extraction.extraction_service import process_srs
 from ai.inference.predict_type_level import predict_and_save_nfr, predict_level_for_text
-
 from service.ordinal_service import execute_ordinal_method
 from service.binary_service import execute_binary_method
 from service.weighted_service import execute_weighted_method
 from service.nfr_stats_service import compute_nfr_statistics
 from service.functional_service import execute_functional_method
 from service.hybrid_service import execute_hybrid_method
-
-from infrastructure.repositories.project_repo import update_project_progress, create_project, save_project_data
+from infrastructure.repositories.project_repo import update_project_progress, create_project
 from infrastructure.repositories.weighted_repository import save_weighted_result
 from infrastructure.repositories.nfr_dataset_repository import NFRPredictionRepository
-import pdfplumber
-
-
+from infrastructure.repositories.srs_repository import SRSRepository
+from infrastructure.repositories.human_feedback_repository import save_new_confirmed_nfr
+from service.retrain_service import merge_and_retrain
+from infrastructure.database import db
+from service.retrain_service import run_retrain_async
 router = APIRouter()
 
 UPLOAD_DIR = "uploads"
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 
-
 def validate_pdf_file(file: UploadFile):
     if not file.filename.lower().endswith(".pdf"):
         return "Invalid file format. Please upload a valid PDF document."
     return None
-
 
 def extract_text_from_pdf(pdf_path: str) -> str:
     text = ""
@@ -67,17 +68,6 @@ def clean_object_id(items: list):
         item.pop("_id", None)
         cleaned.append(item)
     return cleaned
-
-@router.get("/get_project/{project_id}")
-def get_project_api(project_id: str):
-    project = db.projects.find_one({"project_id": project_id})
-    print("PROJECT FROM DB:", project)
-
-    if not project:
-        return {"error": "Project not found"}
-
-    project.pop("_id", None)
-    return project
 
 
 @router.post("/extract")
@@ -154,8 +144,49 @@ async def extract_srs(request: Request, file: UploadFile = File(...)):
         # 4️⃣ Get high and low confidence from MongoDB
         high_confidence = NFRPredictionRepository.get_high_confidence(project_id)
         low_confidence = NFRPredictionRepository.get_low_confidence(project_id)
-
         print(f"📊 High confidence: {len(high_confidence)}, Low confidence: {len(low_confidence)}")
+        if len(low_confidence) == 0:
+            print("⚡ No low confidence → auto running architecture")
+
+            all_nfrs = high_confidence
+
+            functional_result = execute_functional_method(project_id)
+    
+            freq_norm, must_norm, importance = compute_nfr_statistics(all_nfrs)
+    
+            ordinal_result = execute_ordinal_method(project_id)
+            binary_result = execute_binary_method(project_id)
+    
+            weighted_result = execute_weighted_method(
+                freq_norm=freq_norm,
+                must_norm=must_norm,
+                importance=importance
+            )
+    
+            hybrid_result = execute_hybrid_method(
+                project_id,
+                functional_result,
+                ordinal_result,
+                binary_result,
+                weighted_result
+            )
+
+            save_weighted_result(project_id, weighted_result)
+
+            return {
+                "project_id": project_id,
+                "srs_verified": True,
+                "functional": clean_object_id(extraction_result.get("functional", [])),
+                "nfr_predictions": clean_object_id(high_confidence),
+                "low_confidence_nfrs": [],
+                "needs_confirmation": False,
+                "functional_method": functional_result,
+                "ordinal_method": ordinal_result.get("result"),
+                "binary_method": binary_result,
+                "weighted_method": weighted_result,
+                "hybrid_method": hybrid_result
+            }
+        
 
         # 5️⃣ Return data to frontend
         return {
@@ -185,7 +216,42 @@ async def extract_srs(request: Request, file: UploadFile = File(...)):
             }
         )
 
+@router.post("/generate-skeleton")
+async def generate_skeleton(request: Request):
 
+    body = await request.json()
+
+    project_id = body.get("project_id")
+    language = body.get("language", "python")
+
+    architecture = load_selected_architecture(project_id)
+
+    frs, nfrs = load_requirements()
+
+    patterns_doc = db.design_patterns.find_one({
+        "project_id": project_id
+    })
+
+    patterns = []
+
+    if patterns_doc:
+        patterns = patterns_doc.get("patterns", [])
+
+    code = generate_code_skeleton(
+        architecture=architecture,
+        functional=frs,
+        nfrs=nfrs,
+        patterns=patterns,
+        language=language
+    )
+    save_code_skeleton(
+    project_id=project_id,
+    language=language,
+    tree=code
+)
+    return {
+        "code": code
+    }
 @router.post("/confirm_nfr")
 async def confirm_nfr(request: Request):
     """
@@ -272,19 +338,8 @@ async def confirm_nfr(request: Request):
     save_weighted_result(project_id, weighted_result)
 
     user_id = request.session.get("user", {}).get("id", "guest")
-    phase4 = generate_phase4(project_id)
+    create_project(project_id, user_id)
 
-    print("HYBRID RESULT:", hybrid_result)
-    save_project_data(project_id, {
-    "functional": extracted.get("functional", []),   # 👈 مهم
-    "nfr_predictions": all_nfrs,
-    "selectedArchitecture": hybrid_result,
-    "functional_method": functional_result,
-    "ordinal_method": ordinal_result,
-    "binary_method": binary_result,
-    "weighted_method": weighted_result,
-    "hybrid_method": hybrid_result
-})
     return {
         "status": "ok",
         "saved_count": confirmed_count,
@@ -293,7 +348,8 @@ async def confirm_nfr(request: Request):
         "binary_method": binary_result,
         "weighted_method": weighted_result,
         "hybrid_method": hybrid_result,
-        "nfr_predictions": clean_object_id(all_nfrs)
+        "nfr_predictions": clean_object_id(all_nfrs),
+       
     }
 
 
