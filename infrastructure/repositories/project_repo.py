@@ -42,3 +42,25 @@ def get_user_projects(user_id):
         {"user_id": user_id},
         {"_id": 0}
     ).sort("created_at", -1))
+
+def save_project_data(project_id: str, data: dict):
+    projects_collection.update_one(
+        {"project_id": project_id},
+        {
+            "$set": {
+                "functional": data.get("functional"),
+                "nfr_predictions": data.get("nfr_predictions"),
+                "selectedArchitecture": data.get("selectedArchitecture"),
+                "functional_method": data.get("functional_method"),
+                "ordinal_method": data.get("ordinal_method"),
+                "binary_method": data.get("binary_method"),
+                "weighted_method": data.get("weighted_method"),
+                "hybrid_method": data.get("hybrid_method"),
+                "requirement_drift":
+    data.get(
+        "requirement_drift"
+    ),
+                "updated_at": datetime.utcnow()
+            }
+        }
+    )
