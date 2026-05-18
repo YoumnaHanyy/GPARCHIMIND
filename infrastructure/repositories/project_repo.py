@@ -56,8 +56,11 @@ def save_project_data(project_id: str, data: dict):
                 "binary_method": data.get("binary_method"),
                 "weighted_method": data.get("weighted_method"),
                 "hybrid_method": data.get("hybrid_method"),
+                "requirement_drift":
+    data.get(
+        "requirement_drift"
+    ),
                 "updated_at": datetime.utcnow()
             }
         }
     )
-
