@@ -364,6 +364,16 @@ def ai_generate_architecture(system, frs, nfrs, style):
 
         source = "FALLBACK"
 
+    try:
+     critique_result = critique(
+        components,
+        relationships,
+        nfrs
+    )
+    except Exception as e:
+     print("⚠️ critique failed:", e)
+     critique_result = []
+
     return {
         "system": system,
         "style": style,
@@ -373,5 +383,5 @@ def ai_generate_architecture(system, frs, nfrs, style):
         "components": components,
         "relationships": relationships,
         "runtime_flow": steps,
-        "critique": critique(components, relationships, nfrs)
-    }
+        "critique": critique_result
+}

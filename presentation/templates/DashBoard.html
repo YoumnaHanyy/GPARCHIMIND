@@ -80,6 +80,10 @@
     <li><i class="bi bi-star"></i> Starred Projects</li>
     <li><i class="bi bi-bell"></i> Notifications</li>
     <li><i class="bi bi-gear"></i> Settings</li>
+    <li onclick="window.location.href='/adl-dashboard'">
+      <i class="bi bi-cpu"></i> ADL Generation
+</li>
+   
     <hr class="my-3 opacity-10">
     <li class="text-danger" onclick="logoutAnimated()"><i class="bi bi-door-open"></i> Logout</li>
   </ul>
@@ -352,6 +356,47 @@
       </div>
     </div>
   </div>
+ <!-- ================= ADL GENERATION VIEW ================= -->
+<div id="adlView" class="hidden">
+  <div class="row justify-content-center">
+    <div class="col-lg-10">
+      <div class="studio-card p-5 animate-pop">
+        <!-- Back -->
+        <button type="button"
+          class="back-to-dashboard"
+          onclick="backToDashboard()">
+          <i class="bi bi-arrow-left"></i>
+        </button>
+        <h3 class="fw-bold mb-3 text-center">ADL Generation</h3>
+        <p class="text-muted text-center mb-4">
+          Generate architecture directly from SRS without full pipeline
+        </p>
+        <!-- SRS -->
+        <input type="file"
+       id="adlFileInput"
+       class="form-control mb-3"
+       accept=".pdf"
+       onchange="checkADLInputs()">
+        <!-- Architecture -->
+        <select id="adlArchitecture" class="form-select mb-3" onchange="checkADLInputs()">
+          <option value="">Select Architecture Style</option>
+          <option value="Microservices">Microservices</option>
+          <option value="Layered">Layered</option>
+          <option value="Monolithic">Monolithic</option>
+          <option value="Event-Driven">Event-Driven</option>
+        </select>
+        <button class="create-btn w-100"
+        id="generateAdlBtn"
+        onclick="generateStandaloneADL()"
+        disabled>
+  Generate ADL
+</button>
+        <!-- Output -->
+        <pre id="adlStandaloneOutput" class="mt-4 p-3 bg-light rounded hidden"></pre>
+      </div>
+    </div>
+  </div>
+</div>
 
 </div>
 <!-- ERROR MODAL -->
