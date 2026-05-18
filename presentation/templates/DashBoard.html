@@ -414,16 +414,26 @@
       <!-- ✅ FOOTER -->
       <div class="modal-footer border-0 d-flex justify-content-between">
 
-        <!-- 👈 Validation Button -->
-        <button
-          type="button"
-          class="btn btn-outline-secondary"
-          onclick="loadValidationReport()">
-          <i class="bi bi-shield-check me-1"></i>
-          View Validation Report
-        </button>
+        <!-- Report buttons (left side) -->
+        <div class="d-flex gap-2">
+          <button
+            type="button"
+            class="btn btn-outline-secondary"
+            onclick="loadValidationReport()">
+            <i class="bi bi-shield-check me-1"></i>
+            View Validation Report
+          </button>
 
-        <!-- Existing button -->
+          <button
+            type="button"
+            class="btn btn-outline-info"
+            onclick="loadVerificationReport()">
+            <i class="bi bi-patch-check me-1"></i>
+            View Verification Report
+          </button>
+        </div>
+
+        <!-- Save button (right side) -->
         <button
           type="button"
           class="btn btn-success px-4 rounded-pill"

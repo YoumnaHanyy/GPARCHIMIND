@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dir /s /b)",
+      "PowerShell(head *)",
+      "PowerShell(cd \"C:\\\\Users\\\\moham\\\\Desktop\\\\GPARCHIMIND\"; Get-ChildItem -Recurse -Force | ForEach-Object { $_.FullName })",
+      "PowerShell(cd \"C:\\\\Users\\\\moham\\\\Desktop\\\\GPARCHIMIND\"; Get-ChildItem -Directory | ForEach-Object { Write-Host $_.Name })",
+      "Bash(dir \"C:\\\\Users\\\\moham\\\\Desktop\\\\GPARCHIMIND\\\\application\\\\extraction\\\\adl\\\\verification\" /b)",
+      "Bash(dir \"C:\\\\Users\\\\moham\\\\Desktop\\\\GPARCHIMIND\\\\application\\\\extraction\\\\adl\\\\validation\" /b)"
+    ]
+  }
+}

@@ -10,7 +10,7 @@ from application.extraction.adl.verification.verification_report_generator impor
 from ai.inference.feature_extractor import generate_phase4
 import zipfile
 from infrastructure.database import db
-from infrastructure.repositories.ADL_repository import save_architecture_report_pdf
+from infrastructure.repositories.ADL_repository import save_architecture_report_pdf, save_verification_report_pdf
 from infrastructure.repositories.hybrid_repository import save_hybrid_result
 from fastapi.staticfiles import StaticFiles
 from ai.json_to_process_view import convert_to_process_view
@@ -326,26 +326,26 @@ def generate_architecture(project_id: str):
     )
 
     # ==========================================================
-    # 4. VERIFICATION GATE
+    # 4. VERIFICATION (non-blocking — always runs, never stops the pipeline)
     # ==========================================================
-   # try:
-    #  verification_result = run_verification(arch)
-    #except Exception as e:
-    # raise HTTPException(
-     #   status_code=500,
-      #  detail=f"Verification crashed: {str(e)}"
-    #)
+    verification_result = {}
+    try:
+        verification_result = run_verification(arch)
+        print(f"[verify] run_verification status={verification_result.get('status')}", flush=True)
 
-    #verification_result = run_verification(arch)
+        verification_pdf_path = generate_verification_pdf(verification_result)
+        print(f"[verify] PDF generated at: {verification_pdf_path}", flush=True)
 
-    #if verification_result["status"] != "VERIFIED":
-     #raise HTTPException(
-      #  status_code=400,
-       # detail="Architecture verification failed. Please fix issues before generating ADL."
-    #)
+        with open(verification_pdf_path, "rb") as _vf:
+            _vbytes = _vf.read()
+        print(f"[verify] PDF bytes read: {len(_vbytes)}", flush=True)
 
-# Generate verification report ONLY on success (optional)
-   # generate_verification_pdf(verification_result)
+        save_verification_report_pdf(project_id, _vbytes)
+        print("[verify] verification report saved to MongoDB successfully", flush=True)
+    except Exception as e:
+        import traceback
+        print(f"[verify] ERROR — verification report NOT saved: {e}", flush=True)
+        traceback.print_exc()
 
 
     # ==========================================================
@@ -370,7 +370,10 @@ def generate_architecture(project_id: str):
         json.dump(arch, f, indent=2)
 
     with open("data/outputs/architecture.validation.json", "w", encoding="utf-8") as f:
-       json.dump(validation_result, f, indent=2)
+        json.dump(validation_result, f, indent=2)
+
+    with open("data/outputs/architecture.verification.json", "w", encoding="utf-8") as f:
+        json.dump(verification_result, f, indent=2)
 
 
     acme = convert_to_acme(arch)
@@ -581,5 +584,36 @@ def download_validation_report():
         media_type="application/pdf",
         headers={
             "Content-Disposition": "inline; filename=architecture_validation_report.pdf"
+        }
+    )
+
+
+@app.get("/download-verification-report")
+def download_verification_report():
+    """
+    Serve the architecture verification PDF.
+
+    Returns the success report when verification passed, or the
+    'problems' report when verification failed. Whichever exists
+    on disk is the one returned.
+    """
+    success_path = "data/outputs/architecture_verification_report.pdf"
+    problems_path = "data/outputs/architecture_verification_problems.pdf"
+
+    if os.path.exists(success_path):
+        path, filename = success_path, "architecture_verification_report.pdf"
+    elif os.path.exists(problems_path):
+        path, filename = problems_path, "architecture_verification_problems.pdf"
+    else:
+        raise HTTPException(
+            status_code=404,
+            detail="Verification report not found. Run verification first."
+        )
+
+    return FileResponse(
+        path=path,
+        media_type="application/pdf",
+        headers={
+            "Content-Disposition": f"inline; filename={filename}"
         }
     )
