@@ -44,3 +44,4 @@ def compute_nfr_statistics(nfr_predictions):
     }
 
     return freq_norm, must_norm, importance
+
