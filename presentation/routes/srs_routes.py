@@ -186,6 +186,11 @@ async def extract_srs(request: Request, file: UploadFile = File(...)):
                     "error": "No file uploaded"
                 }
             )
+         # ✅ USE VALIDATION FUNCTION
+        validation_error = validate_pdf_file(file)
+        if validation_error:
+            return JSONResponse(
+                status_code=400,content={"error": validation_error})
 
         # ==========================================
         # SAVE PDF

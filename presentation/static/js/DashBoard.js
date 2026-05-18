@@ -768,7 +768,21 @@ function loadValidationReport() {
     { once: true }
   );
 }
-
+function loadVerificationReport() {
+  const frame = document.getElementById("reportFrame");
+  const loader = document.getElementById("modalIframeLoader");
+  loader.style.display = "block";
+  frame.style.opacity = "0";
+  frame.src = "/download-verification-report";
+  frame.addEventListener(
+    "load",
+    () => {
+      loader.style.display = "none";
+      frame.style.opacity = "1";
+    },
+    { once: true }
+  );
+}
 
   function renderPhase() {
     const data = phaseData[currentPhase];
