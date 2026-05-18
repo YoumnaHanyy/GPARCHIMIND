@@ -23,7 +23,9 @@ def mock_all(monkeypatch):
                 return {
                     "_id": "123",
                     "Email": "admin@test.com",
-                    "password": bcrypt.hashpw(b"1234", bcrypt.gensalt()).decode("utf-8"),
+                    "password": bcrypt.hashpw(
+                        b"1234", bcrypt.gensalt()
+                    ).decode("utf-8"),
                     "Role": "Admin",
                     "Fullname": "Admin User"
                 }

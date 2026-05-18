@@ -93,7 +93,7 @@ def hybrid_aggregation(functional, ordinal, binary, weighted):
         raw_f = functional_scores.get(arch, 0)
         s_f = raw_f / max_f if max_f else 0
 
-        # ---------- Ordinal (count → score) ----------
+    
         raw_o = 0
         if isinstance(ordinal, list):
             for a in ordinal:

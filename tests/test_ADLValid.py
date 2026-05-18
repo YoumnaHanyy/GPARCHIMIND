@@ -190,3 +190,4 @@ def test_tc_f8_generate_validation_report_with_issues():
 
     # الملف فعلاً اتعمل
     assert os.path.exists(report_path)
+>>>>>>>>> Temporary merge branch 2

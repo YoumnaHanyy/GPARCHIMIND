@@ -13,7 +13,7 @@ def get_architecture_dataset():
             "Architecture": 1,
             "Type": 1,
             "Level": 1,
-            "LevelNorm": 1   # ✅ مهم للـ Weighted
+            "LevelNorm": 1  
         }
     )
 

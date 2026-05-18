@@ -9,7 +9,14 @@ import pdfplumber
 
 from application.extraction.extraction_service import process_srs
 from ai.inference.predict_type_level import predict_and_save_nfr, predict_level_for_text
-
+from infrastructure.repositories.code_skeleton_repository import (
+    save_code_skeleton
+)
+from infrastructure.repositories.code_skeleton_repository import (
+    get_code_skeleton
+)
+from ai.inference.feature_extractor import load_selected_architecture, load_requirements
+from application.extraction.skeleton.generator import generate_code_skeleton
 from service.ordinal_service import execute_ordinal_method
 from service.binary_service import execute_binary_method
 from service.weighted_service import execute_weighted_method
@@ -82,164 +89,631 @@ def get_project_api(project_id: str):
         return {"error": "Project not found"}
 
     project.pop("_id", None)
+    skeleton = get_code_skeleton(project_id)
+
+    if skeleton:
+
+       skeleton.pop("_id", None)
+
+       project["code_skeleton"] = skeleton.get("tree")
+       project["selected_language"] = skeleton.get("language")
     return project
 
 
 @router.post("/extract")
 async def extract_srs(request: Request, file: UploadFile = File(...)):
+
     project_id = f"proj_{uuid.uuid4().hex[:8]}"
 
     try:
+
         if not file:
             return JSONResponse(status_code=400, content={"error": "No file uploaded"})
+        # ✅ USE VALIDATION FUNCTION
+        validation_error = validate_pdf_file(file)
+        if validation_error:
+            return JSONResponse(
+                status_code=400,
+                content={"error": validation_error}
+            )
 
-        # 1️⃣ Save PDF
-        pdf_path = os.path.join(UPLOAD_DIR, f"{project_id}.pdf")
+        # ==========================================
+        # SAVE PDF
+        # ==========================================
+
+        pdf_path = os.path.join(
+            UPLOAD_DIR,
+            f"{project_id}.pdf"
+        )
+
         file_bytes = await file.read()
 
         with open(pdf_path, "wb") as f:
-          f.write(file_bytes)
-        
-        # ✅ STRUCTURE CHECK (HERE ONLY)
+            f.write(file_bytes)
+
+        # ==========================================
+        # STRUCTURE CHECK
+        # ==========================================
+
         pdf_text = extract_text_from_pdf(pdf_path)
 
         pdf_doc = fitz.open(pdf_path)
+
         num_pages = len(pdf_doc)
+
         pdf_doc.close()
-        has_fr, has_nfr = check_srs_sections(pdf_text)
-        user_id = request.session.get("user", {}).get("id", "guest")
-        status = "verified" if (has_fr and has_nfr) else "error"
+
+        has_fr, has_nfr = \
+            check_srs_sections(pdf_text)
+
+        user_id = request.session.get(
+            "user",
+            {}
+        ).get(
+            "id",
+            "guest"
+        )
+
+        status = \
+            "verified" \
+            if (has_fr and has_nfr) \
+            else "error"
+
         SRSRepository.save_srs(
-              file_bytes=file_bytes,
-              filename=file.filename,
-              project_id=project_id,
-              user_id=user_id,
-              num_pages=num_pages,
-              status=status
+
+            file_bytes=file_bytes,
+
+            filename=file.filename,
+
+            project_id=project_id,
+
+            user_id=user_id,
+
+            num_pages=num_pages,
+
+            status=status
         )
 
         if not has_fr or not has_nfr:
-         return JSONResponse(
-        status_code=400,
-        content={
-            "error": "Invalid SRS format",
-            "message": (
-                "The uploaded SRS must contain clearly defined "
-                "'Functional Requirements' and 'Non-Functional Requirements' sections."
-            )
-        }
-    )
 
-        # 2️⃣ Extract FR + NFR
+            return JSONResponse(
+
+                status_code=400,
+
+                content={
+
+                    "error":
+                        "Invalid SRS format",
+
+                    "message":
+                        (
+                            "The uploaded SRS must contain "
+                            "clearly defined "
+                            "'Functional Requirements' "
+                            "and "
+                            "'Non-Functional Requirements' "
+                            "sections."
+                        )
+                }
+            )
+
+        # ==========================================
+        # EXTRACT FR + NFR
+        # ==========================================
+
         extraction_result = process_srs(
+
             pdf_path=pdf_path,
+
             project_id=project_id,
+
             hf_key=None
         )
-        
+
         if not extraction_result:
-            raise ValueError("process_srs returned empty result")
-        project_name = extraction_result.get("project_name", "Unknown Project")
-        user_id = request.session.get("user", {}).get("id", "guest")
+
+            raise ValueError(
+                "process_srs returned empty result"
+            )
+
+        # ==========================================
+        # AI REQUIREMENT DRIFT DETECTION
+        # ==========================================
+
+
+        # ==========================================
+        # PROJECT INFO
+        # ==========================================
+
+        project_name = extraction_result.get(
+            "project_name",
+            "Unknown Project"
+        )
+
+        user_id = request.session.get(
+            "user",
+            {}
+        ).get(
+            "id",
+            "guest"
+        )
 
         create_project(project_id, user_id, project_name)
         # 3️⃣ Predict NFR Type + Level → Saves to BOTH MongoDB AND JSON
-        all_predictions = predict_and_save_nfr(project_id)
+        all_predictions =predict_and_save_nfr(project_id)
 
         if not all_predictions:
-            raise ValueError("No NFR predictions generated")
 
-        # 4️⃣ Get high and low confidence from MongoDB
-        high_confidence = NFRPredictionRepository.get_high_confidence(project_id)
-        low_confidence = NFRPredictionRepository.get_low_confidence(project_id)
+            raise ValueError(
+                "No NFR predictions generated"
+            )
+
+        # ==========================================
+        # GET HIGH + LOW CONFIDENCE
+        # ==========================================
+
+        high_confidence = \
+            NFRPredictionRepository.get_high_confidence(
+                project_id
+            )
+
+        low_confidence = \
+            NFRPredictionRepository.get_low_confidence(
+                project_id
+            )
 
         save_project_data(project_id, {
-         "functional": extraction_result.get("functional", []),
-         "nfr_predictions": high_confidence
-})
-        print(f"📊 High confidence: {len(high_confidence)}, Low confidence: {len(low_confidence)}")
+            "functional":
+                extraction_result.get(
+                    "functional",
+                    []
+                ),
+
+            "nfr_predictions":
+                high_confidence
+
+                
+        })
+
+        print(
+            f"📊 High confidence: "
+            f"{len(high_confidence)}, "
+            f"Low confidence: "
+            f"{len(low_confidence)}"
+        )
+
+        # ==========================================
+        # AUTO RUN ARCHITECTURE
+        # ==========================================
+
         if len(low_confidence) == 0:
-            print("⚡ No low confidence → auto running architecture")
+
+            print(
+                "⚡ No low confidence "
+                "→ auto running architecture"
+            )
 
             all_nfrs = high_confidence
 
-            functional_result = execute_functional_method(project_id)
-    
-            freq_norm, must_norm, importance = compute_nfr_statistics(all_nfrs)
-    
-            ordinal_result = execute_ordinal_method(project_id)
-            binary_result = execute_binary_method(project_id)
-    
-            weighted_result = execute_weighted_method(
-                freq_norm=freq_norm,
-                must_norm=must_norm,
-                importance=importance
+            functional_result = \
+                execute_functional_method(
+                    project_id
+                )
+
+            freq_norm, must_norm, importance = \
+                compute_nfr_statistics(
+                    all_nfrs
+                )
+
+            ordinal_result = \
+                execute_ordinal_method(
+                    project_id
+                )
+
+            # ==========================================
+            # BUILD BINARY VECTOR
+            # ==========================================
+
+            binary_vector = {
+
+                "PE": 0,
+                "SC": 0,
+                "MN": 0,
+                "A": 0,
+                "SE": 0,
+                "US": 0,
+                "PO": 0,
+                "O": 0
+            }
+
+            for pred in all_nfrs:
+
+                nfr_type = pred.get(
+                    "predicted_type",
+                    ""
+                )
+
+                if nfr_type in binary_vector:
+
+                    binary_vector[nfr_type] = 1
+
+            print(
+                "BINARY VECTOR:",
+                binary_vector
             )
-    
-            hybrid_result = execute_hybrid_method(
+
+            # ==========================================
+            # EXECUTE METHODS
+            # ==========================================
+
+            binary_result = \
+                execute_binary_method(
+
+                    project_id,
+
+                    binary_vector
+                )
+
+            weighted_result = \
+                execute_weighted_method(
+
+                    freq_norm=freq_norm,
+
+                    must_norm=must_norm,
+
+                    importance=importance
+                )
+
+            hybrid_result = \
+                execute_hybrid_method(
+
+                    project_id,
+
+                    functional_result,
+
+                    ordinal_result,
+
+                    binary_result,
+
+                    weighted_result
+                )
+
+            save_weighted_result(
                 project_id,
-                functional_result,
-                ordinal_result,
-                binary_result,
                 weighted_result
             )
 
-            save_weighted_result(project_id, weighted_result)
-
             save_project_data(project_id, {
-    "functional": extraction_result.get("functional", []),
-    "nfr_predictions": high_confidence,
-    "functional_method": functional_result,
-    "ordinal_method": ordinal_result.get("result"),
-    "binary_method": binary_result,
-    "weighted_method": weighted_result,
-    "hybrid_method": hybrid_result,
-    "selectedArchitecture": hybrid_result
-})
+
+                "functional":
+                    extraction_result.get(
+                        "functional",
+                        []
+                    ),
+
+                "nfr_predictions":
+                    high_confidence,
+
+                "functional_method":
+                    functional_result,
+
+                "ordinal_method":
+                    ordinal_result.get(
+                        "result"
+                    ),
+
+                "binary_method":
+                    binary_result,
+
+                "weighted_method":
+                    weighted_result,
+
+                "hybrid_method":
+                    hybrid_result,
+
+                "selectedArchitecture":
+                    hybrid_result
+            })
 
             return {
-                "project_id": project_id,
-                "srs_verified": True,
-                "functional": clean_object_id(extraction_result.get("functional", [])),
-                "nfr_predictions": clean_object_id(high_confidence),
-                "low_confidence_nfrs": [],
-                "needs_confirmation": False,
-                "functional_method": functional_result,
-                "ordinal_method": ordinal_result.get("result"),
-                "binary_method": binary_result,
-                "weighted_method": weighted_result,
-                "hybrid_method": hybrid_result
-            }
-        
 
-        # 5️⃣ Return data to frontend
+                "project_id":
+                    project_id,
+
+                "srs_verified":
+                    True,
+
+                "functional":
+                    clean_object_id(
+                        extraction_result.get(
+                            "functional",
+                            []
+                        )
+                    ),
+
+                "nfr_predictions":
+                    clean_object_id(
+                        high_confidence
+                    ),
+
+                "low_confidence_nfrs":
+                    [],
+
+                "needs_confirmation":
+                    False,
+
+                "functional_method":
+                    functional_result,
+
+                "ordinal_method":
+                    ordinal_result.get(
+                        "result"
+                    ),
+
+                "binary_method":
+                    binary_result,
+
+                "weighted_method":
+                    weighted_result,
+
+                "hybrid_method":
+                    hybrid_result
+            }
+
+        # ==========================================
+        # RETURN LOW CONFIDENCE
+        # ==========================================
+
         return {
-            "project_id": project_id,
-            "srs_verified":True,
-            "functional": clean_object_id(extraction_result.get("functional", [])),
-            "nfr_predictions": clean_object_id(high_confidence),
-            "low_confidence_nfrs": clean_object_id(low_confidence),
-            "needs_confirmation": len(low_confidence) > 0
+
+            "project_id":
+                project_id,
+
+            "requirement_drift":
+                drift_result,
+
+            "srs_verified":
+                True,
+
+            "functional":
+                clean_object_id(
+                    extraction_result.get(
+                        "functional",
+                        []
+                    )
+                ),
+
+            "nfr_predictions":
+                clean_object_id(
+                    high_confidence
+                ),
+
+            "low_confidence_nfrs":
+                clean_object_id(
+                    low_confidence
+                ),
+
+            "needs_confirmation":
+                len(low_confidence) > 0
         }
 
     except Exception as e:
-        tb = traceback.extract_tb(e.__traceback__)
+
+        tb = traceback.extract_tb(
+            e.__traceback__
+        )
+
         last = tb[-1]
+
         print("❌ EXTRACT FAILED:", e)
+
         traceback.print_exc()
+
         return JSONResponse(
+
             status_code=500,
+
             content={
-                "message": "Extraction pipeline failed",
-                "error": str(e),
+
+                "message":
+                    "Extraction pipeline failed",
+
+                "error":
+                    str(e),
+
                 "location": {
-                    "file": os.path.relpath(last.filename),
-                    "line": last.lineno,
-                    "code": last.line
+
+                    "file":
+                        os.path.relpath(
+                            last.filename
+                        ),
+
+                    "line":
+                        last.lineno,
+
+                    "code":
+                        last.line
                 }
             }
         )
 
+
+# ==========================================
+# UPLOAD UPDATED SRS
+# ==========================================
+
+@router.post("/upload-updated-srs/{project_id}")
+async def upload_updated_srs(
+
+    request: Request,
+
+    project_id: str,
+
+    file: UploadFile = File(...)
+):
+
+    try:
+
+        # ==========================================
+        # SAVE UPDATED PDF
+        # ==========================================
+
+        pdf_path = os.path.join(
+            UPLOAD_DIR,
+            f"{project_id}_updated.pdf"
+        )
+
+        file_bytes = await file.read()
+
+        with open(pdf_path, "wb") as f:
+            f.write(file_bytes)
+
+        # ==========================================
+        # EXTRACT UPDATED REQUIREMENTS
+        # ==========================================
+
+        extraction_result = process_srs(
+
+            pdf_path=pdf_path,
+
+            project_id=project_id,
+
+            hf_key=None
+        )
+
+        # ==========================================
+        # GET OLD PROJECT DATA
+        # ==========================================
+
+        project = db.projects.find_one({
+
+            "project_id":
+                project_id
+        })
+
+        old_frs = project.get(
+            "functional",
+            []
+        )
+
+        old_nfrs = project.get(
+            "nfr_predictions",
+            []
+        )
+
+        new_frs = extraction_result.get(
+            "functional",
+            []
+        )
+
+        new_nfrs = extraction_result.get(
+            "non_functional",
+            []
+        )
+
+        # ==========================================
+        # AI DRIFT DETECTION
+        # ==========================================
+
+        from service.requirement_drift_service import (
+            RequirementDriftService
+        )
+
+        drift_result = \
+            RequirementDriftService.detect_changes(
+
+                old_frs,
+                old_nfrs,
+
+                new_frs,
+                new_nfrs
+            )
+
+        # ==========================================
+        # SAVE DRIFT
+        # ==========================================
+
+        db.projects.update_one(
+
+            {
+                "project_id":
+                    project_id
+            },
+
+            {
+                "$set": {
+
+                    "requirement_drift":
+                        drift_result,
+
+                    "updated_at":
+                        datetime.utcnow()
+                }
+            }
+        )
+
+        # ==========================================
+        # REDIRECT BACK
+        # ==========================================
+
+        return RedirectResponse(
+
+            url=f"/project/{project_id}",
+
+            status_code=303
+        )
+
+    except Exception as e:
+
+        traceback.print_exc()
+
+        return JSONResponse(
+
+            status_code=500,
+
+            content={
+                "error": str(e)
+            }
+        )
+    
+
+
+@router.post("/generate-skeleton")
+async def generate_skeleton(request: Request):
+
+    body = await request.json()
+
+    project_id = body.get("project_id")
+    language = body.get("language", "python")
+
+    architecture = load_selected_architecture(project_id)
+
+    frs, nfrs = load_requirements()
+
+    patterns_doc = db.design_patterns.find_one({
+        "project_id": project_id
+    })
+
+    patterns = []
+
+    if patterns_doc:
+        patterns = patterns_doc.get("patterns", [])
+
+    code = generate_code_skeleton(
+        architecture=architecture,
+        functional=frs,
+        nfrs=nfrs,
+        patterns=patterns,
+        language=language
+    )
+    save_code_skeleton(
+    project_id=project_id,
+    language=language,
+    tree=code
+)
+    return {
+        "code": code
+    }
 
 @router.post("/confirm_nfr")
 async def confirm_nfr(request: Request):
@@ -308,8 +782,8 @@ async def confirm_nfr(request: Request):
     
     freq_norm, must_norm, importance = compute_nfr_statistics(all_nfrs)
     
-    ordinal_result = execute_ordinal_method()
-    binary_result = execute_binary_method()
+    ordinal_result = execute_ordinal_method(project_id)
+    binary_result = execute_binary_method(project_id)
     weighted_result = execute_weighted_method(
         freq_norm=freq_norm,
         must_norm=must_norm,
@@ -330,8 +804,10 @@ async def confirm_nfr(request: Request):
     phase4 = generate_phase4(project_id)
 
     print("HYBRID RESULT:", hybrid_result)
+    project_doc = db.projects.find_one({"project_id": project_id}) or {}
+
     save_project_data(project_id, {
-    "functional": extracted.get("functional", []),   # 👈 مهم
+    "functional": project_doc.get("functional", []),   # ✅ FIX
     "nfr_predictions": all_nfrs,
     "selectedArchitecture": hybrid_result,
     "functional_method": functional_result,

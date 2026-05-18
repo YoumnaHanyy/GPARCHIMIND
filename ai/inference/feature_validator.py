@@ -32,7 +32,6 @@ def validate_features(features, text):
 
         current = features[feature]
 
-        # 🔥 boost تدريجي (مش قفزات)
         if count == 1:
             current = max(current, 0.5)
 
@@ -42,21 +41,21 @@ def validate_features(features, text):
         elif count >= 3:
             current = min(0.85, current + 0.15)
 
-        # 🧠 weak signal correction (بس لو AI ضعيف جدًا)
+       
         if count == 0:
             current = min(current, 0.2)
 
-        # 🔒 strict features control
+       
         if feature in strict_features:
             strict_words = strict_features[feature]
             if not any(match_keyword(w, text) for w in strict_words):
                 current = min(current, 0.5)
 
-        # 🚫 منع القيم العالية بدون evidence كفاية
+        
         if current > 0.9 and count < 3:
             current = 0.85
 
-        # 🎯 final cap
+
         current = min(current, 0.9)
 
         features[feature] = round(current, 2)
