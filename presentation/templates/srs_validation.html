@@ -1,0 +1,372 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>ArchiMind — SRS Validation Studio</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="/static/css/Dashboarddd.css">
+</head>
+
+<body>
+
+<!-- ═══════════════════════════════════════════
+     HEADER
+════════════════════════════════════════════ -->
+<header class="blueprint-header">
+  <div class="container d-flex justify-content-between align-items-center">
+
+    <div class="brand">
+      <img src="/static/images/Logo_b&w.png" style="height:60px;width:140px;">
+    </div>
+
+    <div class="d-flex align-items-center gap-3">
+      <div class="dropdown">
+        <button class="btn p-0 border-0 d-flex align-items-center justify-content-center avatar-trigger"
+                data-bs-toggle="dropdown">
+          <div class="avatar-circle-sm">{{ user['name'][0]|upper }}</div>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0 animate-fade-down">
+          <li class="px-3 py-3 bg-light-soft">
+            <div class="d-flex align-items-center gap-3">
+              <div class="avatar-circle-sm">{{ user['name'][0]|upper }}</div>
+              <div>
+                <h6 class="mb-0 fw-bold" style="font-size:0.9rem;">{{ user['name'] }}</h6>
+                <small class="text-muted">{{ user['role'] }}</small>
+              </div>
+            </div>
+          </li>
+          <li><hr class="dropdown-divider opacity-50"></li>
+          <li><a class="dropdown-item" href="#"><i class="bi bi-person-gear me-2"></i>Account Settings</a></li>
+          <li><a class="dropdown-item" href="#"><i class="bi bi-shield-check me-2"></i>Security</a></li>
+          <li><hr class="dropdown-divider opacity-50"></li>
+          
+          <li>
+            <a class="dropdown-item text-danger fw-bold" href="#" onclick="logoutAnimated()">
+              <i class="bi bi-box-arrow-right me-2"></i>Log out
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <button class="btn btn-outline-light rounded-circle"
+              style="width:40px;height:40px;"
+              onclick="toggleSideMenu()">
+        <i class="bi bi-list fs-5"></i>
+      </button>
+    </div>
+
+  </div>
+</header>
+
+<!-- ═══════════════════════════════════════════
+     SIDE MENU
+════════════════════════════════════════════ -->
+<div id="sideMenu" class="side-menu">
+  <div class="side-menu-header">
+    <div class="d-flex align-items-center gap-3">
+      <div class="avatar-circle-lg">{{ user['name'][0]|upper }}</div>
+      <div class="user-meta">
+        <h6 class="mb-0 fw-bold">{{ user['name'] }}</h6>
+        <small class="text-muted text-uppercase fw-semibold" style="font-size:0.7rem;letter-spacing:0.5px;">{{ user['role'] }}</small>
+      </div>
+    </div>
+    <button class="close-menu-btn" onclick="toggleSideMenu()"><i class="bi bi-x-lg"></i></button>
+  </div>
+  <ul class="side-menu-list">
+    <li onclick="window.location.href='/'" style="cursor:pointer;"><i class="bi bi-house-door"></i>Home</li>
+    <li onclick="window.location.href='/architectural-patterns'" style="cursor:pointer;"><i class="bi bi-layers"></i>Architectural Patterns</li>
+    <li onclick="window.location.href='/srs-validations'" style="cursor:pointer;"><i class="bi bi-file-earmark-check"></i>SRS Validations</li>
+    <li onclick="window.location.href='/starred-projects'" style="cursor:pointer;"><i class="bi bi-star"></i>Starred Projects</li>
+    <li onclick="window.location.href='/notifications'" style="cursor:pointer;"><i class="bi bi-bell"></i>Notifications</li>
+    <li onclick="window.location.href='/settings'" style="cursor:pointer;"><i class="bi bi-gear"></i>Settings</li>
+    <li onclick="window.location.href='/adl-dashboard'">
+      <i class="bi bi-cpu"></i> ADL Generation
+</li>
+    <hr class="my-3 opacity-10">
+    <li class="text-danger" onclick="logoutAnimated()" style="cursor:pointer;"><i class="bi bi-door-open"></i>Logout</li>
+  </ul>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     MAIN CONTENT
+════════════════════════════════════════════ -->
+<div class="container pb-5">
+
+  <!-- ── PROGRESS BAR (hidden until validation starts) ── -->
+  <div id="progressSection" class="progress-wrapper hidden animate-pop">
+    <div class="d-flex justify-content-between mb-2">
+      <span class="phase-tag" id="phaseLabel">Phase 1: Detected Issues</span>
+      <span class="phase-tag" id="phasePercent">25%</span>
+    </div>
+    <div class="progress">
+      <div id="progressBar" class="progress-bar" style="width:25%"></div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════
+       DASHBOARD VIEW  (projects grid)
+  ═════════════════════════════════════════ -->
+  <div id="dashboardView" class="animate-pop">
+    <div class="row g-4">
+
+      <!-- New Validation Card -->
+      <div class="col-md-4">
+        <div class="studio-card p-5 h-100 text-center d-flex flex-column align-items-center justify-content-center"
+             style="border:2px dashed rgba(16,185,129,0.3);cursor:pointer;"
+             onclick="showValidationUploader()">
+          <div class="mb-3 p-3 bg-light rounded-circle" style="animation:float 3s infinite ease-in-out;">
+            <i class="bi bi-shield-check fs-1 text-success"></i>
+          </div>
+          <h5 class="fw-bold">New SRS Validation</h5>
+          <p class="small text-muted">
+            Upload and validate your Software Requirements Specification
+            according to ISO and IEEE principles.
+          </p>
+          <button class="create-btn mt-2">Start Validation</button>
+        </div>
+      </div>
+
+      <!-- Existing Project Cards -->
+      {% for project in projects %}
+      <div class="col-md-4">
+        <div class="studio-card project-card p-4 h-100 position-relative d-flex flex-column animate-pop">
+          <div class="d-flex justify-content-between align-items-start mb-4">
+            <div class="project-icon-wrapper">
+              <i class="bi bi-file-earmark-check"></i>
+            </div>
+            {% if project.status == 'completed' %}
+            <span class="status-badge status-finished animate-pulse">
+              <i class="bi bi-check-circle-fill me-1"></i>Finished
+            </span>
+            {% elif project.status == 'failed' %}
+            <span class="status-badge" style="background:#fee2e2;color:#dc2626;">
+              <i class="bi bi-x-circle-fill me-1"></i>Failed
+            </span>
+            {% else %}
+            <span class="status-badge status-progress">In Progress</span>
+            {% endif %}
+          </div>
+
+          <div class="project-details mb-4">
+            <h5 class="project-title mb-1 text-truncate">{{ project.project_name }}</h5>
+            <p class="project-date text-muted mb-0" style="font-size:0.85rem;">
+              <i class="bi bi-calendar3 me-2"></i>
+              {{ project.created_at.strftime('%d %b, %Y') }}
+            </p>
+          </div>
+
+          <div class="mt-auto">
+            <div class="d-flex justify-content-between mb-2 small">
+              <span class="fw-medium text-secondary">Quality Score</span>
+              <span class="fw-bold">{{ project.progress }}%</span>
+            </div>
+            <div class="progress-container mb-4">
+              <div class="progress-bar-fill"
+                   style="width:0%;"
+                   data-width="{{ project.progress|default('0', true) }}">
+              </div>
+            </div>
+            <button class="open-project-btn w-100"
+                    onclick="openValidationProject('{{ project.validation_id }}')">
+              Open Validation
+            </button>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════
+       UPLOAD & RESULTS VIEW
+       NOTE: Only upload form hides after submit.
+             The entire #uploadView stays visible.
+  ═════════════════════════════════════════ -->
+  <div id="uploadView" class="hidden">
+    <div class="row justify-content-center">
+      <div class="col-lg-10">
+        <div class="studio-card p-5 animate-pop">
+
+          <!-- ── UPLOAD FORM (hides after submit) ── -->
+          <div id="step-upload" class="text-center py-4" style="position:relative;">
+            <button type="button" class="back-to-dashboard" onclick="backToValidationDashboard()">
+              <i class="bi bi-arrow-left"></i>
+            </button>
+            <h3 class="fw-bold mb-3">SRS Validation Studio</h3>
+            <p class="text-muted mb-5">
+              Analyze your Software Requirements Specification, detect ambiguities,
+              weak requirement statements, and compliance violations based on IEEE 830 and ISO/IEC 25010.
+            </p>
+            <form id="processForm">
+              <input type="file" class="form-control mb-4 mx-auto"
+                     id="fileIn" accept=".pdf" style="max-width:400px;">
+              <button class="create-btn px-5" type="submit">
+                <i class="bi bi-shield-check me-2"></i>Start Validation
+              </button>
+            </form>
+          </div>
+
+          <!-- ── LOADER (shown while API call is running) ── -->
+          <div id="loadingMessage" class="hidden">
+            <div class="loader-container">
+              <div class="text-center py-5">
+
+                <!-- Animated spinner -->
+                <div class="validation-spinner mb-4">
+                  <div class="spinner-ring"></div>
+                  <div class="spinner-ring spinner-ring--delay"></div>
+                  <i class="bi bi-shield-check spinner-icon text-success"></i>
+                </div>
+
+                <!-- Rotating status messages -->
+                <h5 class="fw-bold mb-2" id="loaderTitle">Analyzing Your SRS...</h5>
+                <p class="text-muted" id="loaderDesc">
+                  Running IEEE 830 and ISO/IEC 25010 validation checks.
+                </p>
+
+                <!-- Mini progress steps -->
+                <div class="loader-steps mt-4 mx-auto" style="max-width:380px;">
+                  <div class="loader-step active" id="lstep1">
+                    <i class="bi bi-check2-circle me-2"></i>Extracting requirements
+                  </div>
+                  <div class="loader-step" id="lstep2">
+                    <i class="bi bi-hourglass-split me-2"></i>Running ambiguity checks
+                  </div>
+                  <div class="loader-step" id="lstep3">
+                    <i class="bi bi-hourglass-split me-2"></i>Checking IEEE 830 compliance
+                  </div>
+                  <div class="loader-step" id="lstep4">
+                    <i class="bi bi-hourglass-split me-2"></i>AI deep analysis
+                  </div>
+                  <div class="loader-step" id="lstep5">
+                    <i class="bi bi-hourglass-split me-2"></i>Generating enhanced SRS
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+          <!-- ── RESULTS (shown after API responds) ── -->
+          <div id="resultContent" class="hidden" style="position:relative;">
+
+            <button type="button" class="phase-back-arrow" onclick="backToDashboard()">
+              <i class="bi bi-arrow-left"></i>
+            </button>
+
+            <!-- Summary Cards -->
+            <div id="validationSummary" class="row g-4 mb-4 hidden">
+
+              <div class="col-6 col-md-3">
+                <div class="studio-card p-4 text-center h-100">
+                  <div class="mb-2"><i class="bi bi-file-earmark-text fs-2 text-success"></i></div>
+                  <h3 class="fw-bold text-success" id="totalReqs">0</h3>
+                  <p class="text-muted mb-0">Requirements</p>
+                </div>
+              </div>
+
+              <div class="col-6 col-md-3">
+                <div class="studio-card p-4 text-center h-100">
+                  <div class="mb-2"><i class="bi bi-exclamation-circle fs-2 text-danger"></i></div>
+                  <h3 class="fw-bold text-danger" id="issuesFound">0</h3>
+                  <p class="text-muted mb-0">Issues Found</p>
+                </div>
+              </div>
+
+              <div class="col-6 col-md-3">
+                <div class="studio-card p-4 text-center h-100">
+                  <div class="mb-2"><i class="bi bi-shield-exclamation fs-2 text-warning"></i></div>
+                  <h3 class="fw-bold text-warning" id="criticalIssues">0</h3>
+                  <p class="text-muted mb-0">Critical Issues</p>
+                </div>
+              </div>
+
+              <div class="col-6 col-md-3">
+                <div class="studio-card p-4 text-center h-100 position-relative">
+                  <div class="mb-2"><i class="bi bi-bar-chart-line fs-2 text-primary"></i></div>
+                  <h3 class="fw-bold text-primary" id="qualityScore">0%</h3>
+                  <p class="text-muted mb-0">Quality Score</p>
+                  <span class="grade-badge position-absolute" id="gradeBadge"
+                        style="top:12px;right:12px;">A</span>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- AI Summary Banner -->
+            <div id="aiSummaryBanner" class="hidden ai-summary-banner mb-4">
+              <i class="bi bi-stars me-2 text-warning"></i>
+              <span id="aiSummaryText"></span>
+            </div>
+
+            <!-- Phase Tabs -->
+            <ul class="nav nav-pills mb-4 justify-content-center border-bottom pb-3" id="dynamicTabs"></ul>
+
+            <!-- Tab Content -->
+            <div id="tabContentBox" class="result-section animate-pop"></div>
+
+            <!-- Phase Navigation -->
+            <div class="d-flex justify-content-between mt-5">
+              <button class="btn btn-light rounded-pill px-4 fw-bold" id="btnPrev" onclick="changePhase(-1)">
+                <i class="bi bi-arrow-left me-2"></i>Previous
+              </button>
+              <button class="create-btn" id="btnNext" onclick="changePhase(1)">
+                Next Phase<i class="bi bi-arrow-right ms-2"></i>
+              </button>
+            </div>
+
+          </div>
+          <!-- /#resultContent -->
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- /#uploadView -->
+
+</div>
+<!-- /#container -->
+
+<!-- ═══════════════════════════════════════════
+     ERROR MODAL
+════════════════════════════════════════════ -->
+<div class="modal fade" id="errorModal" tabindex="-1">
+  <div class="modal-dialog modal-sm modal-dialog-centered">
+    <div class="modal-content border-0 shadow-lg" style="border-radius:20px;">
+      <div class="modal-body text-center p-4">
+        <div class="mb-3"><i class="bi bi-exclamation-circle text-danger" style="font-size:2.5rem;"></i></div>
+        <h5 class="fw-bold">Validation Failed</h5>
+        <p class="text-muted small mb-4" id="errorModalMessage">
+          Unable to validate the uploaded SRS document.
+        </p>
+        <button class="btn btn-success w-100 py-2 rounded-pill fw-bold"
+                data-bs-dismiss="modal"
+                style="background-color:var(--accent-main);border:none;">
+          Try Again
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/static/js/SrsValidation.js?v=3"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  // Animate progress bars on dashboard
+  document.querySelectorAll('.progress-bar-fill').forEach(bar => {
+    const w = bar.dataset.width + '%';
+    bar.style.width = '0%';
+    setTimeout(() => { bar.style.width = w; }, 200);
+  });
+});
+</script>
+
+</body>
+</html>
