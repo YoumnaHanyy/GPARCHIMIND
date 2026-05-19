@@ -20,3 +20,5 @@ results/checkpoint-500
 results_binary/checkpoint-500
 
 data/outputs
+Tests
+.vscode
