@@ -603,6 +603,12 @@ generateBtn.disabled = true;
   id="downloadBtn" onclick="downloadCodeSKELETON()">
               <i class="bi bi-download"></i> Download .zip
             </button>
+             <button
+      class="code-action-btn skeleton-main-btn"
+      onclick="downloadFinalReport()">
+      <i class="bi bi-file-earmark-pdf-fill"></i>
+      Final Report
+    </button>
           </div>
         </div>
 
@@ -1334,4 +1340,27 @@ function regenerateCode() {
 
 function openProject(projectId) {
     window.location.href = `/project/${projectId}`;
+}
+
+
+async function downloadFinalReport() {
+
+  const response = await fetch(
+    `/generate-final-report/${extractedData.project_id}`
+  );
+
+  const blob = await response.blob();
+
+  const url = window.URL.createObjectURL(blob);
+
+  const a = document.createElement("a");
+
+  a.href = url;
+  a.download = "Final_Report.pdf";
+
+  document.body.appendChild(a);
+
+  a.click();
+
+  a.remove();
 }

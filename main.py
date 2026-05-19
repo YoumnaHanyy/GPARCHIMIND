@@ -1168,30 +1168,44 @@ def download_validation_report():
         }
     )
 
+from application.extraction.reporting.final_report_generator import generate_last_report
+@app.get("/generate-final-report/{project_id}")
+def generate_final_report(project_id: str):
 
-@app.get("/download-verification-report")
-def download_verification_report():
-    """
-    Serve the architecture verification PDF.
-    Returns the success report when verification passed, or the
-    'problems' report when verification failed. Whichever exists
-    on disk is the one returned.
-    """
-    success_path = "data/outputs/architecture_verification_report.pdf"
-    problems_path = "data/outputs/architecture_verification_problems.pdf"
-    if os.path.exists(success_path):
-        path, filename = success_path, "architecture_verification_report.pdf"
-    elif os.path.exists(problems_path):
-        path, filename = problems_path, "architecture_verification_problems.pdf"
-    else:
-        raise HTTPException(
-            status_code=404,
-            detail="Verification report not found. Run verification first."
+    project = db.projects.find_one({
+        "project_id": project_id
+    })
+
+    frs = list(
+        db.fr_extracted.find(
+            {"project_id": project_id},
+            {"_id": 0}
         )
+    )
+
+    nfrs = list(
+        db.nfr_predictions.find(
+            {"project_id": project_id},
+            {"_id": 0}
+        )
+    )
+
+    hybrid = db.hybrid_method.find_one({
+        "project_id": project_id
+    })
+
+    phase4 = generate_phase4(project_id)
+
+    pdf_path = generate_last_report(
+        project,
+        frs,
+        nfrs,
+        hybrid,
+        phase4
+    )
+
     return FileResponse(
-        path=path,
-        media_type="application/pdf",
-        headers={
-            "Content-Disposition": f"inline; filename={filename}"
-        }
+        path=pdf_path,
+        filename="final_report.pdf",
+        media_type="application/pdf"
     )
