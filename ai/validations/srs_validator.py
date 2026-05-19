@@ -202,25 +202,59 @@ class SRSValidator:
 
     def extract_project_name(self, text: str) -> str:
         """
-        Try to extract the project/system name from the SRS header.
-        Looks for patterns like 'for <SystemName>' or lines that look
-        like a document title (short, capitalised, near the top).
+        Extract the SRS document title (system/project name).
+        Handles cases where the title spans two lines:
+          "Software Requirements Specification for"
+          "Gestify"   ← this is the actual name
         """
         lines = [l.strip() for l in text.split("\n") if l.strip()]
 
-        # Pattern: "Software Requirements Specification for <Name>"
-        for line in lines[:30]:
+        skip_patterns = re.compile(
+            r'\b(supervised|prepared|submitted|by|dr\.|eng\.|prof\.|university|'
+            r'faculty|department|january|february|march|april|may|june|july|'
+            r'august|september|october|november|december|\d{4})\b',
+            re.IGNORECASE
+        )
+
+        # Pattern 1: "SRS/Specification for <Name>" — name on SAME line
+        for line in lines[:40]:
             match = re.search(
-                r"(?:for|of|:)\s+([A-Z][^\n]{3,60})",
+                r"(?:specification|srs|requirements)[^\n]*\bfor\b\s+([A-Z][^\n]{2,60})",
                 line,
                 re.IGNORECASE
             )
             if match:
-                return match.group(1).strip()
+                candidate = match.group(1).strip()
+                if candidate and not skip_patterns.search(candidate):
+                    return candidate
 
-        # Fallback: first short capitalised line
-        for line in lines[:15]:
-            if 5 < len(line) < 80 and line[0].isupper():
+        # Pattern 2: "... for" at end of line → name is on the NEXT line
+        for i, line in enumerate(lines[:40]):
+            if line.lower().rstrip().endswith("for"):
+                if i + 1 < len(lines):
+                    next_line = lines[i + 1].strip()
+                    # Skip if it looks like a person's name (exactly 2 words, common name patterns)
+                    is_person_name = bool(re.match(
+                        r'^(Dr|Eng|Prof|Mr|Mrs|Ms)\.?\s', next_line, re.I
+                    ))
+                    if (2 < len(next_line) < 80
+                            and not skip_patterns.search(next_line)
+                            and not is_person_name):
+                        return next_line
+
+        # Pattern 3: Line containing "System" or "Software" near top
+        for line in lines[:20]:
+            if (re.search(r'\b(system|software|application|platform)\b', line, re.I)
+                    and 5 < len(line) < 80
+                    and not skip_patterns.search(line)):
+                return line
+
+        # Pattern 4: First short capitalised line that isn't a name/date
+        for line in lines[:20]:
+            if (5 < len(line) < 60
+                    and line[0].isupper()
+                    and not skip_patterns.search(line)
+                    and not re.match(r'^[A-Z][a-z]+ [A-Z][a-z]+', line)):
                 return line
 
         return "Unknown Project"
