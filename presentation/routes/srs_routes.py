@@ -26,6 +26,7 @@ from fastapi import APIRouter, UploadFile, Request, File, Form
 from fastapi.responses import FileResponse
 from application.extraction.extraction_service import process_srs
 from application.extraction.adl.json_to_acme import convert_to_acme
+from application.extraction.adl.json_to_acme import convert_to_acme
 from ai.inference.predict_type_level import predict_and_save_nfr, predict_level_for_text
 from infrastructure.repositories.code_skeleton_repository import (
     save_code_skeleton
@@ -60,6 +61,11 @@ from infrastructure.repositories.weighted_repository import save_weighted_result
 from infrastructure.repositories.nfr_dataset_repository import NFRPredictionRepository
 from infrastructure.repositories.srs_repository import SRSRepository
 from infrastructure.repositories.human_feedback_repository import save_new_confirmed_nfr
+from infrastructure.repositories.project_repo import get_user_adl_projects
+from infrastructure.repositories.project_repo import get_project
+from infrastructure.repositories.ADL_repository import save_architecture_report_pdf
+from infrastructure.repositories.validation_report_repository import save_validation_report_pdf
+
 from infrastructure.repositories.project_repo import get_user_adl_projects
 from infrastructure.repositories.project_repo import get_project
 from infrastructure.repositories.ADL_repository import save_architecture_report_pdf
@@ -1496,3 +1502,432 @@ async def update_progress(request: Request):
     )
 
     return {"status": "ok"}
+
+
+
+
+
+
+
+@router.post("/adl/generate")
+async def adl_generate(file: UploadFile = File(...), architecture: str = Form(...)):
+    try:
+        # 1) احفظي الملف مؤقتًا
+        file_bytes = await file.read()
+        temp_path = os.path.join(UPLOAD_DIR, f"adl_{uuid.uuid4().hex}.pdf")
+        with open(temp_path, "wb") as f:
+            f.write(file_bytes)
+
+        # 2) استخدمي نفس extraction الحقيقي
+        extraction_result = process_srs(
+            pdf_path=temp_path,
+            project_id="temp_proj",
+            hf_key=None
+        )
+
+        frs = extraction_result.get("functional", [])
+        nfrs = predict_and_save_nfr("temp_proj")
+        # 3) generate ADL
+        adl = ai_generate_architecture(
+            "UserSystem",
+            frs,
+            nfrs,
+            architecture
+        )
+
+        print("🔥 FRS:", frs)
+        print("🔥 NFRS:", nfrs)
+        print("🔥 ADL:", adl)
+
+        # (اختياري) تحويل لـ ACME
+        adl_acme = convert_to_acme(adl)
+
+        return {"adl": adl_acme}
+
+    except Exception as e:
+        return {"error": str(e)}
+    
+
+
+
+@router.post("/adl/generate-pdf")
+async def adl_generate_pdf(
+    request: Request,
+    file: UploadFile = File(...),
+    architecture: str = Form(...)
+):
+    try:
+
+        # =========================
+        # Require logged-in user
+        # =========================
+        user = request.session.get("user")
+
+        if not user:
+            return JSONResponse(
+                status_code=401,
+                content={
+                    "error": "User not authenticated"
+                }
+            )
+
+        user_id = user["id"]
+
+        # =========================
+        # Create unique project
+        # =========================
+        project_id = f"adl_{uuid.uuid4().hex[:8]}"
+
+        # =========================
+        # Save uploaded file
+        # =========================
+        file_bytes = await file.read()
+
+        temp_path = os.path.join(
+            UPLOAD_DIR,
+            f"{project_id}.pdf"
+        )
+
+        with open(temp_path, "wb") as f:
+            f.write(file_bytes)
+
+        # =========================
+        # Extract SRS
+        # =========================
+        extraction_result = process_srs(
+            pdf_path=temp_path,
+            project_id=project_id,
+            hf_key=None
+        )
+
+        # =========================
+        # Get project name
+        # =========================
+        project_name = extraction_result.get(
+            "project_name",
+            "Architecture Project"
+        )
+
+        # =========================
+        # Create project in DB
+        # =========================
+        create_project(
+            project_id,
+            user_id,
+            project_name,
+            "adl_reusable"
+
+        )
+
+        # =========================
+        # Predict NFRs
+        # =========================
+        nfrs = predict_and_save_nfr(project_id)
+
+        frs = extraction_result.get("functional", [])
+
+        # =========================
+        # Generate ADL
+        # =========================
+        adl_result = ai_generate_architecture(
+            project_name,
+            frs,
+            nfrs,
+            architecture
+        )
+
+        # =========================
+        # Convert to ACME
+        # =========================
+        adl_acme = convert_to_acme(adl_result)
+
+        # =========================
+        # Save ACME file
+        # =========================
+        acme_path = os.path.join(
+            "data",
+            "outputs",
+            "architecture.acme"
+        )
+
+        with open(acme_path, "w", encoding="utf-8") as f:
+            f.write(adl_acme)
+
+        # =========================
+        # Save hybrid architecture result
+        # =========================
+        db.hybrid_method.update_one(
+            {"project_id": project_id},
+            {
+                "$set": {
+                    "project_id": project_id,
+                    "selected_architecture": architecture
+                }
+            },
+            upsert=True
+        )
+
+        # =========================
+        # Save project data
+        # =========================
+        save_project_data(project_id, {
+            "functional": frs,
+            "nfr_predictions": nfrs,
+            "selectedArchitecture": architecture
+        })
+
+        # =========================
+        # Generate PlantUML Views
+        # =========================
+        c4_puml = convert_to_c4_plantuml(adl_result)
+
+        process_puml = convert_to_process_view(adl_result)
+
+        deployment_puml = convert_to_deployment_view(adl_result)
+
+        usecase_puml = convert_to_usecase_view(adl_result)
+
+        outputs_dir = Path("data/outputs")
+        outputs_dir.mkdir(parents=True, exist_ok=True)
+
+        c4_file = outputs_dir / "architecture_c4.puml"
+        process_file = outputs_dir / "process_view.puml"
+        deployment_file = outputs_dir / "deployment_view.puml"
+        usecase_file = outputs_dir / "usecase_view.puml"
+
+        c4_file.write_text(c4_puml, encoding="utf-8")
+        process_file.write_text(process_puml, encoding="utf-8")
+        deployment_file.write_text(deployment_puml, encoding="utf-8")
+        usecase_file.write_text(usecase_puml, encoding="utf-8")
+
+        # =========================
+        # Render PNGs using PlantUML
+        # =========================
+        subprocess.run([
+            r"C:\Program Files\Java\jdk-24\bin\java.exe",
+            "-jar",
+            "C:\\plantuml\\plantuml.jar",
+            "-tpng",
+            "data/outputs/dfd_context.puml",
+            "data/outputs/process_view.puml",
+            "data/outputs/deployment_view.puml",
+            "data/outputs/architecture_c4.puml",
+            "data/outputs/usecase_view.puml"
+        ])
+
+        # =========================
+        # Generate FINAL REPORT
+        # =========================
+        pdf_path = generate_report(project_id)
+        with open(pdf_path, "rb") as pdf_file:
+              pdf_bytes = pdf_file.read()
+
+        save_architecture_report_pdf(
+            project_id,
+            pdf_bytes
+)
+# =========================
+        # RUN VALIDATION
+        # =========================
+        validation_result = run_validation(
+            adl_result
+        )
+
+        # =========================
+        # GENERATE VALIDATION PDF
+        # =========================
+        validation_pdf_path = generate_validation_pdf(
+            validation_result
+        )
+
+        # =========================
+        # READ VALIDATION PDF
+        # =========================
+        with open(validation_pdf_path, "rb") as f:
+            validation_pdf_bytes = f.read()
+            
+
+        # =========================
+        # SAVE VALIDATION REPORT
+        # =========================
+        save_validation_report_pdf(
+            project_id,
+            validation_pdf_bytes
+        )
+        print("VALIDATION PDF SAVED:", project_id)
+        
+        update_project_progress(
+    project_id,
+    100,
+    1
+)
+       
+
+        return FileResponse(
+            path=str(pdf_path),
+            filename="architecture_report.pdf",
+            media_type="application/pdf"
+        )
+
+    except Exception as e:
+        traceback.print_exc()
+
+        return JSONResponse(
+            status_code=500,
+            content={
+                "error": str(e)
+            }
+        )
+    
+
+
+@router.get("/adl-dashboard")
+async def adl_dashboard(request: Request):
+
+    user = request.session.get("user")
+
+    if not user:
+        return RedirectResponse("/Login")
+
+    projects = get_user_adl_projects(user["id"])
+
+    return templates.TemplateResponse(
+        "adl_dashboard.html",
+        {
+            "request": request,
+            "projects": projects,
+            "user": user
+        }
+    )
+
+
+
+@router.get("/adl-generator", response_class=HTMLResponse)
+async def adl_generator(request: Request):
+
+    return templates.TemplateResponse(
+        "adl_generator.html",
+        {
+            "request": request
+        }
+    )
+
+
+
+@router.get("/adl-project/{project_id}")
+async def open_adl_project(
+    request: Request,
+    project_id: str
+):
+
+    user = request.session.get("user")
+
+    if not user:
+        return RedirectResponse("/Login")
+
+    project = get_project(project_id)
+
+    if not project:
+        return HTMLResponse(
+            content="Project not found",
+            status_code=404
+        )
+
+    return templates.TemplateResponse(
+        "adl_project.html",
+        {
+            "request": request,
+            "project": project
+        }
+    )
+
+
+
+@router.get("/adl-project/{project_id}")
+async def open_adl_project(
+    request: Request,
+    project_id: str
+):
+
+    user = request.session.get("user")
+
+    if not user:
+        return RedirectResponse("/Login")
+
+    project = get_project(project_id)
+
+    if not project:
+        return HTMLResponse(
+            content="Project not found",
+            status_code=404
+        )
+
+    return templates.TemplateResponse(
+        "adl_project.html",
+        {
+            "request": request,
+            "project": project
+        }
+    )
+
+
+@router.get("/adl-project/{project_id}/download")
+async def download_adl_report(project_id: str):
+
+    report = db.architecture_reports.find_one({
+        "project_id": project_id
+    })
+
+    if not report:
+        return JSONResponse(
+            status_code=404,
+            content={"error": "PDF not found"}
+        )
+
+    pdf_bytes = report["report_pdf"]
+
+    temp_pdf = os.path.join(
+        "data",
+        "outputs",
+        f"{project_id}.pdf"
+    )
+
+    with open(temp_pdf, "wb") as f:
+        f.write(pdf_bytes)
+
+    return FileResponse(
+    path=temp_pdf,
+    media_type="application/pdf"
+)
+
+
+@router.get(
+    "/adl-project/{project_id}/validation-report"
+)
+async def open_validation_report(project_id: str):
+
+    report = db.validation_reports.find_one({
+        "project_id": project_id
+    })
+
+    if not report:
+        return JSONResponse(
+            status_code=404,
+            content={"error": "Validation report not found"}
+        )
+
+    pdf_bytes = report["report_pdf"]
+
+    temp_pdf = os.path.join(
+        "data",
+        "outputs",
+        f"{project_id}_validation.pdf"
+    )
+
+    with open(temp_pdf, "wb") as f:
+        f.write(pdf_bytes)
+
+    return FileResponse(
+        path=temp_pdf,
+        media_type="application/pdf"
+    )
