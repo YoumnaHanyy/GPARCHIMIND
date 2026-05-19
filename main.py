@@ -22,6 +22,7 @@ from infrastructure.repositories.weighted_repository import save_weighted_result
 from ai.inference.predict_type_level import predict_and_save_nfr, predict_level_for_text
 
 import traceback
+from infrastructure.repositories.ADL_repository import save_architecture_report_pdf, save_verification_report_pdf
 from fastapi.responses import JSONResponse
 from application.extraction.adl.verification.runner import run_verification
 from application.extraction.adl.verification.verification_report_generator import generate_verification_pdf
@@ -74,7 +75,10 @@ from service.retrain_service import merge_and_retrain
 from infrastructure.database import db
 from service.retrain_service import run_retrain_async
 from presentation.routes.download_routes import router as download_router
-
+from presentation.routes.srs_validation_routes import router as validation_router
+from ai.validations.srs_validator import SRSValidator
+from dotenv import load_dotenv
+load_dotenv() 
 def auto_retrain_loop():
     while True:
         time.sleep(86400)
@@ -116,6 +120,10 @@ extractor = SRSExtractor(
 app.include_router(
     srs_router,
     tags=["Extraction"]
+)
+app.include_router(
+    validation_router,
+    tags=["Validation"]
 )
 # ============================================================
 # Templates & Static Files
@@ -902,24 +910,25 @@ def generate_architecture(project_id: str):
     # ==========================================================
     # 4. VERIFICATION GATE
     # ==========================================================
-   # try:
-    #  verification_result = run_verification(arch)
-    #except Exception as e:
-    # raise HTTPException(
-     #   status_code=500,
-      #  detail=f"Verification crashed: {str(e)}"
-    #)
+    verification_result = {}
+    try:
+        verification_result = run_verification(arch)
+        print(f"[verify] run_verification status={verification_result.get('status')}", flush=True)
+        verification_pdf_path = generate_verification_pdf(verification_result)
+        print(f"[verify] PDF generated at: {verification_pdf_path}", flush=True)
+        with open(verification_pdf_path, "rb") as _vf:
+            _vbytes = _vf.read()
+        print(f"[verify] PDF bytes read: {len(_vbytes)}", flush=True)
 
-    #verification_result = run_verification(arch)
+        save_verification_report_pdf(project_id, _vbytes)
+        print("[verify] verification report saved to MongoDB successfully", flush=True)
+    except Exception as e:
+        import traceback
+        print(f"[verify] ERROR — verification report NOT saved: {e}", flush=True)
+        traceback.print_exc()
 
-    #if verification_result["status"] != "VERIFIED":
-     #raise HTTPException(
-      #  status_code=400,
-       # detail="Architecture verification failed. Please fix issues before generating ADL."
-    #)
 
-# Generate verification report ONLY on success (optional)
-   # generate_verification_pdf(verification_result)
+
 
 
     # ==========================================================
@@ -945,7 +954,8 @@ def generate_architecture(project_id: str):
 
     with open("data/outputs/architecture.validation.json", "w", encoding="utf-8") as f:
        json.dump(validation_result, f, indent=2)
-
+    with open("data/outputs/architecture.verification.json", "w", encoding="utf-8") as f:
+        json.dump(verification_result, f, indent=2)
 
     acme = convert_to_acme(arch)
     with open("data/outputs/architecture.acme", "w", encoding="utf-8") as f:
@@ -985,7 +995,7 @@ def generate_architecture(project_id: str):
     )
 
     subprocess.run([
-        r"C:\Program Files\Java\jdk-21\bin\java.exe",
+        r"C:\Program Files\Java\jdk-24\bin\java.exe",
         "-jar",
         PLANTUML_JAR,
         "-tpng",
@@ -1156,4 +1166,46 @@ def download_validation_report():
         headers={
             "Content-Disposition": "inline; filename=architecture_validation_report.pdf"
         }
+    )
+
+from application.extraction.reporting.final_report_generator import generate_last_report
+@app.get("/generate-final-report/{project_id}")
+def generate_final_report(project_id: str):
+
+    project = db.projects.find_one({
+        "project_id": project_id
+    })
+
+    frs = list(
+        db.fr_extracted.find(
+            {"project_id": project_id},
+            {"_id": 0}
+        )
+    )
+
+    nfrs = list(
+        db.nfr_predictions.find(
+            {"project_id": project_id},
+            {"_id": 0}
+        )
+    )
+
+    hybrid = db.hybrid_method.find_one({
+        "project_id": project_id
+    })
+
+    phase4 = generate_phase4(project_id)
+
+    pdf_path = generate_last_report(
+        project,
+        frs,
+        nfrs,
+        hybrid,
+        phase4
+    )
+
+    return FileResponse(
+        path=pdf_path,
+        filename="final_report.pdf",
+        media_type="application/pdf"
     )

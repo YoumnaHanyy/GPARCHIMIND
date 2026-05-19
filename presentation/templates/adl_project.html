@@ -1,0 +1,511 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>ADL Workspace</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Fira+Code:wght@300;400;500&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --green-dark:   #0f6b4f;
+      --green-mid:    #138a64;
+      --green-light:  #1aaa7a;
+      --green-accent: #10c97d;
+      --green-pale:   #e6f7f1;
+      --green-mist:   #f0faf6;
+
+      --bg:           #f5f7f6;
+      --surface:      #ffffff;
+      --border:       #dde8e3;
+      --border-dark:  #b8d4c8;
+      --text:         #0d1f18;
+      --text-mid:     #3a5a4a;
+      --text-dim:     #7a9e8e;
+
+      --shadow-sm: 0 1px 3px rgba(15,107,79,.07), 0 1px 2px rgba(15,107,79,.04);
+      --shadow-md: 0 4px 16px rgba(15,107,79,.10), 0 2px 6px rgba(15,107,79,.06);
+      --shadow-lg: 0 12px 40px rgba(15,107,79,.14), 0 4px 12px rgba(15,107,79,.08);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      min-height: 100vh;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: radial-gradient(circle, rgba(15,107,79,.12) 1px, transparent 1px);
+      background-size: 28px 28px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── HEADER ── */
+    .adl-header {
+      position: relative;
+      z-index: 100;
+      background: var(--green-dark);
+      height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2.5rem;
+      box-shadow: 0 2px 12px rgba(15,107,79,.3);
+    }
+
+    .adl-header img { height: 64px; width: auto; }
+
+    .back-btn {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: .8rem;
+      font-weight: 600;
+      letter-spacing: .04em;
+      color: rgba(255,255,255,.9);
+      border: 1.5px solid rgba(255,255,255,.35);
+      background: transparent;
+      padding: .5rem 1.3rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all .2s;
+    }
+    .back-btn:hover {
+      background: rgba(255,255,255,.12);
+      border-color: rgba(255,255,255,.65);
+      color: #fff;
+    }
+
+    /* ── PAGE WRAP ── */
+    .page-wrap {
+      position: relative;
+      z-index: 1;
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 3rem 1.5rem 5rem;
+    }
+
+    /* ── BREADCRUMB ── */
+    .breadcrumb-bar {
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+      font-size: .72rem;
+      font-weight: 600;
+      color: var(--text-dim);
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      margin-bottom: 1.8rem;
+      animation: fadeUp .4s ease both;
+    }
+    .breadcrumb-bar .active { color: var(--green-light); }
+
+    /* ── PROJECT CARD ── */
+    .project-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2.4rem 2.8rem;
+      margin-bottom: 2rem;
+      box-shadow: var(--shadow-md);
+      position: relative;
+      overflow: hidden;
+      animation: fadeUp .45s ease both;
+    }
+
+    .project-card::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 4px;
+      background: linear-gradient(180deg, var(--green-accent), var(--green-dark));
+      border-radius: 16px 0 0 16px;
+    }
+
+    .project-card::after {
+      content: '';
+      position: absolute;
+      top: -50px; right: -50px;
+      width: 220px; height: 220px;
+      background: radial-gradient(circle, rgba(16,201,125,.06) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .project-eyebrow {
+      font-size: .67rem;
+      font-weight: 700;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      color: var(--green-light);
+      margin-bottom: .7rem;
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+    }
+    .project-eyebrow::before {
+      content: '';
+      width: 18px; height: 2px;
+      background: var(--green-accent);
+      border-radius: 2px;
+    }
+
+    .project-title {
+      font-size: clamp(1.45rem, 2.8vw, 2rem);
+      font-weight: 800;
+      color: var(--text);
+      letter-spacing: -.03em;
+      margin-bottom: 1.8rem;
+      line-height: 1.2;
+    }
+
+    .stats-row {
+      display: flex;
+      gap: 0;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .stat-cell {
+      flex: 1;
+      padding: 0 1.8rem;
+      border-right: 1px solid var(--border);
+    }
+    .stat-cell:first-child { padding-left: 0; }
+    .stat-cell:last-child { border-right: none; }
+
+    .stat-label {
+      font-size: .67rem;
+      font-weight: 600;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin-bottom: .35rem;
+    }
+
+    .stat-val {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .stat-val .num {
+      font-family: 'Fira Code', monospace;
+      font-size: 1.4rem;
+      font-weight: 500;
+      color: var(--green-mid);
+    }
+
+    /* ── SECTION HEADER ── */
+    .section-head {
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+      margin-bottom: 1.2rem;
+      animation: fadeUp .5s ease .1s both;
+    }
+    .section-head h6 {
+      font-size: .67rem;
+      font-weight: 700;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin: 0;
+      white-space: nowrap;
+    }
+    .section-head::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* ── ACTION CARDS ── */
+    .actions-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.2rem;
+    }
+    @media (max-width: 620px) { .actions-grid { grid-template-columns: 1fr; } }
+
+    .action-card {
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      border-radius: 14px;
+      padding: 2rem 2rem 1.8rem;
+      display: flex;
+      flex-direction: column;
+      gap: .9rem;
+      box-shadow: var(--shadow-sm);
+      transition: box-shadow .25s, border-color .25s, transform .25s;
+      animation: fadeUp .5s ease both;
+      position: relative;
+      overflow: hidden;
+    }
+    .action-card:nth-child(2) { animation-delay: .1s; }
+
+    .action-card::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--green-accent), var(--green-dark));
+      border-radius: 0 0 14px 14px;
+      opacity: 0;
+      transition: opacity .25s;
+    }
+
+    .action-card:hover {
+      border-color: var(--green-accent);
+      box-shadow: var(--shadow-lg);
+      transform: translateY(-4px);
+    }
+    .action-card:hover::after { opacity: 1; }
+
+    .card-icon-wrap {
+      width: 48px; height: 48px;
+      background: var(--green-mist);
+      border: 1.5px solid var(--green-pale);
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      transition: background .25s, border-color .25s;
+    }
+    .action-card:hover .card-icon-wrap {
+      background: var(--green-pale);
+      border-color: var(--border-dark);
+    }
+
+    .card-icon-wrap svg {
+      width: 22px; height: 22px;
+      stroke: var(--green-mid);
+      fill: none;
+      stroke-width: 1.8;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .card-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: -.02em;
+    }
+
+    .card-desc {
+      font-size: .8rem;
+      color: var(--text-dim);
+      line-height: 1.65;
+      font-weight: 400;
+      flex: 1;
+    }
+
+    .view-btn {
+      align-self: flex-start;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: .8rem;
+      font-weight: 700;
+      letter-spacing: .02em;
+      color: #fff;
+      background: var(--green-dark);
+      border: none;
+      padding: .65rem 1.5rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background .2s, box-shadow .2s, transform .15s;
+      display: flex;
+      align-items: center;
+      gap: .4rem;
+    }
+    .view-btn svg {
+      width: 14px; height: 14px;
+      stroke: currentColor; fill: none;
+      stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round;
+      transition: transform .2s;
+    }
+    .view-btn:hover {
+      background: var(--green-light);
+      box-shadow: 0 4px 14px rgba(15,107,79,.28);
+      transform: translateY(-1px);
+    }
+    .view-btn:hover svg { transform: translateX(3px); }
+    .view-btn:active { transform: translateY(0); }
+
+    /* ── MODAL ── */
+    .modal-content {
+      border: 1px solid var(--border) !important;
+      border-radius: 16px !important;
+      overflow: hidden;
+      box-shadow: var(--shadow-lg) !important;
+      height: 92vh;
+      display: flex !important;
+      flex-direction: column !important;
+    }
+
+    .modal-topbar {
+      background: var(--green-dark);
+      padding: 1rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+
+    .modal-topbar-left {
+      display: flex;
+      align-items: center;
+      gap: .65rem;
+    }
+
+    .modal-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--green-accent);
+      animation: pulse 2.2s infinite;
+    }
+
+    .modal-topbar-title {
+      font-size: .75rem;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.9);
+    }
+
+    .modal-close-btn {
+      width: 30px; height: 30px;
+      border-radius: 50%;
+      border: 1.5px solid rgba(255,255,255,.25);
+      background: transparent;
+      color: rgba(255,255,255,.7);
+      cursor: pointer;
+      font-size: .85rem;
+      display: flex; align-items: center; justify-content: center;
+      transition: background .2s, color .2s;
+    }
+    .modal-close-btn:hover { background: rgba(255,255,255,.15); color: #fff; }
+
+    .modal-iframe-wrap { flex: 1; overflow: hidden; }
+    .modal-iframe-wrap iframe { width: 100%; height: 100%; border: none; display: block; }
+    .modal-dialog { max-width: 1120px; }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50%       { opacity: .4; transform: scale(.85); }
+    }
+  </style>
+</head>
+
+<body>
+
+<header class="adl-header">
+  <img src="/static/images/Logo_b&w.png" alt="ArchiMind">
+  <button class="back-btn" onclick="window.location.href='/adl-dashboard'">← Back</button>
+</header>
+
+<div class="page-wrap">
+
+  <div class="breadcrumb-bar">
+    ADL Dashboard <span style="color:var(--border-dark);margin:0 .2rem">/</span>
+    ADL Projects <span style="color:var(--border-dark);margin:0 .2rem">/</span>
+    <span class="active">Project</span>
+    
+  </div>
+
+  <!-- PROJECT CARD -->
+  <div class="project-card">
+    <div class="project-eyebrow">Project Details</div>
+    <h2 class="project-title">{{ project.project_name }}</h2>
+
+    <div class="stats-row">
+      <div class="stat-cell">
+        <div class="stat-label">Architecture</div>
+        <div class="stat-val">{{ project.selectedArchitecture }}</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-label">Functional Requirements</div>
+        <div class="stat-val"><span class="num">{{ project.functional|length }}</span></div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-label">NFR Predictions</div>
+        <div class="stat-val"><span class="num">{{ project.nfr_predictions|length }}</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ACTIONS -->
+  <div class="section-head"><h6>Documents</h6></div>
+
+  <div class="actions-grid">
+
+    <div class="action-card">
+      <div class="card-icon-wrap">
+        <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><line x1="10" y1="9" x2="8" y2="9"/></svg>
+      </div>
+      <div class="card-title">Architecture Blueprint</div>
+      <div class="card-desc">View the generated ADL report containing the full architecture design and component documentation.</div>
+      <button class="view-btn" onclick="openPDF('{{ project.project_id }}')">
+        View ADL
+        <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </button>
+    </div>
+
+    <div class="action-card">
+      <div class="card-icon-wrap">
+        <svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+      </div>
+      <div class="card-title">Validation Report</div>
+      <div class="card-desc">Review the architecture validation analysis including trade-off assessments and quality recommendations.</div>
+      <button class="view-btn" onclick="openValidationPDF('{{ project.project_id }}')">
+        View Validation
+        <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </button>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- PDF MODAL -->
+<div class="modal fade" id="pdfModal" tabindex="-1">
+  <div class="modal-dialog modal-xl modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-topbar">
+        <div class="modal-topbar-left">
+          <div class="modal-dot"></div>
+          <span class="modal-topbar-title" id="modalTitle">ADL Architecture Blueprint</span>
+        </div>
+        <button class="modal-close-btn" data-bs-dismiss="modal">✕</button>
+      </div>
+      <div class="modal-iframe-wrap">
+        <iframe id="pdfViewer"></iframe>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  function openPDF(projectId) {
+    document.getElementById('modalTitle').textContent = 'ADL Architecture Blueprint';
+    document.getElementById('pdfViewer').src = `/adl-project/${projectId}/download`;
+    new bootstrap.Modal(document.getElementById('pdfModal')).show();
+  }
+  function openValidationPDF(projectId) {
+    document.getElementById('modalTitle').textContent = 'Validation Report';
+    document.getElementById('pdfViewer').src = `/adl-project/${projectId}/validation-report`;
+    new bootstrap.Modal(document.getElementById('pdfModal')).show();
+  }
+</script>
+
+</body>
+</html>
