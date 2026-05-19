@@ -1146,115 +1146,332 @@ async def generate_skeleton(request: Request):
 async def confirm_nfr(request: Request):
     """
     Called after user confirms low confidence NFRs
-    Updates BOTH MongoDB and JSON file, then triggers architecture analysis
+    Updates BOTH MongoDB and JSON file,
+    then triggers architecture analysis
     """
+
     body = await request.json()
 
     project_id = body.get("project_id")
+
     items = body.get("items", [])
 
     if not project_id:
+
         return JSONResponse(
+
             status_code=400,
-            content={"error": "project_id is required"}
+
+            content={
+                "error": "project_id is required"
+            }
         )
 
     if not items:
+
         return JSONResponse(
+
             status_code=400,
-            content={"error": "No NFR items provided"}
+
+            content={
+                "error": "No NFR items provided"
+            }
         )
 
     confirmed_count = 0
 
+    # ======================================================
+    # SAVE CONFIRMED NFRS
+    # ======================================================
+
     for it in items:
+
         description = it.get("description")
+
         confirmed_type = it.get("type")
 
         if not description or not confirmed_type:
             continue
 
-        # Predict level for confirmed type
-        predicted_level = predict_level_for_text(description)
-
-        # Update BOTH MongoDB and JSON file
-        success = NFRPredictionRepository.confirm_nfr(
-            project_id=project_id,
-            description=description,
-            confirmed_type=confirmed_type,
-            predicted_level=predicted_level
+        predicted_level = predict_level_for_text(
+            description
         )
 
+        success = \
+            NFRPredictionRepository.confirm_nfr(
+
+                project_id=project_id,
+
+                description=description,
+
+                confirmed_type=confirmed_type,
+
+                predicted_level=predicted_level
+            )
+
         if success:
-           confirmed_count += 1
-           save_new_confirmed_nfr({
+
+            confirmed_count += 1
+
+            save_new_confirmed_nfr({
+
                 "description": description,
+
                 "confirmed_type": confirmed_type,
+
                 "predicted_level": predicted_level
-        })
-    
+            })
+
+    # ======================================================
+    # AUTO RETRAIN
+    # ======================================================
+
     count = db.new_nfr_confirmed.count_documents({})
 
     print(f"📊 New feedback count: {count}")
 
     if count >= 3:
+
         run_retrain_async()
-    # Get ALL predictions from MongoDB (high confidence + confirmed)
-    all_nfrs = NFRPredictionRepository.get_by_project(project_id)
 
-    print(f"📊 Total NFRs after confirmation: {len(all_nfrs)}")
+    # ======================================================
+    # GET ALL NFRS
+    # ======================================================
 
-    # Now run architecture analysis with complete NFR set
-    functional_result = execute_functional_method(project_id)
-    
-    freq_norm, must_norm, importance = compute_nfr_statistics(all_nfrs)
-    
-    ordinal_result = execute_ordinal_method(project_id)
-    binary_result = execute_binary_method(project_id)
-    weighted_result = execute_weighted_method(
-        freq_norm=freq_norm,
-        must_norm=must_norm,
-        importance=importance
+    all_nfrs = \
+        NFRPredictionRepository.get_by_project(
+            project_id
+        )
+
+    print(
+        f"📊 Total NFRs after confirmation: {len(all_nfrs)}"
     )
-    
-    hybrid_result = execute_hybrid_method(
+
+    # ======================================================
+    # FUNCTIONAL METHOD
+    # ======================================================
+
+    functional_result = \
+        execute_functional_method(
+            project_id
+        )
+
+    # ======================================================
+    # NFR STATISTICS
+    # ======================================================
+
+    freq_norm, must_norm, importance = \
+        compute_nfr_statistics(
+            all_nfrs
+        )
+
+    # ======================================================
+    # ORDINAL METHOD
+    # ======================================================
+
+    ordinal_result = \
+        execute_ordinal_method(
+            project_id
+        )
+
+    # ======================================================
+    # TYPE MAPPING
+    # ======================================================
+
+    TYPE_MAPPING = {
+
+        "Performance": "PE",
+
+        "Scalability": "SC",
+
+        "Maintainability": "MN",
+
+        "Availability": "A",
+
+        "Security": "SE",
+
+        "Usability": "US",
+
+        "Portability": "PO",
+
+        "Reliability": "O",
+
+        "Modularity": "MN",
+
+        "Interoperability": "SC"
+    }
+
+    # ======================================================
+    # BUILD BINARY VECTOR
+    # ======================================================
+
+    binary_vector = {
+
+        "PE": 0,
+        "SC": 0,
+        "MN": 0,
+        "A": 0,
+        "SE": 0,
+        "US": 0,
+        "PO": 0,
+        "O": 0
+    }
+
+    for pred in all_nfrs:
+
+        original_type = pred.get(
+            "predicted_type",
+            ""
+        )
+
+        mapped_type = TYPE_MAPPING.get(
+            original_type,
+            ""
+        )
+
+        if mapped_type in binary_vector:
+
+            binary_vector[mapped_type] = 1
+
+    print("BINARY VECTOR:", binary_vector)
+
+    # ======================================================
+    # BINARY METHOD
+    # ======================================================
+
+    binary_result = \
+        execute_binary_method(
+
+            project_id,
+
+            binary_vector
+        )
+
+    # ======================================================
+    # WEIGHTED METHOD
+    # ======================================================
+
+    weighted_result = \
+        execute_weighted_method(
+
+            freq_norm=freq_norm,
+
+            must_norm=must_norm,
+
+            importance=importance
+        )
+
+    save_weighted_result(
+
         project_id,
-        functional_result,
-        ordinal_result,
-        binary_result,
+
         weighted_result
     )
 
-    save_weighted_result(project_id, weighted_result)
+    # ======================================================
+    # HYBRID METHOD
+    # ======================================================
 
-    user_id = request.session.get("user", {}).get("id", "guest")
-    phase4 = generate_phase4(project_id)
+    hybrid_result = \
+        execute_hybrid_method(
+
+            project_id,
+
+            functional_result,
+
+            ordinal_result,
+
+            binary_result,
+
+            weighted_result
+        )
 
     print("HYBRID RESULT:", hybrid_result)
-    project_doc = db.projects.find_one({"project_id": project_id}) or {}
 
-    save_project_data(project_id, {
-    "functional": project_doc.get("functional", []),   # ✅ FIX
-    "nfr_predictions": all_nfrs,
-    "selectedArchitecture": hybrid_result,
-    "functional_method": functional_result,
-    "ordinal_method": ordinal_result,
-    "binary_method": binary_result,
-    "weighted_method": weighted_result,
-    "hybrid_method": hybrid_result
-})
+    # ======================================================
+    # PHASE 4
+    # ======================================================
+
+    phase4 = generate_phase4(project_id)
+
+    # ======================================================
+    # SAVE PROJECT DATA
+    # ======================================================
+
+    project_doc = \
+        db.projects.find_one({
+
+            "project_id": project_id
+
+        }) or {}
+
+    save_project_data(
+
+        project_id,
+
+        {
+
+            "functional":
+                project_doc.get(
+                    "functional",
+                    []
+                ),
+
+            "nfr_predictions":
+                all_nfrs,
+
+            "selectedArchitecture":
+                hybrid_result,
+
+            "functional_method":
+                functional_result,
+
+            "ordinal_method":
+                ordinal_result,
+
+            "binary_method":
+                binary_result,
+
+            "weighted_method":
+                weighted_result,
+
+            "hybrid_method":
+                hybrid_result
+        }
+    )
+
+    # ======================================================
+    # RETURN RESPONSE
+    # ======================================================
+
     return {
-        "status": "ok",
-        "saved_count": confirmed_count,
-        "functional_method": functional_result,
-        "ordinal_method": ordinal_result.get("result"),
-        "binary_method": binary_result,
-        "weighted_method": weighted_result,
-        "hybrid_method": hybrid_result,
-        "nfr_predictions": clean_object_id(all_nfrs),
-        "phase4": phase4
-    }
 
+        "status": "ok",
+
+        "saved_count":
+            confirmed_count,
+
+        "functional_method":
+            functional_result,
+
+        "ordinal_method":
+            ordinal_result.get("result"),
+
+        "binary_method":
+            binary_result,
+
+        "weighted_method":
+            weighted_result,
+
+        "hybrid_method":
+            hybrid_result,
+
+        "nfr_predictions":
+            clean_object_id(all_nfrs),
+
+        "phase4":
+            phase4
+    }
 
 @router.post("/logout")
 async def logout(request: Request):
