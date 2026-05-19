@@ -70,6 +70,7 @@ from dotenv import load_dotenv
 import os
 import threading
 import time
+from concurrent.futures import ThreadPoolExecutor
 from service.retrain_service import merge_and_retrain
 from infrastructure.database import db
 from service.retrain_service import run_retrain_async
@@ -892,49 +893,37 @@ def generate_architecture(project_id: str):
     # ==========================================================
     # 3. Generate architecture
     # ==========================================================
+    t0 = time.time()
+    print("[generate] ai_generate_architecture START", flush=True)
     arch = ai_generate_architecture(
         system_name,
         functional_requirements,
         non_functional_requirements,
         selected_architecture
     )
+    print(f"[generate] ai_generate_architecture END elapsed={time.time()-t0:.2f}s", flush=True)
 
     # ==========================================================
-    # 4. VERIFICATION (non-blocking — always runs, never stops the pipeline)
+    # 4. VERIFICATION — run check only (PDF generated later in parallel)
     # ==========================================================
     verification_result = {}
+    t0 = time.time()
+    print("[generate] verification START", flush=True)
     try:
         verification_result = run_verification(arch)
-        print(f"[verify] run_verification status={verification_result.get('status')}", flush=True)
-
-        verification_pdf_path = generate_verification_pdf(verification_result)
-        print(f"[verify] PDF generated at: {verification_pdf_path}", flush=True)
-
-        with open(verification_pdf_path, "rb") as _vf:
-            _vbytes = _vf.read()
-        print(f"[verify] PDF bytes read: {len(_vbytes)}", flush=True)
-
-        save_verification_report_pdf(project_id, _vbytes)
-        print("[verify] verification report saved to MongoDB successfully", flush=True)
+        print(f"[generate] verification END status={verification_result.get('status')} elapsed={time.time()-t0:.2f}s", flush=True)
     except Exception as e:
-        import traceback
-        print(f"[verify] ERROR — verification report NOT saved: {e}", flush=True)
+        print(f"[generate] verification ERROR elapsed={time.time()-t0:.2f}s: {e}", flush=True)
         traceback.print_exc()
 
-
     # ==========================================================
-    # 5. VALIDATION GATE
+    # 5. VALIDATION — run check only (PDF generated later in parallel)
     # ==========================================================
-    # ==========================================================
-# 5. VALIDATION (SUCCESSFUL BUT NOT RETURNED)
-# ==========================================================
     validation_result = {}
-
     try:
-      validation_result = run_validation(arch)
-      generate_validation_pdf(validation_result)
+        validation_result = run_validation(arch)
     except Exception as e:
-      print("Validation skipped:", e)
+        print("Validation skipped:", e)
     # ==========================================================
     # 6. Persist architecture outputs
     # ==========================================================
@@ -977,7 +966,8 @@ def generate_architecture(project_id: str):
 
    
     with open("data/outputs/usecase_view.puml", "w", encoding="utf-8") as f:
-     f.write(uml) # ==========================================================
+        f.write(uml)
+    # ==========================================================
     # 8. Render diagrams (PlantUML → PNG)
     # ==========================================================
     PLANTUML_JAR = os.path.join(
@@ -987,6 +977,8 @@ def generate_architecture(project_id: str):
         "plantuml.jar"
     )
 
+    t0 = time.time()
+    print("[generate] PlantUML rendering START", flush=True)
     subprocess.run([
         r"C:\Program Files\Java\jdk-21\bin\java.exe",
         "-jar",
@@ -998,15 +990,64 @@ def generate_architecture(project_id: str):
         "data/outputs/architecture_c4.puml",
         "data/outputs/usecase_view.puml"
     ], check=True)
+    print(f"[generate] PlantUML rendering END elapsed={time.time()-t0:.2f}s", flush=True)
 
     # ==========================================================
-    # 9. Generate final architecture report
+    # 9. PARALLEL PDF GENERATION
+    # All three reports are independent at this point:
+    #   - ADL report  : needs PlantUML PNGs (written above) + DB
+    #   - Verification: needs verification_result dict only
+    #   - Validation  : needs validation_result dict only
     # ==========================================================
-    pdf_path = generate_report(project_id)
-    with open(pdf_path, "rb") as f:
-     pdf_bytes = f.read()
+    def _adl_pdf_task():
+        print("[PDF] ADL report generation started.", flush=True)
+        _pdf_path = generate_report(project_id)
+        with open(_pdf_path, "rb") as f:
+            _pdf_bytes = f.read()
+        save_architecture_report_pdf(project_id, _pdf_bytes)
+        print("[PDF] ADL report saved to MongoDB.", flush=True)
+        return _pdf_path
 
-    save_architecture_report_pdf(project_id, pdf_bytes)
+    def _verification_pdf_task():
+        print("[PDF] Verification report generation started.", flush=True)
+        try:
+            if not verification_result:
+                print("[PDF] Verification PDF skipped (no result).", flush=True)
+                return
+            _vpath = generate_verification_pdf(verification_result)
+            print(f"[PDF] Verification PDF generated at: {_vpath}", flush=True)
+            with open(_vpath, "rb") as vf:
+                _vbytes = vf.read()
+            print(f"[PDF] Verification PDF bytes read: {len(_vbytes)}", flush=True)
+            save_verification_report_pdf(project_id, _vbytes)
+            print("[PDF] Verification report saved to MongoDB.", flush=True)
+        except Exception as e:
+            print(f"[PDF] Verification PDF error: {e}", flush=True)
+            traceback.print_exc()
+
+    def _validation_pdf_task():
+        print("[PDF] Validation report generation started.", flush=True)
+        try:
+            if not validation_result:
+                print("[PDF] Validation PDF skipped (no result).", flush=True)
+                return
+            generate_validation_pdf(validation_result)
+            print("[PDF] Validation report generated.", flush=True)
+        except Exception as e:
+            print(f"[PDF] Validation PDF error: {e}", flush=True)
+
+    t0 = time.time()
+    print("[generate] parallel PDF generation START", flush=True)
+    with ThreadPoolExecutor(max_workers=3) as executor:
+        adl_future = executor.submit(_adl_pdf_task)
+        verify_future = executor.submit(_verification_pdf_task)
+        validate_future = executor.submit(_validation_pdf_task)
+
+    pdf_path = adl_future.result()
+    verify_future.result()
+    validate_future.result()
+    print(f"[generate] parallel PDF generation END elapsed={time.time()-t0:.2f}s", flush=True)
+
     # ==========================================================
     # 10. Return SUCCESS output only
     # ==========================================================

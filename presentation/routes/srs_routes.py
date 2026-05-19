@@ -108,13 +108,14 @@ async def extract_srs(request: Request, file: UploadFile = File(...)):
     try:
 
         if not file:
-            return JSONResponse(status_code=400, content={"error": "No file uploaded"})
-        # ✅ USE VALIDATION FUNCTION
-        validation_error = validate_pdf_file(file)
-        if validation_error:
+
             return JSONResponse(
+
                 status_code=400,
-                content={"error": validation_error}
+
+                content={
+                    "error": "No file uploaded"
+                }
             )
 
         # ==========================================
@@ -211,9 +212,20 @@ async def extract_srs(request: Request, file: UploadFile = File(...)):
         )
 
         if not extraction_result:
+            raise ValueError("process_srs returned empty result")
 
-            raise ValueError(
-                "process_srs returned empty result"
+        if extraction_result.get("extraction_failed"):
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "srs_verified": False,
+                    "error": "Functional Requirements extraction failed",
+                    "message": (
+                        "The system could not extract Functional Requirements "
+                        "due to an API error. Please retry in a few seconds."
+                    ),
+                    "details": extraction_result.get("details", ""),
+                },
             )
 
         # ==========================================
@@ -238,9 +250,18 @@ async def extract_srs(request: Request, file: UploadFile = File(...)):
             "guest"
         )
 
-        create_project(project_id, user_id, project_name)
-        # 3️⃣ Predict NFR Type + Level → Saves to BOTH MongoDB AND JSON
-        all_predictions =predict_and_save_nfr(project_id)
+        create_project(
+            project_id,
+            user_id,
+            project_name
+        )
+
+        # ==========================================
+        # PREDICT NFR TYPES + LEVELS
+        # ==========================================
+
+        all_predictions = \
+            predict_and_save_nfr(project_id)
 
         if not all_predictions:
 
@@ -463,7 +484,7 @@ async def extract_srs(request: Request, file: UploadFile = File(...)):
         # ==========================================
         # RETURN LOW CONFIDENCE
         # ==========================================
-
+        drift_result = {}
         return {
 
             "project_id":
