@@ -35,7 +35,7 @@ def predict_binary_architecture():
         )
         with torch.no_grad():
             output = model(**tokens)
-        return int(torch.argmax(output.logits).item())  # 👈 force int
+        return int(torch.argmax(output.logits).item()) 
 
     # =============================
     # 2️⃣ Build SRS binary vector

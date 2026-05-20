@@ -30,7 +30,7 @@ def apply_rules(features):
 
         total_matches = core_count + generic_count
 
-        # 🔥 FINAL STABLE LOGIC (بدل penalties القديمة)
+       
         if core_count >= 1:
             scores[pattern] = score
 
@@ -75,11 +75,11 @@ def normalize_scores(scores):
 
     max_score = max(values)
 
-    # 💣 الحالة دي معناها: مفيش منافسة (واحد بس > 0)
+   
     non_zero = [v for v in values if v > 0]
 
     if len(non_zero) <= 1:
-        return scores  # ❌ ما نعملش normalize
+        return scores  
 
     if max_score == 0:
         return scores

@@ -2,31 +2,50 @@ from .correctness import verify_correctness
 from .completeness import verify_completeness
 from .consistency import verify_consistency
 
+
 def run_verification(adl: dict):
-    correctness = verify_correctness(adl)
-    if correctness["status"] == "FAILED":
-        return {
-            "status": "NOT_VERIFIED",
-            "failed_layer": "correctness",
-            "details": correctness
-        }
 
-    completeness = verify_completeness(adl)
-    if completeness["status"] == "FAILED":
-        return {
-            "status": "NOT_VERIFIED",
-            "failed_layer": "completeness",
-            "details": completeness
-        }
-
-    consistency = verify_consistency(adl)
-    if consistency["status"] == "FAILED":
+    style = adl.get("style")
+    if not style:
         return {
             "status": "NOT_VERIFIED",
             "failed_layer": "consistency",
-            "details": consistency
+            "details": {
+                "layer": "consistency",
+                "status": "FAILED",
+                "issues": [
+                    {
+                        "rule": "MISSING_STYLE",
+                        "message": "Architecture style is required."
+                    }
+                ]
+            }
+        }
+    
+    correctness = verify_correctness(adl)
+    completeness = verify_completeness(adl)
+    consistency = verify_consistency(adl)
+
+    # Fold the missing-style issue into the consistency layer so the
+    # downstream report can render it consistently.
+    if style_issues:
+        consistency = {
+            "layer": "consistency",
+            "status": "FAILED",
+            "issues": style_issues + consistency.get("issues", [])
         }
 
+    layers = {
+        "correctness": correctness,
+        "completeness": completeness,
+        "consistency": consistency,
+    }
+
+    failed_layers = [name for name, result in layers.items()
+                     if result.get("status") == "FAILED"]
+
     return {
-        "status": "VERIFIED"
+        "status": "VERIFIED" if not failed_layers else "NOT_VERIFIED",
+        "failed_layers": failed_layers,
+        "layers": layers,
     }

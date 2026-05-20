@@ -5,6 +5,25 @@ from pydantic import BaseModel
 from fastapi import HTTPException
 from fastapi.responses import StreamingResponse
 import io
+from datetime import datetime
+from service.functional_service import execute_functional_method
+from service.ordinal_service import execute_ordinal_method
+
+from service.binary_service import execute_binary_method
+
+from service.weighted_service import execute_weighted_method
+
+from service.hybrid_service import execute_hybrid_method
+
+from service.nfr_stats_service import compute_nfr_statistics
+
+from infrastructure.repositories.weighted_repository import save_weighted_result
+
+from ai.inference.predict_type_level import predict_and_save_nfr, predict_level_for_text
+
+import traceback
+from infrastructure.repositories.ADL_repository import save_architecture_report_pdf, save_verification_report_pdf
+from fastapi.responses import JSONResponse
 from application.extraction.adl.verification.runner import run_verification
 from application.extraction.adl.verification.verification_report_generator import generate_verification_pdf
 from ai.inference.feature_extractor import generate_phase4
@@ -55,11 +74,6 @@ import time
 from service.retrain_service import merge_and_retrain
 from infrastructure.database import db
 from service.retrain_service import run_retrain_async
-from presentation.routes.srs_validation_routes import router as validation_router
-from ai.validations.srs_validator import SRSValidator
-from dotenv import load_dotenv
-load_dotenv()  # ← لازم تكون هنا قبل أي حاجة تانية
-
 
 def auto_retrain_loop():
     while True:
@@ -84,7 +98,7 @@ app = FastAPI(
     description="AI-driven Architecture Recommendation System",
     version="1.0.0"
 )
-
+app.include_router(download_router)
 app.add_middleware(
     SessionMiddleware,
     secret_key=os.getenv("SECRET_KEY", "super-secret-key-change-this-in-production"),
@@ -101,11 +115,6 @@ extractor = SRSExtractor(
 app.include_router(
     srs_router,
     tags=["Extraction"]
-)
-
-app.include_router(
-    validation_router,
-    tags=["Validation"]
 )
 # ============================================================
 # Templates & Static Files
@@ -250,6 +259,561 @@ async def get_all_users(request: Request):
             "users": enriched_users
         }
     )
+@app.get("/project/{project_id}", response_class=HTMLResponse)
+async def open_project(
+    request: Request,
+    project_id: str
+):
+
+    # ==========================================
+    # PROJECT
+    # ==========================================
+
+    project = db.projects.find_one(
+        {"project_id": project_id}
+    )
+
+    # ==========================================
+    # HYBRID RESULT ONLY
+    # ==========================================
+
+    hybrid_doc = db.hybrid_method.find_one(
+        {"project_id": project_id}
+    )
+
+    print("HYBRID DOC:", hybrid_doc)
+
+    # ==========================================
+    # REQUIREMENTS
+    # ==========================================
+
+    frs = list(
+        db.fr_extracted.find(
+            {"project_id": project_id},
+            {"_id": 0}
+        )
+    )
+
+    nfrs = list(
+        db.nfr_extracted.find(
+            {"project_id": project_id},
+            {"_id": 0}
+        )
+    )
+
+    # ==========================================
+    # HYBRID RESULTS
+    # ==========================================
+
+    hybrid_results = []
+
+    selected_architecture = "Unknown"
+
+    if hybrid_doc:
+
+        hybrid_results = hybrid_doc.get(
+            "top_architectures",
+            []
+        )
+
+        selected_architecture = hybrid_doc.get(
+            "selected_architecture",
+            "Unknown"
+        )
+
+    print("TOP HYBRID:", hybrid_results)
+
+    # ==========================================
+    # TEMPLATE
+    # ==========================================
+
+    return templates.TemplateResponse(
+
+        "project_dashboard.html",
+
+        {
+            "request": request,
+            "user": request.session.get("user"),
+            "project": project,
+            "frs": frs,
+            "nfrs": nfrs,
+
+            # 🔥 ONLY HYBRID
+            "hybrid_results": hybrid_results,
+            "selected_architecture": selected_architecture,
+            "requirement_drift":
+            project.get(
+                "requirement_drift"
+            )
+        }
+    )
+# ==========================================
+# RE-EVALUATE ARCHITECTURE
+# ==========================================
+# ==========================================
+# RE-EVALUATE ARCHITECTURE
+# ==========================================
+
+@app.post("/project/{project_id}/reevaluate")
+async def reevaluate_architecture(
+    request: Request,
+    project_id: str
+):
+
+    try:
+
+        body = await request.json()
+
+        new_frs = body.get("frs", [])
+        new_nfrs = body.get("nfrs", [])
+
+        print("NEW FRS:", new_frs)
+        print("NEW NFRS:", new_nfrs)
+
+        # ==========================================
+        # SAVE FUNCTIONAL REQUIREMENTS
+        # ==========================================
+
+        for fr in new_frs:
+
+            
+            description = fr.get(
+        "description",
+        ""
+    ).strip()
+
+    # 🔥 check if already exists
+            existing_fr = db.fr_extracted.find_one({
+
+        "project_id": project_id,
+
+        "description": description
+    })
+
+    # 🔥 insert only if not exists
+        if not existing_fr:
+
+           db.fr_extracted.insert_one({
+
+            "project_id": project_id,
+
+            "description": description
+        })
+
+        # ==========================================
+        # SAVE NFRS
+        # ==========================================
+
+        all_predictions = []
+
+        for nfr in new_nfrs:
+
+            predicted_type = nfr.get("title")
+
+            predicted_level = predict_level_for_text(
+                nfr.get("description", "")
+            )
+
+            nfr_doc = {
+
+                "project_id": project_id,
+
+                "description":
+                    nfr.get("description", ""),
+
+                "predicted_type":
+                    predicted_type,
+
+                "predicted_level":
+                    predicted_level,
+
+                "confidence":
+                    1.0
+            }
+
+            existing_nfr = db.nfr_predictions.find_one({
+
+             "project_id": project_id,
+
+             "description":
+                 nfr_doc["description"]
+            })
+
+            if not existing_nfr:
+
+               db.nfr_predictions.insert_one(
+        nfr_doc
+    )
+
+            all_predictions.append(
+                nfr_doc
+            )
+
+        # ==========================================
+        # GET ALL SAVED NFR PREDICTIONS
+        # ==========================================
+
+        saved_predictions = list(
+
+            db.nfr_predictions.find(
+
+                {"project_id": project_id},
+
+                {"_id": 0}
+            )
+        )
+
+        print("SAVED PREDICTIONS:", saved_predictions)
+
+        # ==========================================
+        # FUNCTIONAL METHOD
+        # ==========================================
+
+        functional_result = execute_functional_method(
+            project_id
+        )
+
+        print("FUNCTIONAL:", functional_result)
+
+        # ==========================================
+        # COMPUTE NFR STATISTICS
+        # ==========================================
+
+        freq_norm, must_norm, importance = \
+            compute_nfr_statistics(
+                saved_predictions
+            )
+
+        # ==========================================
+        # ORDINAL METHOD
+        # ==========================================
+
+        ordinal_result = execute_ordinal_method(
+            project_id
+        )
+
+        print("ORDINAL:", ordinal_result)
+
+        # ==========================================
+        # NFR TYPE MAPPING
+        # ==========================================
+
+        TYPE_MAPPING = {
+
+            "Performance": "PE",
+
+            "Scalability": "SC",
+
+            "Maintainability": "MN",
+
+            "Availability": "A",
+
+            "Security": "SE",
+
+            "Usability": "US",
+
+            "Portability": "PO",
+
+            "Reliability": "O",
+
+            "Modularity": "MN",
+
+            "Interoperability": "SC"
+        }
+
+        # ==========================================
+        # BUILD BINARY VECTOR
+        # ==========================================
+
+        binary_vector = {
+
+            "PE": 0,
+            "SC": 0,
+            "MN": 0,
+            "A": 0,
+            "SE": 0,
+            "US": 0,
+            "PO": 0,
+            "O": 0
+        }
+
+        for pred in saved_predictions:
+
+            original_type = pred.get(
+                "predicted_type",
+                ""
+            )
+
+            mapped_type = TYPE_MAPPING.get(
+                original_type,
+                ""
+            )
+
+            if mapped_type in binary_vector:
+
+                binary_vector[mapped_type] = 1
+
+        print("BINARY VECTOR:", binary_vector)
+
+        # ==========================================
+        # BINARY METHOD
+        # ==========================================
+
+        binary_result = execute_binary_method(
+
+            project_id,
+
+            binary_vector
+        )
+
+        print("BINARY:", binary_result)
+
+        # ==========================================
+        # WEIGHTED METHOD
+        # ==========================================
+
+        weighted_result = execute_weighted_method(
+
+            freq_norm=freq_norm,
+
+            must_norm=must_norm,
+
+            importance=importance
+        )
+
+        save_weighted_result(
+
+            project_id,
+
+            weighted_result
+        )
+
+        print("WEIGHTED:", weighted_result)
+
+        # ==========================================
+        # HYBRID METHOD
+        # ==========================================
+
+        hybrid_result = execute_hybrid_method(
+
+            project_id,
+
+            functional_result,
+
+            ordinal_result,
+
+            binary_result,
+
+            weighted_result
+        )
+
+        print("HYBRID:", hybrid_result)
+
+        # ==========================================
+        # RETURN RESULTS
+        # ==========================================
+
+        return {
+
+            "status": "success",
+
+            "functional_method":
+                functional_result,
+
+            "ordinal_method":
+                ordinal_result.get(
+                    "result",
+                    []
+                ),
+
+            "binary_method":
+                binary_result,
+
+            "weighted_method":
+                weighted_result,
+
+            "hybrid_method":
+                hybrid_result
+        }
+
+    except Exception as e:
+
+        traceback.print_exc()
+
+        return JSONResponse(
+
+            status_code=500,
+
+            content={
+
+                "error": str(e)
+            }
+        )
+    
+
+
+# ==========================================
+# SAVE UPDATED REQUIREMENTS
+# ==========================================
+
+@app.post("/project/{project_id}/save-updates")
+async def save_project_updates(
+    request: Request,
+    project_id: str
+):
+
+    try:
+
+        body = await request.json()
+
+        functional = body.get("functional", [])
+
+        nfr_predictions = body.get("nfr_predictions", [])
+
+        # ==========================================
+        # DELETE OLD DATA
+        # ==========================================
+
+        db.fr_extracted.delete_many({
+            "project_id": project_id
+        })
+
+        db.nfr_extracted.delete_many({
+            "project_id": project_id
+        })
+
+        db.nfr_predictions.delete_many({
+            "project_id": project_id
+        })
+
+        # ==========================================
+        # SAVE FUNCTIONAL REQUIREMENTS
+        # ==========================================
+
+        for fr in functional:
+
+            db.fr_extracted.insert_one({
+
+                "project_id": project_id,
+
+                "description":
+                    fr.get("description", "")
+            })
+
+        # ==========================================
+        # SAVE NFRS
+        # ==========================================
+
+        for nfr in nfr_predictions:
+
+            predicted_type =nfr.get("title", "")
+
+            predicted_level = predict_level_for_text(
+                    nfr.get("description", "")
+                )
+
+            db.nfr_extracted.insert_one({
+
+                "project_id": project_id,
+
+                "title": predicted_type,
+
+                "description":
+                    nfr.get("description", "")
+            })
+
+            db.nfr_predictions.insert_one({
+
+                "project_id": project_id,
+
+                "description":
+                    nfr.get("description", ""),
+
+                "predicted_type":
+                    predicted_type,
+
+                "predicted_level":
+                    predicted_level,
+
+                "confidence": 1.0
+            })
+
+        # ==========================================
+        # UPDATE PROJECT DATE
+        # ==========================================
+
+        db.projects.update_one(
+
+            {"project_id": project_id},
+
+            {
+                "$set": {
+                    "updated_at": datetime.utcnow()
+                }
+            }
+        )
+
+        return {
+            "status": "success"
+        }
+
+    except Exception as e:
+
+        traceback.print_exc()
+
+        return JSONResponse(
+
+            status_code=500,
+
+            content={
+                "error": str(e)
+            }
+        )
+    
+
+
+
+@app.post("/project/{project_id}/save-architectures")
+async def save_updated_architectures(
+    request: Request,
+    project_id: str
+):
+
+    try:
+
+        body = await request.json()
+
+        hybrid_method = \
+            body.get("hybrid_method", [])
+
+        selected_architecture = \
+            body.get(
+                "selected_architecture"
+            )
+
+        save_hybrid_result(
+            project_id,
+            hybrid_method,
+            selected_architecture
+        )
+
+        return {
+            "status": "success"
+        }
+
+    except Exception as e:
+
+        traceback.print_exc()
+
+        return JSONResponse(
+
+            status_code=500,
+
+            content={
+                "error": str(e)
+            }
+        )
+    
 
 
 @app.get("/admin/projects", response_class=HTMLResponse)
@@ -292,7 +856,7 @@ def generate_architecture(project_id: str):
     # 1. Load selected architecture style
     # ==========================================================
     hybrid_doc = db.hybrid_method.find_one({"project_id": project_id})
-
+    
     if not hybrid_doc or not hybrid_doc.get("selected_architecture"):
         raise HTTPException(
             status_code=400,
@@ -337,24 +901,25 @@ def generate_architecture(project_id: str):
     # ==========================================================
     # 4. VERIFICATION GATE
     # ==========================================================
-   # try:
-    #  verification_result = run_verification(arch)
-    #except Exception as e:
-    # raise HTTPException(
-     #   status_code=500,
-      #  detail=f"Verification crashed: {str(e)}"
-    #)
+    verification_result = {}
+    try:
+        verification_result = run_verification(arch)
+        print(f"[verify] run_verification status={verification_result.get('status')}", flush=True)
+        verification_pdf_path = generate_verification_pdf(verification_result)
+        print(f"[verify] PDF generated at: {verification_pdf_path}", flush=True)
+        with open(verification_pdf_path, "rb") as _vf:
+            _vbytes = _vf.read()
+        print(f"[verify] PDF bytes read: {len(_vbytes)}", flush=True)
 
-    #verification_result = run_verification(arch)
+        save_verification_report_pdf(project_id, _vbytes)
+        print("[verify] verification report saved to MongoDB successfully", flush=True)
+    except Exception as e:
+        import traceback
+        print(f"[verify] ERROR — verification report NOT saved: {e}", flush=True)
+        traceback.print_exc()
 
-    #if verification_result["status"] != "VERIFIED":
-     #raise HTTPException(
-      #  status_code=400,
-       # detail="Architecture verification failed. Please fix issues before generating ADL."
-    #)
 
-# Generate verification report ONLY on success (optional)
-   # generate_verification_pdf(verification_result)
+
 
 
     # ==========================================================
@@ -380,7 +945,8 @@ def generate_architecture(project_id: str):
 
     with open("data/outputs/architecture.validation.json", "w", encoding="utf-8") as f:
        json.dump(validation_result, f, indent=2)
-
+    with open("data/outputs/architecture.verification.json", "w", encoding="utf-8") as f:
+        json.dump(verification_result, f, indent=2)
 
     acme = convert_to_acme(arch)
     with open("data/outputs/architecture.acme", "w", encoding="utf-8") as f:
@@ -420,7 +986,7 @@ def generate_architecture(project_id: str):
     )
 
     subprocess.run([
-        r"C:\Program Files\Java\jdk-21\bin\java.exe",
+        r"C:\Program Files\Java\jdk-24\bin\java.exe",
         "-jar",
         PLANTUML_JAR,
         "-tpng",
@@ -565,20 +1131,36 @@ app.include_router(
     prefix="/api",        # 👈 API namespace
     tags=["Architecture"]
 )
-
 @app.get("/api/report/{project_id}")
 def get_report(project_id: str):
 
-    doc = db.architecture_reports.find_one({"project_id": project_id})
+    doc = db.architecture_reports.find_one({
+
+        "project_id": project_id,
+
+        "report_type": {
+            "$exists": False
+        }
+    })
 
     if not doc:
-        raise HTTPException(status_code=404, detail="Report not found")
+
+        raise HTTPException(
+
+            status_code=404,
+
+            detail="Report not found"
+        )
 
     return StreamingResponse(
+
         io.BytesIO(doc["report_pdf"]),
+
         media_type="application/pdf",
+
         headers={
-            "Content-Disposition": "inline; filename=architecture_report.pdf"
+            "Content-Disposition":
+            "inline; filename=architecture_report.pdf"
         }
     )
 
@@ -591,4 +1173,77 @@ def download_validation_report():
         headers={
             "Content-Disposition": "inline; filename=architecture_validation_report.pdf"
         }
+    )
+@app.get("/download-verification-report/{project_id}")
+def download_verification_report(
+    project_id: str
+):
+
+    doc = db.architecture_reports.find_one({
+
+        "project_id": project_id,
+
+        "report_type": "verification"
+    })
+
+    if not doc:
+
+        raise HTTPException(
+
+            status_code=404,
+
+            detail="Verification report not found"
+        )
+
+    return StreamingResponse(
+
+        io.BytesIO(doc["report_pdf"]),
+
+        media_type="application/pdf",
+
+        headers={
+            "Content-Disposition":
+            f"inline; filename={project_id}_verification.pdf"
+        }
+    )
+from application.extraction.reporting.final_report_generator import generate_last_report
+@app.get("/generate-final-report/{project_id}")
+def generate_final_report(project_id: str):
+
+    project = db.projects.find_one({
+        "project_id": project_id
+    })
+    project["project_id"] = project_id
+    frs = list(
+        db.fr_extracted.find(
+            {"project_id": project_id},
+            {"_id": 0}
+        )
+    )
+
+    nfrs = list(
+        db.nfr_predictions.find(
+            {"project_id": project_id},
+            {"_id": 0}
+        )
+    )
+
+    hybrid = db.hybrid_method.find_one({
+        "project_id": project_id
+    })
+
+    phase4 = generate_phase4(project_id)
+
+    pdf_path = generate_last_report(
+        project,
+        frs,
+        nfrs,
+        hybrid,
+        phase4
+    )
+
+    return FileResponse(
+        path=pdf_path,
+        filename="final_report.pdf",
+        media_type="application/pdf"
     )

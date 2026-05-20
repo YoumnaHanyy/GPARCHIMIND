@@ -8,7 +8,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-  <link rel="stylesheet" href="/static/css/Dashboard.css">
+  <link rel="stylesheet" href="/static/css/Dashboarddd.css">
 </head>
 
 <body>
@@ -43,6 +43,7 @@
           <li><a class="dropdown-item" href="#"><i class="bi bi-person-gear me-2"></i>Account Settings</a></li>
           <li><a class="dropdown-item" href="#"><i class="bi bi-shield-check me-2"></i>Security</a></li>
           <li><hr class="dropdown-divider opacity-50"></li>
+          
           <li>
             <a class="dropdown-item text-danger fw-bold" href="#" onclick="logoutAnimated()">
               <i class="bi bi-box-arrow-right me-2"></i>Log out
@@ -82,6 +83,9 @@
     <li onclick="window.location.href='/starred-projects'" style="cursor:pointer;"><i class="bi bi-star"></i>Starred Projects</li>
     <li onclick="window.location.href='/notifications'" style="cursor:pointer;"><i class="bi bi-bell"></i>Notifications</li>
     <li onclick="window.location.href='/settings'" style="cursor:pointer;"><i class="bi bi-gear"></i>Settings</li>
+    <li onclick="window.location.href='/adl-dashboard'">
+      <i class="bi bi-cpu"></i> ADL Generation
+</li>
     <hr class="my-3 opacity-10">
     <li class="text-danger" onclick="logoutAnimated()" style="cursor:pointer;"><i class="bi bi-door-open"></i>Logout</li>
   </ul>
