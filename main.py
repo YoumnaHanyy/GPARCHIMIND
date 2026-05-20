@@ -1140,20 +1140,36 @@ app.include_router(
     prefix="/api",        # 👈 API namespace
     tags=["Architecture"]
 )
-
 @app.get("/api/report/{project_id}")
 def get_report(project_id: str):
 
-    doc = db.architecture_reports.find_one({"project_id": project_id})
+    doc = db.architecture_reports.find_one({
+
+        "project_id": project_id,
+
+        "report_type": {
+            "$exists": False
+        }
+    })
 
     if not doc:
-        raise HTTPException(status_code=404, detail="Report not found")
+
+        raise HTTPException(
+
+            status_code=404,
+
+            detail="Report not found"
+        )
 
     return StreamingResponse(
+
         io.BytesIO(doc["report_pdf"]),
+
         media_type="application/pdf",
+
         headers={
-            "Content-Disposition": "inline; filename=architecture_report.pdf"
+            "Content-Disposition":
+            "inline; filename=architecture_report.pdf"
         }
     )
 
@@ -1167,7 +1183,38 @@ def download_validation_report():
             "Content-Disposition": "inline; filename=architecture_validation_report.pdf"
         }
     )
+@app.get("/download-verification-report/{project_id}")
+def download_verification_report(
+    project_id: str
+):
 
+    doc = db.architecture_reports.find_one({
+
+        "project_id": project_id,
+
+        "report_type": "verification"
+    })
+
+    if not doc:
+
+        raise HTTPException(
+
+            status_code=404,
+
+            detail="Verification report not found"
+        )
+
+    return StreamingResponse(
+
+        io.BytesIO(doc["report_pdf"]),
+
+        media_type="application/pdf",
+
+        headers={
+            "Content-Disposition":
+            f"inline; filename={project_id}_verification.pdf"
+        }
+    )
 from application.extraction.reporting.final_report_generator import generate_last_report
 @app.get("/generate-final-report/{project_id}")
 def generate_final_report(project_id: str):
@@ -1175,7 +1222,7 @@ def generate_final_report(project_id: str):
     project = db.projects.find_one({
         "project_id": project_id
     })
-
+    project["project_id"] = project_id
     frs = list(
         db.fr_extracted.find(
             {"project_id": project_id},

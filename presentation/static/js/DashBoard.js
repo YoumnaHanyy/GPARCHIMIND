@@ -270,17 +270,24 @@ function checkADLInputs() {
     return html;
   }
 
-  function renderBinaryMethod(data) {
-    if (!data || !data.binary_method || !data.binary_method.top_architectures) {
+function renderBinaryMethod(data) {
+    if (
+        !data ||
+        !data.binary_method ||
+        !data.binary_method.top_5_architectures
+    ) {
       return "<p class='text-muted'>No binary method results available.</p>";
     }
 
     let html = "<h5 class='section-header'>Binary Method</h5>";
 
-    data.binary_method.top_architectures.forEach((item, idx) => {
+    data.binary_method.top_5_architectures.forEach((item, idx) => {
       html += `
         <div class="mb-3">
-          <div class="req-title">${idx + 1}. ${item.architecture}</div>
+          <div class="req-title">
+            ${idx + 1}. ${item.architecture}
+          </div>
+
           <div class="req-desc">
             Score: <strong>${item.score}</strong>
           </div>
@@ -289,8 +296,7 @@ function checkADLInputs() {
     });
 
     return html;
-  }
-
+}
   function renderWeightedMethod(data) {
     if (!data || !data.weighted_method || !data.weighted_method.top_architectures) {
       return "<p class='text-muted'>No weighted method results available.</p>";
@@ -774,22 +780,32 @@ function loadValidationReport() {
     { once: true }
   );
 }
-function loadVerificationReport() {
-  const frame = document.getElementById("reportFrame");
-  const loader = document.getElementById("modalIframeLoader");
+function loadValidationReport() {
+
+  const frame =
+    document.getElementById("reportFrame");
+
+  const loader =
+    document.getElementById("modalIframeLoader");
+
   loader.style.display = "block";
+
   frame.style.opacity = "0";
-  frame.src = "/download-verification-report";
+
+  frame.src =
+    `/download-validation-report/${extractedData.project_id}`;
+
   frame.addEventListener(
     "load",
     () => {
+
       loader.style.display = "none";
+
       frame.style.opacity = "1";
     },
     { once: true }
   );
 }
-
   function renderPhase() {
     const data = phaseData[currentPhase];
     
