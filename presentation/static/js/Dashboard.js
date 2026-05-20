@@ -39,7 +39,75 @@ window.addEventListener('DOMContentLoaded', () => {
     tabs: ["Design Patterns", "Code Skeleton"] 
   }
   };
+function generateStandaloneADL() {
+  const fileInput = document.getElementById("adlFileInput");
+  const arch = document.getElementById("adlArchitecture").value;
 
+  if (!fileInput.files.length || !arch) {
+    alert("Please upload SRS file and select architecture");
+    return;
+  }
+
+  const formData = new FormData();
+  formData.append("file", fileInput.files[0]);
+  formData.append("architecture", arch);
+
+  // إظهار اللودر (اختياري)
+  startLoadingAnimation();
+
+  fetch("/adl/generate-pdf", { // تأكدي أن الـ URL هو نفسه اللي في الـ FastAPI
+    method: "POST",
+    body: formData
+  })
+  .then(res => {
+    stopLoadingAnimation();
+    if (!res.ok) throw new Error("Server error");
+    return res.blob(); // بنستلم الملف كـ binary data
+  })
+  .then(blob => {
+    const url = window.URL.createObjectURL(blob);
+    
+    // لفتح الملف في tab جديد:
+    const a = document.createElement("a");
+a.href = url;
+a.download = "Architecture_Report.pdf";
+document.body.appendChild(a);
+a.click();
+a.remove();
+
+    // أو للتحميل المباشر:
+    /*
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "Architecture_Report.pdf";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    */
+  })
+  .catch(err => {
+    stopLoadingAnimation();
+    console.error(err);
+    alert("Error generating PDF: " + err.message);
+  });
+}
+
+function openADLGenerator() {
+  window.location.href = "/adl-dashboard";
+}
+
+function checkADLInputs() {
+  const file = document.getElementById("adlFileInput").files.length;
+  const arch = document.getElementById("adlArchitecture").value;
+
+  const btn = document.getElementById("generateAdlBtn");
+
+  if (file && arch) {
+    btn.disabled = false;
+  } else {
+    btn.disabled = true;
+  }
+}
   function showUploader() {
     document.getElementById('dashboardView').classList.add('hidden');
     document.getElementById('uploadView').classList.remove('hidden');
@@ -202,17 +270,24 @@ window.addEventListener('DOMContentLoaded', () => {
     return html;
   }
 
-  function renderBinaryMethod(data) {
-    if (!data || !data.binary_method || !data.binary_method.top_architectures) {
+function renderBinaryMethod(data) {
+    if (
+        !data ||
+        !data.binary_method ||
+        !data.binary_method.top_5_architectures
+    ) {
       return "<p class='text-muted'>No binary method results available.</p>";
     }
 
     let html = "<h5 class='section-header'>Binary Method</h5>";
 
-    data.binary_method.top_architectures.forEach((item, idx) => {
+    data.binary_method.top_5_architectures.forEach((item, idx) => {
       html += `
         <div class="mb-3">
-          <div class="req-title">${idx + 1}. ${item.architecture}</div>
+          <div class="req-title">
+            ${idx + 1}. ${item.architecture}
+          </div>
+
           <div class="req-desc">
             Score: <strong>${item.score}</strong>
           </div>
@@ -221,8 +296,7 @@ window.addEventListener('DOMContentLoaded', () => {
     });
 
     return html;
-  }
-
+}
   function renderWeightedMethod(data) {
     if (!data || !data.weighted_method || !data.weighted_method.top_architectures) {
       return "<p class='text-muted'>No weighted method results available.</p>";
@@ -535,6 +609,12 @@ generateBtn.disabled = true;
   id="downloadBtn" onclick="downloadCodeSKELETON()">
               <i class="bi bi-download"></i> Download .zip
             </button>
+             <button
+      class="code-action-btn skeleton-main-btn"
+      onclick="downloadFinalReport()">
+      <i class="bi bi-file-earmark-pdf-fill"></i>
+      Final Report
+    </button>
           </div>
         </div>
 
@@ -636,10 +716,18 @@ console.log("Project ID:", extractedData?.project_id);
         );
         reportModal.show();
         document.getElementById('reportModal').addEventListener('hidden.bs.modal', () => {
-        document.body.classList.remove('modal-open');
 
-        document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
-        });
+         document.body.classList.remove('modal-open');
+
+          document.body.style.overflow = 'auto';
+
+         document.body.style.paddingRight = '0px';
+
+         document.body.style.position = 'static';
+
+         document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
+
+});
         // 6. Cleanup el memory lma el modal ye2fel
          document
           .getElementById('reportModal')
@@ -690,25 +778,6 @@ function loadValidationReport() {
   frame.style.opacity = "0";
 
   frame.src = "/download-validation-report";
-
-  frame.addEventListener(
-    "load",
-    () => {
-      loader.style.display = "none";
-      frame.style.opacity = "1";
-    },
-    { once: true }
-  );
-}
-
-function loadVerificationReport() {
-  const frame = document.getElementById("reportFrame");
-  const loader = document.getElementById("modalIframeLoader");
-
-  loader.style.display = "block";
-  frame.style.opacity = "0";
-
-  frame.src = "/download-verification-report";
 
   frame.addEventListener(
     "load",
@@ -1144,6 +1213,7 @@ function hideNfrInlineError() {
   }
   function backToDashboard(){
   document.getElementById("uploadView").classList.add("hidden");
+  document.getElementById("adlView").classList.add("hidden"); // ✅ دي الجديدة
   document.getElementById("dashboardView").classList.remove("hidden");
 }
 function showErrorModal(message) {
@@ -1208,66 +1278,129 @@ async function syncProjectProgress() {
   }
 }
 
+const disposition = response.headers.get("Content-Disposition") || "";
+const isProblemReport = disposition.includes("problems");
+if (isProblemReport) {
+  alert("⚠️ Architecture has verification/validation issues. Please review the report.");
+}
 
-async function downloadCodeSKELETON() {
-
-  const btn =
-    document.getElementById("downloadBtn");
-
-  btn.innerHTML = `
-    <span
-      class="spinner-border spinner-border-sm me-2">
-    </span>
-    Downloading
-  `;
-
-  const code =
-    document.getElementById(
-      "generatedCode"
-    ).innerText;
-
-  const response = await fetch(
-    "/download-skeleton",
-    {
-      method: "POST",
-
-      headers: {
-        "Content-Type": "application/json"
-      },
-
-      body: JSON.stringify({
-        tree: code
-      })
-    }
-  );
-
-  const blob = await response.blob();
-
-  const url =
-    window.URL.createObjectURL(blob);
+function downloadCode() {
+  const code = document.getElementById("generatedCode").innerText;
+  const blob = new Blob([code], { type: "text/plain" });
 
   const a = document.createElement("a");
-
-  a.href = url;
-
-  a.download = "code_skeleton.zip";
-
-  document.body.appendChild(a);
-
+  a.href = URL.createObjectURL(blob);
+  a.download = "skeleton.js";
   a.click();
-
-  a.remove();
-
-  btn.innerHTML = `
-    <i class="bi bi-check-circle-fill"></i>
-    Downloaded
-  `;
 }
 
 function regenerateCode() {
   alert("Regenerating code...");
 }
 
+
 function openProject(projectId) {
-    window.location.href = `/project/${projectId}`;
-}
+  console.log("📂 Opening project:", projectId);
+
+  fetch(`/get_project/${projectId}`)
+    .then(res => res.json())
+    .then(data => {
+
+      console.log("DATA:", data); // مهم للديباج
+
+      if (data.error) {
+        alert("Failed to load project");
+        return;
+      }
+
+      // ======================
+      // 1. Restore state
+      // ======================
+      extractedData = {
+        functional: data.functional || [],
+        nfr_predictions: data.nfr_predictions || [],
+        functional_method: data.functional_method,
+        ordinal_method: data.ordinal_method,
+        binary_method: data.binary_method,
+        weighted_method: data.weighted_method,
+        hybrid_method: data.hybrid_method
+      };
+
+      currentPhase = data.current_phase || 1;
+      selectedArchitecture = data.selectedArchitecture || null;
+
+      window.currentProjectId = projectId;
+
+      // ======================
+      // 2. Switch UI
+      // ======================
+      document.getElementById('dashboardView').classList.add('hidden');
+      document.getElementById('uploadView').classList.remove('hidden');
+
+      // 🔥 أهم سطر (يخفي upload UI)
+      document.getElementById("step-upload").classList.add("hidden");
+
+      // ======================
+      // 3. Show results UI
+      // ======================
+      document.getElementById('progressSection').classList.remove('hidden');
+      document.getElementById('resultContent').classList.remove('hidden');
+
+      // ======================
+      // 4. Render correct phase
+      // ======================
+      renderPhase();
+
+      console.log("✅ Project restored successfully");
+    })
+    .catch(err => {
+      console.error("❌ Error loading project:", err);
+    });
+}  console.log("📂 Opening project:", projectId);
+
+  fetch(`/get_project/${projectId}`)
+    .then(res => res.json())
+    .then(data => {
+
+      if (data.error) {
+        alert("Failed to load project");
+        return;
+      }
+
+      // ======================
+      // 1. Restore state
+      // ======================
+      extractedData = {
+  functional: data.functional || [],
+  nfr_predictions: data.nfr_predictions || [],
+  functional_method: data.functional_method,
+  ordinal_method: data.ordinal_method,
+  binary_method: data.binary_method,
+  weighted_method: data.weighted_method,
+  hybrid_method: data.hybrid_method
+};
+
+currentPhase = data.current_phase || 1;
+      selectedArchitecture = data.selectedArchitecture || null;
+
+      window.currentProjectId = projectId;
+
+      // ======================
+      // 2. Switch UI
+      // ======================
+      document.getElementById('dashboardView').classList.add('hidden');
+      document.getElementById('uploadView').classList.remove('hidden');
+
+      // ======================
+      // 3. Show results
+      // ======================
+      document.getElementById('progressSection').classList.remove('hidden');
+      document.getElementById('resultContent').classList.remove('hidden');
+
+      renderPhase();
+
+      console.log("✅ Project loaded successfully");
+    })
+    .catch(err => {
+      console.error("❌ Error loading project:", err);
+    });

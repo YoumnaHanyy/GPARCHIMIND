@@ -3,7 +3,7 @@ from datetime import datetime
 
 projects_collection = db["projects"]
 
-def create_project(project_id: str, user_id, project_name=None):
+def create_project(project_id: str, user_id, project_name=None, project_type="full_pipeline"):
     doc = {
         "project_id": project_id,
         "user_id": user_id,
@@ -12,7 +12,8 @@ def create_project(project_id: str, user_id, project_name=None):
         "progress": 0,
         "current_phase": 1,
         "created_at": datetime.utcnow(),
-        "updated_at": datetime.utcnow()
+        "updated_at": datetime.utcnow(),
+        "project_type": project_type
     }
     projects_collection.insert_one(doc)
 
@@ -37,11 +38,31 @@ def get_project(project_id: str):
     )
 
 def get_user_projects(user_id):
-    # Fetch all projects for this user, sorted by most recent first
     return list(projects_collection.find(
-        {"user_id": user_id},
+        {
+            "user_id": user_id,
+
+            "$or": [
+                {"project_type": "full_pipeline"},
+                {"project_type": {"$exists": False}}
+            ]
+        },
         {"_id": 0}
     ).sort("created_at", -1))
+
+
+
+
+def get_user_adl_projects(user_id):
+    return list(projects_collection.find(
+        {
+            "user_id": user_id,
+            "project_type": "adl_reusable"
+        },
+        {"_id": 0}
+    ).sort("created_at", -1))
+
+
 
 def save_project_data(project_id: str, data: dict):
     projects_collection.update_one(
@@ -56,12 +77,7 @@ def save_project_data(project_id: str, data: dict):
                 "binary_method": data.get("binary_method"),
                 "weighted_method": data.get("weighted_method"),
                 "hybrid_method": data.get("hybrid_method"),
-                "requirement_drift":
-    data.get(
-        "requirement_drift"
-    ),
                 "updated_at": datetime.utcnow()
             }
         }
     )
-

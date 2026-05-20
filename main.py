@@ -22,6 +22,7 @@ from infrastructure.repositories.weighted_repository import save_weighted_result
 from ai.inference.predict_type_level import predict_and_save_nfr, predict_level_for_text
 
 import traceback
+from infrastructure.repositories.ADL_repository import save_architecture_report_pdf, save_verification_report_pdf
 from fastapi.responses import JSONResponse
 from application.extraction.adl.verification.runner import run_verification
 from application.extraction.adl.verification.verification_report_generator import generate_verification_pdf
@@ -75,7 +76,10 @@ from service.retrain_service import merge_and_retrain
 from infrastructure.database import db
 from service.retrain_service import run_retrain_async
 from presentation.routes.download_routes import router as download_router
-
+from presentation.routes.srs_validation_routes import router as validation_router
+from ai.validations.srs_validator import SRSValidator
+from dotenv import load_dotenv
+load_dotenv() 
 def auto_retrain_loop():
     while True:
         time.sleep(86400)
@@ -117,6 +121,10 @@ extractor = SRSExtractor(
 app.include_router(
     srs_router,
     tags=["Extraction"]
+)
+app.include_router(
+    validation_router,
+    tags=["Validation"]
 )
 # ============================================================
 # Templates & Static Files
@@ -906,15 +914,25 @@ def generate_architecture(project_id: str):
     # ==========================================================
     # 4. VERIFICATION — run check only (PDF generated later in parallel)
     # ==========================================================
-    verification_result = {}
-    t0 = time.time()
-    print("[generate] verification START", flush=True)
-    try:
-        verification_result = run_verification(arch)
-        print(f"[generate] verification END status={verification_result.get('status')} elapsed={time.time()-t0:.2f}s", flush=True)
-    except Exception as e:
-        print(f"[generate] verification ERROR elapsed={time.time()-t0:.2f}s: {e}", flush=True)
-        traceback.print_exc()
+   # try:
+    #  verification_result = run_verification(arch)
+    #except Exception as e:
+    # raise HTTPException(
+     #   status_code=500,
+      #  detail=f"Verification crashed: {str(e)}"
+    #)
+
+    #verification_result = run_verification(arch)
+
+    #if verification_result["status"] != "VERIFIED":
+     #raise HTTPException(
+      #  status_code=400,
+       # detail="Architecture verification failed. Please fix issues before generating ADL."
+    #)
+
+# Generate verification report ONLY on success (optional)
+   # generate_verification_pdf(verification_result)
+
 
     # ==========================================================
     # 5. VALIDATION — run check only (PDF generated later in parallel)
@@ -933,10 +951,7 @@ def generate_architecture(project_id: str):
         json.dump(arch, f, indent=2)
 
     with open("data/outputs/architecture.validation.json", "w", encoding="utf-8") as f:
-        json.dump(validation_result, f, indent=2)
-
-    with open("data/outputs/architecture.verification.json", "w", encoding="utf-8") as f:
-        json.dump(verification_result, f, indent=2)
+       json.dump(validation_result, f, indent=2)
 
 
     acme = convert_to_acme(arch)
@@ -980,7 +995,7 @@ def generate_architecture(project_id: str):
     t0 = time.time()
     print("[generate] PlantUML rendering START", flush=True)
     subprocess.run([
-        r"C:\Program Files\Java\jdk-21\bin\java.exe",
+        r"C:\Program Files\Java\jdk-24\bin\java.exe",
         "-jar",
         PLANTUML_JAR,
         "-tpng",
@@ -1174,20 +1189,36 @@ app.include_router(
     prefix="/api",        # 👈 API namespace
     tags=["Architecture"]
 )
-
 @app.get("/api/report/{project_id}")
 def get_report(project_id: str):
 
-    doc = db.architecture_reports.find_one({"project_id": project_id})
+    doc = db.architecture_reports.find_one({
+
+        "project_id": project_id,
+
+        "report_type": {
+            "$exists": False
+        }
+    })
 
     if not doc:
-        raise HTTPException(status_code=404, detail="Report not found")
+
+        raise HTTPException(
+
+            status_code=404,
+
+            detail="Report not found"
+        )
 
     return StreamingResponse(
+
         io.BytesIO(doc["report_pdf"]),
+
         media_type="application/pdf",
+
         headers={
-            "Content-Disposition": "inline; filename=architecture_report.pdf"
+            "Content-Disposition":
+            "inline; filename=architecture_report.pdf"
         }
     )
 
@@ -1199,36 +1230,5 @@ def download_validation_report():
         media_type="application/pdf",
         headers={
             "Content-Disposition": "inline; filename=architecture_validation_report.pdf"
-        }
-    )
-
-
-@app.get("/download-verification-report")
-def download_verification_report():
-    """
-    Serve the architecture verification PDF.
-
-    Returns the success report when verification passed, or the
-    'problems' report when verification failed. Whichever exists
-    on disk is the one returned.
-    """
-    success_path = "data/outputs/architecture_verification_report.pdf"
-    problems_path = "data/outputs/architecture_verification_problems.pdf"
-
-    if os.path.exists(success_path):
-        path, filename = success_path, "architecture_verification_report.pdf"
-    elif os.path.exists(problems_path):
-        path, filename = problems_path, "architecture_verification_problems.pdf"
-    else:
-        raise HTTPException(
-            status_code=404,
-            detail="Verification report not found. Run verification first."
-        )
-
-    return FileResponse(
-        path=path,
-        media_type="application/pdf",
-        headers={
-            "Content-Disposition": f"inline; filename={filename}"
         }
     )

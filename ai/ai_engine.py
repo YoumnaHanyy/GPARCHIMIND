@@ -41,14 +41,19 @@ def ask_llm(prompt: str, temperature=0.2):
 
 def extract_json(text: str):
     try:
-        match = re.search(r"\{.*\}", text, re.DOTALL)
+        # نحاول direct parse
+        return json.loads(text)
 
-        if not match:
-            raise ValueError("No JSON object found")
+    except:
+        pass
 
-        json_str = match.group()
+    try:
+        # نلقط أول JSON block مظبوط
+        start = text.find("{")
+        end = text.rfind("}") + 1
+        json_str = text[start:end]
 
-        # remove trailing commas
+        # تنظيف
         json_str = re.sub(r",\s*}", "}", json_str)
         json_str = re.sub(r",\s*]", "]", json_str)
 
@@ -56,8 +61,6 @@ def extract_json(text: str):
 
     except Exception as e:
         raise ValueError(f"Invalid JSON returned by LLM: {e}")
-
-
 # ================= ROBUST LLM JSON =================
 
 def robust_llm_json(prompt, retries=4):
@@ -75,17 +78,24 @@ def robust_llm_json(prompt, retries=4):
 
             # 🔥 FIX: self-healing بدل ما يعيد نفس الغلط
             prompt = f"""
-RETURN ONLY VALID JSON.
-NO explanations.
-NO markdown.
-NO comments.
+The previous response was INVALID JSON.
 
-{prompt}
+Error:
+{last_error}
+
+Fix it and return ONLY valid JSON.
+
+STRICT RULES:
+- NO explanation
+- NO markdown
+- NO text before or after
+- ONLY RAW JSON
+
+Original request:
+{original_prompt}
 """
 
     raise RuntimeError(f"LLM failed after {retries} attempts: {last_error}")
-
-
 # ================= FALLBACK COMPONENTS =================
 
 def fallback_components(style):
@@ -245,7 +255,14 @@ System: {system}
 Functional Requirements:
 {frs}
 
-Return ONLY valid JSON:
+IMPORTANT:
+- Limit to maximum 8 components
+- Keep output short
+
+STRICT RULES:
+- RETURN JSON ONLY
+- NO explanation
+- NO markdown
 
 {{
  "components":[
@@ -257,7 +274,12 @@ Return ONLY valid JSON:
 }}
 """
 
-    return robust_llm_json(prompt).get("components", [])
+    data = robust_llm_json(prompt)
+
+    if isinstance(data, list):
+     return data
+
+    return data.get("components", [])
 
 
 def generate_relationships(components):
@@ -267,7 +289,13 @@ Components:
 
 {json.dumps(components, indent=2)}
 
-Return ONLY valid JSON:
+IMPORTANT:
+- Keep it concise
+
+STRICT RULES:
+- RETURN JSON ONLY
+- NO explanation
+- NO markdown
 
 {{
  "relationships":[
@@ -280,7 +308,12 @@ Return ONLY valid JSON:
 }}
 """
 
-    return robust_llm_json(prompt).get("relationships", [])
+    data = robust_llm_json(prompt)
+
+    if isinstance(data, list):
+     return data
+
+    return data.get("relationships", [])
 
 
 def generate_runtime_flow(system, components, relationships, style):
@@ -295,7 +328,14 @@ Components:
 Relationships:
 {json.dumps(relationships, indent=2)}
 
-Return ONLY valid JSON:
+IMPORTANT:
+- Max 6 steps
+- Keep short
+
+STRICT RULES:
+- RETURN JSON ONLY
+- NO explanation
+- NO markdown
 
 {{
  "steps":[
@@ -309,7 +349,12 @@ Return ONLY valid JSON:
 }}
 """
 
-    return robust_llm_json(prompt).get("steps", [])
+    data = robust_llm_json(prompt)
+
+    if isinstance(data, list):
+     return data
+
+    return data.get("steps", [])
 
 
 def critique(components, relationships, nfrs):
@@ -331,7 +376,7 @@ Return ONLY valid JSON:
 }}
 """
 
-    return robust_llm_json(prompt, retries=2).get("issues", [])
+    return robust_llm_json(prompt).get("issues", [])
 
 
 # ================= ORCHESTRATOR =================
