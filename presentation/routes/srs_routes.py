@@ -1,12 +1,5 @@
 from fastapi import APIRouter, UploadFile, Request, File, Form
 from fastapi.responses import JSONResponse
-from fastapi.responses import FileResponse
-from fastapi.responses import HTMLResponse
-from fastapi.templating import Jinja2Templates
-from fastapi.responses import RedirectResponse
-
-
-
 import os
 import uuid
 import traceback
@@ -22,8 +15,6 @@ from application.extraction.adl.validation.validation_report_generator import ge
 from application.extraction.extraction_service import process_srs
 from application.extraction.adl.json_to_acme import convert_to_acme
 from ai.inference.predict_type_level import predict_and_save_nfr, predict_level_for_text
-from application.extraction.reporting.report_generator import generate_report
-
 from service.ordinal_service import execute_ordinal_method
 from service.binary_service import execute_binary_method
 from service.weighted_service import execute_weighted_method
@@ -68,10 +59,7 @@ os.makedirs(UPLOAD_DIR, exist_ok=True)
 
 
 
-def validate_pdf_file(file: UploadFile):
-    if not file.filename.lower().endswith(".pdf"):
-        return "Invalid file format. Please upload a valid PDF document."
-    return None
+
 
 def extract_text_from_pdf(pdf_path: str) -> str:
     text = ""
@@ -178,7 +166,7 @@ async def extract_srs(request: Request, file: UploadFile = File(...)):
 
         create_project(project_id, user_id, project_name)
         # 3️⃣ Predict NFR Type + Level → Saves to BOTH MongoDB AND JSON
-        all_predictions = predict_and_save_nfr(project_id)
+        all_predictions = _save_nfr(project_id)
 
         if not all_predictions:
             raise ValueError("No NFR predictions generated")
@@ -186,11 +174,6 @@ async def extract_srs(request: Request, file: UploadFile = File(...)):
         # 4️⃣ Get high and low confidence from MongoDB
         high_confidence = NFRPredictionRepository.get_high_confidence(project_id)
         low_confidence = NFRPredictionRepository.get_low_confidence(project_id)
-
-        save_project_data(project_id, {
-         "functional": extraction_result.get("functional", []),
-         "nfr_predictions": high_confidence
-})
         print(f"📊 High confidence: {len(high_confidence)}, Low confidence: {len(low_confidence)}")
         if len(low_confidence) == 0:
             print("⚡ No low confidence → auto running architecture")
@@ -201,8 +184,8 @@ async def extract_srs(request: Request, file: UploadFile = File(...)):
     
             freq_norm, must_norm, importance = compute_nfr_statistics(all_nfrs)
     
-            ordinal_result = execute_ordinal_method(project_id)
-            binary_result = execute_binary_method(project_id)
+            ordinal_result = execute_ordinal_method()
+            binary_result = execute_binary_method()
     
             weighted_result = execute_weighted_method(
                 freq_norm=freq_norm,
@@ -219,17 +202,6 @@ async def extract_srs(request: Request, file: UploadFile = File(...)):
             )
 
             save_weighted_result(project_id, weighted_result)
-
-            save_project_data(project_id, {
-    "functional": extraction_result.get("functional", []),
-    "nfr_predictions": high_confidence,
-    "functional_method": functional_result,
-    "ordinal_method": ordinal_result.get("result"),
-    "binary_method": binary_result,
-    "weighted_method": weighted_result,
-    "hybrid_method": hybrid_result,
-    "selectedArchitecture": hybrid_result
-})
 
             return {
                 "project_id": project_id,
@@ -383,7 +355,7 @@ async def confirm_nfr(request: Request):
         "weighted_method": weighted_result,
         "hybrid_method": hybrid_result,
         "nfr_predictions": clean_object_id(all_nfrs),
-        "phase4": phase4
+       
     }
 
 

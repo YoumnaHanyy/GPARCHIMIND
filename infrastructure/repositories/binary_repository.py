@@ -4,9 +4,8 @@ from datetime import datetime
 collection = db["methods_results"]
 
 def save_binary_result(data: dict):
-    return collection.insert_one({
-    "project_id": data.get("project_id"),
-    "method": "binary",
-    "result": data["result"],
-    "created_at": datetime.utcnow()
-}).inserted_id
+    return binary_collection.insert_one({
+        "method": data["method"],
+        "result": data["result"],
+        "created_at": datetime.utcnow()
+    }).inserted_id
