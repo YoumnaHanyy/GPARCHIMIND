@@ -716,10 +716,18 @@ console.log("Project ID:", extractedData?.project_id);
         );
         reportModal.show();
         document.getElementById('reportModal').addEventListener('hidden.bs.modal', () => {
-        document.body.classList.remove('modal-open');
 
-        document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
-        });
+         document.body.classList.remove('modal-open');
+
+          document.body.style.overflow = 'auto';
+
+         document.body.style.paddingRight = '0px';
+
+         document.body.style.position = 'static';
+
+         document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
+
+});
         // 6. Cleanup el memory lma el modal ye2fel
          document
           .getElementById('reportModal')
@@ -780,32 +788,33 @@ function loadValidationReport() {
     { once: true }
   );
 }
-function loadValidationReport() {
 
-  const frame =
-    document.getElementById("reportFrame");
+function loadVerificationReport() {
 
-  const loader =
-    document.getElementById("modalIframeLoader");
+  const frame = document.getElementById("reportFrame");
+  const loader = document.getElementById("modalIframeLoader");
 
   loader.style.display = "block";
-
   frame.style.opacity = "0";
 
-  frame.src =
-    `/download-validation-report/${extractedData.project_id}`;
+  // IMPORTANT
+  frame.src = `/download-verification-report/${extractedData.project_id}`;
 
-  frame.addEventListener(
-    "load",
-    () => {
+  frame.onload = () => {
+    loader.style.display = "none";
+    frame.style.opacity = "1";
+  };
 
-      loader.style.display = "none";
-
-      frame.style.opacity = "1";
-    },
-    { once: true }
+  const reportModal = new bootstrap.Modal(
+    document.getElementById("reportModal")
   );
+
+  reportModal.show();
 }
+
+
+
+
   function renderPhase() {
     const data = phaseData[currentPhase];
     
