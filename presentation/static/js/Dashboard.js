@@ -1238,7 +1238,7 @@ function hideNfrInlineError() {
   }
   function backToDashboard(){
   document.getElementById("uploadView").classList.add("hidden");
-  document.getElementById("adlView").classList.add("hidden"); // ✅ دي الجديدة
+  document.getElementById("adlView").classList.add("hidden");
   document.getElementById("dashboardView").classList.remove("hidden");
 }
 function showErrorModal(message) {
@@ -1303,129 +1303,89 @@ async function syncProjectProgress() {
   }
 }
 
-const disposition = response.headers.get("Content-Disposition") || "";
-const isProblemReport = disposition.includes("problems");
-if (isProblemReport) {
-  alert("⚠️ Architecture has verification/validation issues. Please review the report.");
-}
 
-function downloadCode() {
-  const code = document.getElementById("generatedCode").innerText;
-  const blob = new Blob([code], { type: "text/plain" });
+async function downloadCodeSKELETON() {
+
+  const btn =
+    document.getElementById("downloadBtn");
+
+  btn.innerHTML = `
+    <span
+      class="spinner-border spinner-border-sm me-2">
+    </span>
+    Downloading
+  `;
+
+  const code =
+    document.getElementById(
+      "generatedCode"
+    ).innerText;
+
+  const response = await fetch(
+    "/download-skeleton",
+    {
+      method: "POST",
+
+      headers: {
+        "Content-Type": "application/json"
+      },
+
+      body: JSON.stringify({
+        tree: code
+      })
+    }
+  );
+
+  const blob = await response.blob();
+
+  const url =
+    window.URL.createObjectURL(blob);
 
   const a = document.createElement("a");
-  a.href = URL.createObjectURL(blob);
-  a.download = "skeleton.js";
+
+  a.href = url;
+
+  a.download = "code_skeleton.zip";
+
+  document.body.appendChild(a);
+
   a.click();
+
+  a.remove();
+
+  btn.innerHTML = `
+    <i class="bi bi-check-circle-fill"></i>
+    Downloaded
+  `;
 }
 
 function regenerateCode() {
   alert("Regenerating code...");
 }
 
-
 function openProject(projectId) {
-  console.log("📂 Opening project:", projectId);
+    window.location.href = `/project/${projectId}`;
+}
 
-  fetch(`/get_project/${projectId}`)
-    .then(res => res.json())
-    .then(data => {
 
-      console.log("DATA:", data); // مهم للديباج
+async function downloadFinalReport() {
 
-      if (data.error) {
-        alert("Failed to load project");
-        return;
-      }
+  const response = await fetch(
+    `/generate-final-report/${extractedData.project_id}`
+  );
 
-      // ======================
-      // 1. Restore state
-      // ======================
-      extractedData = {
-        functional: data.functional || [],
-        nfr_predictions: data.nfr_predictions || [],
-        functional_method: data.functional_method,
-        ordinal_method: data.ordinal_method,
-        binary_method: data.binary_method,
-        weighted_method: data.weighted_method,
-        hybrid_method: data.hybrid_method
-      };
+  const blob = await response.blob();
 
-      currentPhase = data.current_phase || 1;
-      selectedArchitecture = data.selectedArchitecture || null;
+  const url = window.URL.createObjectURL(blob);
 
-      window.currentProjectId = projectId;
+  const a = document.createElement("a");
 
-      // ======================
-      // 2. Switch UI
-      // ======================
-      document.getElementById('dashboardView').classList.add('hidden');
-      document.getElementById('uploadView').classList.remove('hidden');
+  a.href = url;
+  a.download = "Final_Report.pdf";
 
-      // 🔥 أهم سطر (يخفي upload UI)
-      document.getElementById("step-upload").classList.add("hidden");
+  document.body.appendChild(a);
 
-      // ======================
-      // 3. Show results UI
-      // ======================
-      document.getElementById('progressSection').classList.remove('hidden');
-      document.getElementById('resultContent').classList.remove('hidden');
+  a.click();
 
-      // ======================
-      // 4. Render correct phase
-      // ======================
-      renderPhase();
-
-      console.log("✅ Project restored successfully");
-    })
-    .catch(err => {
-      console.error("❌ Error loading project:", err);
-    });
-}  console.log("📂 Opening project:", projectId);
-
-  fetch(`/get_project/${projectId}`)
-    .then(res => res.json())
-    .then(data => {
-
-      if (data.error) {
-        alert("Failed to load project");
-        return;
-      }
-
-      // ======================
-      // 1. Restore state
-      // ======================
-      extractedData = {
-  functional: data.functional || [],
-  nfr_predictions: data.nfr_predictions || [],
-  functional_method: data.functional_method,
-  ordinal_method: data.ordinal_method,
-  binary_method: data.binary_method,
-  weighted_method: data.weighted_method,
-  hybrid_method: data.hybrid_method
-};
-
-currentPhase = data.current_phase || 1;
-      selectedArchitecture = data.selectedArchitecture || null;
-
-      window.currentProjectId = projectId;
-
-      // ======================
-      // 2. Switch UI
-      // ======================
-      document.getElementById('dashboardView').classList.add('hidden');
-      document.getElementById('uploadView').classList.remove('hidden');
-
-      // ======================
-      // 3. Show results
-      // ======================
-      document.getElementById('progressSection').classList.remove('hidden');
-      document.getElementById('resultContent').classList.remove('hidden');
-
-      renderPhase();
-
-      console.log("✅ Project loaded successfully");
-    })
-    .catch(err => {
-      console.error("❌ Error loading project:", err);
-    });
+  a.remove();
+}

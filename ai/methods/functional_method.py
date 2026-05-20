@@ -85,5 +85,3 @@ def choose_architecture(functional_reqs):
 class FunctionalMethod(ArchitectureAnalysisStrategy):
     def run(self, functional_requirements):
         return choose_architecture(functional_requirements)
-
-
