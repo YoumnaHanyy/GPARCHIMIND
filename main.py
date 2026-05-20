@@ -996,9 +996,8 @@ def generate_architecture(project_id: str):
 
     subprocess.run([
         r"C:\Program Files\Java\jdk-24\bin\java.exe",
-        r"C:\Program Files\Java\jdk-24\bin\java.exe",
         "-jar",
-        "C:\\plantuml\\plantuml.jar",
+        PLANTUML_JAR,
         "-tpng",
         "data/outputs/dfd_context.puml",
         "data/outputs/process_view.puml",
