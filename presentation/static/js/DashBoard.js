@@ -968,6 +968,7 @@ function hideNfrInlineError() {
   }
   function backToDashboard(){
   document.getElementById("uploadView").classList.add("hidden");
+  document.getElementById("adlView").classList.add("hidden"); // ✅ دي الجديدة
   document.getElementById("dashboardView").classList.remove("hidden");
 }
 function showErrorModal(message) {
@@ -1032,10 +1033,10 @@ async function syncProjectProgress() {
   }
 }
 
-
-function copyCode() {
-  const code = document.getElementById("generatedCode").innerText;
-  navigator.clipboard.writeText(code);
+const disposition = response.headers.get("Content-Disposition") || "";
+const isProblemReport = disposition.includes("problems");
+if (isProblemReport) {
+  alert("⚠️ Architecture has verification/validation issues. Please review the report.");
 }
 
 function downloadCode() {
@@ -1158,14 +1159,3 @@ currentPhase = data.current_phase || 1;
     .catch(err => {
       console.error("❌ Error loading project:", err);
     });
-
-
-
-    // ======================
-      // 3. Show results
-      // ======================
-      // 3. Show results
-      // ======================// ======================
-      // 3. Show results
-      // ======================
-      // ======================

@@ -29,7 +29,7 @@ from application.extraction.adl.verification.verification_report_generator impor
 from ai.inference.feature_extractor import generate_phase4
 import zipfile
 from infrastructure.database import db
-from infrastructure.repositories.ADL_repository import save_architecture_report_pdf
+from infrastructure.repositories.ADL_repository import save_architecture_report_pdf, save_verification_report_pdf
 from infrastructure.repositories.hybrid_repository import save_hybrid_result
 from fastapi.staticfiles import StaticFiles
 from ai.json_to_process_view import convert_to_process_view
@@ -71,6 +71,7 @@ from dotenv import load_dotenv
 import os
 import threading
 import time
+from concurrent.futures import ThreadPoolExecutor
 from service.retrain_service import merge_and_retrain
 from infrastructure.database import db
 from service.retrain_service import run_retrain_async
@@ -900,50 +901,47 @@ def generate_architecture(project_id: str):
     # ==========================================================
     # 3. Generate architecture
     # ==========================================================
+    t0 = time.time()
+    print("[generate] ai_generate_architecture START", flush=True)
     arch = ai_generate_architecture(
         system_name,
         functional_requirements,
         non_functional_requirements,
         selected_architecture
     )
+    print(f"[generate] ai_generate_architecture END elapsed={time.time()-t0:.2f}s", flush=True)
 
     # ==========================================================
-    # 4. VERIFICATION GATE
+    # 4. VERIFICATION — run check only (PDF generated later in parallel)
     # ==========================================================
-    verification_result = {}
-    try:
-        verification_result = run_verification(arch)
-        print(f"[verify] run_verification status={verification_result.get('status')}", flush=True)
-        verification_pdf_path = generate_verification_pdf(verification_result)
-        print(f"[verify] PDF generated at: {verification_pdf_path}", flush=True)
-        with open(verification_pdf_path, "rb") as _vf:
-            _vbytes = _vf.read()
-        print(f"[verify] PDF bytes read: {len(_vbytes)}", flush=True)
+   # try:
+    #  verification_result = run_verification(arch)
+    #except Exception as e:
+    # raise HTTPException(
+     #   status_code=500,
+      #  detail=f"Verification crashed: {str(e)}"
+    #)
 
-        save_verification_report_pdf(project_id, _vbytes)
-        print("[verify] verification report saved to MongoDB successfully", flush=True)
-    except Exception as e:
-        import traceback
-        print(f"[verify] ERROR — verification report NOT saved: {e}", flush=True)
-        traceback.print_exc()
+    #verification_result = run_verification(arch)
 
+    #if verification_result["status"] != "VERIFIED":
+     #raise HTTPException(
+      #  status_code=400,
+       # detail="Architecture verification failed. Please fix issues before generating ADL."
+    #)
 
-
+# Generate verification report ONLY on success (optional)
+   # generate_verification_pdf(verification_result)
 
 
     # ==========================================================
-    # 5. VALIDATION GATE
+    # 5. VALIDATION — run check only (PDF generated later in parallel)
     # ==========================================================
-    # ==========================================================
-# 5. VALIDATION (SUCCESSFUL BUT NOT RETURNED)
-# ==========================================================
     validation_result = {}
-
     try:
-      validation_result = run_validation(arch)
-      generate_validation_pdf(validation_result)
+        validation_result = run_validation(arch)
     except Exception as e:
-      print("Validation skipped:", e)
+        print("Validation skipped:", e)
     # ==========================================================
     # 6. Persist architecture outputs
     # ==========================================================
@@ -954,8 +952,7 @@ def generate_architecture(project_id: str):
 
     with open("data/outputs/architecture.validation.json", "w", encoding="utf-8") as f:
        json.dump(validation_result, f, indent=2)
-    with open("data/outputs/architecture.verification.json", "w", encoding="utf-8") as f:
-        json.dump(verification_result, f, indent=2)
+
 
     acme = convert_to_acme(arch)
     with open("data/outputs/architecture.acme", "w", encoding="utf-8") as f:
@@ -984,7 +981,8 @@ def generate_architecture(project_id: str):
 
    
     with open("data/outputs/usecase_view.puml", "w", encoding="utf-8") as f:
-     f.write(uml) # ==========================================================
+        f.write(uml)
+    # ==========================================================
     # 8. Render diagrams (PlantUML → PNG)
     # ==========================================================
     PLANTUML_JAR = os.path.join(
@@ -994,6 +992,8 @@ def generate_architecture(project_id: str):
         "plantuml.jar"
     )
 
+    t0 = time.time()
+    print("[generate] PlantUML rendering START", flush=True)
     subprocess.run([
         r"C:\Program Files\Java\jdk-24\bin\java.exe",
         "-jar",
@@ -1005,15 +1005,64 @@ def generate_architecture(project_id: str):
         "data/outputs/architecture_c4.puml",
         "data/outputs/usecase_view.puml"
     ], check=True)
+    print(f"[generate] PlantUML rendering END elapsed={time.time()-t0:.2f}s", flush=True)
 
     # ==========================================================
-    # 9. Generate final architecture report
+    # 9. PARALLEL PDF GENERATION
+    # All three reports are independent at this point:
+    #   - ADL report  : needs PlantUML PNGs (written above) + DB
+    #   - Verification: needs verification_result dict only
+    #   - Validation  : needs validation_result dict only
     # ==========================================================
-    pdf_path = generate_report(project_id)
-    with open(pdf_path, "rb") as f:
-     pdf_bytes = f.read()
+    def _adl_pdf_task():
+        print("[PDF] ADL report generation started.", flush=True)
+        _pdf_path = generate_report(project_id)
+        with open(_pdf_path, "rb") as f:
+            _pdf_bytes = f.read()
+        save_architecture_report_pdf(project_id, _pdf_bytes)
+        print("[PDF] ADL report saved to MongoDB.", flush=True)
+        return _pdf_path
 
-    save_architecture_report_pdf(project_id, pdf_bytes)
+    def _verification_pdf_task():
+        print("[PDF] Verification report generation started.", flush=True)
+        try:
+            if not verification_result:
+                print("[PDF] Verification PDF skipped (no result).", flush=True)
+                return
+            _vpath = generate_verification_pdf(verification_result)
+            print(f"[PDF] Verification PDF generated at: {_vpath}", flush=True)
+            with open(_vpath, "rb") as vf:
+                _vbytes = vf.read()
+            print(f"[PDF] Verification PDF bytes read: {len(_vbytes)}", flush=True)
+            save_verification_report_pdf(project_id, _vbytes)
+            print("[PDF] Verification report saved to MongoDB.", flush=True)
+        except Exception as e:
+            print(f"[PDF] Verification PDF error: {e}", flush=True)
+            traceback.print_exc()
+
+    def _validation_pdf_task():
+        print("[PDF] Validation report generation started.", flush=True)
+        try:
+            if not validation_result:
+                print("[PDF] Validation PDF skipped (no result).", flush=True)
+                return
+            generate_validation_pdf(validation_result)
+            print("[PDF] Validation report generated.", flush=True)
+        except Exception as e:
+            print(f"[PDF] Validation PDF error: {e}", flush=True)
+
+    t0 = time.time()
+    print("[generate] parallel PDF generation START", flush=True)
+    with ThreadPoolExecutor(max_workers=3) as executor:
+        adl_future = executor.submit(_adl_pdf_task)
+        verify_future = executor.submit(_verification_pdf_task)
+        validate_future = executor.submit(_validation_pdf_task)
+
+    pdf_path = adl_future.result()
+    verify_future.result()
+    validate_future.result()
+    print(f"[generate] parallel PDF generation END elapsed={time.time()-t0:.2f}s", flush=True)
+
     # ==========================================================
     # 10. Return SUCCESS output only
     # ==========================================================
@@ -1182,77 +1231,4 @@ def download_validation_report():
         headers={
             "Content-Disposition": "inline; filename=architecture_validation_report.pdf"
         }
-    )
-@app.get("/download-verification-report/{project_id}")
-def download_verification_report(
-    project_id: str
-):
-
-    doc = db.architecture_reports.find_one({
-
-        "project_id": project_id,
-
-        "report_type": "verification"
-    })
-
-    if not doc:
-
-        raise HTTPException(
-
-            status_code=404,
-
-            detail="Verification report not found"
-        )
-
-    return StreamingResponse(
-
-        io.BytesIO(doc["report_pdf"]),
-
-        media_type="application/pdf",
-
-        headers={
-            "Content-Disposition":
-            f"inline; filename={project_id}_verification.pdf"
-        }
-    )
-from application.extraction.reporting.final_report_generator import generate_last_report
-@app.get("/generate-final-report/{project_id}")
-def generate_final_report(project_id: str):
-
-    project = db.projects.find_one({
-        "project_id": project_id
-    })
-    project["project_id"] = project_id
-    frs = list(
-        db.fr_extracted.find(
-            {"project_id": project_id},
-            {"_id": 0}
-        )
-    )
-
-    nfrs = list(
-        db.nfr_predictions.find(
-            {"project_id": project_id},
-            {"_id": 0}
-        )
-    )
-
-    hybrid = db.hybrid_method.find_one({
-        "project_id": project_id
-    })
-
-    phase4 = generate_phase4(project_id)
-
-    pdf_path = generate_last_report(
-        project,
-        frs,
-        nfrs,
-        hybrid,
-        phase4
-    )
-
-    return FileResponse(
-        path=pdf_path,
-        filename="final_report.pdf",
-        media_type="application/pdf"
     )

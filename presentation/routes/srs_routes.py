@@ -228,9 +228,20 @@ async def extract_srs(request: Request, file: UploadFile = File(...)):
         )
 
         if not extraction_result:
+            raise ValueError("process_srs returned empty result")
 
-            raise ValueError(
-                "process_srs returned empty result"
+        if extraction_result.get("extraction_failed"):
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "srs_verified": False,
+                    "error": "Functional Requirements extraction failed",
+                    "message": (
+                        "The system could not extract Functional Requirements "
+                        "due to an API error. Please retry in a few seconds."
+                    ),
+                    "details": extraction_result.get("details", ""),
+                },
             )
 
         # ==========================================
@@ -462,7 +473,7 @@ async def extract_srs(request: Request, file: UploadFile = File(...)):
         # ==========================================
         # RETURN LOW CONFIDENCE
         # ==========================================
-
+        drift_result = {}
         return {
 
             "project_id":
