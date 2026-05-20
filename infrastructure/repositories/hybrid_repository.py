@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from infrastructure.database import db
 
 
@@ -8,5 +10,6 @@ def save_hybrid_result(project_id, result, selected_architecture):
         "project_id": project_id,
         "method": "hybrid",
         "top_architectures": result,
-        "selected_architecture": selected_architecture
+        "selected_architecture": selected_architecture,
+        "created_at": datetime.utcnow()
     })
