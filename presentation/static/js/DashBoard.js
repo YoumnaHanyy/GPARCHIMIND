@@ -1158,3 +1158,14 @@ currentPhase = data.current_phase || 1;
     .catch(err => {
       console.error("❌ Error loading project:", err);
     });
+
+
+
+    // ======================
+      // 3. Show results
+      // ======================
+      // 3. Show results
+      // ======================// ======================
+      // 3. Show results
+      // ======================
+      // ======================
