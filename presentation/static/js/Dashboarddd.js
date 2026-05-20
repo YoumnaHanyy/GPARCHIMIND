@@ -2,6 +2,7 @@
 let currentPhase = 1;
 let extractedData = null;
 let pendingConfirmation = false; 
+let generatedSkeletonHTML = null;
 // Add defensive check
 window.addEventListener('DOMContentLoaded', () => {
   console.log("Dashboard initialized");
@@ -107,7 +108,6 @@ function checkADLInputs() {
     btn.disabled = true;
   }
 }
-
   function showUploader() {
     document.getElementById('dashboardView').classList.add('hidden');
     document.getElementById('uploadView').classList.remove('hidden');
@@ -270,17 +270,24 @@ function checkADLInputs() {
     return html;
   }
 
-  function renderBinaryMethod(data) {
-    if (!data || !data.binary_method || !data.binary_method.top_architectures) {
+function renderBinaryMethod(data) {
+    if (
+        !data ||
+        !data.binary_method ||
+        !data.binary_method.top_5_architectures
+    ) {
       return "<p class='text-muted'>No binary method results available.</p>";
     }
 
     let html = "<h5 class='section-header'>Binary Method</h5>";
 
-    data.binary_method.top_architectures.forEach((item, idx) => {
+    data.binary_method.top_5_architectures.forEach((item, idx) => {
       html += `
         <div class="mb-3">
-          <div class="req-title">${idx + 1}. ${item.architecture}</div>
+          <div class="req-title">
+            ${idx + 1}. ${item.architecture}
+          </div>
+
           <div class="req-desc">
             Score: <strong>${item.score}</strong>
           </div>
@@ -289,8 +296,7 @@ function checkADLInputs() {
     });
 
     return html;
-  }
-
+}
   function renderWeightedMethod(data) {
     if (!data || !data.weighted_method || !data.weighted_method.top_architectures) {
       return "<p class='text-muted'>No weighted method results available.</p>";
@@ -445,6 +451,221 @@ async function saveSelectedArchitecture() {
     }
 }
 
+async function loadPhase4() {
+  const res = await fetch(`/phase4/${extractedData.project_id}`);
+  const data = await res.json();
+
+  console.log("PHASE4 RESPONSE:", data);
+
+  extractedData.phase4 = data.phase4;
+
+  renderPhase();
+}
+
+function renderDesignPatterns(data) {
+  if (
+    !data ||
+    !data.phase4 ||
+    !Array.isArray(data.phase4.top_patterns) ||
+    data.phase4.top_patterns.length === 0
+  ) {
+     return "<p class='text-muted'>Loading design patterns...</p>";
+  }
+  let html = "<h5 class='section-header'>Recommended Design Patterns</h5>";
+
+  data.phase4.top_patterns.forEach((p, idx) => {
+    html += `
+    
+      <div class="mb-4">
+        <div class="req-title">${idx + 1}. ${p.pattern}</div>
+        <div class="req-desc">
+          ${Array.isArray(p.reasons) ? p.reasons.join(", ") : "No reasons available"}
+        </div>
+      </div>
+    `;
+  });
+
+  return html;
+}
+
+function renderCodeSkeleton(data) {
+  if (generatedSkeletonHTML) {
+    return `
+      <h5 class="section-header mb-4">
+        <i class="bi bi-braces me-2 text-success"></i>Generated Code Skeleton
+      </h5>
+      <div id="generatedSkeletonBox">
+        ${generatedSkeletonHTML}
+      </div>
+    `;
+  }
+
+  return `
+    <h5 class="section-header mb-4">
+      <i class="bi bi-braces me-2 text-success"></i>Code Skeleton Generator
+    </h5>
+    <div id="generatedSkeletonBox" class="skeleton-glass-panel">
+      <div class="text-center">
+        <div class="mb-4">
+          <i class="bi bi-code-square" style="font-size: 2.5rem; color: var(--accent-main); opacity: 0.8;"></i>
+        </div>
+        <h4 class="mb-2 fw-bold" style="color: var(--nav-dark);">
+          Select Language Framework
+        </h4>
+        <p class="text-muted mb-4 small">Generate a structural blueprint based on your architectural choices.</p>
+
+        <select id="languageSelect" class="custom-select-glass w-50 mx-auto mb-4 d-block">
+          <option value="" disabled selected>Choose a programming language...</option>
+          <option value="python">Python</option>
+          <option value="java">Java</option>
+          <option value="javascript">JavaScript / Node.js</option>
+          <option value="typescript">TypeScript</option>
+          <option value="csharp">C# / .NET</option>
+          <option value="go">Go</option>
+          <option value="php">PHP</option>
+          <option value="ruby">Ruby</option>
+          <option value="kotlin">Kotlin</option>
+          <option value="swift">Swift</option>
+        </select>
+
+        <button
+  id="generateSkeletonBtn"
+  class="btn-generate-pulse mt-2"
+  onclick="generateSkeletonWithLanguage()">
+          <i class="bi bi-cpu me-2"></i>Generate Blueprint
+        </button>
+      </div>
+    </div>
+  `;
+}
+
+async function generateSkeletonWithLanguage() {
+  const selectEl = document.getElementById("languageSelect");
+  const language = selectEl.value;
+
+  if(!language) {
+      alert("Please select a language first!");
+      return;
+  }
+
+  const box = document.getElementById("generatedSkeletonBox");
+  const generateBtn =
+  document.getElementById("generateSkeletonBtn");
+
+generateBtn.innerHTML = `
+  <span
+    class="spinner-border spinner-border-sm me-2">
+  </span>
+  Generating...
+`;
+
+generateBtn.disabled = true;
+  // Cinematic Loading State
+  box.innerHTML = `
+    <div class="skeleton-glass-panel">
+      <div class="d-flex align-items-center mb-4 text-muted">
+        <div class="spinner-border spinner-border-sm me-3 text-success" role="status"></div>
+        <span class="fw-semibold tracking-wider text-uppercase">Compiling architectural tree...</span>
+      </div>
+      <div class="code-display-area">
+        <div class="skeleton-loader-line"></div>
+        <div class="skeleton-loader-line medium"></div>
+        <div class="skeleton-loader-line"></div>
+        <div class="skeleton-loader-line short"></div>
+        <div class="skeleton-loader-line medium"></div>
+      </div>
+    </div>
+  `;
+
+  try {
+    const response = await fetch("/generate-skeleton", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        project_id: extractedData.project_id,
+        language: language
+      })
+    });
+
+    const data = await response.json();
+
+    // The Final Generated View
+    generatedSkeletonHTML = `
+      <div class="skeleton-glass-panel">
+        <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-3">
+          <button class="code-action-btn" onclick="backToLanguageSelection()">
+            <i class="bi bi-arrow-left"></i> Back
+          </button>
+          
+          <div class="d-flex gap-2">
+            <button
+  class="code-action-btn skeleton-main-btn"
+  id="copyCodeBtn"
+  onclick="copyCode()">
+              <i class="bi bi-clipboard"></i> <span>Copy</span>
+            </button>
+            <button
+  class="code-action-btn skeleton-main-btn"
+  id="downloadBtn" onclick="downloadCodeSKELETON()">
+              <i class="bi bi-download"></i> Download .zip
+            </button>
+             <button
+      class="code-action-btn skeleton-main-btn"
+      onclick="downloadFinalReport()">
+      <i class="bi bi-file-earmark-pdf-fill"></i>
+      Final Report
+    </button>
+          </div>
+        </div>
+
+        <div class="code-display-area animate-fade-down">
+          <pre><code id="generatedCode">${data.code}</code></pre>
+        </div>
+      </div>
+    `;
+    
+    box.innerHTML = generatedSkeletonHTML;
+
+  } catch (error) {
+    box.innerHTML = `
+      <div class="alert alert-danger" role="alert">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i> Failed to generate skeleton. Please try again.
+        <br><button class="btn btn-sm btn-outline-danger mt-2" onclick="backToLanguageSelection()">Go Back</button>
+      </div>
+    `;
+  }
+}
+
+function backToLanguageSelection() {
+  generatedSkeletonHTML = null; // Reset state
+  renderPhase(); // Re-render to show the pristine selection screen
+}
+
+function copyCode() {
+  const code = document.getElementById("generatedCode").innerText;
+  navigator.clipboard.writeText(code).then(() => {
+    // Visual feedback for copying
+    const copyBtn = document.getElementById("copyCodeBtn");
+    const originalHTML = copyBtn.innerHTML;
+    
+    copyBtn.innerHTML = `
+  <i class="bi bi-check2-all"></i>
+  <span>Copied</span>
+`;
+
+copyBtn.style.background =
+  "linear-gradient(135deg,#10b981,#06b6d4)";
+copyBtn.style.color = "white";
+    copyBtn.style.color = "#10b981";
+    copyBtn.style.borderColor = "#10b981";
+    copyBtn.style.background = "#ecfdf5";
+    
+    setTimeout(() => {
+      copyBtn.innerHTML = originalHTML;
+      copyBtn.style = ""; // Reset inline styles
+    }, 2000);
+  });
+}
   /* =======================
      TAB RENDERING
   ======================= */
@@ -495,10 +716,18 @@ console.log("Project ID:", extractedData?.project_id);
         );
         reportModal.show();
         document.getElementById('reportModal').addEventListener('hidden.bs.modal', () => {
-        document.body.classList.remove('modal-open');
 
-        document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
-        });
+         document.body.classList.remove('modal-open');
+
+          document.body.style.overflow = 'auto';
+
+         document.body.style.paddingRight = '0px';
+
+         document.body.style.position = 'static';
+
+         document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
+
+});
         // 6. Cleanup el memory lma el modal ye2fel
          document
           .getElementById('reportModal')
@@ -559,6 +788,31 @@ function loadValidationReport() {
     { once: true }
   );
 }
+
+function loadVerificationReport() {
+
+  const frame = document.getElementById("reportFrame");
+  const loader = document.getElementById("modalIframeLoader");
+
+  loader.style.display = "block";
+  frame.style.opacity = "0";
+
+  // IMPORTANT
+  frame.src = `/download-verification-report/${extractedData.project_id}`;
+
+  frame.onload = () => {
+    loader.style.display = "none";
+    frame.style.opacity = "1";
+  };
+
+  const reportModal = new bootstrap.Modal(
+    document.getElementById("reportModal")
+  );
+
+  reportModal.show();
+}
+
+
 
 
   function renderPhase() {
@@ -643,9 +897,17 @@ function changePhase(dir) {
     ).show();
     return;
   }
+    
 
-  if (dir === 1 && currentPhase < 3) {
+    if (dir === 1 && currentPhase < 4) {
     currentPhase++;
+
+    if (currentPhase === 4) {
+       loadPhase4(); // 🔥 يستنى الداتا الأول
+    }
+
+    renderPhase(); // بعد ما الداتا وصلت
+
     syncProjectProgress();
     triggerLoading();
   } else if (dir === -1 && currentPhase > 1) {
@@ -901,7 +1163,7 @@ async function submitNFRConfirmation() {
     extractedData.binary_method = confirmData.binary_method;
     extractedData.weighted_method = confirmData.weighted_method;
     extractedData.hybrid_method = confirmData.hybrid_method;
-
+    
     /* 6️⃣ Short delay for UX */
     setTimeout(() => {
       stopLoadingAnimation();
@@ -976,6 +1238,7 @@ function hideNfrInlineError() {
   }
   function backToDashboard(){
   document.getElementById("uploadView").classList.add("hidden");
+  document.getElementById("adlView").classList.add("hidden"); // ✅ دي الجديدة
   document.getElementById("dashboardView").classList.remove("hidden");
 }
 function showErrorModal(message) {
@@ -1045,3 +1308,127 @@ const isProblemReport = disposition.includes("problems");
 if (isProblemReport) {
   alert("⚠️ Architecture has verification/validation issues. Please review the report.");
 }
+<<<<<<<<< Temporary merge branch 1:presentation/static/js/DashBoardd.js
+=========
+
+function downloadCode() {
+  const code = document.getElementById("generatedCode").innerText;
+  const blob = new Blob([code], { type: "text/plain" });
+
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "skeleton.js";
+  a.click();
+}
+
+function regenerateCode() {
+  alert("Regenerating code...");
+}
+
+
+function openProject(projectId) {
+  console.log("📂 Opening project:", projectId);
+
+  fetch(`/get_project/${projectId}`)
+    .then(res => res.json())
+    .then(data => {
+
+      console.log("DATA:", data); // مهم للديباج
+
+      if (data.error) {
+        alert("Failed to load project");
+        return;
+      }
+
+      // ======================
+      // 1. Restore state
+      // ======================
+      extractedData = {
+        functional: data.functional || [],
+        nfr_predictions: data.nfr_predictions || [],
+        functional_method: data.functional_method,
+        ordinal_method: data.ordinal_method,
+        binary_method: data.binary_method,
+        weighted_method: data.weighted_method,
+        hybrid_method: data.hybrid_method
+      };
+
+      currentPhase = data.current_phase || 1;
+      selectedArchitecture = data.selectedArchitecture || null;
+
+      window.currentProjectId = projectId;
+
+      // ======================
+      // 2. Switch UI
+      // ======================
+      document.getElementById('dashboardView').classList.add('hidden');
+      document.getElementById('uploadView').classList.remove('hidden');
+
+      // 🔥 أهم سطر (يخفي upload UI)
+      document.getElementById("step-upload").classList.add("hidden");
+
+      // ======================
+      // 3. Show results UI
+      // ======================
+      document.getElementById('progressSection').classList.remove('hidden');
+      document.getElementById('resultContent').classList.remove('hidden');
+
+      // ======================
+      // 4. Render correct phase
+      // ======================
+      renderPhase();
+
+      console.log("✅ Project restored successfully");
+    })
+    .catch(err => {
+      console.error("❌ Error loading project:", err);
+    });
+}  console.log("📂 Opening project:", projectId);
+
+  fetch(`/get_project/${projectId}`)
+    .then(res => res.json())
+    .then(data => {
+
+      if (data.error) {
+        alert("Failed to load project");
+        return;
+      }
+
+      // ======================
+      // 1. Restore state
+      // ======================
+      extractedData = {
+  functional: data.functional || [],
+  nfr_predictions: data.nfr_predictions || [],
+  functional_method: data.functional_method,
+  ordinal_method: data.ordinal_method,
+  binary_method: data.binary_method,
+  weighted_method: data.weighted_method,
+  hybrid_method: data.hybrid_method
+};
+
+currentPhase = data.current_phase || 1;
+      selectedArchitecture = data.selectedArchitecture || null;
+
+      window.currentProjectId = projectId;
+
+      // ======================
+      // 2. Switch UI
+      // ======================
+      document.getElementById('dashboardView').classList.add('hidden');
+      document.getElementById('uploadView').classList.remove('hidden');
+
+      // ======================
+      // 3. Show results
+      // ======================
+      document.getElementById('progressSection').classList.remove('hidden');
+      document.getElementById('resultContent').classList.remove('hidden');
+
+      renderPhase();
+
+      console.log("✅ Project loaded successfully");
+    })
+    .catch(err => {
+      console.error("❌ Error loading project:", err);
+    });
+>>>>>>>>> Temporary merge branch 2:presentation/static/js/DashBoard.js
