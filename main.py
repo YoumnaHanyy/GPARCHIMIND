@@ -74,7 +74,11 @@ import time
 from service.retrain_service import merge_and_retrain
 from infrastructure.database import db
 from service.retrain_service import run_retrain_async
-
+from presentation.routes.download_routes import router as download_router
+from presentation.routes.srs_validation_routes import router as validation_router
+from ai.validations.srs_validator import SRSValidator
+from dotenv import load_dotenv
+load_dotenv() 
 def auto_retrain_loop():
     while True:
         time.sleep(86400)
@@ -106,6 +110,7 @@ app.add_middleware(
 )
 app.include_router(auth.router)
 app.include_router(hybrid_router)
+
 UPLOAD_DIR = "uploads"
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 
@@ -115,6 +120,10 @@ extractor = SRSExtractor(
 app.include_router(
     srs_router,
     tags=["Extraction"]
+)
+app.include_router(
+    validation_router,
+    tags=["Validation"]
 )
 # ============================================================
 # Templates & Static Files
