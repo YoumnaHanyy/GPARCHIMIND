@@ -1308,8 +1308,6 @@ const isProblemReport = disposition.includes("problems");
 if (isProblemReport) {
   alert("⚠️ Architecture has verification/validation issues. Please review the report.");
 }
-<<<<<<<<< Temporary merge branch 1:presentation/static/js/DashBoardd.js
-=========
 
 function downloadCode() {
   const code = document.getElementById("generatedCode").innerText;
@@ -1431,4 +1429,3 @@ currentPhase = data.current_phase || 1;
     .catch(err => {
       console.error("❌ Error loading project:", err);
     });
->>>>>>>>> Temporary merge branch 2:presentation/static/js/DashBoard.js
