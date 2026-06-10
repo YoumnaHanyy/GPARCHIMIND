@@ -138,6 +138,15 @@
             <div class="project-icon-wrapper">
               <i class="bi bi-file-earmark-check"></i>
             </div>
+            
+             <div class="d-flex align-items-center gap-1">
+
+        <i
+            class="bi bi-star{% if project.starred %}-fill text-warning{% endif %}"
+            onclick="toggleStar('{{ project.validation_id }}', event)"
+            style="cursor:pointer;font-size:1.1rem;">
+        </i>
+         </div>
             {% if project.status == 'completed' %}
             <span class="status-badge status-finished animate-pulse">
               <i class="bi bi-check-circle-fill me-1"></i>Finished
@@ -366,6 +375,49 @@ document.addEventListener('DOMContentLoaded', () => {
     setTimeout(() => { bar.style.width = w; }, 200);
   });
 });
+</script>
+<script>
+async function toggleStar(projectId, event) {
+
+    event.stopPropagation();
+
+    const star = event.target;
+
+    try {
+
+        const response = await fetch(
+            `/validation/${projectId}/toggle-star`,
+            {
+                method: "POST"
+            }
+        );
+
+        const data = await response.json();
+        console.log(data);
+
+        if (data.starred) {
+
+            star.classList.remove("bi-star");
+            star.classList.add(
+                "bi-star-fill",
+                "text-warning"
+            );
+
+        } else {
+
+            star.classList.remove(
+                "bi-star-fill",
+                "text-warning"
+            );
+
+            star.classList.add("bi-star");
+        }
+
+    } catch (err) {
+
+        console.error(err);
+    }
+}
 </script>
 
 </body>

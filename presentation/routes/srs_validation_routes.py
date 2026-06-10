@@ -37,6 +37,9 @@ from infrastructure.repositories.validation_repository import (
     delete_validation_project,
 )
 from ai.validations.enhanced_srs_pdf import generate_enhanced_srs_pdf
+from infrastructure.repositories.validation_repository import (
+    toggle_validation_star
+)
 
 
 logger = logging.getLogger(__name__)
@@ -317,3 +320,26 @@ async def download_enhanced_srs(
             f"Failed to generate PDF: {str(e)}",
             status_code=500
         )
+    
+@router.post("/validation/{validation_id}/toggle-star")
+async def toggle_validation_project_star(
+    request: Request,
+    validation_id: str
+):
+    user = request.session.get("user")
+
+    if not user:
+        return JSONResponse(
+            status_code=401,
+            content={"error": "Not authenticated"}
+        )
+
+    result = toggle_validation_star(
+        validation_id,
+        user["id"]
+    )
+
+    return {
+        "success": True,
+        "starred": result
+    }

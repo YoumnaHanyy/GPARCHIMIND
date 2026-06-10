@@ -47,6 +47,7 @@ def create_validation_project(
     validation_id: str,
     user_id: str,
     project_name: str,
+    starred: False,
     file_name: str = "unknown.pdf"
 ) -> None:
     """
@@ -63,6 +64,7 @@ def create_validation_project(
         "created_at":     datetime.utcnow(),
         "updated_at":     datetime.utcnow(),
         "results":        None,
+        "starred": False
     })
 
 
@@ -155,6 +157,7 @@ def get_user_validation_projects(user_id: str) -> list[dict]:
                 "results.quality_score":      1,
                 "results.total_requirements": 1,
                 "results.critical_issues":    1,
+                "starred": 1,
             }
         ).sort("created_at", -1)
     )
@@ -209,3 +212,39 @@ def get_user_validation_stats(user_id: str) -> dict:
         "max_quality_score": 0,
         "min_quality_score": 0,
     }
+def toggle_validation_star(validation_id: str, user_id: str):
+
+    project = validation_collection.find_one({
+        "validation_id": validation_id,
+        "user_id": user_id
+    })
+
+    if not project:
+        return None
+
+    new_value = not project.get("starred", False)
+
+    validation_collection.update_one(
+        {
+            "validation_id": validation_id,
+            "user_id": user_id
+        },
+        {
+            "$set": {
+                "starred": new_value,
+                "updated_at": datetime.utcnow()
+            }
+        }
+    )
+
+    return new_value
+def get_starred_validation_projects(user_id):
+    return list(
+        validation_collection.find(
+            {
+                "user_id": user_id,
+                "starred": True
+            },
+            {"_id": 0}
+        ).sort("created_at", -1)
+    )

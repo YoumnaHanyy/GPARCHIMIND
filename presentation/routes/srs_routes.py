@@ -55,7 +55,8 @@ from service.nfr_stats_service import compute_nfr_statistics
 from service.functional_service import execute_functional_method
 from service.hybrid_service import execute_hybrid_method
 from infrastructure.repositories.ADL_repository import save_architecture_report_pdf
-from infrastructure.repositories.project_repo import get_project, update_project_progress, create_project, save_project_data
+from infrastructure.repositories.project_repo import get_project, update_project_progress, create_project, save_project_data,toggle_project_star,get_all_starred_projects
+
 from infrastructure.repositories.weighted_repository import save_weighted_result
 from infrastructure.repositories.nfr_dataset_repository import NFRPredictionRepository
 import pdfplumber
@@ -67,6 +68,8 @@ from ai.json_to_deployment_view import convert_to_deployment_view
 from ai.json_to_usecase_view import convert_to_usecase_view
 from infrastructure.repositories.validation_report_repository import save_validation_report_pdf
 from infrastructure.repositories.project_repo import get_user_adl_projects
+
+
 from fastapi.templating import Jinja2Templates
 
 templates = Jinja2Templates(
@@ -1840,4 +1843,50 @@ async def open_validation_report(project_id: str):
     return FileResponse(
         path=temp_pdf,
         media_type="application/pdf"
+    )
+
+
+@router.post("/project/{project_id}/toggle-star")
+async def toggle_star(
+    request: Request,
+    project_id: str
+):
+    user = request.session.get("user")
+
+    if not user:
+        return JSONResponse(
+            status_code=401,
+            content={"error": "Not authenticated"}
+        )
+
+    result = toggle_project_star(
+        project_id,
+        user["id"]
+    )
+
+    return {
+        "success": True,
+        "starred": result
+    }
+
+
+@router.get("/starred-projects")
+async def starred_projects_page(request: Request):
+
+    user = request.session.get("user")
+
+    if not user:
+        return RedirectResponse("/Login")
+
+    projects = get_all_starred_projects(
+        user["id"]
+    )
+
+    return templates.TemplateResponse(
+        "starred_projects.html",
+        {
+            "request": request,
+            "projects": projects,
+            "user": user
+        }
     )

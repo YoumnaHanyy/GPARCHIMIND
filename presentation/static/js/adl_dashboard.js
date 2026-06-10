@@ -121,3 +121,41 @@ function openProject(projectId) {
   window.location.href =
     `/adl-project/${projectId}`;
 }
+async function toggleStar(projectId, event) {
+
+    event.stopPropagation();
+
+    try {
+
+        const response = await fetch(
+            `/project/${projectId}/toggle-star`,
+            {
+                method: "POST"
+            }
+        );
+
+        const data = await response.json();
+
+        if (data.starred) {
+
+            event.target.classList.remove("bi-star");
+            event.target.classList.add(
+                "bi-star-fill",
+                "text-warning"
+            );
+
+        } else {
+
+            event.target.classList.remove(
+                "bi-star-fill",
+                "text-warning"
+            );
+
+            event.target.classList.add("bi-star");
+        }
+
+    } catch (err) {
+
+        console.error(err);
+    }
+}

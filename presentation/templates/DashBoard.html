@@ -77,8 +77,10 @@
   <ul class="side-menu-list">
     <li><i class="bi bi-house-door"></i> Home</li>
     <li><i class="bi bi-layers"></i> Architectural Patterns</li>
-    <li><i class="bi bi-star"></i> Starred Projects</li>
-        <li onclick="window.location.href='/adl-dashboard'">
+<li onclick="window.location.href='/starred-projects'">
+    <i class="bi bi-star"></i>
+    Starred Projects
+</li>        <li onclick="window.location.href='/adl-dashboard'">
       <i class="bi bi-cpu"></i> ADL Generation
 </li>
     <li onclick="window.location.href='/srs-validations'">
@@ -156,6 +158,15 @@
       <div class="studio-card project-card p-4 h-100 position-relative d-flex flex-column animate-pop">
         
         <div class="d-flex justify-content-between align-items-start mb-4">
+          <div class="project-star"
+     onclick="toggleStar('{{ project.project_id }}', event)">
+     
+    {% if project.starred %}
+        <i class="bi bi-star-fill"></i>
+    {% else %}
+        <i class="bi bi-star"></i>
+    {% endif %}
+</div>
           <div class="project-icon-wrapper">
             <i class="bi bi-file-earmark-code"></i>
           </div>
@@ -583,6 +594,21 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
+</script>
+<script>
+async function toggleStar(projectId, event){
+
+    event.stopPropagation();
+
+    await fetch(
+        `/project/${projectId}/toggle-star`,
+        {
+            method: "POST"
+        }
+    );
+
+    location.reload();
+}
 </script>
 
 </body>

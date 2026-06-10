@@ -497,6 +497,15 @@
                 </p>
             </div>
             <div>
+    <div class="position-absolute top-0 end-0 p-4">
+
+    <i
+        class="bi bi-star{% if project.starred %}-fill text-warning{% endif %}"
+        onclick="toggleStar('{{ project.project_id }}', event)"
+        style="font-size:1.5rem;cursor:pointer;">
+    </i>
+
+</div>
                 <span class="badge-arch d-inline-flex align-items-center">
                     <i class="bi bi-cpu me-2 text-muted"></i> 
                     Selected Architecture: <span class="fw-bold ms-1 text-dark">{{ selected_architecture }}</span>
@@ -1630,6 +1639,40 @@ async function saveUpdatedArchitectures(
 
         </div>
         `;
+    }
+}
+</script>
+<script>
+async function toggleStar(projectId, event){
+
+    event.stopPropagation();
+
+    const icon = event.target;
+
+    await fetch(
+        `/project/${projectId}/toggle-star`,
+        {
+            method: "POST"
+        }
+    );
+
+    if(icon.classList.contains("bi-star-fill")){
+
+        icon.classList.remove(
+            "bi-star-fill",
+            "text-warning"
+        );
+
+        icon.classList.add("bi-star");
+
+    }else{
+
+        icon.classList.remove("bi-star");
+
+        icon.classList.add(
+            "bi-star-fill",
+            "text-warning"
+        );
     }
 }
 </script>
