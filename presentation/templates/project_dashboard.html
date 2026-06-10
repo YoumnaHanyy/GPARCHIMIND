@@ -518,7 +518,7 @@
                         <span class="text-dark">{{ project.progress }}%</span>
                     </div>
                     <div class="progress">
-                        <div class="progress-bar-fill" style="width: {{ project.progress }}%"></div>
+                        <div class="progress-bar-fill" data-progress="{{ project.progress }}"></div>
                     </div>
                 </div>
 
@@ -773,7 +773,7 @@
 </div>
 
 <script>
-let frCounter = {{ frs|length if frs else 1 }};
+let frCounter = Number('{{ frs|length if frs else 1 }}');
 
 function addFRField() {
     frCounter++;
@@ -881,11 +881,9 @@ window.addEventListener(
     "DOMContentLoaded",
     monitorRequirementChanges
 );
-const previousHybridArchitectures = [
-    {% for arch in hybrid_results %}
-        "{{ arch.Architecture }}",
-    {% endfor %}
-];
+const previousHybridArchitectures = JSON.parse(
+    '{{ hybrid_results | map(attribute="Architecture") | list | tojson | safe }}'
+);
 
 function viewLastResults() {
 

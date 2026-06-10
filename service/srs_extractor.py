@@ -1,6 +1,7 @@
 import fitz  # PyMuPDF
 import json
 import re
+import time
 import logging
 from typing import List, Dict
 
@@ -13,31 +14,71 @@ import os
 logger = logging.getLogger("srs_extractor")
 
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
+GROQ_MAX_RETRIES = 3
+
+FALLBACK_FR_PATTERNS = [
+    r"[Tt]he system shall\b[^.]*",
+    r"[Tt]he system must\b[^.]*",
+    r"[Tt]he user can\b[^.]*",
+    r"[Uu]sers? should be able to\b[^.]*",
+]
+
+
+class GroqRateLimitError(Exception):
+    pass
+
+
+def _parse_groq_wait_time(error_message: str) -> float:
+    """Return suggested retry-after seconds from a Groq rate-limit message, or None."""
+    match = re.search(r"try again in ([\d.]+)s", error_message, re.IGNORECASE)
+    return float(match.group(1)) + 0.5 if match else None
+
 
 def generate(prompt: str) -> str:
-    response = requests.post(
-        "https://api.groq.com/openai/v1/chat/completions",
-        headers={
-            "Authorization": f"Bearer {GROQ_API_KEY}",
-            "Content-Type": "application/json"
-        },
-        json={
-            "model": "llama-3.3-70b-versatile",
-            "messages": [
-                {"role": "system", "content": "Return ONLY valid JSON."},
-                {"role": "user", "content": prompt}
-            ],
-            "temperature": 0.2
-        },
-        timeout=60
-    )
-
-    data = response.json()
-
-    if "choices" not in data:
-        raise ValueError(f"Groq API error: {data}")
-
-    return data["choices"][0]["message"]["content"]
+    """Call Groq with exponential-backoff retry on rate-limit errors."""
+    last_error = None
+    for attempt in range(GROQ_MAX_RETRIES):
+        response = requests.post(
+            "https://api.groq.com/openai/v1/chat/completions",
+            headers={
+                "Authorization": f"Bearer {GROQ_API_KEY}",
+                "Content-Type": "application/json",
+            },
+            json={
+                "model": "llama-3.3-70b-versatile",
+                "messages": [
+                    {"role": "system", "content": "Return ONLY valid JSON."},
+                    {"role": "user", "content": prompt},
+                ],
+                "temperature": 0.2,
+            },
+            timeout=60,
+        )
+        data = response.json()
+        error_obj = data.get("error", {})
+        is_rate_limit = (
+            response.status_code == 429
+            or error_obj.get("code") == "rate_limit_exceeded"
+        )
+        if is_rate_limit:
+            error_msg = error_obj.get("message", "")
+            suggested = _parse_groq_wait_time(error_msg)
+            wait_time = suggested if suggested is not None else (2 ** attempt) * 2
+            last_error = GroqRateLimitError(
+                f"rate_limit_exceeded (attempt {attempt + 1}/{GROQ_MAX_RETRIES}): {error_msg}"
+            )
+            logger.warning(
+                "Groq rate limit hit (attempt %d/%d), waiting %.1fs",
+                attempt + 1, GROQ_MAX_RETRIES, wait_time,
+            )
+            if attempt < GROQ_MAX_RETRIES - 1:
+                time.sleep(wait_time)
+                continue
+            raise last_error
+        if "choices" not in data:
+            raise ValueError(f"Groq API error: {data}")
+        return data["choices"][0]["message"]["content"]
+    raise last_error
 MAX_CHARS = 12000
 CHUNK_SIZE = 4000
 
@@ -138,15 +179,41 @@ class SRSExtractor:
         raise ValueError("LLM returned invalid or unbalanced JSON")
 
     # -------------------------------
+    # FALLBACK FR EXTRACTION (REGEX)
+    # -------------------------------
+    @staticmethod
+    def _fallback_extract_functional(srs_text: str) -> List[Dict]:
+        """Extract FRs via regex patterns when Groq is unavailable."""
+        text = srs_text.replace("\n", " ")
+        sentences = re.split(r'(?<=[.!?])\s+', text)
+        seen: set = set()
+        results = []
+        for sentence in sentences:
+            sentence = sentence.strip()
+            if len(sentence) < 15:
+                continue
+            for pattern in FALLBACK_FR_PATTERNS:
+                if re.search(pattern, sentence):
+                    if sentence not in seen:
+                        seen.add(sentence)
+                        results.append({
+                            "description": sentence,
+                            "source": {"page": None, "start_index": None},
+                        })
+                    break
+        return results
+
+    # -------------------------------
     # FUNCTIONAL + NON-FUNCTIONAL EXTRACTION
     # -------------------------------
     def extract_requirements(self, srs_text: str, project_id: int = 2) -> Dict:
         project_name = self.extract_project_name(srs_text)
+        groq_error = None
+        extracted = None
+
         try:
             candidates = self.extract_candidates(srs_text)
-
             joined_text = "\n".join(candidates[:200])
-
             prompt = f"""
 You are a software requirements analyst.
 
@@ -170,62 +237,50 @@ Return ONLY JSON:
 Requirements:
 {joined_text}
 """
-
             output = generate(prompt)
             extracted = self.extract_json_from_model_output(output)
-
         except Exception as e:
-            logger.exception("❌ Groq extraction failed")
+            groq_error = e
+            logger.warning(
+                "Groq extraction failed (%s: %s), trying regex fallback",
+                type(e).__name__, e,
+            )
 
-            # 🔹 Graceful failure (system does NOT crash)
+        if extracted is not None:
+            functional_requirements = [
+                {"description": f, "source": {"page": None, "start_index": None}}
+                for f in extracted.get("functional", [])
+            ]
+            non_functional_requirements = extracted.get("non_functional", [])
+            logger.info("FR source: Groq (%d items)", len(functional_requirements))
+        else:
+            functional_requirements = self._fallback_extract_functional(srs_text)
+            non_functional_requirements = []
+            logger.info("FR source: regex fallback (%d items found)", len(functional_requirements))
+
+        if not functional_requirements and groq_error is not None:
+            logger.error("❌ Groq failed and regex fallback returned no FRs")
             return {
                 "project_name": project_name,
                 "functional": [],
                 "non_functional": [],
-                "error": "LLM extraction failed",
-                "details": str(e)
+                "extraction_failed": True,
+                "error": "FR extraction failed after retries and fallback",
+                "details": str(groq_error),
             }
 
-        # -------------------------------
-        # SPLIT RESULTS
-        # -------------------------------
-        functional_requirements = [
-    {
-        "description": f,
-        "source": {"page": None, "start_index": None}
-    }
-    for f in extracted.get("functional", [])
-]
-        non_functional_requirements = extracted.get("non_functional", [])
-
-        # -------------------------------
-        # SAVE TO DATABASE
-        # -------------------------------
-        ExtractionRepository.save_functional(
-            project_id,
-            functional_requirements
-        )
-
-        ExtractionRepository.save_non_functional(
-            project_id,
-            non_functional_requirements
-        )
-
-        # -------------------------------
-        # SAVE TO JSON FILES
-        # -------------------------------
+        ExtractionRepository.save_functional(project_id, functional_requirements)
+        ExtractionRepository.save_non_functional(project_id, non_functional_requirements)
         paths = ExtractionRepository.save_extraction_results(
             project_id=project_id,
             fr=functional_requirements,
-            nfr=non_functional_requirements
+            nfr=non_functional_requirements,
         )
 
-        # -------------------------------
-        # RETURN FINAL RESULT
-        # -------------------------------
         return {
             "project_name": project_name,
             "functional": functional_requirements,
             "non_functional": non_functional_requirements,
-            "saved_files": paths
+            "fr_source": "groq" if extracted is not None else "fallback",
+            "saved_files": paths,
         }

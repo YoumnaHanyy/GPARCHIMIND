@@ -270,24 +270,17 @@ function checkADLInputs() {
     return html;
   }
 
-function renderBinaryMethod(data) {
-    if (
-        !data ||
-        !data.binary_method ||
-        !data.binary_method.top_5_architectures
-    ) {
+  function renderBinaryMethod(data) {
+    if (!data || !data.binary_method || !data.binary_method.top_architectures) {
       return "<p class='text-muted'>No binary method results available.</p>";
     }
 
     let html = "<h5 class='section-header'>Binary Method</h5>";
 
-    data.binary_method.top_5_architectures.forEach((item, idx) => {
+    data.binary_method.top_architectures.forEach((item, idx) => {
       html += `
         <div class="mb-3">
-          <div class="req-title">
-            ${idx + 1}. ${item.architecture}
-          </div>
-
+          <div class="req-title">${idx + 1}. ${item.architecture}</div>
           <div class="req-desc">
             Score: <strong>${item.score}</strong>
           </div>
@@ -296,7 +289,8 @@ function renderBinaryMethod(data) {
     });
 
     return html;
-}
+  }
+
   function renderWeightedMethod(data) {
     if (!data || !data.weighted_method || !data.weighted_method.top_architectures) {
       return "<p class='text-muted'>No weighted method results available.</p>";
@@ -716,18 +710,10 @@ console.log("Project ID:", extractedData?.project_id);
         );
         reportModal.show();
         document.getElementById('reportModal').addEventListener('hidden.bs.modal', () => {
+        document.body.classList.remove('modal-open');
 
-         document.body.classList.remove('modal-open');
-
-          document.body.style.overflow = 'auto';
-
-         document.body.style.paddingRight = '0px';
-
-         document.body.style.position = 'static';
-
-         document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
-
-});
+        document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
+        });
         // 6. Cleanup el memory lma el modal ye2fel
          document
           .getElementById('reportModal')
@@ -788,32 +774,21 @@ function loadValidationReport() {
     { once: true }
   );
 }
-
 function loadVerificationReport() {
-
   const frame = document.getElementById("reportFrame");
   const loader = document.getElementById("modalIframeLoader");
-
   loader.style.display = "block";
   frame.style.opacity = "0";
-
-  // IMPORTANT
-  frame.src = `/download-verification-report/${extractedData.project_id}`;
-
-  frame.onload = () => {
-    loader.style.display = "none";
-    frame.style.opacity = "1";
-  };
-
-  const reportModal = new bootstrap.Modal(
-    document.getElementById("reportModal")
+  frame.src = "/download-verification-report";
+  frame.addEventListener(
+    "load",
+    () => {
+      loader.style.display = "none";
+      frame.style.opacity = "1";
+    },
+    { once: true }
   );
-
-  reportModal.show();
 }
-
-
-
 
   function renderPhase() {
     const data = phaseData[currentPhase];
@@ -1238,7 +1213,7 @@ function hideNfrInlineError() {
   }
   function backToDashboard(){
   document.getElementById("uploadView").classList.add("hidden");
-  document.getElementById("adlView").classList.add("hidden"); // ✅ دي الجديدة
+  document.getElementById("adlView").classList.add("hidden");
   document.getElementById("dashboardView").classList.remove("hidden");
 }
 function showErrorModal(message) {
@@ -1303,129 +1278,89 @@ async function syncProjectProgress() {
   }
 }
 
-const disposition = response.headers.get("Content-Disposition") || "";
-const isProblemReport = disposition.includes("problems");
-if (isProblemReport) {
-  alert("⚠️ Architecture has verification/validation issues. Please review the report.");
-}
 
-function downloadCode() {
-  const code = document.getElementById("generatedCode").innerText;
-  const blob = new Blob([code], { type: "text/plain" });
+async function downloadCodeSKELETON() {
+
+  const btn =
+    document.getElementById("downloadBtn");
+
+  btn.innerHTML = `
+    <span
+      class="spinner-border spinner-border-sm me-2">
+    </span>
+    Downloading
+  `;
+
+  const code =
+    document.getElementById(
+      "generatedCode"
+    ).innerText;
+
+  const response = await fetch(
+    "/download-skeleton",
+    {
+      method: "POST",
+
+      headers: {
+        "Content-Type": "application/json"
+      },
+
+      body: JSON.stringify({
+        tree: code
+      })
+    }
+  );
+
+  const blob = await response.blob();
+
+  const url =
+    window.URL.createObjectURL(blob);
 
   const a = document.createElement("a");
-  a.href = URL.createObjectURL(blob);
-  a.download = "skeleton.js";
+
+  a.href = url;
+
+  a.download = "code_skeleton.zip";
+
+  document.body.appendChild(a);
+
   a.click();
+
+  a.remove();
+
+  btn.innerHTML = `
+    <i class="bi bi-check-circle-fill"></i>
+    Downloaded
+  `;
 }
 
 function regenerateCode() {
   alert("Regenerating code...");
 }
 
-
 function openProject(projectId) {
-  console.log("📂 Opening project:", projectId);
+    window.location.href = `/project/${projectId}`;
+}
 
-  fetch(`/get_project/${projectId}`)
-    .then(res => res.json())
-    .then(data => {
 
-      console.log("DATA:", data); // مهم للديباج
+async function downloadFinalReport() {
 
-      if (data.error) {
-        alert("Failed to load project");
-        return;
-      }
+  const response = await fetch(
+    `/generate-final-report/${extractedData.project_id}`
+  );
 
-      // ======================
-      // 1. Restore state
-      // ======================
-      extractedData = {
-        functional: data.functional || [],
-        nfr_predictions: data.nfr_predictions || [],
-        functional_method: data.functional_method,
-        ordinal_method: data.ordinal_method,
-        binary_method: data.binary_method,
-        weighted_method: data.weighted_method,
-        hybrid_method: data.hybrid_method
-      };
+  const blob = await response.blob();
 
-      currentPhase = data.current_phase || 1;
-      selectedArchitecture = data.selectedArchitecture || null;
+  const url = window.URL.createObjectURL(blob);
 
-      window.currentProjectId = projectId;
+  const a = document.createElement("a");
 
-      // ======================
-      // 2. Switch UI
-      // ======================
-      document.getElementById('dashboardView').classList.add('hidden');
-      document.getElementById('uploadView').classList.remove('hidden');
+  a.href = url;
+  a.download = "Final_Report.pdf";
 
-      // 🔥 أهم سطر (يخفي upload UI)
-      document.getElementById("step-upload").classList.add("hidden");
+  document.body.appendChild(a);
 
-      // ======================
-      // 3. Show results UI
-      // ======================
-      document.getElementById('progressSection').classList.remove('hidden');
-      document.getElementById('resultContent').classList.remove('hidden');
+  a.click();
 
-      // ======================
-      // 4. Render correct phase
-      // ======================
-      renderPhase();
-
-      console.log("✅ Project restored successfully");
-    })
-    .catch(err => {
-      console.error("❌ Error loading project:", err);
-    });
-}  console.log("📂 Opening project:", projectId);
-
-  fetch(`/get_project/${projectId}`)
-    .then(res => res.json())
-    .then(data => {
-
-      if (data.error) {
-        alert("Failed to load project");
-        return;
-      }
-
-      // ======================
-      // 1. Restore state
-      // ======================
-      extractedData = {
-  functional: data.functional || [],
-  nfr_predictions: data.nfr_predictions || [],
-  functional_method: data.functional_method,
-  ordinal_method: data.ordinal_method,
-  binary_method: data.binary_method,
-  weighted_method: data.weighted_method,
-  hybrid_method: data.hybrid_method
-};
-
-currentPhase = data.current_phase || 1;
-      selectedArchitecture = data.selectedArchitecture || null;
-
-      window.currentProjectId = projectId;
-
-      // ======================
-      // 2. Switch UI
-      // ======================
-      document.getElementById('dashboardView').classList.add('hidden');
-      document.getElementById('uploadView').classList.remove('hidden');
-
-      // ======================
-      // 3. Show results
-      // ======================
-      document.getElementById('progressSection').classList.remove('hidden');
-      document.getElementById('resultContent').classList.remove('hidden');
-
-      renderPhase();
-
-      console.log("✅ Project loaded successfully");
-    })
-    .catch(err => {
-      console.error("❌ Error loading project:", err);
-    });
+  a.remove();
+}
