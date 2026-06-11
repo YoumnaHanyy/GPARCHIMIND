@@ -47,7 +47,7 @@ def create_validation_project(
     validation_id: str,
     user_id: str,
     project_name: str,
-    starred: False,
+    starred: bool = False,
     file_name: str = "unknown.pdf"
 ) -> None:
     """
