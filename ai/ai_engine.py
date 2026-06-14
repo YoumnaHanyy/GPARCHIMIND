@@ -4,13 +4,14 @@ import re
 from huggingface_hub import InferenceClient
 from dotenv import load_dotenv
 
+
 load_dotenv()
 
 HF_API_KEY = os.getenv("HF_API_KEY")
 if not HF_API_KEY:
     raise RuntimeError("HF_API_KEY not found in environment variables")
 
-MODEL_NAME = "meta-llama/Meta-Llama-3-8B-Instruct"
+MODEL_NAME = "meta-llama/Llama-3.3-70B-Instruct"
 
 client = InferenceClient(
     model=MODEL_NAME,
@@ -28,27 +29,45 @@ def ask_llm(prompt: str, temperature=0.2):
         max_tokens=2000,
         temperature=temperature
     )
+    print("RESPONSE TYPE:", type(response))
+    print(response)
 
-    return response["choices"][0]["message"]["content"]
+    return response.choices[0].message.content
 
 
 # ================= SAFE JSON EXTRACTION =================
 
 def extract_json(text: str):
+
+    text = text.strip()
+
+    if text.startswith("```json"):
+        text = text.replace("```json", "", 1)
+
+    if text.startswith("```"):
+        text = text.replace("```", "", 1)
+
+    if text.endswith("```"):
+        text = text[:-3]
+
+    text = text.strip()
+
     try:
-        # نحاول direct parse
         return json.loads(text)
 
     except:
         pass
 
     try:
-        # نلقط أول JSON block مظبوط
+
         start = text.find("{")
         end = text.rfind("}") + 1
+
+        if start == -1 or end <= 0:
+            raise ValueError("No JSON object found")
+
         json_str = text[start:end]
 
-        # تنظيف
         json_str = re.sub(r",\s*}", "}", json_str)
         json_str = re.sub(r",\s*]", "]", json_str)
 
@@ -66,6 +85,12 @@ def robust_llm_json(prompt, retries=4):
     for i in range(retries):
         try:
             response = ask_llm(prompt)
+            print("\n========== RAW LLM ==========")
+            print(response)
+            print("=============================\n")
+            print("\n========== PROMPT ==========")
+            print(prompt[:2000])
+            print("============================\n")
             return extract_json(response)
 
         except Exception as e:
@@ -217,6 +242,9 @@ def style_production_intents(style: str):
 
 def extract_decisions(system, frs, nfrs, style):
 
+
+    print("STEP: extract_decisions")
+
     prompt = f"""
 System: {system}
 Architecture Style: {style}
@@ -238,32 +266,75 @@ Return ONLY valid JSON:
  ]
 }}
 """
+    print("\nDECISIONS PROMPT:")
+    print(prompt[:1000])
 
-    return robust_llm_json(prompt).get("decisions", [])
+    result = robust_llm_json(prompt)
+
+    print("\nDECISIONS RESULT:")
+    print(type(result))
+    print(result)
+
+    if isinstance(result, list):
+     print("WARNING: LLM returned LIST instead of JSON OBJECT")
+     return []
+
+    return result.get("decisions", [])
 
 
-def generate_components(system, frs):
+def generate_components(system, frs , style):
+    print("STEP: generate_components")
 
     prompt = f"""
 System: {system}
+Architecture Style: {style}
+
 
 Functional Requirements:
 {frs}
+Generate components suitable for the selected architecture style.
+Choose component kinds and layers according to the selected architecture style.
+
 
 IMPORTANT:
 - Limit to maximum 8 components
 - Keep output short
+- Every component must have:
+  - name
+  - responsibility
+  - kind
 
 STRICT RULES:
 - RETURN JSON ONLY
 - NO explanation
 - NO markdown
 
+If Architecture Style is Layered:
+generate Presentation, Business and Data components.
+
+If Architecture Style is MVC:
+generate Model, View and Controller components.
+
+If Architecture Style is Microservices:
+generate independent services and databases.
+
+If Architecture Style is Event-Driven:
+generate producers, consumers and brokers.
+
+If Architecture Style is Pipe-and-Filter:
+generate filters and pipes.
+
+If Architecture Style is Client-Server:
+generate clients, servers and databases.
+
 {{
  "components":[
   {{
    "name":"Component name",
-   "responsibility":"Short responsibility"
+   "responsibility":"Short responsibility",
+   "kind":"service | database | external | broker | gateway | ui | controller | model | view | adapter | port | filter | pipe | client | server",
+    "technology":"Technology name"
+  
   }}
  ]
 }}
@@ -297,7 +368,8 @@ STRICT RULES:
   {{
    "source":"Component",
    "target":"Component",
-   "type":"data-flow | event-flow"
+   "type":"data-flow | event-flow",
+   "description":"Short interaction description"
   }}
  ]
 }}
@@ -324,7 +396,7 @@ Relationships:
 {json.dumps(relationships, indent=2)}
 
 IMPORTANT:
-- Max 6 steps
+- Max 8 steps
 - Keep short
 
 STRICT RULES:
@@ -364,19 +436,31 @@ Relationships:
 NFRs:
 {nfrs}
 
+Return at least 3 architecture observations.
+Include strengths and weaknesses.
 Return ONLY valid JSON:
 
 {{
- "issues":[]
+ "issues":["Observation"]
 }}
 """
 
-    data = robust_llm_json(prompt)
+    try:
 
-    if isinstance(data, list):
-     return data
+        data = robust_llm_json(prompt)
 
-    return data.get("issues", [])
+        if isinstance(data, list):
+            return data
+
+        return data.get("issues", [])
+
+    except Exception as e:
+
+        print("Critique generation failed:", e)
+
+        return [
+            "No critique available"
+        ]
 
 
 # ================= ORCHESTRATOR =================
@@ -387,11 +471,23 @@ def ai_generate_architecture(system, frs, nfrs, style):
 
         decisions = extract_decisions(system, frs, nfrs, style)
 
-        components = generate_components(system, frs)
+        components = generate_components(system, frs, style)
 
         relationships = generate_relationships(components)
 
-        steps = generate_runtime_flow(system, components, relationships, style)
+        steps = generate_runtime_flow(
+            system,
+            components,
+            relationships,
+            style
+        )
+
+        # critique داخل الـ try
+        critique_result = critique(
+            components,
+            relationships,
+            nfrs
+        )
 
         source = "AI"
 
@@ -412,6 +508,10 @@ def ai_generate_architecture(system, frs, nfrs, style):
             }
         ]
 
+        critique_result = [
+            "Architecture generated using fallback mode"
+        ]
+
         source = "FALLBACK"
 
     return {
@@ -423,5 +523,18 @@ def ai_generate_architecture(system, frs, nfrs, style):
         "components": components,
         "relationships": relationships,
         "runtime_flow": steps,
-        "critique": critique(components, relationships, nfrs)
+        "critique": critique_result
     }
+def test_llm():
+    response = ask_llm("""
+Return ONLY this JSON:
+
+{
+  "test": "hello"
+}
+""")
+
+    print(response)
+
+if __name__ == "__main__":
+    test_llm()

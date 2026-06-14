@@ -20,26 +20,38 @@ def convert_to_c4_plantuml(arch):
         name = c["name"]
         desc = c.get("responsibility", "")
         tech = c.get("technology", "Service")
-
         alias = alias_of(name)
+
+        kind = c.get("kind", "").lower()
         lname = name.lower()
 
-        if "database" in lname:
+        if kind == "database" or "database" in lname:
+             lines.append(
+                 f'  ContainerDb({alias}, "{name}", "Database", "{desc}")'
+             )
+        elif kind == "external":
             lines.append(
-                f'  ContainerDb({alias}, "{name}", "Database", "{desc}")'
+                 f'  System_Ext({alias}, "{name}", "{desc}")'
             )
-        elif "broker" in lname or "queue" in lname:
-            lines.append(
-                f'  ContainerQueue({alias}, "{name}", "Message Broker", "{desc}")'
-            )
-        elif "gateway" in lname or "api" in lname:
+
+        elif kind == "broker" or "broker" in lname or "queue" in lname:
+             lines.append(
+                 f'  ContainerQueue({alias}, "{name}", "Message Broker", "{desc}")'
+             )
+        elif kind == "ui" or kind == "view":
+              lines.append(
+                  f'  Container({alias}, "{name}", "UI", "{desc}")'
+             )     
+
+        elif kind == "gateway" or "gateway" in lname or "api" in lname:
             lines.append(
                 f'  Container({alias}, "{name}", "REST API", "{desc}")'
             )
+
         else:
             lines.append(
                 f'  Container({alias}, "{name}", "{tech}", "{desc}")'
-            )
+           )
 
     lines.append("}")
 
@@ -48,11 +60,12 @@ def convert_to_c4_plantuml(arch):
         src = alias_of(r["source"])
         dst = alias_of(r["target"])
         rtype = r.get("type", "data-flow")
+        description = r.get("description", "")
 
         if rtype == "event-flow":
-            lines.append(f'Rel({src}, {dst}, "event", "Async")')
+            lines.append(f'Rel({src}, {dst}, "description", "Async")')
         else:
-            lines.append(f'Rel({src}, {dst}, "call", "Sync")')
+            lines.append(f'Rel({src}, {dst}, "description", "Sync")')
 
     lines.append("@enduml")
     return "\n".join(lines)
