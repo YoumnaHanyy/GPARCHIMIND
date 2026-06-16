@@ -29,7 +29,7 @@ from application.extraction.adl.verification.verification_report_generator impor
 from ai.inference.feature_extractor import generate_phase4
 import zipfile
 from infrastructure.database import db
-from infrastructure.repositories.ADL_repository import save_architecture_report_pdf, save_verification_report_pdf
+from infrastructure.repositories.ADL_repository import save_architecture_report_pdf
 from infrastructure.repositories.hybrid_repository import save_hybrid_result
 from fastapi.staticfiles import StaticFiles
 from ai.json_to_process_view import convert_to_process_view
@@ -71,7 +71,6 @@ from dotenv import load_dotenv
 import os
 import threading
 import time
-from concurrent.futures import ThreadPoolExecutor
 from service.retrain_service import merge_and_retrain
 from infrastructure.database import db
 from service.retrain_service import run_retrain_async
@@ -238,13 +237,13 @@ async def admin_dashboard(request: Request):
             "arch_counts": arch_counts
         }
     )
+
 @app.get("/admin/users", response_class=HTMLResponse)
 async def get_all_users(request: Request):
     users = list(db.Users.find({}, {"password": 0}))
 
     enriched_users = []
 
-    # 🔥 function تتحط جوه الفنكشن عادي
     def serialize(obj):
         if isinstance(obj, dict):
             return {k: serialize(v) for k, v in obj.items()}
@@ -256,7 +255,6 @@ async def get_all_users(request: Request):
     for user in users:
         user_projects = get_user_projects(str(user["_id"]))
 
-        # 🔥 الحل النهائي
         user_projects = serialize(user_projects)
 
         user["projects"] = user_projects
@@ -269,11 +267,32 @@ async def get_all_users(request: Request):
             "users": enriched_users
         }
     )
+
 @app.get("/project/{project_id}", response_class=HTMLResponse)
 async def open_project(
     request: Request,
     project_id: str
 ):
+
+    # ==========================================
+    # AUTH CHECK
+    # ==========================================
+
+    user_session = request.session.get("user")
+
+    if not user_session:
+        return RedirectResponse(
+            url="/Login?error=required",
+            status_code=303
+        )
+
+    # Normalize user object so template always gets user['name']
+    # DashBoard.html stores full_name, project_dashboard.html expects name
+    user = {
+        "name": user_session.get("name") or user_session.get("full_name", "User"),
+        "role": user_session.get("role", "User"),
+        "email": user_session.get("email", "")
+    }
 
     # ==========================================
     # PROJECT
@@ -343,7 +362,7 @@ async def open_project(
 
         {
             "request": request,
-            "user": request.session.get("user"),
+            "user": user,
             "project": project,
             "frs": frs,
             "nfrs": nfrs,
@@ -357,9 +376,126 @@ async def open_project(
             )
         }
     )
-# ==========================================
-# RE-EVALUATE ARCHITECTURE
-# ==========================================
+
+
+# ============================================================
+# ++ ADDED: Load full project data as JSON for Continue Project resume flow ++
+# Called by Dashboard.js on DOMContentLoaded when ?project_id + ?resume_phase params exist
+# ============================================================
+
+@app.get("/projects/load/{project_id}")
+async def load_project_data(
+    request: Request,
+    project_id: str
+):
+    if not project_id:
+        return JSONResponse(
+            status_code=400,
+            content={"error": "project_id is required"}
+        )
+
+    project = db.projects.find_one(
+        {"project_id": project_id},
+        {"_id": 0}
+    )
+
+    if not project:
+        return JSONResponse(
+            status_code=404,
+            content={"error": "Project not found"}
+        )
+
+    frs = list(
+        db.fr_extracted.find(
+            {"project_id": project_id},
+            {"_id": 0}
+        )
+    )
+
+    nfrs = list(
+        db.nfr_extracted.find(
+            {"project_id": project_id},
+            {"_id": 0}
+        )
+    )
+
+    # Hybrid results live in hybrid_method collection (same as open_project)
+    hybrid_doc = db.hybrid_method.find_one(
+        {"project_id": project_id}
+    )
+
+    hybrid_method         = []
+    selected_architecture = None
+
+    if hybrid_doc:
+        hybrid_method         = hybrid_doc.get("top_architectures", [])
+        selected_architecture = hybrid_doc.get("selected_architecture")
+
+    # Build the exact shape extractedData expects in Dashboard.js
+    payload = {
+        "project_id":           project.get("project_id"),
+        "project_name":         project.get("project_name"),
+        "current_phase":        project.get("current_phase", 1),
+        "progress":             project.get("progress", 0),
+        "status":               project.get("status"),
+
+        # Requirements
+        "functional":           frs,
+        "nfr_predictions":      nfrs,
+
+        # Architecture results (None if project hasn't reached those phases yet)
+        "functional_method":    project.get("functional_method"),
+        "ordinal_method":       project.get("ordinal_method"),
+        "binary_method":        project.get("binary_method"),
+        "weighted_method":      project.get("weighted_method"),
+        "hybrid_method":        hybrid_method,
+
+        "selectedArchitecture": selected_architecture,
+    }
+
+    return JSONResponse(content=payload)
+
+
+# ============================================================
+# ++ ADDED: Mark project as fully complete ++
+# Called by Dashboard.js completeProject() when user clicks Finish at Phase 4
+# Sets status=finished, progress=100, current_phase=4
+# ============================================================
+
+@app.post("/projects/complete/{project_id}")
+async def complete_project(
+    request: Request,
+    project_id: str
+):
+    if not project_id:
+        return JSONResponse(
+            status_code=400,
+            content={"error": "project_id is required"}
+        )
+
+    try:
+        db.projects.update_one(
+            {"project_id": project_id},
+            {
+                "$set": {
+                    "status":        "finished",
+                    "progress":      100,
+                    "current_phase": 4,
+                    "updated_at":    datetime.utcnow()
+                }
+            }
+        )
+
+        return JSONResponse(content={"status": "completed"})
+
+    except Exception as e:
+        traceback.print_exc()
+        return JSONResponse(
+            status_code=500,
+            content={"error": str(e)}
+        )
+
+
 # ==========================================
 # RE-EVALUATE ARCHITECTURE
 # ==========================================
@@ -716,7 +852,7 @@ async def save_project_updates(
 
         for nfr in nfr_predictions:
 
-            predicted_type =nfr.get("title", "")
+            predicted_type = nfr.get("title", "")
 
             predicted_level = predict_level_for_text(
                     nfr.get("description", "")
@@ -780,7 +916,6 @@ async def save_project_updates(
             }
         )
     
-
 
 
 @app.post("/project/{project_id}/save-architectures")
@@ -856,8 +991,6 @@ def download_adl(project_id: str):
     )
 
 
-
-
 @app.get("/generate/{project_id}")
 def generate_architecture(project_id: str):
     print("/generating endpointttt HIT with project_id =", project_id, flush=True)
@@ -901,47 +1034,45 @@ def generate_architecture(project_id: str):
     # ==========================================================
     # 3. Generate architecture
     # ==========================================================
-    t0 = time.time()
-    print("[generate] ai_generate_architecture START", flush=True)
     arch = ai_generate_architecture(
         system_name,
         functional_requirements,
         non_functional_requirements,
         selected_architecture
     )
-    print(f"[generate] ai_generate_architecture END elapsed={time.time()-t0:.2f}s", flush=True)
 
     # ==========================================================
-    # 4. VERIFICATION — run check only (PDF generated later in parallel)
+    # 4. VERIFICATION GATE
     # ==========================================================
-   # try:
-    #  verification_result = run_verification(arch)
-    #except Exception as e:
-    # raise HTTPException(
-     #   status_code=500,
-      #  detail=f"Verification crashed: {str(e)}"
-    #)
+    verification_result = {}
+    try:
+        verification_result = run_verification(arch)
+        print(f"[verify] run_verification status={verification_result.get('status')}", flush=True)
+        verification_pdf_path = generate_verification_pdf(verification_result)
+        print(f"[verify] PDF generated at: {verification_pdf_path}", flush=True)
+        with open(verification_pdf_path, "rb") as _vf:
+            _vbytes = _vf.read()
+        print(f"[verify] PDF bytes read: {len(_vbytes)}", flush=True)
 
-    #verification_result = run_verification(arch)
-
-    #if verification_result["status"] != "VERIFIED":
-     #raise HTTPException(
-      #  status_code=400,
-       # detail="Architecture verification failed. Please fix issues before generating ADL."
-    #)
-
-# Generate verification report ONLY on success (optional)
-   # generate_verification_pdf(verification_result)
+        save_verification_report_pdf(project_id, _vbytes)
+        print("[verify] verification report saved to MongoDB successfully", flush=True)
+    except Exception as e:
+        import traceback
+        print(f"[verify] ERROR — verification report NOT saved: {e}", flush=True)
+        traceback.print_exc()
 
 
     # ==========================================================
-    # 5. VALIDATION — run check only (PDF generated later in parallel)
+    # 5. VALIDATION GATE
     # ==========================================================
     validation_result = {}
+
     try:
-        validation_result = run_validation(arch)
+      validation_result = run_validation(arch)
+      generate_validation_pdf(validation_result)
     except Exception as e:
-        print("Validation skipped:", e)
+      print("Validation skipped:", e)
+
     # ==========================================================
     # 6. Persist architecture outputs
     # ==========================================================
@@ -952,7 +1083,8 @@ def generate_architecture(project_id: str):
 
     with open("data/outputs/architecture.validation.json", "w", encoding="utf-8") as f:
        json.dump(validation_result, f, indent=2)
-
+    with open("data/outputs/architecture.verification.json", "w", encoding="utf-8") as f:
+        json.dump(verification_result, f, indent=2)
 
     acme = convert_to_acme(arch)
     with open("data/outputs/architecture.acme", "w", encoding="utf-8") as f:
@@ -977,11 +1109,9 @@ def generate_architecture(project_id: str):
     with open("data/outputs/architecture_c4.puml", "w", encoding="utf-8") as f:
         f.write(convert_to_c4_plantuml(arch))
 
-    
-
-   
     with open("data/outputs/usecase_view.puml", "w", encoding="utf-8") as f:
-        f.write(uml)
+     f.write(uml)
+
     # ==========================================================
     # 8. Render diagrams (PlantUML → PNG)
     # ==========================================================
@@ -992,76 +1122,26 @@ def generate_architecture(project_id: str):
         "plantuml.jar"
     )
 
-    t0 = time.time()
-    print("[generate] PlantUML rendering START", flush=True)
     subprocess.run([
-        r"C:\Program Files\Java\jdk-24\bin\java.exe",
-        "-jar",
-        PLANTUML_JAR,
-        "-tpng",
-        "data/outputs/dfd_context.puml",
-        "data/outputs/process_view.puml",
-        "data/outputs/deployment_view.puml",
-        "data/outputs/architecture_c4.puml",
-        "data/outputs/usecase_view.puml"
+    "java",
+    "-jar",
+    PLANTUML_JAR,
+    "-tpng",
+    "data/outputs/dfd_context.puml",
+    "data/outputs/process_view.puml",
+    "data/outputs/deployment_view.puml",
+    "data/outputs/architecture_c4.puml",
+    "data/outputs/usecase_view.puml"
     ], check=True)
-    print(f"[generate] PlantUML rendering END elapsed={time.time()-t0:.2f}s", flush=True)
 
     # ==========================================================
-    # 9. PARALLEL PDF GENERATION
-    # All three reports are independent at this point:
-    #   - ADL report  : needs PlantUML PNGs (written above) + DB
-    #   - Verification: needs verification_result dict only
-    #   - Validation  : needs validation_result dict only
+    # 9. Generate final architecture report
     # ==========================================================
-    def _adl_pdf_task():
-        print("[PDF] ADL report generation started.", flush=True)
-        _pdf_path = generate_report(project_id)
-        with open(_pdf_path, "rb") as f:
-            _pdf_bytes = f.read()
-        save_architecture_report_pdf(project_id, _pdf_bytes)
-        print("[PDF] ADL report saved to MongoDB.", flush=True)
-        return _pdf_path
+    pdf_path = generate_report(project_id)
+    with open(pdf_path, "rb") as f:
+     pdf_bytes = f.read()
 
-    def _verification_pdf_task():
-        print("[PDF] Verification report generation started.", flush=True)
-        try:
-            if not verification_result:
-                print("[PDF] Verification PDF skipped (no result).", flush=True)
-                return
-            _vpath = generate_verification_pdf(verification_result)
-            print(f"[PDF] Verification PDF generated at: {_vpath}", flush=True)
-            with open(_vpath, "rb") as vf:
-                _vbytes = vf.read()
-            print(f"[PDF] Verification PDF bytes read: {len(_vbytes)}", flush=True)
-            save_verification_report_pdf(project_id, _vbytes)
-            print("[PDF] Verification report saved to MongoDB.", flush=True)
-        except Exception as e:
-            print(f"[PDF] Verification PDF error: {e}", flush=True)
-            traceback.print_exc()
-
-    def _validation_pdf_task():
-        print("[PDF] Validation report generation started.", flush=True)
-        try:
-            if not validation_result:
-                print("[PDF] Validation PDF skipped (no result).", flush=True)
-                return
-            generate_validation_pdf(validation_result)
-            print("[PDF] Validation report generated.", flush=True)
-        except Exception as e:
-            print(f"[PDF] Validation PDF error: {e}", flush=True)
-
-    t0 = time.time()
-    print("[generate] parallel PDF generation START", flush=True)
-    with ThreadPoolExecutor(max_workers=3) as executor:
-        adl_future = executor.submit(_adl_pdf_task)
-        verify_future = executor.submit(_verification_pdf_task)
-        validate_future = executor.submit(_validation_pdf_task)
-
-    pdf_path = adl_future.result()
-    verify_future.result()
-    validate_future.result()
-    print(f"[generate] parallel PDF generation END elapsed={time.time()-t0:.2f}s", flush=True)
+    save_architecture_report_pdf(project_id, pdf_bytes)
 
     # ==========================================================
     # 10. Return SUCCESS output only
@@ -1073,7 +1153,6 @@ def generate_architecture(project_id: str):
     )
 
 
-
 @app.get("/download-report")
 def download_report():
     return FileResponse(
@@ -1081,7 +1160,6 @@ def download_report():
         filename="architecture_report.pdf",
         media_type="application/pdf"
     )
-
 
 
 @app.get("/ArchitectureGenerator")
@@ -1095,11 +1173,8 @@ async def login_page(
     logout: str = None,
     info: str = None
 ):
-    """
-    Display login page with optional error message
-    """
     error_message = None
-    info_message = None
+    info_message  = None
     
     if error == "invalid":
         error_message = "Invalid email or password. Please try again."
@@ -1115,7 +1190,7 @@ async def login_page(
        info_message = "Your account created successfully! Login Now" 
     
     return templates.TemplateResponse(
-        "login.html",
+        "Login.html",
         {
             "request": request,
             "error": error_message,
@@ -1133,21 +1208,21 @@ async def dashboard(request: Request):
             status_code=303
         )
 
-    user_id = user_session["id"]          # 🔥
-    projects = get_user_projects(user_id) # 🔥
+    user_id  = user_session["id"]
+    projects = get_user_projects(user_id)
 
     user = {
         "full_name": user_session.get("name", "User"),
-        "email": user_session.get("email", ""),
-        "role": user_session.get("role", "User")
+        "email":     user_session.get("email", ""),
+        "role":      user_session.get("role", "User")
     }
 
     return templates.TemplateResponse(
-        "Dashboard.html",
+        "DashBoard.html",
         {
-            "request": request,
-            "user": user,
-            "projects": projects   # 🔥 ده اللي كان ناقص
+            "request":  request,
+            "user":     user,
+            "projects": projects
         }
     )
 
@@ -1158,12 +1233,8 @@ def get_phase4(project_id: str):
 
 @app.post("/logout")
 async def logout(request: Request):
-    """
-    Clear session and logout user
-    """
     request.session.clear()
     return {"status": "success"}
-
 
 
 @app.get("/Signup", response_class=HTMLResponse)
@@ -1172,11 +1243,10 @@ async def signup(request: Request):
         "Signup.html",
         {"request": request}
     )
+
 # ============================================================
 # API Routes
 # ============================================================
-
-
 
 app.include_router(
     architecture_router,
@@ -1186,9 +1256,10 @@ app.include_router(
 
 app.include_router(
     hybrid_router,
-    prefix="/api",        # 👈 API namespace
+    prefix="/api",
     tags=["Architecture"]
 )
+
 @app.get("/api/report/{project_id}")
 def get_report(project_id: str):
 
@@ -1231,4 +1302,80 @@ def download_validation_report():
         headers={
             "Content-Disposition": "inline; filename=architecture_validation_report.pdf"
         }
+    )
+
+@app.get("/download-verification-report/{project_id}")
+def download_verification_report(
+    project_id: str
+):
+
+    doc = db.architecture_reports.find_one({
+
+        "project_id": project_id,
+
+        "report_type": "verification"
+    })
+
+    if not doc:
+
+        raise HTTPException(
+
+            status_code=404,
+
+            detail="Verification report not found"
+        )
+
+    return StreamingResponse(
+
+        io.BytesIO(doc["report_pdf"]),
+
+        media_type="application/pdf",
+
+        headers={
+            "Content-Disposition":
+            f"inline; filename={project_id}_verification.pdf"
+        }
+    )
+
+from application.extraction.reporting.final_report_generator import generate_last_report
+
+@app.get("/generate-final-report/{project_id}")
+def generate_final_report(project_id: str):
+
+    project = db.projects.find_one({
+        "project_id": project_id
+    })
+    project["project_id"] = project_id
+    frs = list(
+        db.fr_extracted.find(
+            {"project_id": project_id},
+            {"_id": 0}
+        )
+    )
+
+    nfrs = list(
+        db.nfr_predictions.find(
+            {"project_id": project_id},
+            {"_id": 0}
+        )
+    )
+
+    hybrid = db.hybrid_method.find_one({
+        "project_id": project_id
+    })
+
+    phase4 = generate_phase4(project_id)
+
+    pdf_path = generate_last_report(
+        project,
+        frs,
+        nfrs,
+        hybrid,
+        phase4
+    )
+
+    return FileResponse(
+        path=pdf_path,
+        filename="final_report.pdf",
+        media_type="application/pdf"
     )

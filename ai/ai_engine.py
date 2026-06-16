@@ -1,13 +1,8 @@
 import os
 import json
 import re
-import logging
-import time
-from concurrent.futures import ThreadPoolExecutor
 from huggingface_hub import InferenceClient
 from dotenv import load_dotenv
-
-logger = logging.getLogger("ai_engine")
 
 load_dotenv()
 
@@ -376,73 +371,48 @@ Return ONLY valid JSON:
 }}
 """
 
-    return robust_llm_json(prompt).get("issues", [])
+    data = robust_llm_json(prompt)
+
+    if isinstance(data, list):
+     return data
+
+    return data.get("issues", [])
 
 
 # ================= ORCHESTRATOR =================
 
-def ai_generate_architecture(system, frs, nfrs, style, enable_critique=False):
+def ai_generate_architecture(system, frs, nfrs, style):
 
-    t_start = time.time()
-    logger.info("[ai_generate_architecture] START system=%s style=%s", system, style)
-
-    source = "AI"
-
-    # Stage 1: decisions + components are independent — run in parallel
-    with ThreadPoolExecutor(max_workers=2) as pool:
-        t1 = time.time()
-        fut_decisions  = pool.submit(extract_decisions, system, frs, nfrs, style)
-        fut_components = pool.submit(generate_components, system, frs)
-
-        try:
-            decisions = fut_decisions.result()
-            logger.info("[extract_decisions] done %.2fs", time.time() - t1)
-        except Exception as e:
-            logger.warning("[extract_decisions] failed %.2fs: %s", time.time() - t1, e)
-            decisions = [{"name": "Fallback Architecture", "rationale": "AI response invalid"}]
-
-        try:
-            components = fut_components.result()
-            logger.info("[generate_components] done %.2fs", time.time() - t1)
-        except Exception as e:
-            logger.warning("[generate_components] failed %.2fs: %s", time.time() - t1, e)
-            components = fallback_components(style)
-            source = "FALLBACK"
-
-    # Stage 2: relationships needs components
-    t2 = time.time()
     try:
+
+        decisions = extract_decisions(system, frs, nfrs, style)
+
+        components = generate_components(system, frs)
+
         relationships = generate_relationships(components)
-        logger.info("[generate_relationships] done %.2fs", time.time() - t2)
+
+        steps = generate_runtime_flow(system, components, relationships, style)
+
+        source = "AI"
+
     except Exception as e:
-        logger.warning("[generate_relationships] failed %.2fs: %s", time.time() - t2, e)
+
+        print("⚠️ AI failed, using fallback:", e)
+
+        components = fallback_components(style)
+
         relationships = fallback_relationships(style)
+
+        steps = fallback_runtime_flow(style)
+
+        decisions = [
+            {
+                "name": "Fallback Architecture",
+                "rationale": "AI response invalid"
+            }
+        ]
+
         source = "FALLBACK"
-
-    # Stage 3: runtime_flow + (optional) critique both need components + relationships — run in parallel
-    with ThreadPoolExecutor(max_workers=2) as pool:
-        t3 = time.time()
-        fut_runtime  = pool.submit(generate_runtime_flow, system, components, relationships, style)
-        fut_critique = pool.submit(critique, components, relationships, nfrs) if enable_critique else None
-
-        try:
-            steps = fut_runtime.result()
-            logger.info("[generate_runtime_flow] done %.2fs", time.time() - t3)
-        except Exception as e:
-            logger.warning("[generate_runtime_flow] failed %.2fs: %s", time.time() - t3, e)
-            steps = fallback_runtime_flow(style)
-            source = "FALLBACK"
-
-        critique_issues = []
-        if fut_critique is not None:
-            try:
-                critique_issues = fut_critique.result()
-                logger.info("[critique] done %.2fs", time.time() - t3)
-            except Exception as e:
-                logger.warning("[critique] failed (non-critical) %.2fs: %s", time.time() - t3, e)
-
-    t_end = time.time()
-    logger.info("[ai_generate_architecture] END source=%s elapsed=%.2fs", source, t_end - t_start)
 
     return {
         "system": system,
@@ -453,5 +423,5 @@ def ai_generate_architecture(system, frs, nfrs, style, enable_critique=False):
         "components": components,
         "relationships": relationships,
         "runtime_flow": steps,
-        "critique": critique_issues,
+        "critique": critique(components, relationships, nfrs)
     }

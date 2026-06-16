@@ -11,10 +11,7 @@ __pycache__/
 # Uploads
 uploads/
 
-# Trained ML models
-models/trained_nfr_level_model/
-models/trained_nfr_type_model/
-models/trained_nfr_binary_model/
+
 
 results/checkpoint-500
 results_binary/checkpoint-500

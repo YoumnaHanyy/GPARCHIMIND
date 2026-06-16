@@ -4,7 +4,7 @@ from transformers import BertTokenizer, BertForSequenceClassification
 from infrastructure.database import db
 from collections import defaultdict
 
-MODEL_DIR = "models/trained_nfr_binary_model"
+MODEL_DIR = "hanawahab/trained_nfr_binary_model"
 
 NFR_ORDER = ["PE", "SC", "MN", "A", "SE", "US", "PO", "O"]
 

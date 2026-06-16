@@ -8,7 +8,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-    <link rel="stylesheet" href="/static/css/Dashboarddd.css">
+    <link rel="stylesheet" href="/static/css/Dashboard.css">
 </head>
 
 <body>
@@ -45,7 +45,7 @@
       </div>
     </li>
     <li><hr class="dropdown-divider opacity-50"></li>
-    <li><a class="dropdown-item" href="#"><i class="bi bi-person-gear me-2"></i> Account Settings</a></li>
+    <li><a class="dropdown-item" href="#"><i class="bi bi-person-gear me-2"></i> Account Settingss</a></li>
     <li><a class="dropdown-item" href="#"><i class="bi bi-shield-check me-2"></i> Security</a></li>
     <li><hr class="dropdown-divider opacity-50"></li>
     <li>
@@ -75,11 +75,14 @@
   </div>
 
   <ul class="side-menu-list">
-    <li><i class="bi bi-house-door"></i> Home</li>
-    <li><i class="bi bi-layers"></i> Architectural Patterns</li>
+    <li  class="menu-active"><i class="bi bi-diagram-3"></i> End-To-End Pipeline</li>
     <li><i class="bi bi-star"></i> Starred Projects</li>
-    <li><i class="bi bi-bell"></i> Notifications</li>
-    <li><i class="bi bi-gear"></i> Settings</li>
+        <li onclick="window.location.href='/adl-dashboard'">
+      <i class="bi bi-cpu"></i> ADL Generation
+</li>
+    <li onclick="window.location.href='/srs-validations'">
+    <i class="bi bi-star"></i> SRS Validation
+</li>
     <hr class="my-3 opacity-10">
     <li class="text-danger" onclick="logoutAnimated()"><i class="bi bi-door-open"></i> Logout</li>
   </ul>
@@ -555,8 +558,8 @@
 </div>
 
 
-<script src="/static/js/Dashboard.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/static/js/Dashboard.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function(){
   document.querySelectorAll('.progress-bar[data-progress]').forEach(function(el){

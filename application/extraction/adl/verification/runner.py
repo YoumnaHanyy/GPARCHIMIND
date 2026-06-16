@@ -28,13 +28,7 @@ def run_verification(adl: dict):
 
     # Fold the missing-style issue into the consistency layer so the
     # downstream report can render it consistently.
-    if style_issues:
-        consistency = {
-            "layer": "consistency",
-            "status": "FAILED",
-            "issues": style_issues + consistency.get("issues", [])
-        }
-
+    
     layers = {
         "correctness": correctness,
         "completeness": completeness,

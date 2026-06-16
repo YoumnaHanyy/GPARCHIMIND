@@ -96,7 +96,7 @@ trainer = Trainer(
 # =============================
 trainer.train()
 
-model.save_pretrained("models/trained_nfr_binary_model")
-tokenizer.save_pretrained("models/trained_nfr_binary_model")
+model.save_pretrained("hanawahab/trained_nfr_binary_model")
+tokenizer.save_pretrained("hanawahab/trained_nfr_binary_model")
 
 print("✅ Binary NFR model trained & saved from MongoDB")
