@@ -70,6 +70,15 @@ from infrastructure.repositories.project_repo import get_user_adl_projects
 from ai.ai_usecase import generate_usecase_ai
 
 from fastapi.templating import Jinja2Templates
+
+
+from application.extraction.adl.verification.runner import run_verification
+from application.extraction.adl.verification.verification_report_generator import generate_verification_pdf
+
+from infrastructure.repositories.adl_verification_report_repository import save_verification_report_pdf1
+
+
+
 print("SRS_ROUTES FILE LOADED")
 
 templates = Jinja2Templates(
@@ -779,12 +788,30 @@ async def adl_generate_pdf(
             project_id,
             validation_pdf_bytes
         )
+        # =========================
+        # RUN VERIFICATION
+        # =========================
+
+        verification_result = run_verification(
+            adl_result
+        )
+
+        verification_pdf_path = generate_verification_pdf(
+             verification_result,
+             project_id
+        )
+
+        with open(verification_pdf_path, "rb") as f:
+             verification_pdf_bytes = f.read()
+
+        save_verification_report_pdf1(project_id,verification_pdf_bytes)
+
+        print("VERIFICATION PDF SAVED:", project_id)
+
+
+
         print("VALIDATION PDF SAVED:", project_id)
-        update_project_progress(
-    project_id,
-    100,
-    1
-)
+        update_project_progress(project_id,100,1)
         return FileResponse(
               path=str(pdf_path),
             filename="architecture_report.pdf",
@@ -1643,7 +1670,7 @@ async def adl_generate_pdf(
             project_id,
             pdf_bytes
 )
-# =========================
+        # =========================
         # RUN VALIDATION
         # =========================
         validation_result = run_validation(
@@ -1673,11 +1700,25 @@ async def adl_generate_pdf(
         )
         print("VALIDATION PDF SAVED:", project_id)
         
-        update_project_progress(
-    project_id,
-    100,
-    1
-)
+        update_project_progress(project_id,100,1)
+         # =========================
+        # RUN VERIFICATION
+        # =========================
+
+        verification_result = run_verification(
+            adl_result
+        )
+
+        verification_pdf_path = generate_verification_pdf(
+             verification_result
+        )
+
+        with open(verification_pdf_path, "rb") as f:
+             verification_pdf_bytes = f.read()
+
+        save_verification_report_pdf1(project_id,verification_pdf_bytes)
+
+        print("VERIFICATION PDF SAVED:", project_id)
        
 
         return FileResponse(
@@ -1894,4 +1935,35 @@ async def starred_projects_page(request: Request):
             "projects": projects,
             "user": user
         }
+    )
+
+@router.get("/adl-project/{project_id}/verification-report")
+async def open_verification_report(project_id: str):
+    print("VERIFICATION ROUTE HIT", project_id)
+
+
+    report = db.ADLVerificationReports.find_one({
+        "project_id": project_id,
+    })
+
+    if not report:
+        return JSONResponse(
+            status_code=404,
+            content={"error": "Verification report not found"}
+        )
+
+    pdf_bytes = report["report_pdf"]
+
+    temp_pdf = os.path.join(
+        "data",
+        "outputs",
+        f"{project_id}_verification.pdf"
+    )
+
+    with open(temp_pdf, "wb") as f:
+        f.write(pdf_bytes)
+
+    return FileResponse(
+        path=temp_pdf,
+        media_type="application/pdf"
     )

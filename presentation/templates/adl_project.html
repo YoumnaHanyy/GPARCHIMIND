@@ -470,6 +470,36 @@
         <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
       </button>
     </div>
+        <!-- Verification -->
+    <div class="action-card">
+      <div class="card-icon-wrap">
+        <svg viewBox="0 0 24 24">
+          <path d="M9 12l2 2 4-4"/>
+          <circle cx="12" cy="12" r="9"/>
+        </svg>
+      </div>
+
+      <div class="card-title">
+        Verification Report
+      </div>
+
+      <div class="card-desc">
+        Review the architecture verification report and consistency checks.
+      </div>
+
+      <button
+        class="view-btn"
+        onclick="openVerificationPDF('{{ project.project_id }}')">
+
+        View Verification
+
+        <svg viewBox="0 0 24 24">
+          <line x1="5" y1="12" x2="19" y2="12"/>
+          <polyline points="12 5 19 12 12 19"/>
+        </svg>
+
+      </button>
+    </div>
 
   </div>
 </div>
@@ -505,6 +535,17 @@
     document.getElementById('pdfViewer').src = `/adl-project/${projectId}/validation-report`;
     new bootstrap.Modal(document.getElementById('pdfModal')).show();
   }
+  function openVerificationPDF(projectId) {
+    document.getElementById('modalTitle').textContent =
+        'Verification Report';
+
+    document.getElementById('pdfViewer').src =
+        `/adl-project/${projectId}/verification-report`;
+
+    new bootstrap.Modal(
+        document.getElementById('pdfModal')
+    ).show();
+}
 </script>
 
 </body>

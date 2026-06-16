@@ -11,6 +11,7 @@ from reportlab.lib.colors import HexColor, white
 from reportlab.lib.units import cm
 from reportlab.lib.enums import TA_LEFT
 import os
+from infrastructure.repositories.adl_verification_report_repository import save_verification_report_pdf1
 
 # ---------------------------------------------------------------------------
 # Colour palette
@@ -583,7 +584,7 @@ def _build_final_decision(story, st, section_idx, status, failed_layers):
 # ---------------------------------------------------------------------------
 # Main entry point
 # ---------------------------------------------------------------------------
-def generate_verification_pdf(verification_result: dict) -> str:
+def generate_verification_pdf(verification_result: dict, project_id: str) -> str:
     status       = verification_result.get("status", "NOT_VERIFIED")
     layers       = verification_result.get("layers", {})
     failed_layers = verification_result.get("failed_layers", [])
