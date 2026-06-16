@@ -270,26 +270,32 @@ function checkADLInputs() {
     return html;
   }
 
-  function renderBinaryMethod(data) {
-    if (!data || !data.binary_method || !data.binary_method.top_architectures) {
-      return "<p class='text-muted'>No binary method results available.</p>";
-    }
+ function renderBinaryMethod(data) {
+  console.log("BINARY DATA =", data.binary_method);
 
-    let html = "<h5 class='section-header'>Binary Method</h5>";
-
-    data.binary_method.top_architectures.forEach((item, idx) => {
-      html += `
-        <div class="mb-3">
-          <div class="req-title">${idx + 1}. ${item.architecture}</div>
-          <div class="req-desc">
-            Score: <strong>${item.score}</strong>
-          </div>
-        </div>
-      `;
-    });
-
-    return html;
+  if (
+    !data ||
+    !data.binary_method ||
+    !data.binary_method.top_5_architectures
+  ) {
+    return "<p class='text-muted'>No binary method results available.</p>";
   }
+
+  let html = "<h5 class='section-header'>Binary Method</h5>";
+
+  data.binary_method.top_5_architectures.forEach((item, idx) => {
+    html += `
+      <div class="mb-3">
+        <div class="req-title">${idx + 1}. ${item.architecture}</div>
+        <div class="req-desc">
+          Score: <strong>${item.score}</strong>
+        </div>
+      </div>
+    `;
+  });
+
+  return html;
+}
 
   function renderWeightedMethod(data) {
     if (!data || !data.weighted_method || !data.weighted_method.top_architectures) {
