@@ -19,7 +19,7 @@
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
-        body { background: var(--bg); color: var(--text-main); overflow-x: hidden; perspective: 1500px; }
+        body { width: 100%; background: var(--bg); color: var(--text-main); overflow-x: hidden; perspective: 1500px; }
 
         /* --- 3D CODE BACKGROUND --- */
         .code-bg {
@@ -711,7 +711,8 @@
 .file-item:hover { color: var(--primary); }
 
 .editor-mockup {
-    min-width: 500px;
+    width: 100%;
+    min-width: 0;
     background: white;
 }
 /* Add this to your style block */
@@ -726,18 +727,235 @@
     opacity: 1;
     background: rgba(5, 150, 105, 0.05);
 }
+html {
+    scroll-behavior: smooth;
+}
+#mcdm-engine,
+#lifecycle {
+    scroll-margin-top: 120px;
+}
+/* =========================
+   TABLET
+========================= */
+@media (max-width: 1024px) {
+
+    h1 {
+        font-size: 3.5rem;
+    }
+
+    header,
+    .engine-container,
+    .bridge-grid,
+    .canvas-grid {
+        grid-template-columns: 1fr;
+        gap: 50px;
+    }
+
+    .eval-container {
+        grid-template-columns: 1fr;
+    }
+
+    .timeline-container {
+        flex-wrap: wrap;
+        gap: 30px;
+    }
+
+    .step-card {
+        width: 48%;
+    }
+
+    .pipeline-track {
+        display: none;
+    }
+
+    .footer-content {
+        flex-direction: column;
+        gap: 30px;
+    }
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+@media (max-width: 768px) {
+
+    nav {
+        padding: 15px 20px;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    nav > div {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 15px !important;
+    }
+
+    header {
+        padding: 150px 20px 80px;
+        grid-template-columns: 1fr;
+        text-align: center;
+    }
+
+    h1 {
+        font-size: 2.7rem;
+        letter-spacing: -2px;
+    }
+
+    .hero-description {
+        max-width: 100%;
+        font-size: 1rem;
+    }
+
+    /* 3D Diagram */
+    .diagram-container {
+        height: 350px;
+        transform: scale(.8);
+    }
+
+    .layer {
+        width: 220px;
+        height: 130px;
+    }
+
+    .layer span {
+        font-size: 0.75rem;
+    }
+
+    /* Sections */
+    .engine-section,
+    .workflow-section,
+    .live-eval-section,
+    .bridge-section,
+    .blueprint-light,
+    .clean-footer {
+        padding: 70px 20px;
+    }
+
+    .engine-container,
+    .bridge-grid {
+        padding: 30px;
+        border-radius: 25px;
+    }
+
+    .workflow-title,
+    .cta-final h2 {
+        font-size: 2rem;
+    }
+
+    .step-card {
+        width: 100%;
+    }
+
+    .timeline-container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .pipeline-track {
+        display: none;
+    }
+
+    .eval-container {
+        grid-template-columns: 1fr;
+    }
+
+    .canvas-grid,
+    .bridge-grid,
+    .engine-container {
+        grid-template-columns: 1fr;
+    }
+
+    .editor-mockup {
+        min-width: unset;
+        width: 100%;
+    }
+
+    #code-window {
+        flex-direction: column;
+    }
+
+    #code-window > div:first-child {
+        width: 100% !important;
+        border-right: none !important;
+        border-bottom: 1px solid #e2e8f0;
+    }
+
+    .adl-terminal {
+        height: auto;
+        min-height: 280px;
+    }
+
+    .decision-box {
+        padding: 25px;
+    }
+
+    .footer-links {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 15px;
+    }
+
+    .copyright {
+        flex-direction: column;
+        text-align: center;
+        gap: 10px;
+    }
+
+    .cta-final {
+        padding: 40px 20px;
+    }
+
+}
+
+
+/* =========================
+   SMALL PHONES
+========================= */
+@media (max-width: 480px) {
+
+    h1 {
+        font-size: 2.1rem;
+    }
+
+    .workflow-title,
+    .eval-title,
+    .cta-final h2 {
+        font-size: 1.7rem;
+    }
+
+    .btn-main {
+        width: 100%;
+        text-align: center;
+    }
+
+    .layer {
+        width: 180px;
+        height: 110px;
+    }
+
+    .layer i {
+        font-size: 1.8rem;
+    }
+
+    .footer-logo img {
+        height: 70px !important;
+    }
+
+}
     </style>
 </head>
 <body>
 
     <nav>
         <a href="/" class="logo" style="display: flex; align-items: center;">
-        <img src="/static/images/Logo_black.png" style="height: 55px; width: 180px;">
+        <img src="/static/images/Logo_black.png" style="height:auto; width:180px; max-width:100%;">
         </a>
 
         <div style="display: flex; gap: 35px; align-items: center;">
-            <a href="#" style="color: var(--text-dim); text-decoration: none; font-weight: 600;">Explore</a>
-             <a href="#" style="color: var(--text-dim); text-decoration: none; font-weight: 600;">MCDM Engine</a>
+            <a href="#lifecycle" style="color: var(--text-dim); text-decoration: none; font-weight: 600;">Explore</a>
+             <a href="#mcdm-engine" style="color: var(--text-dim); text-decoration: none; font-weight: 600;">MCDM Engine</a>
               <a href="#" style="color: var(--text-dim); text-decoration: none; font-weight: 600;">Methodology</a>
             <a href="/Login" style="color: var(--text-dim); text-decoration: none; font-weight: 600;">Login</a>
             <a href="/Signup" class="btn-main" style="padding: 10px 25px; font-size: 0.85rem;">Sign Up</a>
@@ -827,7 +1045,7 @@
 
 </style>
 
-<section class="workflow-section">
+<section class="workflow-section" id="lifecycle">
     <h2 class="workflow-title">The ArchiMind Lifecycle</h2>
     
     <div class="timeline-container">
@@ -910,7 +1128,7 @@
    
 </style>
 
-<section class="live-eval-section">
+<section class="live-eval-section" id="mcdm-engine">
     <center>
         <h2 style="font-size: 3rem; font-weight: 900; letter-spacing: -2px;">Systematic Selection Logic</h2>
         <p style="color: #64748b; margin-top: 10px;">The exact mathematical process our AI uses to coose your architecture style.</p>
@@ -1096,7 +1314,9 @@
     <div class="cta-final">
         <h2 style="letter-spacing: -2px;">Ready to build <span style="color: var(--primary);">for longevity?</span></h2>
         <p style="color: #64748b; margin-bottom: 30px; font-size: 1.1rem;">Join the next generation of architects using AI-driven sustainability logic.</p>
-        <button class="btn-main">Get Started Now</button>
+        <button class="btn-main" onclick="window.location.href='/Signup'">
+    Get Started Now
+</button>
     </div>
 
     <div class="footer-content">
