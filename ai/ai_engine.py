@@ -1,11 +1,11 @@
+from dotenv import load_dotenv
+load_dotenv(override=True)
 import os
+print(os.getenv("HF_API_KEY"))
 import json
 import re
 from huggingface_hub import InferenceClient
-from dotenv import load_dotenv
 
-
-load_dotenv()
 
 HF_API_KEY = os.getenv("HF_API_KEY")
 if not HF_API_KEY:
@@ -309,30 +309,76 @@ STRICT RULES:
 - NO explanation
 - NO markdown
 
+The generated components MUST strictly match the selected architecture style.
+
+Do NOT generate components from other architecture styles.
+
+Examples:
+- MVC must not contain Broker.
+- Broker must not contain Controller.
+- Layered must not contain Event Bus.
+- Hexagonal must not contain MVC components.
+
+If Architecture Style is Monolithic:
+generate UI, Business Logic and Database components inside one application.
+
 If Architecture Style is Layered:
 generate Presentation, Business and Data components.
 
 If Architecture Style is MVC:
 generate Model, View and Controller components.
 
+If Architecture Style is Client-Server:
+generate clients, servers and databases.
+
 If Architecture Style is Microservices:
-generate independent services and databases.
+generate independent services, databases and API Gateway.
+
+If Architecture Style is Service-Oriented Architecture:
+generate service providers, service consumers, shared services and service registry.
 
 If Architecture Style is Event-Driven:
-generate producers, consumers and brokers.
+generate producers, consumers and event brokers.
+
+If Architecture Style is Microkernel:
+generate core system, plugins and extension points.
+
+If Architecture Style is Component-Based:
+generate reusable components and connectors.
 
 If Architecture Style is Pipe-and-Filter:
 generate filters and pipes.
 
-If Architecture Style is Client-Server:
-generate clients, servers and databases.
+If Architecture Style is Broker:
+generate broker, clients and servers.
+
+If Architecture Style is Peer-to-Peer:
+generate peer nodes with decentralized communication.
+
+If Architecture Style is Blackboard:
+generate blackboard repository, knowledge sources and controller.
+
+If Architecture Style is Space-Based:
+generate processing units, data grid and messaging infrastructure.
+
+If Architecture Style is REST:
+generate REST APIs, resources and clients.
+
+If Architecture Style is Hexagonal:
+generate application core, ports and adapters.
+
+If Architecture Style is Serverless:
+generate functions, event triggers and managed cloud services.
+
+If Architecture Style is Event-Bus:
+generate publishers, subscribers and event bus.
 
 {{
  "components":[
   {{
    "name":"Component name",
    "responsibility":"Short responsibility",
-   "kind":"service | database | external | broker | gateway | ui | controller | model | view | adapter | port | filter | pipe | client | server",
+   "kind":"service | database | external | broker | gateway |ui | controller | model | view | adapter | port | filter | pipe | client | server | plugin | core | registry | bus | publisher | subscriber | knowledge-source | blackboard | processing-unit | datastore",
     "technology":"Technology name"
   
   }}
@@ -348,9 +394,11 @@ generate clients, servers and databases.
     return data.get("components", [])
 
 
-def generate_relationships(components):
+def generate_relationships(components, style):
 
     prompt = f"""
+    Architecture Style: {style}
+
 Components:
 
 {json.dumps(components, indent=2)}
@@ -362,6 +410,66 @@ STRICT RULES:
 - RETURN JSON ONLY
 - NO explanation
 - NO markdown
+
+The generated relationships MUST strictly follow the selected architecture style.
+Do NOT create relationships that violate the architecture style.
+Use ONLY the provided components.
+
+Rules:
+If Architecture Style is Monolithic:
+all modules communicate directly within the same application.
+
+If Architecture Style is Layered:
+Presentation -> Business -> Data.
+
+If Architecture Style is MVC:
+Controller interacts with Model and View.
+
+If Architecture Style is Client-Server:
+clients communicate with servers which access databases.
+
+If Architecture Style is Microservices:
+services communicate through APIs and databases.
+
+If Architecture Style is Service-Oriented Architecture:
+service consumers communicate with service providers through service contracts.
+
+If Architecture Style is Event-Driven:
+producers publish events to broker and consumers subscribe.
+
+If Architecture Style is Microkernel:
+plugins communicate with the core system.
+
+If Architecture Style is Component-Based:
+components communicate through connectors and interfaces.
+
+If Architecture Style is Pipe-and-Filter:
+filters communicate through pipes.
+
+If Architecture Style is Broker:
+clients communicate with servers through broker.
+
+If Architecture Style is Peer-to-Peer:
+peers communicate directly with other peers.
+
+If Architecture Style is Blackboard:
+knowledge sources read and write to blackboard repository.
+
+If Architecture Style is Space-Based:
+processing units communicate through distributed data grid.
+
+If Architecture Style is REST:
+clients communicate with REST resources through HTTP APIs.
+
+If Architecture Style is Hexagonal:
+adapters communicate through ports to application core.
+
+If Architecture Style is Serverless:
+functions communicate through events and managed services.
+
+If Architecture Style is Event-Bus:
+publishers publish to event bus and subscribers consume events.
+
 
 {{
  "relationships":[
@@ -403,6 +511,65 @@ STRICT RULES:
 - RETURN JSON ONLY
 - NO explanation
 - NO markdown
+
+The generated runtime flow MUST strictly follow the selected architecture style.
+Do NOT invent components.
+Use ONLY the components provided above.
+
+Rules:
+If Architecture Style is Monolithic:
+user -> ui -> business logic -> database
+
+If Architecture Style is Layered:
+presentation -> business -> data -> database
+
+If Architecture Style is MVC:
+user -> controller -> model -> view
+
+If Architecture Style is Client-Server:
+client request -> server -> database -> client response
+
+If Architecture Style is Microservices:
+client -> api gateway -> service -> database
+
+If Architecture Style is Service-Oriented Architecture:
+consumer -> service registry -> provider -> response
+
+If Architecture Style is Event-Driven:
+producer -> broker -> consumer
+
+If Architecture Style is Microkernel:
+plugin -> core system -> plugin response
+
+If Architecture Style is Component-Based:
+component -> connector -> component
+
+If Architecture Style is Pipe-and-Filter:
+filter -> pipe -> filter
+
+If Architecture Style is Broker:
+client request -> broker -> server response
+
+If Architecture Style is Peer-to-Peer:
+peer -> peer -> peer
+
+If Architecture Style is Blackboard:
+knowledge source -> blackboard -> knowledge source
+
+If Architecture Style is Space-Based:
+client -> processing unit -> data grid
+
+If Architecture Style is REST:
+client -> rest api -> resource -> response
+
+If Architecture Style is Hexagonal:
+adapter -> port -> application core -> port -> adapter
+
+If Architecture Style is Serverless:
+event trigger -> function -> managed service
+
+If Architecture Style is Event-Bus:
+publisher -> event bus -> subscriber
 
 {{
  "steps":[
@@ -473,7 +640,7 @@ def ai_generate_architecture(system, frs, nfrs, style):
 
         components = generate_components(system, frs, style)
 
-        relationships = generate_relationships(components)
+        relationships = generate_relationships(components, style)
 
         steps = generate_runtime_flow(
             system,
@@ -513,6 +680,10 @@ def ai_generate_architecture(system, frs, nfrs, style):
         ]
 
         source = "FALLBACK"
+    print("\n===================")
+    print("SOURCE =", source)
+    print("COMPONENTS =", components)
+    print("===================\n")    
 
     return {
         "system": system,

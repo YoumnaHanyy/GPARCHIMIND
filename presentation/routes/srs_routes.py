@@ -71,6 +71,7 @@ from infrastructure.repositories.project_repo import get_user_adl_projects
 
 
 from fastapi.templating import Jinja2Templates
+print("SRS_ROUTES FILE LOADED")
 
 templates = Jinja2Templates(
     directory="presentation/templates"
@@ -604,10 +605,13 @@ async def adl_generate(file: UploadFile = File(...), architecture: str = Form(..
 
 @router.post("/adl/generate-pdf")
 async def adl_generate_pdf(
+    
     request: Request,
     file: UploadFile = File(...),
     architecture: str = Form(...)
+    
 ): 
+    print("AAAAAAAAAAAA FIRST ROUTE")
     try:   
 
         user = request.session.get("user")
@@ -1468,6 +1472,7 @@ async def adl_generate_pdf(
     file: UploadFile = File(...),
     architecture: str = Form(...)
 ):
+    print("BBBBBBBBBBBB SECOND ROUTE")
     try:
 
         # =========================
