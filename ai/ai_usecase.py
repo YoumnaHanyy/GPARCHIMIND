@@ -41,10 +41,82 @@ def generate_usecase_ai(frs, system_name):
     prompt = f"""
 You are a senior software architect.
 
-Extract:
-1. Actors
-2. Use cases (SHORT: 2-4 words)
-3. Map each use case to actor
+Extract realistic actors from the requirements.
+
+STRICT RULES:
+- Do NOT use only "User".
+- Infer domain-specific actors when possible.
+- Examples:
+  CV System -> Job Seeker, Recruiter, Admin
+  E-Commerce -> Customer, Seller, Admin
+  Hospital -> Patient, Doctor, Receptionist
+  Banking -> Customer, Bank Employee, Admin
+
+
+
+  
+
+You are a senior software architect.
+
+Generate a UML Use Case Model from the functional requirements.
+
+STRICT RULES:
+
+- A Use Case must represent a goal achieved by an external actor.
+- Every Use Case must be directly traceable to one or more functional requirements.
+- Infer realistic domain-specific actors from the requirements.
+- Do NOT use generic actors unless no other actor can be inferred.
+- Use concise names (2-4 words maximum).
+- Use verb + object naming style.
+
+DO NOT INCLUDE:
+- Internal algorithms
+- Technical implementations
+- AI/NLP processing
+- Database operations
+- Calculations
+- Background system activities
+- Internal services or components
+- System-to-system internal behavior
+
+A use case must answer:
+"What does an external user/stakeholder want to accomplish?"
+
+Examples of valid use cases:
+- Register Account
+- Submit Application
+- Approve Request
+- Generate Report
+- View Dashboard
+- Manage Inventory
+
+Examples of invalid use cases:
+- Process Data
+- Execute Algorithm
+- Calculate Similarity
+- Store Records
+- Query Database
+- Run AI Model
+
+For each use case:
+- Assign the most appropriate actor.
+- Only include actors that actually participate in the system.
+
+Return ONLY valid JSON.
+
+FORMAT:
+{{
+  "actors": [
+    "Actor 1",
+    "Actor 2"
+  ],
+  "usecases": [
+    {{
+      "name": "Use Case Name",
+      "actor": "Actor 1"
+    }}
+  ]
+}}
 
 STRICT RULES:
 - No "shall"
@@ -72,6 +144,11 @@ Requirements:
     # 🧠 parse + fix
     data = extract_json(response)
     data = normalize_ai_output(data)
+    if len(data["actors"]) == 1 and data["actors"][0].lower() == "user":
+       data["actors"] = [
+           "Primary User",
+           "Administrator"
+        ]
 
     # 🧪 debug (مهم جدًا دلوقتي)
     print("🔥 AI USECASE OUTPUT:", data)
@@ -117,5 +194,11 @@ Requirements:
         lines.append(f'{actor_alias} --> UC{i}')
 
     lines.append("@enduml")
+    import json
+
+    print("\n========== USECASE DATA ==========")
+    print(json.dumps(data, indent=2))
+    print("==================================\n")
+    
 
     return "\n".join(lines),data

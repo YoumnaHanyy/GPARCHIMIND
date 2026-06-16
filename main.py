@@ -41,7 +41,7 @@ from ai.json_to_deployment_view import convert_to_deployment_view
 from application.extraction.api.hybrid_route import router as hybrid_router
 from ai.json_to_c4_plantuml import convert_to_c4_plantuml
 from ai.ai_engine import ai_generate_architecture
-from ai.json_to_usecase_view import convert_to_usecase_view
+from ai.ai_usecase import generate_usecase_ai
 from application.extraction.adl.json_to_acme import convert_to_acme
 import os
 from fastapi import FastAPI, Request, UploadFile, File
