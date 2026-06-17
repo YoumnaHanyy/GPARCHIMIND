@@ -399,6 +399,203 @@
     margin-bottom:8px;
     font-weight:600;
 }
+
+
+
+.compact-card h6 {
+    font-size: 0.95rem;
+}
+
+.compact-card ul {
+    font-size: 0.8rem;
+}
+
+.compact-card .badge {
+    font-size: 0.7rem;
+    padding: 3px 8px;
+}
+/* ========================= */
+/* LOWER DASHBOARD CARDS */
+/* ========================= */
+.pattern-item{
+
+    background:#fff;
+
+    border:1px solid #e2e8f0;
+
+    border-left:3px solid #0f766e;
+
+    border-radius:8px;
+
+    padding:16px;
+
+    margin-bottom:16px;
+
+    transition:.2s;
+
+}
+
+
+.pattern-item:hover{
+
+    border-color:#0f766e;
+
+}
+
+
+.pattern-item:last-child{
+
+    margin-bottom:0;
+
+}
+
+
+
+.pattern-title{
+
+    font-size:1.05rem;
+
+    font-weight:700;
+
+    color:#0f172a;
+
+}
+
+
+.pattern-score{
+
+    color:#64748b;
+
+    font-size:.85rem;
+
+}
+
+
+
+
+.code-container{
+
+    margin-top:10px;
+}
+
+
+.code-box{
+
+
+    background:#0f172a;
+
+    color:white;
+
+
+    border-radius:8px;
+
+
+    padding:16px;
+
+
+    height:320px;
+
+
+    overflow:auto;
+
+
+    font-size:13px;
+
+
+}
+
+
+
+.report-buttons{
+
+    margin-top:15px;
+}
+.patterns-body,
+.skeleton-body,
+.reports-body{
+
+    height:420px;
+
+}
+
+
+.patterns-body{
+
+    overflow-y:auto;
+
+}
+
+
+
+.skeleton-body{
+
+    overflow:hidden;
+
+}
+
+
+.reports-body{
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:flex-start;
+
+}
+.architecture-btn{
+
+background:#0f766e;
+
+color:white;
+
+border:none;
+
+}
+
+
+.architecture-btn:hover{
+
+background:#115e59;
+
+color:white;
+
+}
+.validation-btn{
+
+background:#f59e0b;
+
+color:white;
+
+border:none;
+
+}
+
+.validation-btn:hover{
+
+background:#d97706;
+
+color:white;
+
+}
+.verification-btn{
+
+background:#2563eb;
+
+color:white;
+
+border:none;
+
+}
+
+.verification-btn:hover{
+
+background:#1d4ed8;
+
+color:white;
+
+}
+
     </style>
 </head>
 
@@ -768,6 +965,115 @@
     </div>
 
 </div>
+<div class="row g-4 mb-5">
+
+<!-- DESIGN PATTERNS -->
+<div class="col-lg-4">
+    <div class="dashboard-card p-4">
+        <div class="patterns-body">
+
+        <div class="section-header">
+            <i class="bi bi-diagram-2"></i>
+            Design Patterns
+        </div>
+
+        {% if patterns %}
+        <div class="d-flex flex-column gap-2 patterns-scroll">
+            {% for pattern in patterns[:3] %}
+            <div class="history-card compact-card">
+                <h6 class="fw-bold mb-1">{{ pattern.pattern }}</h6>
+                <span class="badge bg-success mb-1">{{ pattern.confidence }}</span>
+                <div class="text-muted small mb-1">Score : {{ pattern.score }}</div>
+                {% if pattern.reasons %}
+                <ul class="small mb-0 ps-3">
+                    {% for reason in pattern.reasons %}
+                    <li>{{ reason }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <p class="text-muted">No patterns generated.</p>
+        {% endif %}
+
+    </div>
+</div>
+</div>
+
+    <!-- CODE SKELETON -->
+    <div class="col-lg-4">
+        <div class="dashboard-card p-4">
+            <div class="section-header">
+                <i class="bi bi-code-slash"></i>
+                Code Skeleton
+            </div>
+             <div class="skeleton-body">
+
+        {% if skeleton %}
+        <span class="badge bg-dark mb-3">
+            {{ skeleton.language }}
+        </span>
+
+        <div class="code-container">
+
+            <pre class="code-box">
+{{ skeleton.tree }}
+            </pre>
+
+        </div>
+
+        {% endif %}
+
+    </div>
+     </div>
+
+</div>
+
+
+    <!-- REPORTS -->
+    <div class="col-lg-4">
+        <div class="dashboard-card p-4">
+
+            <div class="section-header">
+                <i class="bi bi-file-earmark-pdf"></i>
+                Generated Reports
+            </div>
+            <div class="reports-body">
+
+            <div class="d-grid gap-3 report-buttons">
+
+                
+                <a href="/adl-project/{{ project.project_id }}/download" 
+                class="btn architecture-btn">
+                    Architecture Report
+                </a>
+                
+
+                
+                <a href="/adl-project/{{ project.project_id }}/validation-report"
+                   class="btn validation-btn">
+                    Validation Report
+                </a>
+                
+
+                
+                <a href="/adl-project/{{ project.project_id }}/verification-report" 
+                   class="btn verification-btn">
+                    Verification Report
+                </a>
+                
+
+            </div>
+
+        </div>
+    </div>
+    </div>
+
+</div>
+
+
 
 <div class="modal fade" id="evaluationModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
   <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
@@ -779,6 +1085,7 @@
         </div>
     </div>
   </div>
+  
 </div>
 
 <script>

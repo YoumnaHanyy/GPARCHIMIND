@@ -879,6 +879,8 @@ async def open_adl_project(
 
 @router.get("/adl-project/{project_id}/download")
 async def download_adl_report(project_id: str):
+    print("ARCH REPORT")
+
     report = db.architecture_reports.find_one({
         "project_id": project_id
     })
@@ -1710,7 +1712,7 @@ async def adl_generate_pdf(
         )
 
         verification_pdf_path = generate_verification_pdf(
-             verification_result
+             verification_result, project_id
         )
 
         with open(verification_pdf_path, "rb") as f:
@@ -1939,6 +1941,7 @@ async def starred_projects_page(request: Request):
 
 @router.get("/adl-project/{project_id}/verification-report")
 async def open_verification_report(project_id: str):
+    print("VERIFICATION REPORT")
     print("VERIFICATION ROUTE HIT", project_id)
 
 
