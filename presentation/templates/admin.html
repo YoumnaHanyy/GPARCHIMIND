@@ -223,15 +223,7 @@
            <p class="font-bold text-sm mb-4">Project Repo</p>
            <button onclick="goToProjects()" class="create-btn w-full text-[10px] py-2 px-0 shadow-none">BROWSE ALL</button>
         </div>
-        <div class="studio-card p-6 col-span-2 border-dashed border-2 flex items-center justify-between group">
-           <div class="text-left">
-             <h4 class="font-bold text-sm">Neural Retraining</h4>
-             <p class="text-[10px] text-gray-400">Optimize AI with new datasets</p>
-           </div>
-           <button onclick="triggerRetrain()" class="px-6 py-2 rounded-full font-bold text-[10px] border-2 border-[var(--scribble)] text-[var(--scribble)] hover:bg-[var(--scribble)] hover:text-white transition-all">
-             INITIALIZE
-           </button>
-        </div>
+        
       </div>
     </div>
   </div>
@@ -250,7 +242,6 @@ function goToUsers() {
     function logout() {
       document.body.classList.add('page-exit');
       setTimeout(() => {
-        alert("Session Terminated");
         window.location.href = '/Login';
       }, 500);
     }

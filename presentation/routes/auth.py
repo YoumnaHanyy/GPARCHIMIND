@@ -19,6 +19,26 @@ async def login(
 ):
     try:
 
+        # =========================
+        # ADMIN LOGIN
+        # =========================
+        if email == "admin@gmail.com" and password == "1234":
+
+            request.session["user"] = {
+                "id": "admin",
+                "email": "admin",
+                "role": "Admin",
+                "name": "Administrator"
+            }
+
+            return RedirectResponse(
+                url="/Admin",
+                status_code=303
+            )
+
+        # =========================
+        # NORMAL USER LOGIN
+        # =========================
         user = db.Users.find_one({"Email": email})
 
         if not user:
@@ -27,7 +47,10 @@ async def login(
                 status_code=303
             )
 
-        if not bcrypt.checkpw(password.encode("utf-8"), user["password"].encode("utf-8")):
+        if not bcrypt.checkpw(
+            password.encode("utf-8"),
+            user["password"].encode("utf-8")
+        ):
             return RedirectResponse(
                 url="/Login?error=invalid",
                 status_code=303
@@ -51,7 +74,6 @@ async def login(
             url="/Login?error=server",
             status_code=303
         )
-
 # -------------------------
 # SIGNUP POST
 # -------------------------

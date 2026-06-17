@@ -68,6 +68,7 @@ from ai.json_to_usecase_view import convert_to_usecase_view
 from infrastructure.repositories.validation_report_repository import save_validation_report_pdf
 from infrastructure.repositories.project_repo import get_user_adl_projects
 from fastapi.templating import Jinja2Templates
+from infrastructure.repositories.project_repo import get_project, update_project_progress, create_project, save_project_data,toggle_project_star,get_all_starred_projects
 
 templates = Jinja2Templates(
     directory="presentation/templates"
@@ -1497,3 +1498,50 @@ async def open_validation_report(project_id: str):
         path=temp_pdf,
         media_type="application/pdf"
     )
+@router.post("/project/{project_id}/toggle-star")
+async def toggle_star(
+    request: Request,
+    project_id: str
+):
+    user = request.session.get("user")
+
+    if not user:
+        return JSONResponse(
+            status_code=401,
+            content={"error": "Not authenticated"}
+        )
+
+    result = toggle_project_star(
+        project_id,
+        user["id"]
+    )
+
+    return {
+        "success": True,
+        "starred": result
+    }
+
+
+@router.get("/starred-projects")
+async def starred_projects_page(request: Request):
+
+    user = request.session.get("user")
+
+    if not user:
+        return RedirectResponse("/Login")
+
+    projects = get_all_starred_projects(
+        user["id"]
+    )
+
+    # التعديل المطلوب
+    user_data = request.session.get("user") # أو الطريقة اللي بتجيب بيها الـ user عندك في الـ Routes التانية
+
+    return templates.TemplateResponse(
+       "starred_projects.html", 
+       {
+        "request": request, 
+        "projects": projects, 
+        "user": user_data # 👈 السطر ده هو اللي هيحل المشكلة فوراً
+     }
+   )

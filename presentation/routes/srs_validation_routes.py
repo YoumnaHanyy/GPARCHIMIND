@@ -20,6 +20,9 @@ import traceback
 from fastapi import APIRouter, UploadFile, Request, File, HTTPException
 from fastapi.responses import JSONResponse, HTMLResponse, StreamingResponse
 from fastapi.templating import Jinja2Templates
+from infrastructure.repositories.validation_repository import (
+    toggle_validation_star
+)
 import io
 
 from service.srs_validation_service import (
@@ -144,10 +147,11 @@ async def validate_srs(
 
     # ── Create DB record (status = processing) ─
     create_validation_project(
-        validation_id=validation_id,
-        user_id=user_id,
-        project_name="Processing...",
-        file_name=file.filename,
+    validation_id=validation_id,
+    user_id=user_id,
+    project_name="Processing...",
+    file_name=file.filename,
+    starred=False
     )
 
     # ── Run pipeline ───────────────────────────
@@ -317,3 +321,26 @@ async def download_enhanced_srs(
             f"Failed to generate PDF: {str(e)}",
             status_code=500
         )
+    
+@router.post("/validation/{validation_id}/toggle-star")
+async def toggle_validation_project_star(
+    request: Request,
+    validation_id: str
+):
+    user = request.session.get("user")
+
+    if not user:
+        return JSONResponse(
+            status_code=401,
+            content={"error": "Not authenticated"}
+        )
+
+    result = toggle_validation_star(
+        validation_id,
+        user["id"]
+    )
+
+    return {
+        "success": True,
+        "starred": result
+    }

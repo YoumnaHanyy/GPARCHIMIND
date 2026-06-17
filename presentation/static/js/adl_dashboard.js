@@ -121,3 +121,39 @@ function openProject(projectId) {
   window.location.href =
     `/adl-project/${projectId}`;
 }
+async function toggleStar(projectId, event) {
+
+    event.stopPropagation();
+
+    const icon = event.currentTarget.querySelector("i");
+
+    try {
+
+        const response = await fetch(
+            `/project/${projectId}/toggle-star`,
+            { method: "POST" }
+        );
+
+        const data = await response.json();
+
+        if (data.starred) {
+
+            icon.classList.remove("bi-bookmark");
+            icon.classList.add("bi-bookmark-fill");
+
+        } else {
+
+            icon.classList.remove("bi-bookmark-fill");
+            icon.classList.add("bi-bookmark");
+        }
+
+        event.currentTarget.classList.add("bookmark-bounce");
+
+        setTimeout(() => {
+            event.currentTarget.classList.remove("bookmark-bounce");
+        }, 350);
+
+    } catch (err) {
+        console.error(err);
+    }
+}

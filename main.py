@@ -151,7 +151,13 @@ def home(request: Request):
 
 @app.get("/Admin", response_class=HTMLResponse)
 async def admin_dashboard(request: Request):
+    user = request.session.get("user")
 
+    if not user or user.get("role") != "Admin":
+        return RedirectResponse(
+            url="/Login?error=required",
+            status_code=303
+        )
     # 📊 most selected architecture (top 1)
     pipeline = [
         {
@@ -239,6 +245,13 @@ async def admin_dashboard(request: Request):
     )
 @app.get("/admin/users", response_class=HTMLResponse)
 async def get_all_users(request: Request):
+    user = request.session.get("user")
+
+    if not user or user.get("role") != "Admin":
+        return RedirectResponse(
+            url="/Login?error=required",
+            status_code=303
+        )
     users = list(db.Users.find({}, {"password": 0}))
 
     enriched_users = []
@@ -828,7 +841,37 @@ async def save_updated_architectures(
 @app.get("/admin/projects", response_class=HTMLResponse)
 async def get_all_projects(request: Request):
     projects = list(db.projects.find({}, {"_id": 0}))
+    validations = list(
+        db.validation_projects.find({}, {"_id": 0})
+    )
 
+    for v in validations:
+
+        projects.append({
+
+            "project_id":
+                v.get("validation_id"),
+
+            "project_name":
+                v.get("project_name"),
+
+            "status":
+                v.get("status"),
+
+            "progress":
+                v.get("progress", 0),
+
+            "created_at":
+                v.get("created_at"),
+
+            "project_type":
+                "srs_validation"
+        })
+
+    projects.sort(
+        key=lambda x: x.get("created_at"),
+        reverse=True
+    )
     return templates.TemplateResponse(
         "projects.html",
         {
