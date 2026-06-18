@@ -64,7 +64,7 @@ from infrastructure.repositories.srs_repository import SRSRepository
 from ai.json_to_c4_plantuml import convert_to_c4_plantuml
 from ai.json_to_process_view import convert_to_process_view
 from ai.json_to_deployment_view import convert_to_deployment_view
-from ai.json_to_usecase_view import convert_to_usecase_view
+from ai.ai_usecase import generate_usecase_ai
 from infrastructure.repositories.validation_report_repository import save_validation_report_pdf
 from infrastructure.repositories.project_repo import get_user_adl_projects
 from fastapi.templating import Jinja2Templates
@@ -704,7 +704,7 @@ async def adl_generate_pdf(
         c4_puml = convert_to_c4_plantuml(adl_result)
         process_puml = convert_to_process_view(adl_result)
         deployment_puml = convert_to_deployment_view(adl_result)
-        usecase_puml = convert_to_usecase_view(adl_result)
+        usecase_puml, usecase_data = generate_usecase_ai(frs,project_name)
         outputs_dir = Path("data/outputs")
         outputs_dir.mkdir(parents=True, exist_ok=True)
         c4_file = outputs_dir / "architecture_c4.puml"
