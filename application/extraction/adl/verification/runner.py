@@ -25,12 +25,18 @@ def run_verification(adl: dict):
     correctness = verify_correctness(adl)
     completeness = verify_completeness(adl)
     consistency = verify_consistency(adl)
-    if consistency["status"] == "FAILED":
-        return {
-            "status": "NOT_VERIFIED",
-            "failed_layer": "consistency",
-            "details": consistency
-        }
+
+    # Fold the missing-style issue into the consistency layer so the
+    # downstream report can render it consistently.
+    
+    layers = {
+        "correctness": correctness,
+        "completeness": completeness,
+        "consistency": consistency,
+    }
+
+    failed_layers = [name for name, result in layers.items()
+                     if result.get("status") == "FAILED"]
 
     return {
         "status": "VERIFIED" if not failed_layers else "NOT_VERIFIED",

@@ -11,7 +11,7 @@ HF_API_KEY = os.getenv("HF_API_KEY")
 if not HF_API_KEY:
     raise RuntimeError("HF_API_KEY not found in environment variables")
 
-MODEL_NAME = "meta-llama/Llama-3.3-70B-Instruct"
+MODEL_NAME = "Qwen/Qwen2.5-14B-Instruct"
 
 client = InferenceClient(
     model=MODEL_NAME,
