@@ -22,7 +22,8 @@ from infrastructure.repositories.weighted_repository import save_weighted_result
 from ai.inference.predict_type_level import predict_and_save_nfr, predict_level_for_text
 
 import traceback
-from infrastructure.repositories.ADL_repository import save_architecture_report_pdf, save_verification_report_pdf
+from application.extraction.adl.verification.verification_report_generator import generate_verification_pdf
+from infrastructure.repositories.adl_verification_report_repository import save_verification_report_pdf1
 from fastapi.responses import JSONResponse
 from application.extraction.adl.verification.runner import run_verification
 from application.extraction.adl.verification.verification_report_generator import generate_verification_pdf
@@ -957,13 +958,13 @@ def generate_architecture(project_id: str):
     try:
         verification_result = run_verification(arch)
         print(f"[verify] run_verification status={verification_result.get('status')}", flush=True)
-        verification_pdf_path = generate_verification_pdf(verification_result)
+        verification_pdf_path = generate_verification_pdf(verification_result, project_id)
         print(f"[verify] PDF generated at: {verification_pdf_path}", flush=True)
         with open(verification_pdf_path, "rb") as _vf:
             _vbytes = _vf.read()
         print(f"[verify] PDF bytes read: {len(_vbytes)}", flush=True)
 
-        save_verification_report_pdf(project_id, _vbytes)
+        save_verification_report_pdf1(project_id, _vbytes)
         print("[verify] verification report saved to MongoDB successfully", flush=True)
     except Exception as e:
         import traceback
