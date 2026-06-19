@@ -1283,13 +1283,17 @@ def download_verification_report(
             f"inline; filename={project_id}_verification.pdf"
         }
     )
-from application.extraction.reporting.final_report_generator import generate_last_report
+from application.extraction.reporting.final_report_generator import (
+    generate_last_report,
+    build_final_report_payload,
+)
+from infrastructure.repositories.code_skeleton_repository import get_code_skeleton
 @app.get("/generate-final-report/{project_id}")
-def generate_final_report(project_id: str):
+def generate_final_report(project_id: str, format: str = "pdf"):
 
     project = db.projects.find_one({
         "project_id": project_id
-    })
+    }) or {}
     project["project_id"] = project_id
     frs = list(
         db.fr_extracted.find(
@@ -1309,16 +1313,46 @@ def generate_final_report(project_id: str):
         "project_id": project_id
     })
 
-    phase4 = generate_phase4(project_id)
+    design_patterns_doc = db.design_patterns.find_one(
+        {"project_id": project_id},
+        {"_id": 0}
+    ) or {}
+    design_patterns = design_patterns_doc.get("patterns", []) or []
+
+    # Reuse persisted Phase 4 output — do NOT recompute feature extraction here.
+    phase4 = {
+        "phase4": {
+            "top_patterns": design_patterns,
+        }
+    }
+
+    code_skeleton_doc = get_code_skeleton(project_id) or {}
+    code_skeleton = {
+        "language": code_skeleton_doc.get("language", ""),
+        "tree": code_skeleton_doc.get("tree", ""),
+    }
 
     pdf_path = generate_last_report(
         project,
         frs,
         nfrs,
         hybrid,
-        phase4
+        phase4,
+        design_patterns=design_patterns,
+        code_skeleton=code_skeleton
     )
-
+    if format and format.lower() == "json":
+        payload = build_final_report_payload(
+            project,
+            frs,
+            nfrs,
+            hybrid,
+            phase4,
+            design_patterns=design_patterns,
+            code_skeleton=code_skeleton,
+        )
+        payload["pdf_url"] = f"/generate-final-report/{project_id}"
+        return JSONResponse(content=payload)
     return FileResponse(
         path=pdf_path,
         filename="final_report.pdf",
