@@ -8,7 +8,7 @@ import io
 from datetime import datetime
 from service.functional_service import execute_functional_method
 from service.ordinal_service import execute_ordinal_method
-
+from infrastructure.repositories.code_skeleton_repository import get_code_skeleton
 from service.binary_service import execute_binary_method
 
 from service.weighted_service import execute_weighted_method
@@ -349,27 +349,51 @@ async def open_project(
     # ==========================================
     # TEMPLATE
     # ==========================================
+    patterns_doc = db.design_patterns.find_one(
+    {"project_id": project_id})
+    patterns = []
+    if patterns_doc:
+       patterns = patterns_doc.get("patterns", [])
+    skeleton = get_code_skeleton(project_id)
+
+    adl_report_exists = db.architecture_reports.find_one({
+       "project_id": project_id
+    })
+
+    validation_report_exists = db.validation_reports.find_one({
+        "project_id": project_id
+    })
+
+    verification_report_exists = db.ADLVerificationReports.find_one({
+        "project_id": project_id
+   })
+    print("PATTERNS =", patterns)
+    print("SKELETON =", skeleton)
+    print("ADL REPORT =", adl_report_exists)
+    print("VALIDATION REPORT =", validation_report_exists)
+    print("VERIFICATION REPORT =", verification_report_exists)
 
     return templates.TemplateResponse(
+    "project_dashboard.html",
+    {
+        "request": request,
+        "user": request.session.get("user"),
+        "project": project,
+        "frs": frs,
+        "nfrs": nfrs,
+        "hybrid_results": hybrid_results,
+        "selected_architecture": selected_architecture,
 
-        "project_dashboard.html",
+        "patterns": patterns,
+        "skeleton": skeleton,
 
-        {
-            "request": request,
-            "user": request.session.get("user"),
-            "project": project,
-            "frs": frs,
-            "nfrs": nfrs,
+        "adl_report_exists": bool(adl_report_exists),
+        "validation_report_exists": bool(validation_report_exists),
+        "verification_report_exists": bool(verification_report_exists),
 
-            # 🔥 ONLY HYBRID
-            "hybrid_results": hybrid_results,
-            "selected_architecture": selected_architecture,
-            "requirement_drift":
-            project.get(
-                "requirement_drift"
-            )
-        }
-    )
+        "requirement_drift": project.get("requirement_drift")
+    }
+)
 # ==========================================
 # RE-EVALUATE ARCHITECTURE
 # ==========================================
@@ -1187,7 +1211,7 @@ app.include_router(
 @app.get("/api/report/{project_id}")
 def get_report(project_id: str):
 
-    doc = db.architecture_reports.find_one({
+    doc = db.ADLVerificationReports.find_one({
 
         "project_id": project_id,
 

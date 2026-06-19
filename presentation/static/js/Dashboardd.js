@@ -271,10 +271,10 @@ function checkADLInputs() {
     return html;
   }
 
-  function renderBinaryMethod(data) {
-    console.log("BINARY DATA =", data.binary_method);
+function renderBinaryMethod(data) {
+  console.log("BINARY DATA =", data.binary_method);
 
-    if (
+  if (
     !data ||
     !data.binary_method ||
     !data.binary_method.top_5_architectures
@@ -282,7 +282,7 @@ function checkADLInputs() {
     return "<p class='text-muted'>No binary method results available.</p>";
   }
 
-    let html = "<h5 class='section-header'>Binary Method</h5>";
+  let html = "<h5 class='section-header'>Binary Method</h5>";
 
   data.binary_method.top_5_architectures.forEach((item, idx) => {
     html += `
@@ -291,12 +291,12 @@ function checkADLInputs() {
         <div class="req-desc">
           Score: <strong>${item.score}</strong>
         </div>
-     </div>
+      </div>
     `;
   });
 
-    return html;
-  }
+  return html;
+}
 
   function renderWeightedMethod(data) {
     if (!data || !data.weighted_method || !data.weighted_method.top_architectures) {
