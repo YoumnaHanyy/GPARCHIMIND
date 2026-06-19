@@ -271,7 +271,7 @@ function checkADLInputs() {
     return html;
   }
 
-function renderBinaryMethod(data) {
+ function renderBinaryMethod(data) {
   console.log("BINARY DATA =", data.binary_method);
 
   if (

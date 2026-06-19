@@ -20,9 +20,6 @@ import traceback
 from fastapi import APIRouter, UploadFile, Request, File, HTTPException
 from fastapi.responses import JSONResponse, HTMLResponse, StreamingResponse
 from fastapi.templating import Jinja2Templates
-from infrastructure.repositories.validation_repository import (
-    toggle_validation_star
-)
 import io
 
 from service.srs_validation_service import (
@@ -40,6 +37,9 @@ from infrastructure.repositories.validation_repository import (
     delete_validation_project,
 )
 from ai.validations.enhanced_srs_pdf import generate_enhanced_srs_pdf
+from infrastructure.repositories.validation_repository import (
+    toggle_validation_star
+)
 
 
 logger = logging.getLogger(__name__)
@@ -147,11 +147,10 @@ async def validate_srs(
 
     # ── Create DB record (status = processing) ─
     create_validation_project(
-    validation_id=validation_id,
-    user_id=user_id,
-    project_name="Processing...",
-    file_name=file.filename,
-    starred=False
+        validation_id=validation_id,
+        user_id=user_id,
+        project_name="Processing...",
+        file_name=file.filename,
     )
 
     # ── Run pipeline ───────────────────────────

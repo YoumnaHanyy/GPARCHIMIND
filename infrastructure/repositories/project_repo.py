@@ -3,6 +3,7 @@ from datetime import datetime
 from infrastructure.repositories.validation_repository import (
     get_starred_validation_projects
 )
+
 projects_collection = db["projects"]
 
 def create_project(project_id: str, user_id, project_name=None, project_type="full_pipeline"):
@@ -16,7 +17,7 @@ def create_project(project_id: str, user_id, project_name=None, project_type="fu
         "created_at": datetime.utcnow(),
         "updated_at": datetime.utcnow(),
         "project_type": project_type,
-        "starred":False
+         "starred":False
     }
     projects_collection.insert_one(doc)
 
@@ -149,5 +150,70 @@ def save_project_data(project_id: str, data: dict):
             }
         }
     )
+    
+def toggle_project_star(project_id: str, user_id):
+    project = projects_collection.find_one({
+        "project_id": project_id,
+        "user_id": user_id
+    })
+
+    if not project:
+        return None
+
+    new_star_value = not project.get("starred", False)
+
+    projects_collection.update_one(
+        {
+            "project_id": project_id,
+            "user_id": user_id
+        },
+        {
+            "$set": {
+                "starred": new_star_value,
+                "updated_at": datetime.utcnow()
+            }
+        }
+    )
+
+    return new_star_value
 
 
+def get_starred_projects(user_id):
+    return list(
+        projects_collection.find(
+            {
+                "user_id": user_id,
+                "starred": True
+            },
+            {"_id": 0}
+        ).sort("created_at", -1)
+    )
+
+def get_all_starred_projects(user_id):
+
+    normal_projects = list(
+        projects_collection.find(
+            {
+                "user_id": user_id,
+                "starred": True
+            },
+            {"_id": 0}
+        )
+    )
+
+    validation_projects = \
+        get_starred_validation_projects(
+            user_id
+        )
+
+    all_projects = (
+        normal_projects +
+        validation_projects
+    )
+
+    all_projects.sort(
+        key=lambda x: x.get("created_at"),
+        reverse=True
+    )
+
+    return all_projects

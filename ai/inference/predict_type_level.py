@@ -59,7 +59,12 @@ def predict_and_save_nfr(project_id: str):
     le_level.fit(df["Level"])
     
     # 2️⃣ Load models
+    tokenizer = BertTokenizer.from_pretrained(MODEL_TYPE_PATH)
+    model_type = BertForSequenceClassification.from_pretrained(MODEL_TYPE_PATH)
+    model_level = BertForSequenceClassification.from_pretrained(MODEL_LEVEL_PATH)
     
+    model_type.eval()
+    model_level.eval()
     
     # 3️⃣ Load extracted NFRs
     with open(NFR_INPUT_PATH, "r", encoding="utf-8") as f:

@@ -9,171 +9,13 @@ from reportlab.lib.utils import ImageReader
 from datetime import datetime
 import os
 
-PATTERN_DESCRIPTIONS = {
-    "Singleton": "Restricts instantiation of a class to a single shared instance and provides a global access point.",
-    "Factory": "Encapsulates object creation behind a method, decoupling clients from concrete classes.",
-    "Abstract Factory": "Creates families of related objects without specifying their concrete classes.",
-    "Builder": "Separates the construction of a complex object from its representation.",
-    "Prototype": "Creates new objects by cloning an existing prototype instance.",
-    "Adapter": "Bridges two incompatible interfaces so they can collaborate.",
-    "Bridge": "Decouples an abstraction from its implementation so they can vary independently.",
-    "Composite": "Treats individual objects and compositions of objects uniformly through a tree structure.",
-    "Decorator": "Adds responsibilities to an object dynamically without altering its structure.",
-    "Facade": "Provides a unified, simplified interface to a set of interfaces in a subsystem.",
-    "Proxy": "Provides a surrogate or placeholder to control access to another object.",
-    "Flyweight": "Shares fine-grained objects efficiently to support large numbers of instances.",
-    "Observer": "Defines a one-to-many dependency so observers are notified of state changes.",
-    "Strategy": "Encapsulates interchangeable algorithms behind a common interface.",
-    "Command": "Encapsulates a request as an object, enabling queueing, logging, and undo.",
-    "Iterator": "Provides sequential access to elements of an aggregate without exposing its structure.",
-    "Mediator": "Centralizes complex communications between related objects.",
-    "Memento": "Captures and restores an object's internal state without violating encapsulation.",
-    "State": "Allows an object to alter its behavior when its internal state changes.",
-    "Template Method": "Defines the skeleton of an algorithm, deferring steps to subclasses.",
-    "Visitor": "Represents an operation to be performed on the elements of an object structure.",
-    "Chain of Responsibility": "Passes a request along a chain of handlers until one handles it.",
-    "Interpreter": "Defines a representation for a grammar along with an interpreter that uses it.",
-    "Repository": "Mediates between the domain and data layers using a collection-like interface.",
-    "Service Layer": "Defines an application's boundary with a layer of services that establishes operations.",
-    "MVC": "Separates application logic into Model, View, and Controller for clearer responsibilities.",
-    "Publish-Subscribe": "Decouples producers and consumers of events through an intermediary broker.",
-    "CQRS": "Separates read and write models to optimize for different workload characteristics.",
-    "Event Sourcing": "Persists changes as an append-only sequence of immutable events.",
-    "Saga": "Coordinates long-running distributed transactions through compensating actions.",
-    "Circuit Breaker": "Prevents cascading failures by tripping calls to a failing dependency.",
-}
-
-
-def _pattern_description(pattern_name):
-    if not pattern_name:
-        return "Recommended design pattern."
-    name = pattern_name.strip()
-    if name in PATTERN_DESCRIPTIONS:
-        return PATTERN_DESCRIPTIONS[name]
-    for key, desc in PATTERN_DESCRIPTIONS.items():
-        if key.lower() in name.lower() or name.lower() in key.lower():
-            return desc
-    return "Design pattern selected as a strong match for the project's requirements."
-
-
-def _normalize_tree_for_pdf(tree_text):
-    """Convert Unicode box-drawing / block chars to ASCII for reliable PDF rendering."""
-    if not tree_text:
-        return tree_text
-    result = tree_text
-    # Preferred tree chars → ASCII equivalents that Courier handles reliably
-    result = result.replace("├──", "+--")
-    result = result.replace("├─",  "+--")
-    result = result.replace("└──", "\\--")
-    result = result.replace("└─",  "\\--")
-    result = result.replace("│",   "|")
-    result = result.replace("─",   "-")
-    # Block / square symbols commonly produced by LLM skeleton generators
-    for ch in "■□▪▫●○◆◇▶▷▸▹►▻◾◽◼◻█▓▒░":
-        result = result.replace(ch, "*")
-    return result
-
-
-def _summarize_skeleton_tree(tree_text):
-    if not tree_text or not isinstance(tree_text, str):
-        return {"folders": [], "files": [], "folder_count": 0, "file_count": 0}
-
-    folders = []
-    files = []
-
-    for raw in tree_text.splitlines():
-        stripped = raw.strip()
-        token = stripped.lstrip("│├└─ ").strip()
-        if not token or token in {"│", "├", "└", "─"}:
-            continue
-        if token.endswith("/"):
-            folder = token.rstrip("/")
-            if folder and folder not in folders:
-                folders.append(folder)
-        elif "." in token:
-            if token not in files:
-                files.append(token)
-
-    return {
-        "folders": folders,
-        "files": files,
-        "folder_count": len(folders),
-        "file_count": len(files),
-    }
-
-
-def build_final_report_payload(
-    project,
-    frs,
-    nfrs,
-    hybrid,
-    phase4,
-    design_patterns=None,
-    code_skeleton=None
-):
-    """Assemble the structured data backing the final report (used by both PDF and API response)."""
-    hybrid = hybrid or {}
-    phase4 = phase4 or {}
-
-    raw_patterns = []
-    if isinstance(design_patterns, list):
-        raw_patterns = design_patterns
-    elif isinstance(design_patterns, dict):
-        raw_patterns = design_patterns.get("patterns", []) or []
-    if not raw_patterns:
-        phase4_inner = phase4.get("phase4", phase4)
-        raw_patterns = phase4_inner.get("top_patterns", []) or phase4.get("top_patterns", [])
-
-    patterns_payload = []
-    for pat in raw_patterns or []:
-        name = pat.get("pattern", "Unknown Pattern")
-        patterns_payload.append({
-            "name": name,
-            "description": _pattern_description(name),
-            "confidence": pat.get("confidence", ""),
-            "score": pat.get("score", 0),
-            "rationale": pat.get("reasons", []) or [],
-        })
-
-    skeleton_tree = ""
-    skeleton_language = ""
-    if isinstance(code_skeleton, dict):
-        skeleton_tree = code_skeleton.get("tree", "") or ""
-        skeleton_language = code_skeleton.get("language", "") or ""
-    elif isinstance(code_skeleton, str):
-        skeleton_tree = code_skeleton
-
-    skeleton_summary = _summarize_skeleton_tree(skeleton_tree)
-
-    return {
-        "project_name": project.get("project_name", "Unknown Project") if project else "Unknown Project",
-        "project_id": project.get("project_id", "") if project else "",
-        "functional_requirements": frs or [],
-        "non_functional_requirements": nfrs or [],
-        "top_architectures": hybrid.get("top_architectures", []) or [],
-        "selected_architecture": hybrid.get("selected_architecture", "Unknown"),
-        "design_patterns": patterns_payload,
-        "code_skeleton": {
-            "architecture": hybrid.get("selected_architecture", "Unknown"),
-            "language": skeleton_language,
-            "tree": skeleton_tree,
-            "folders": skeleton_summary["folders"],
-            "files": skeleton_summary["files"],
-            "folder_count": skeleton_summary["folder_count"],
-            "file_count": skeleton_summary["file_count"],
-        },
-    }
-
-
 def generate_last_report(
     project,
     frs,
     nfrs,
     hybrid,
     phase4,
-    generated_code=None,
-    design_patterns=None,
-    code_skeleton=None
+    generated_code=None
 ):
     # ======================================================
     # OUTPUT PATH
@@ -487,64 +329,22 @@ def generate_last_report(
     elements.append(Spacer(1, 20))
 
     # ======================================================
-    # DESIGN PATTERNS — DETAILED
+    # DESIGN PATTERNS
     # ======================================================
-    elements.append(PageBreak())
-    elements.extend(create_heading("Design Patterns"))
-
-    elements.append(Paragraph(
-        "The following design patterns were generated for this project. "
-        "For each pattern, the description explains its intent and the "
-        "rationale lists the reasons it was selected based on the project's "
-        "requirements and selected architecture.",
-        normal_style
-    ))
-    elements.append(Spacer(1, 12))
-
-    phase4_inner = phase4.get("phase4", phase4) if isinstance(phase4, dict) else {}
-    _fallback_patterns = (
-        phase4_inner.get("top_patterns", [])
-        or (phase4.get("top_patterns", []) if isinstance(phase4, dict) else [])
-    )
-
-    detailed_patterns = []
-    if isinstance(design_patterns, list):
-        detailed_patterns = design_patterns
-    elif isinstance(design_patterns, dict):
-        detailed_patterns = design_patterns.get("patterns", []) or []
-    if not detailed_patterns:
-        detailed_patterns = _fallback_patterns
-
-    if detailed_patterns:
-        dp_data = [["#", "Pattern", "Description", "Rationale"]]
-        for idx, pattern in enumerate(detailed_patterns, start=1):
+    elements.extend(create_heading("Recommended Design Patterns"))
+    
+    patterns = phase4.get("top_patterns", [])
+    if patterns:
+        pat_data = [["#", "Pattern", "Justification"]]
+        for idx, pattern in enumerate(patterns, start=1):
             pattern_name = pattern.get("pattern", "Unknown Pattern")
-            confidence = pattern.get("confidence", "")
-            score = pattern.get("score", "")
-            desc_text = _pattern_description(pattern_name)
-            meta_parts = []
-            if confidence:
-                meta_parts.append(f"<b>Confidence:</b> {confidence}")
-            if score != "" and score is not None:
-                meta_parts.append(f"<b>Score:</b> {score}")
-            meta_line = " &nbsp;|&nbsp; ".join(meta_parts)
-            full_desc = desc_text + (f"<br/><br/>{meta_line}" if meta_line else "")
-
-            reasons = pattern.get("reasons", []) or []
-            rationale_text = "• " + "<br/>• ".join(reasons) if reasons else "No rationale recorded."
-
-            dp_data.append([
-                str(idx),
-                Paragraph(f"<b>{pattern_name}</b>", table_cell_style),
-                Paragraph(full_desc, table_cell_style),
-                Paragraph(rationale_text, table_cell_style),
-            ])
-
-        t_dp = Table(dp_data, colWidths=[28, 100, 200, 204])
-        t_dp.setStyle(get_grid_style())
-        elements.append(t_dp)
-    else:
-        elements.append(Paragraph("No design patterns were generated for this project.", normal_style))
+            reasons = pattern.get("reasons", [])
+            reason_text = " • " + "<br/> • ".join(reasons) if reasons else "No reasons provided."
+            pat_data.append([str(idx), pattern_name, Paragraph(reason_text, table_cell_style)])
+            
+        t_pat = Table(pat_data, colWidths=[30, 130, 372])
+        t_pat.setStyle(get_grid_style())
+        elements.append(t_pat)
 
     elements.append(Spacer(1, 20))
 
@@ -594,27 +394,59 @@ def generate_last_report(
     validation_link = \
     f"{base_url}/download-validation-report"
 
-    link_style = ParagraphStyle(
-        "LinkStyle",
-        parent=table_cell_style,
-        textColor=colors.HexColor("#0066CC"),
-    )
-
-    def _link(url, label):
-        return Paragraph(
-            f'<link href="{url}"><u>{label}</u></link>',
-            link_style,
-        )
-
     links_data = [
-        [
-            Paragraph("<b>Document</b>", table_cell_style),
-            Paragraph("<b>Download Link</b>", table_cell_style),
-        ],
-        ["ADL Blueprint",        _link(adl_link,          "Download ADL Report")],
-        ["Verification Report",  _link(verification_link, "Download Verification Report")],
-        ["Validation Report",    _link(validation_link,   "Download Validation Report")],
+
+    [
+        Paragraph(
+            "<b>Document</b>",
+            table_cell_style
+        ),
+
+        Paragraph(
+            "<b>Download Link</b>",
+            table_cell_style
+        )
+    ],
+
+    [
+        "ADL Blueprint",
+
+        Paragraph(
+            f'''
+            <link href="{adl_link}">
+            Download ADL Report
+            </link>
+            ''',
+            table_cell_style
+        )
+    ],
+
+    [
+        "Verification Report",
+
+        Paragraph(
+            f'''
+            <link href="{verification_link}">
+            Download Verification Report
+            </link>
+            ''',
+            table_cell_style
+        )
+    ],
+
+    [
+        "Validation Report",
+
+        Paragraph(
+            f'''
+            <link href="{validation_link}">
+            Download Validation Report
+            </link>
+            ''',
+            table_cell_style
+        )
     ]
+]
 
     links_table = Table(
 
@@ -633,73 +465,13 @@ def generate_last_report(
 
 
     # ======================================================
-    # GENERATED CODE SKELETON (reused from previous workflow step)
+    # CODE SKELETON
     # ======================================================
     elements.append(PageBreak())
     elements.extend(create_heading("Generated Code Skeleton"))
 
-    skeleton_tree = ""
-    skeleton_language = ""
-    if isinstance(code_skeleton, dict):
-        skeleton_tree = code_skeleton.get("tree", "") or ""
-        skeleton_language = code_skeleton.get("language", "") or ""
-    elif isinstance(code_skeleton, str):
-        skeleton_tree = code_skeleton
-    if not skeleton_tree and generated_code:
-        skeleton_tree = generated_code
-
-    if skeleton_tree:
-        summary = _summarize_skeleton_tree(skeleton_tree)
-
-        elements.append(Paragraph(
-            "The following project structure was generated from the selected "
-            "architecture, the recommended design patterns, and the project's "
-            "functional and non-functional requirements.",
-            normal_style
-        ))
-        elements.append(Spacer(1, 10))
-
-        meta_rows = [
-            ["Architecture", selected_arch or "Unknown"],
-            ["Language", skeleton_language or "Not specified"],
-            ["Top-level Components", str(summary["folder_count"])],
-            ["Generated Files", str(summary["file_count"])],
-        ]
-        meta_table = Table(meta_rows, colWidths=[180, 352])
-        meta_table.setStyle(TableStyle([
-            ('FONTNAME', (0, 0), (0, -1), 'Helvetica-Bold'),
-            ('FONTNAME', (1, 0), (1, -1), 'Helvetica'),
-            ('FONTSIZE', (0, 0), (-1, -1), 10),
-            ('TEXTCOLOR', (0, 0), (0, -1), ACCENT_GREEN),
-            ('TEXTCOLOR', (1, 0), (1, -1), PRIMARY_BLACK),
-            ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
-            ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
-            ('BOTTOMPADDING', (0, 0), (-1, -1), 8),
-            ('TOPPADDING', (0, 0), (-1, -1), 8),
-            ('LINEBELOW', (0, 0), (-1, -2), 0.5, BORDER_GRAY),
-            ('BACKGROUND', (0, 0), (-1, -1), colors.white),
-        ]))
-        elements.append(meta_table)
-        elements.append(Spacer(1, 14))
-
-        if summary["folders"]:
-            elements.append(Paragraph("<b>Components / Modules</b>", normal_style))
-            elements.append(Spacer(1, 4))
-            components_text = "• " + "<br/>• ".join(summary["folders"])
-            elements.append(Paragraph(components_text, normal_style))
-            elements.append(Spacer(1, 14))
-
-        elements.append(Paragraph("<b>Project Structure</b>", normal_style))
-        elements.append(Spacer(1, 4))
-        normalized_tree = _normalize_tree_for_pdf(skeleton_tree)
-        safe_code = (
-            normalized_tree
-            .replace("&", "&amp;")
-            .replace("<", "&lt;")
-            .replace(">", "&gt;")
-            .replace(" ", "&nbsp;")
-            .replace("\n", "<br/>")
-        )
+    if generated_code:
+        safe_code = generated_code.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace("\n", "<br/>")
         elements.append(Paragraph(safe_code, code_style))
     else:
         elements.append(Paragraph("No code skeleton generated.", normal_style))

@@ -125,35 +125,37 @@ async function toggleStar(projectId, event) {
 
     event.stopPropagation();
 
-    const icon = event.currentTarget.querySelector("i");
-
     try {
 
         const response = await fetch(
             `/project/${projectId}/toggle-star`,
-            { method: "POST" }
+            {
+                method: "POST"
+            }
         );
 
         const data = await response.json();
 
         if (data.starred) {
 
-            icon.classList.remove("bi-bookmark");
-            icon.classList.add("bi-bookmark-fill");
+            event.target.classList.remove("bi-star");
+            event.target.classList.add(
+                "bi-star-fill",
+                "text-warning"
+            );
 
         } else {
 
-            icon.classList.remove("bi-bookmark-fill");
-            icon.classList.add("bi-bookmark");
+            event.target.classList.remove(
+                "bi-star-fill",
+                "text-warning"
+            );
+
+            event.target.classList.add("bi-star");
         }
 
-        event.currentTarget.classList.add("bookmark-bounce");
-
-        setTimeout(() => {
-            event.currentTarget.classList.remove("bookmark-bounce");
-        }, 350);
-
     } catch (err) {
+
         console.error(err);
     }
 }
