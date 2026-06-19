@@ -371,6 +371,177 @@
 .login-link:hover::after {
     width: 100%;
 }
+.back-btn:hover{
+    background:var(--emerald);
+    color:#fff;
+}
+/* =========================
+   TABLET
+========================= */
+@media (max-width: 1024px){
+
+    body{
+        padding:20px;
+    }
+
+    .main-layout{
+        max-width:900px;
+    }
+
+    .auth-side{
+        padding:40px;
+    }
+
+    h1{
+        font-size:1.9rem;
+    }
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+@media (max-width: 768px){
+
+    body{
+        padding:15px;
+        align-items:flex-start;
+    }
+
+    .main-layout{
+        flex-direction:column;
+        width:100%;
+        min-height:auto;
+        border-radius:24px;
+    }
+
+    /* Form section */
+    .auth-side{
+        width:100%;
+        padding:30px 22px;
+    }
+
+    h1{
+        font-size:1.8rem;
+        text-align:center;
+    }
+
+    .subtitle{
+        text-align:center;
+    }
+
+    .login-redirect-text{
+        text-align:center;
+    }
+
+    .top-bar{
+        justify-content:center;
+        position:relative;
+    }
+
+    .back-btn{
+        position:absolute;
+        left:0;
+    }
+
+    /* Step indicator */
+    .step-indicator{
+        gap:10px;
+        justify-content:center;
+        flex-wrap:wrap;
+    }
+
+    .step{
+        font-size:.75rem;
+    }
+
+    /* Nationality + Gender */
+    div[style*="display:flex; gap:15px;"]{
+        flex-direction:column !important;
+        gap:0 !important;
+    }
+
+    /* Password + Confirm */
+    #step2 div[style*="display: flex; gap: 15px;"]{
+        flex-direction:column !important;
+        gap:0 !important;
+    }
+
+    /* Right Side */
+    .visual-side{
+        min-height:300px;
+        padding:30px 20px;
+    }
+
+    .engine-core{
+        width:100%;
+        max-width:340px;
+    }
+
+    .social-login{
+        flex-wrap:wrap;
+    }
+}
+
+
+/* =========================
+   SMALL PHONES
+========================= */
+@media (max-width:480px){
+
+    body{
+        padding:10px;
+    }
+
+    .main-layout{
+        border-radius:20px;
+    }
+
+    .auth-side{
+        padding:25px 18px;
+    }
+
+    h1{
+        font-size:1.5rem;
+    }
+
+    .subtitle{
+        font-size:.85rem;
+    }
+
+    .step{
+        width:100%;
+        justify-content:center;
+    }
+
+    .step-indicator{
+        flex-direction:column;
+        align-items:center;
+    }
+
+    .input-field{
+        padding:12px 14px;
+        font-size:14px;
+    }
+
+    .btn-primary{
+        padding:14px;
+        font-size:14px;
+    }
+
+    .engine-core{
+        max-width:100%;
+    }
+
+    .module-box{
+        font-size:.8rem;
+    }
+
+    .social-btn{
+        width:38px;
+        height:38px;
+    }
+}
     </style>
 </head>
 <body>
@@ -378,7 +549,9 @@
 <div class="main-layout">
     <div class="auth-side">
         <div class="top-bar">
-            <a href="#" class="back-btn"><i class="fas fa-arrow-left"></i></a>
+            <a onclick="window.history.back()" class="back-btn" style="cursor:pointer;">
+    <i class="fas fa-arrow-left"></i>
+</a>
             <img src="/static/images/Logo_black.png" alt="Logo" style="height: 50px;">
         </div>
 

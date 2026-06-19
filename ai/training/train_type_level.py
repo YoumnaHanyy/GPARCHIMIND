@@ -105,8 +105,8 @@ trainer_type = Trainer(
 
 trainer_type.train()
 
-model_type.save_pretrained("models/trained_nfr_type_model")
-tokenizer.save_pretrained("models/trained_nfr_type_model")
+model_type.save_pretrained("hanawahab/trained_nfr_type_model")
+tokenizer.save_pretrained("hanawahab/trained_nfr_type_model")
 
 
 # ======================================
@@ -139,7 +139,7 @@ trainer_level = Trainer(
 
 trainer_level.train()
 
-model_level.save_pretrained("models/trained_nfr_level_model")
-tokenizer.save_pretrained("models/trained_nfr_level_model")
+model_level.save_pretrained("hanawahab/trained_nfr_level_model")
+tokenizer.save_pretrained("hanawahab/trained_nfr_level_model")
 
 print("✅ Training finished & models saved successfully")

@@ -105,13 +105,32 @@
       background: linear-gradient(90deg, var(--accent-main), var(--accent-secondary));
       border-radius: 10px;
     }
+         .filter-btn{
+  padding:8px 18px;
+  border-radius:999px;
+  border:1px solid #e5e7eb;
+  background:white;
+  font-size:12px;
+  font-weight:700;
+  transition:.3s;
+}
+
+.filter-btn:hover{
+  background:#f8fafc;
+}
+
+.filter-btn.active{
+  background:var(--accent-main);
+  color:white;
+  border-color:var(--accent-main);
+}
   </style>
 </head>
 <body>
 
   <nav class="blueprint-header sticky top-0 z-50 px-6 py-3 flex justify-between items-center text-white">
     <div class="flex items-center gap-4">
-      <a href="/admin" class="opacity-70 hover:opacity-100 transition-all">
+      <a href="/Admin" class="opacity-70 hover:opacity-100 transition-all">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
         </svg>
@@ -131,16 +150,41 @@
       </div>
       <div class="bg-white px-5 py-2 rounded-2xl border border-slate-100 shadow-sm text-right">
         <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">System Load</span>
-        <p class="text-2xl font-bold text-[var(--accent-main)]">{{ projects|length }} <span class="text-xs font-normal text-slate-400">Items</span></p>
+        <p id="itemsCount"
+   class="text-2xl font-bold text-[var(--accent-main)]">
+    {{ projects|length }}
+    <span class="text-xs font-normal text-slate-400">
+        Items
+    </span>
+</p>
       </div>
     </div>
+<div class="flex gap-3 mb-5">
 
+  <button class="filter-btn active" data-type="all">
+    All
+  </button>
+
+  <button class="filter-btn" data-type="full_pipeline">
+    Full Pipeline
+  </button>
+
+  <button class="filter-btn" data-type="adl_reusable">
+    ADL Reusable
+  </button>
+
+  <button class="filter-btn" data-type="srs_validation">
+    SRS Validation
+  </button>
+
+</div>
     <div class="studio-card overflow-hidden">
       <div class="overflow-x-auto">
         <table class="w-full text-left custom-table border-collapse">
           <thead>
             <tr class="bg-slate-50/50">
               <th class="pl-8">Project Name</th>
+              <th>Type</th>
               <th>Status</th>
               <th>Progress</th>
               <th>Timestamp</th>
@@ -149,15 +193,30 @@
           </thead>
           <tbody>
             {% for project in projects %}
-            <tr>
+            <tr data-type="{{ project.project_type }}">
               <td class="py-5 pl-8">
-                <span class="font-bold text-slate-700 block text-base">{{ project.project_name }}</span>
+                <span class="font-bold text-slate-700 block text-base">{{ project.project_name }} </span>
                 <span class="text-[10px] text-slate-400 font-mono tracking-tighter">REF-ID: {{ project.project_id }}</span>
               </td>
+              <td>
+                {% if project.project_type == "full_pipeline" %}
+      <span class="status-badge">Full Pipeline</span>
+
+  {% elif project.project_type == "adl_reusable" %}
+      <span class="status-badge">ADL Reusable</span>
+
+  {% elif project.project_type == "srs_validation" %}
+      <span class="status-badge">SRS Validation</span>
+
+  {% else %}
+      <span class="status-badge">Unknown</span>
+  {% endif %}
+</td>
               <td>
                 <span class="status-badge">{{ project.status }}</span>
               </td>
               <td>
+                
                 <div class="flex items-center gap-3">
                     <div class="progress-bar-container">
     <div class="progress-bar-fill" data-progress="{{ project.progress | default(0) }}"></div>
@@ -169,13 +228,25 @@
                 {{ project.created_at }}
               </td>
               <td class="pr-8 text-right">
-                <a href="/admin/download-adl/{{ project.project_id }}" class="download-btn">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                  </svg>
-                  DOWNLOAD ADL
-                </a>
-              </td>
+                
+{% if project.project_type == "srs_validation" %}
+
+<button class="download-btn opacity-70 cursor-default">
+  VALIDATION PROJECT
+</button>
+
+{% else %}
+
+<a href="/admin/download-adl/{{ project.project_id }}" class="download-btn">
+  <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+  </svg>
+  DOWNLOAD ADL
+</a>
+
+{% endif %}
+
+</td>
             </tr>
             {% endfor %}
           </tbody>
@@ -196,6 +267,60 @@ document.querySelectorAll('.progress-bar-fill').forEach(el => {
   let val = el.getAttribute('data-progress') || 0;
   el.style.width = val + "%";
 });
+</script>
+<script>
+
+  const itemsCount =
+document.getElementById("itemsCount");
+
+const filterButtons =
+document.querySelectorAll(".filter-btn");
+
+const rows =
+document.querySelectorAll("tbody tr");
+
+filterButtons.forEach(button => {
+
+  button.addEventListener("click", () => {
+
+    filterButtons.forEach(btn =>
+      btn.classList.remove("active")
+    );
+
+    button.classList.add("active");
+
+    const type = button.dataset.type;
+
+    let visibleCount = 0;
+
+    rows.forEach(row => {
+
+      if (
+        type === "all" ||
+        row.dataset.type === type
+      ) {
+
+        row.style.display = "";
+        visibleCount++;
+
+      } else {
+
+        row.style.display = "none";
+
+      }
+
+    });
+
+    itemsCount.innerHTML =
+      `${visibleCount}
+      <span class="text-xs font-normal text-slate-400">
+        Items
+      </span>`;
+
+  });
+
+});
+
 </script>
 </body>
 

@@ -45,7 +45,7 @@
       </div>
     </li>
     <li><hr class="dropdown-divider opacity-50"></li>
-    <li><a class="dropdown-item" href="#"><i class="bi bi-person-gear me-2"></i> Account Settings</a></li>
+    <li><a class="dropdown-item" href="#"><i class="bi bi-person-gear me-2"></i> Account Settingss</a></li>
     <li><a class="dropdown-item" href="#"><i class="bi bi-shield-check me-2"></i> Security</a></li>
     <li><hr class="dropdown-divider opacity-50"></li>
     <li>
@@ -75,11 +75,14 @@
   </div>
 
   <ul class="side-menu-list">
-    <li><i class="bi bi-house-door"></i> Home</li>
-    <li><i class="bi bi-layers"></i> Architectural Patterns</li>
-    <li><i class="bi bi-star"></i> Starred Projects</li>
-    <li><i class="bi bi-bell"></i> Notifications</li>
-    <li><i class="bi bi-gear"></i> Settings</li>
+    <li  class="menu-active"><i class="bi bi-diagram-3"></i> End-To-End Pipeline</li>
+    <li onclick="window.location.href='/starred-projects'"><i class="bi bi-bookmark"></i> Saved Projects</li>
+        <li onclick="window.location.href='/adl-dashboard'">
+      <i class="bi bi-cpu"></i> ADL Generation
+</li>
+    <li onclick="window.location.href='/srs-validations'">
+    <i class="bi bi-star"></i> SRS Validation
+</li>
     <hr class="my-3 opacity-10">
     <li class="text-danger" onclick="logoutAnimated()"><i class="bi bi-door-open"></i> Logout</li>
   </ul>
@@ -149,24 +152,42 @@
     <div class="col-md-4">
       <div class="studio-card project-card p-4 h-100 position-relative d-flex flex-column animate-pop">
         
-        <div class="d-flex justify-content-between align-items-start mb-4">
-          <div class="project-icon-wrapper">
-            <i class="bi bi-file-earmark-code"></i>
-          </div>
-          
-          {% if project.progress == 100 %}
-            <span class="status-badge status-finished animate-pulse">
-              <i class="bi bi-check-circle-fill me-1"></i> Finished
-            </span>
-          {% else %}
-            <span class="status-badge status-progress">
-              In Progress
-            </span>
-          {% endif %}
-        </div>
+        <div class="project-header mb-4">
+
+    <div class="project-icon-wrapper">
+        <i class="bi bi-file-earmark-code"></i>
+    </div>
+
+    <div class="project-actions">
+
+    {% if project.progress == 100 %}
+    <span class="status-badge status-finished">
+        <i class="bi bi-check-circle-fill me-1"></i>
+        Finished
+    </span>
+    {% else %}
+    <span class="status-badge status-progress">
+        In Progress
+    </span>
+    {% endif %}
+
+    <div class="project-bookmark"
+         onclick="toggleStar('{{ project.project_id }}', event)">
+
+        {% if project.starred %}
+            <i class="bi bi-bookmark-fill"></i>
+        {% else %}
+            <i class="bi bi-bookmark"></i>
+        {% endif %}
+
+    </div>
+
+</div>
+
+</div>
         
         <div class="project-details mb-4">
-          <h5 class="project-title mb-1 text-truncate">{{ project.project_id }}</h5>
+          <h5 class="project-title mb-1 text-truncate">{{ project.project_name }}</h5>
           <p class="project-date text-muted mb-0" style="font-size: 0.85rem;">
             <i class="bi bi-calendar3 me-2"></i>{{ project.created_at.strftime('%d %b, %Y') }}
           </p>
@@ -339,7 +360,9 @@
             <ul class="nav nav-pills mb-4 justify-content-center border-bottom pb-3" id="dynamicTabs"></ul>
 
             <div id="tabContentBox" class="result-section animate-pop"></div>
-
+            <div id="skeletonSection" class="hidden">
+                <pre id="skeletonResult"></pre>
+            </div>
             <div class="d-flex justify-content-between mt-5">
                 <button class="btn btn-light rounded-pill px-4 fw-bold" id="btnPrev" onclick="changePhase(-1)">Previous</button>
                 <button class="create-btn" id="btnNext" onclick="changePhase(1)">Next Phase</button>
@@ -350,6 +373,47 @@
       </div>
     </div>
   </div>
+ <!-- ================= ADL GENERATION VIEW ================= -->
+<div id="adlView" class="hidden">
+  <div class="row justify-content-center">
+    <div class="col-lg-10">
+      <div class="studio-card p-5 animate-pop">
+        <!-- Back -->
+        <button type="button"
+          class="back-to-dashboard"
+          onclick="backToDashboard()">
+          <i class="bi bi-arrow-left"></i>
+        </button>
+        <h3 class="fw-bold mb-3 text-center">ADL Generation</h3>
+        <p class="text-muted text-center mb-4">
+          Generate architecture directly from SRS without full pipeline
+        </p>
+        <!-- SRS -->
+        <input type="file"
+       id="adlFileInput"
+       class="form-control mb-3"
+       accept=".pdf"
+       onchange="checkADLInputs()">
+        <!-- Architecture -->
+        <select id="adlArchitecture" class="form-select mb-3" onchange="checkADLInputs()">
+          <option value="">Select Architecture Style</option>
+          <option value="Microservices">Microservices</option>
+          <option value="Layered">Layered</option>
+          <option value="Monolithic">Monolithic</option>
+          <option value="Event-Driven">Event-Driven</option>
+        </select>
+        <button class="create-btn w-100"
+        id="generateAdlBtn"
+        onclick="generateStandaloneADL()"
+        disabled>
+  Generate ADL
+</button>
+        <!-- Output -->
+        <pre id="adlStandaloneOutput" class="mt-4 p-3 bg-light rounded hidden"></pre>
+      </div>
+    </div>
+  </div>
+</div>
 
 </div>
 <!-- ERROR MODAL -->
@@ -423,7 +487,16 @@
           View Validation Report
         </button>
 
-        <!-- Existing button -->
+          <button
+            type="button"
+            class="btn btn-outline-info"
+            onclick="loadVerificationReport()">
+            <i class="bi bi-patch-check me-1"></i>
+            View Verification Report
+          </button>
+        </div>
+
+        <!-- Save button (right side) -->
         <button
           type="button"
           class="btn btn-success px-4 rounded-pill"
@@ -503,8 +576,29 @@
 </div>
 
 
-<script src="/static/js/Dashboard.js"></script>
+<script src="/static/js/DashboardD.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+async function toggleStar(projectId,event){
+
+    event.stopPropagation();
+
+    const star = event.currentTarget.querySelector("i");
+
+    await fetch(`/project/${projectId}/toggle-star`,{
+        method:"POST"
+    });
+
+    star.classList.toggle("bi-bookmark");
+    star.classList.toggle("bi-bookmark-fill");
+
+    event.currentTarget.classList.add("star-bounce");
+
+    setTimeout(()=>{
+        event.currentTarget.classList.remove("star-bounce");
+    },400);
+}
+</script>
 <script>
 document.addEventListener('DOMContentLoaded', function(){
   document.querySelectorAll('.progress-bar[data-progress]').forEach(function(el){

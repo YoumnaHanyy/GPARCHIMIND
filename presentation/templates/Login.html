@@ -358,7 +358,146 @@ p{
     background:var(--emerald);
     color:#fff;
 }
+/* =========================
+   TABLET
+========================= */
+@media (max-width: 1024px){
 
+    .container{
+        width:92%;
+        gap:40px;
+    }
+
+    h1{
+        font-size:2.5rem;
+    }
+
+    .visual{
+        padding:35px;
+    }
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+@media (max-width: 768px){
+
+    body{
+        padding:20px;
+        align-items:flex-start;
+    }
+
+    .container{
+        width:100%;
+        grid-template-columns:1fr;
+        gap:20px;
+    }
+
+    .visual{
+        display:none;
+    }
+
+    .top-bar{
+        justify-content:center;
+        position:relative;
+        margin-bottom:20px;
+    }
+
+    .back-btn{
+        position:absolute;
+        left:0;
+        translate:0;
+    }
+
+    .brand img{
+        height:45px !important;
+        translate:0 !important;
+    }
+
+    h1{
+        font-size:2rem;
+        text-align:center;
+    }
+
+    p{
+        text-align:center;
+    }
+
+    .signup-link{
+        display:inline-block;
+    }
+
+    .social-login{
+        flex-wrap:wrap;
+    }
+
+    .input-box{
+        padding:14px 16px;
+    }
+
+    .btn{
+        padding:16px;
+    }
+}
+
+
+/* =========================
+   SMALL PHONES
+========================= */
+@media (max-width:480px){
+
+    body{
+        padding:15px;
+    }
+
+    h1{
+        font-size:1.7rem;
+        line-height:1.15;
+    }
+
+    p{
+        font-size:.95rem;
+    }
+
+    .top-bar{
+        margin-bottom:15px;
+    }
+
+    .brand img{
+        height:40px !important;
+    }
+
+    .back-btn{
+        width:38px;
+        height:38px;
+    }
+
+    .input-box{
+        border-radius:14px;
+        padding:12px 14px;
+    }
+
+    .btn{
+        border-radius:14px;
+        font-size:.95rem;
+    }
+
+    .social-btn{
+        width:42px;
+        height:42px;
+        font-size:1rem;
+    }
+
+    .social-divider{
+        font-size:.75rem;
+    }
+
+    .error-alert{
+        font-size:.8rem;
+        padding:12px;
+    }
+}
 </style>
 </head>
 
@@ -371,7 +510,7 @@ p{
     <div>
 
         <div class="top-bar">
-    <a href="/" class="back-btn">
+    <a onclick="window.history.back()" class="back-btn">
         <i class="fas fa-arrow-left"></i>
     </a>
 

@@ -13,11 +13,7 @@ from dotenv import load_dotenv
 import os
 
 load_dotenv()
-
-client = InferenceClient(
-    model="meta-llama/Meta-Llama-3-8B-Instruct",
-    token=os.getenv("HF_API_KEY")
-)
+client = InferenceClient(model="meta-llama/Meta-Llama-3-8B-Instruct", token=os.getenv("HF_API_KEY"))
 
 ALL_FEATURES = [
     "EVENT_DRIVEN",
@@ -219,7 +215,7 @@ def generate_phase4(project_id):
     decisions = build_feature_decision(features, full_text)
 
     architecture = load_selected_architecture(project_id)
-
+    
     save_decisions(decisions, architecture)
 
     data = {
@@ -233,8 +229,7 @@ def generate_phase4(project_id):
         project_id,
         patterns_result["top_patterns"]
     )
-
-    # 🔥🔥 أهم سطر
+    
     return {
-        "phase4": patterns_result
+        "phase4": patterns_result,
     }

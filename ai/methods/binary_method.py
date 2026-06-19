@@ -31,7 +31,7 @@ def load_architecture_dataset():
         )
     )
 
-    # 🧠 build binary vectors manually
+    
     arch_map = {}
 
     for doc in docs:

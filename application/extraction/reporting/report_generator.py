@@ -226,7 +226,7 @@ def generate_report(project_id: str):
             paragraph("[Diagram Asset Missing]", font_style="Helvetica-Bold", color=HexColor("#E53E3E"))
 
     # =========================
-    # 💾 Finalize
+    # Finalize
     # =========================
     draw_footer()
     c.save()
