@@ -13,7 +13,7 @@ from dotenv import load_dotenv
 import os
 
 load_dotenv()
-client = InferenceClient(model="meta-llama/Meta-Llama-3-8B-Instruct", token=os.getenv("HF_API_KEY"))
+client = InferenceClient(model="Qwen/Qwen2.5-14B-Instruct", token=os.getenv("HF_API_KEY"))
 
 ALL_FEATURES = [
     "EVENT_DRIVEN",

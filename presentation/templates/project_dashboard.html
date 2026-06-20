@@ -13,7 +13,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     
-    <link rel="stylesheet" href="/static/css/Dashboard.css">
+    <link rel="stylesheet" href="/static/css/Dashboardd.css">
 
     <style>
         :root {
@@ -494,7 +494,8 @@
     height:320px;
 
 
-    overflow:auto;
+    overflow-y:auto;
+    overflow-x:hidden;
 
 
     font-size:13px;
@@ -543,54 +544,409 @@
 }
 .architecture-btn{
 
-background:#0f766e;
-
-color:white;
-
-border:none;
+    background:#0f766e;
+    color:white;
 
 }
 
-
 .architecture-btn:hover{
 
-background:#115e59;
-
-color:white;
+    background:#115e59;
+    color:white;
 
 }
 .validation-btn{
 
-background:#f59e0b;
-
-color:white;
-
-border:none;
+    background:#167972d5;
+    color:white;
 
 }
 
 .validation-btn:hover{
 
-background:#d97706;
-
-color:white;
+    background:#115e59;
+    color:white;
 
 }
 .verification-btn{
 
-background:#2563eb;
-
-color:white;
-
-border:none;
+    background:#1fa79ed5;
+    color:white;
 
 }
 
 .verification-btn:hover{
 
-background:#1d4ed8;
+    background:#115a55d5;
+    color:white;
 
-color:white;
+}
+.back-arrow{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+
+    padding:10px 22px;
+
+    border-radius:999px;
+
+    background:white;
+
+    color:#0f766e;
+
+    border:1px solid var(--border-color);
+
+    text-decoration:none;
+
+    font-weight:600;
+    font-size:0.9rem;
+
+    box-shadow:0 1px 3px rgba(0,0,0,0.04);
+
+    transition:.25s;
+}
+
+.back-arrow i{
+    font-size:1rem;
+    transition:transform .25s;
+}
+
+.back-arrow:hover{
+    background:#0f766e;
+    color:white;
+    border-color:#0f766e;
+
+    box-shadow:0 4px 12px rgba(15,118,110,.25);
+}
+
+.back-arrow:hover i{
+    transform:translateX(-4px);
+}
+.bottom-card{
+    background:#fff;
+    border:1px solid #e2e8f0;
+    border-radius:18px;
+
+    padding:28px;
+
+    height:100%;
+
+    transition:.3s ease;
+
+    box-shadow:
+        0 2px 8px rgba(15,23,42,.03);
+}
+
+.bottom-card:hover{
+
+    transform:translateY(-4px);
+
+    box-shadow:
+        0 12px 30px rgba(15,23,42,.08);
+
+    border-color:#0f766e;
+}
+.code-box{
+
+
+background:#0f172a;
+
+color:#e2e8f0;
+
+
+border-radius:14px;
+
+
+padding:20px;
+
+
+height:340px;
+
+overflow-y:auto;
+overflow-x:hidden;
+
+
+font-size:13px;
+
+
+font-family:'JetBrains Mono';
+
+
+box-shadow:
+inset 0 0 0 1px rgba(255,255,255,.04);
+
+}
+.report-btn{
+
+padding:14px;
+
+border-radius:12px;
+
+font-weight:600;
+
+transition:.25s;
+
+}
+
+
+.report-btn:hover{
+
+transform:translateY(-2px);
+
+}
+.patterns-body{
+    height:520px;
+    overflow-y:auto;
+
+    display:flex;
+    flex-direction:column;
+
+    padding-right:6px;
+}
+
+
+.patterns-scroll{
+    flex:1;
+}
+.compact-card{
+
+    background:white;
+
+    border:1px solid #e2e8f0;
+
+    border-radius:14px;
+
+    padding:20px;
+
+    transition:.3s;
+
+}
+
+
+.compact-card:hover{
+
+    transform:translateY(-3px);
+
+    box-shadow:
+        0 8px 20px rgba(15,118,110,.08);
+
+    border-color:#0f766e;
+
+}
+.report-btn{
+
+    border:none;
+
+    border-radius:14px;
+
+    padding:16px;
+
+    font-weight:700;
+
+    font-size:15px;
+
+    transition:.3s;
+
+}
+
+
+.report-btn:hover{
+
+    transform:translateY(-2px);
+
+}
+.code-box{
+
+    background:#081226;
+
+    color:#e2e8f0;
+
+    border-radius:16px;
+
+    padding:24px;
+
+    height:420px;
+
+    overflow-y:auto;
+    overflow-x:hidden;
+
+    font-family:'JetBrains Mono', monospace;
+
+    font-size:14px;
+
+    line-height:1.8;
+
+    border:1px solid rgba(255,255,255,.05);
+
+    box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.03),
+        0 8px 24px rgba(0,0,0,.08);
+
+}
+.code-box::-webkit-scrollbar{
+
+    width:8px;
+
+}
+
+
+.code-box::-webkit-scrollbar-track{
+
+    background:transparent;
+
+}
+
+
+.code-box::-webkit-scrollbar-thumb{
+
+    background:#334155;
+
+    border-radius:20px;
+
+}
+
+
+.code-box::-webkit-scrollbar-thumb:hover{
+
+    background:#475569;
+
+}
+.code-box{
+
+    background:#081226ee;
+    color:#e2e8f0;
+
+    border-radius:16px;
+    padding:24px;
+
+    height:420px;
+
+    overflow-y:auto;
+    overflow-x:hidden;
+
+    font-family:'JetBrains Mono', monospace;
+
+    font-size:11px;     /* كان 14px */
+    line-height:1.7;
+
+    white-space:pre;
+    word-break:normal;
+
+    border:1px solid rgba(255,255,255,.05);
+
+    box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.03),
+        0 8px 24px rgba(0,0,0,.08);
+}
+.badge.bg-dark{
+
+    font-size:11px;
+
+    padding:6px 12px;
+
+    border-radius:999px;
+
+    background:#101727 !important;
+
+    letter-spacing:.5px;
+
+}
+.download-skeleton-btn{
+
+    border:none;
+
+    background:#0f766e;
+
+    color:white;
+
+    padding:7px 14px;
+
+    border-radius:10px;
+
+    font-size:12px;
+
+    font-weight:600;
+
+    transition:.25s;
+
+}
+
+
+.download-skeleton-btn:hover{
+
+    background:#115e59;
+
+    transform:translateY(-2px);
+
+}
+
+
+.download-skeleton-btn i{
+
+    font-size:13px;
+
+}
+.empty-state{
+
+    height:100%;
+
+    min-height:300px;
+
+    display:flex;
+
+    flex-direction:column;
+
+    align-items:center;
+
+    justify-content:center;
+
+    text-align:center;
+
+    padding:30px;
+
+    color:#94a3b8;
+
+}
+
+
+.empty-state i{
+
+    font-size:42px;
+
+    margin-bottom:14px;
+
+    opacity:.7;
+
+}
+
+
+.empty-state h6{
+
+    font-weight:700;
+
+    color:#475569;
+
+    margin-bottom:8px;
+
+}
+
+
+.empty-state p{
+
+    font-size:13px;
+
+    margin:0;
+
+    max-width:250px;
+
+    line-height:1.6;
+
+}
+.reports-body .empty-state{
+
+    justify-content:flex-start;
+
+    padding-top:120px;
 
 }
     </style>
@@ -700,8 +1056,17 @@ color:white;
     <li class="text-danger" onclick="logoutAnimated()"><i class="bi bi-box-arrow-right"></i> Log Out</li>
   </ul>
 </div>
-<div class="container py-5">
+<div class="container pt-3 pb-5">
+    <div class="mb-3">
 
+    <a href="/Dashboard"
+       class="back-arrow">
+
+        <i class="bi bi-arrow-left"></i> Back to Dashboard
+
+    </a>
+
+</div>
     <div class="dashboard-card header-card p-4 p-md-5 mb-4 animate-fade-up">
         <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
             <div>
@@ -729,7 +1094,7 @@ color:white;
             </div>
         </div>
     </div>
-
+    
     <div class="row g-4 mb-4">
         <div class="col-lg-4 animate-fade-up stagger-1">
             <div class="dashboard-card p-4 h-100">
@@ -751,11 +1116,28 @@ color:white;
                 </div>
 
                 <div class="mt-auto border-top pt-3">
-                    <div class="text-label mb-1">Current Phase</div>
-                    <span class="badge bg-dark text-white fw-medium px-3 py-2 rounded-2" style="font-size: 0.85rem;">
-                        Phase {{ project.current_phase }}
-                    </span>
-                </div>
+
+    <div class="text-label mb-1">Current Phase</div>
+
+    <span class="badge bg-dark text-white fw-medium px-3 py-2 rounded-2"
+          style="font-size: 0.85rem;">
+        Phase {{ project.current_phase }}
+    </span>
+
+    {% if project.current_phase < 4 %}
+    <div class="mt-3">
+        <button
+            class="btn btn-primary-custom w-100"
+            onclick="continuePipeline('{{ project.project_id }}')">
+
+            <i class="bi bi-play-fill me-2"></i>
+            Continue Pipeline
+
+        </button>
+    </div>
+    {% endif %}
+
+</div>
             </div>
         </div>
 
@@ -766,23 +1148,51 @@ color:white;
                 </div>
 
                 <div class="mt-2">
-                    {% if hybrid_results %}
-                        {% for arch in hybrid_results %}
-                        <div class="arch-recommendation arch-item">
-                            <h6 class="fw-semibold mb-1 fs-6 text-dark">
-                                {{ arch.Architecture }}
-                            </h6>
-                            <div class="text-muted" style="font-size: 0.8rem;">
-                                Recommended System Architecture
-                            </div>
-                        </div>
-                        {% endfor %}
-                    {% else %}
-                        <div class="text-center text-muted py-4">
-                            <i class="bi bi-inbox fs-3 d-block mb-2 text-secondary opacity-50"></i>
-                            <span class="fs-6">No hybrid recommendations.</span>
-                        </div>
-                    {% endif %}
+                    {% if project.current_phase < 2 %}
+
+<div class="empty-state">
+
+    <i class="bi bi-diagram-3"></i>
+
+    <h6>Hybrid Recommendations Not Available Yet</h6>
+
+    <p>
+        Complete Phase 2 of the pipeline to generate architecture recommendations.
+    </p>
+
+</div>
+
+{% elif hybrid_results %}
+
+    {% for arch in hybrid_results %}
+    <div class="arch-recommendation arch-item">
+
+        <h6 class="fw-semibold mb-1 fs-6 text-dark">
+            {{ arch.Architecture }}
+        </h6>
+
+        <div class="text-muted" style="font-size:0.8rem;">
+            Recommended System Architecture
+        </div>
+
+    </div>
+    {% endfor %}
+
+{% else %}
+
+<div class="empty-state">
+
+    <i class="bi bi-diagram-3"></i>
+
+    <h6>No Recommendations Found</h6>
+
+    <p>
+        Complete the pipeline to generate and save architecture recommendations.
+    </p>
+
+</div>
+
+{% endif %}
                 </div>
             </div>
         </div>
@@ -851,7 +1261,167 @@ color:white;
         </div>
     </div>
 
+    <div class="row g-4 mb-5">
 
+<!-- DESIGN PATTERNS -->
+<div class="col-lg-4">
+    <div class="bottom-card">
+        <div class="patterns-body">
+
+        <div class="section-header">
+            <i class="bi bi-diagram-2"></i>
+            Design Patterns
+        </div>
+
+        {% if patterns %}
+        <div class="d-flex flex-column gap-2 patterns-scroll">
+            {% for pattern in patterns[:3] %}
+            <div class="history-card compact-card">
+                <h6 class="fw-bold mb-1">{{ pattern.pattern }}</h6>
+                <span class="badge bg-success mb-1">{{ pattern.confidence }}</span>
+                <div class="text-muted small mb-1">Score : {{ pattern.score }}</div>
+                {% if pattern.reasons %}
+                <ul class="small mb-0 ps-3">
+                    {% for reason in pattern.reasons %}
+                    <li>{{ reason }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state">
+
+    <i class="bi bi-diagram-2"></i>
+
+    <h6>No Design Patterns Found</h6>
+
+    <p>
+        Complete the pipeline to generate and save design patterns.
+    </p>
+
+</div>
+        {% endif %}
+
+    </div>
+</div>
+</div>
+
+    <!-- CODE SKELETON -->
+    <div class="col-lg-4">
+        <div class="bottom-card">
+            <div class="section-header">
+                <i class="bi bi-code-slash"></i>
+                Code Skeleton
+            </div>
+             <div class="skeleton-body">
+
+        {% if skeleton %}
+        <div class="d-flex align-items-center gap-2 mb-3">
+
+    <span class="badge bg-dark">
+        {{ skeleton.language }}
+    </span>
+
+    <button
+        id="downloadBtn"
+        class="download-skeleton-btn"
+        onclick="downloadCodeSKELETON()">
+
+        <i class="bi bi-download me-1"></i>
+        Download ZIP
+
+    </button>
+
+</div>
+
+        <div class="code-container">
+
+            <pre class="code-box" id="generatedCode">
+{{ skeleton.tree }}
+            </pre>
+
+        </div>
+        {% else %}
+
+<div class="empty-state">
+
+    <i class="bi bi-code-slash"></i>
+
+    <h6>No Code Skeleton Found</h6>
+
+    <p>
+        Complete the pipeline to generate and save the code skeleton.
+    </p>
+
+</div>
+        {% endif %}
+
+    </div>
+     </div>
+
+</div>
+
+
+    <!-- REPORTS -->
+    <div class="col-lg-4">
+        <div class="bottom-card">
+
+            <div class="section-header">
+                <i class="bi bi-file-earmark-pdf"></i>
+                Generated Reports
+            </div>
+            <div class="reports-body">
+            
+            <div class="d-grid gap-3 report-buttons">
+
+                {% if project.current_phase < 3 %}
+
+<div class="empty-state">
+
+    <i class="bi bi-file-earmark-lock"></i>
+
+    <h6>Reports Not Available Yet</h6>
+
+    <p>
+        Complete Phase 3 of the pipeline to generate architecture reports.
+    </p>
+
+</div>
+
+{% else %}
+
+<a href="/adl-project/{{ project.project_id }}/download" 
+                <a class="btn report-btn architecture-btn">
+                    Architecture Report
+                </a>
+                
+
+                
+                <a href="/adl-project/{{ project.project_id }}/validation-report"
+                   <a class="btn report-btn validation-btn">
+                    Validation Report
+                </a>
+                
+
+                
+                <a href="/adl-project/{{ project.project_id }}/verification-report" 
+                   <a class="btn report-btn verification-btn">
+                    Verification Report
+                </a>
+
+{% endif %}
+                
+                
+
+            </div>
+
+        </div>
+    </div>
+    </div>
+
+</div>
     <div class="dashboard-card p-4 mb-5 animate-fade-up stagger-3">
         <div class="section-header">
             <i class="bi bi-clock-history"></i> Architecture Evolution History
@@ -987,113 +1557,7 @@ color:white;
     </div>
 
 </div>
-<div class="row g-4 mb-5">
 
-<!-- DESIGN PATTERNS -->
-<div class="col-lg-4">
-    <div class="dashboard-card p-4">
-        <div class="patterns-body">
-
-        <div class="section-header">
-            <i class="bi bi-diagram-2"></i>
-            Design Patterns
-        </div>
-
-        {% if patterns %}
-        <div class="d-flex flex-column gap-2 patterns-scroll">
-            {% for pattern in patterns[:3] %}
-            <div class="history-card compact-card">
-                <h6 class="fw-bold mb-1">{{ pattern.pattern }}</h6>
-                <span class="badge bg-success mb-1">{{ pattern.confidence }}</span>
-                <div class="text-muted small mb-1">Score : {{ pattern.score }}</div>
-                {% if pattern.reasons %}
-                <ul class="small mb-0 ps-3">
-                    {% for reason in pattern.reasons %}
-                    <li>{{ reason }}</li>
-                    {% endfor %}
-                </ul>
-                {% endif %}
-            </div>
-            {% endfor %}
-        </div>
-        {% else %}
-        <p class="text-muted">No patterns generated.</p>
-        {% endif %}
-
-    </div>
-</div>
-</div>
-
-    <!-- CODE SKELETON -->
-    <div class="col-lg-4">
-        <div class="dashboard-card p-4">
-            <div class="section-header">
-                <i class="bi bi-code-slash"></i>
-                Code Skeleton
-            </div>
-             <div class="skeleton-body">
-
-        {% if skeleton %}
-        <span class="badge bg-dark mb-3">
-            {{ skeleton.language }}
-        </span>
-
-        <div class="code-container">
-
-            <pre class="code-box">
-{{ skeleton.tree }}
-            </pre>
-
-        </div>
-
-        {% endif %}
-
-    </div>
-     </div>
-
-</div>
-
-
-    <!-- REPORTS -->
-    <div class="col-lg-4">
-        <div class="dashboard-card p-4">
-
-            <div class="section-header">
-                <i class="bi bi-file-earmark-pdf"></i>
-                Generated Reports
-            </div>
-            <div class="reports-body">
-
-            <div class="d-grid gap-3 report-buttons">
-
-                
-                <a href="/adl-project/{{ project.project_id }}/download" 
-                class="btn architecture-btn">
-                    Architecture Report
-                </a>
-                
-
-                
-                <a href="/adl-project/{{ project.project_id }}/validation-report"
-                   class="btn validation-btn">
-                    Validation Report
-                </a>
-                
-
-                
-                <a href="/adl-project/{{ project.project_id }}/verification-report" 
-                   class="btn verification-btn">
-                    Verification Report
-                </a>
-                
-
-            </div>
-
-        </div>
-    </div>
-    </div>
-
-</div>
 
 
 <div class="modal fade" id="evaluationModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
@@ -1107,7 +1571,71 @@ color:white;
     </div>
   </div>
 </div>
+<script>
+    async function downloadCodeSKELETON() {
 
+  const btn =
+    document.getElementById("downloadBtn");
+
+  btn.innerHTML = `
+    <span
+      class="spinner-border spinner-border-sm me-2">
+    </span>
+    Downloading
+  `;
+
+  const code =
+    document.getElementById(
+      "generatedCode"
+    ).innerText;
+
+  const response = await fetch(
+    "/download-skeleton",
+    {
+      method: "POST",
+
+      headers: {
+        "Content-Type": "application/json"
+      },
+
+      body: JSON.stringify({
+        tree: code
+      })
+    }
+  );
+
+  const blob = await response.blob();
+
+  const url =
+    window.URL.createObjectURL(blob);
+
+  const a = document.createElement("a");
+
+  a.href = url;
+
+  a.download = "code_skeleton.zip";
+
+  document.body.appendChild(a);
+
+  a.click();
+
+  a.remove();
+
+  btn.innerHTML = `
+<i class="bi bi-check-circle-fill me-1"></i>
+Downloaded
+`;
+
+setTimeout(()=>{
+
+btn.innerHTML=`
+<i class="bi bi-download me-1"></i>
+Download ZIP
+`;
+
+},2000);
+}
+</script>
 <script>
 let frCounter = Number('{{ frs|length }}');
 
@@ -2014,6 +2542,15 @@ async function saveUpdatedArchitectures(
     function closeSideMenu() {
         document.getElementById("sideMenu").classList.remove("open");   
     }
+</script>
+<script>
+
+function continuePipeline(projectId){
+
+    window.location.href="/Dashboard?continue_project={{ project.project_id }}"
+
+}
+
 </script>
 <script>
 document.querySelectorAll(".progress-bar-fill")

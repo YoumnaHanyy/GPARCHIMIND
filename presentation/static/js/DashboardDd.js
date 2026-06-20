@@ -1218,10 +1218,8 @@ function hideNfrInlineError() {
   function toggleSideMenu() {
     document.getElementById("sideMenu").classList.toggle("open");
   }
-  function backToDashboard(){
-  document.getElementById("uploadView").classList.add("hidden");
-  document.getElementById("adlView").classList.add("hidden");
-  document.getElementById("dashboardView").classList.remove("hidden");
+function backToDashboard(){
+  window.location.href = "/Dashboard";
 }
 function showErrorModal(message) {
 
@@ -1362,4 +1360,38 @@ async function downloadFinalReport() {
   a.click();
 
   a.remove();
+}
+async function resumeProjectPipeline(projectId) {
+    document.getElementById('dashboardView').classList.add('hidden');
+    document.getElementById('uploadView').classList.remove('hidden');
+    document.getElementById('step-upload').classList.add('hidden');
+
+    document.getElementById('loadingMessage').classList.remove('hidden');
+    startLoadingAnimation();
+
+    try {
+        const res = await fetch(`/project/${projectId}/resume-data`);
+        if (!res.ok) throw new Error("Failed to load project data");
+
+        const data = await res.json();
+
+        extractedData = data;
+        window.currentProjectId = data.project_id;
+
+        currentPhase = Math.min(Math.max(parseInt(data.current_phase) || 1, 1), 4);
+
+        stopLoadingAnimation();
+        document.getElementById('loadingMessage').classList.add('hidden');
+        document.getElementById('progressSection').classList.remove('hidden');
+        document.getElementById('resultContent').classList.remove('hidden');
+
+        renderPhase();
+
+    } catch (err) {
+        console.error(err);
+        stopLoadingAnimation();
+        document.getElementById('loadingMessage').classList.add('hidden');
+        backToDashboard();
+        showErrorModal("Failed to resume project. Please try again.");
+    }
 }
