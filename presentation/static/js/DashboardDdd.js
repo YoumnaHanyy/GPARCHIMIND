@@ -3,6 +3,7 @@ let currentPhase = 1;
 let extractedData = null;
 let pendingConfirmation = false; 
 let generatedSkeletonHTML = null;
+let architectureConfirmed = false;
 // Add defensive check
 //newcomment 
 window.addEventListener('DOMContentLoaded', () => {
@@ -372,23 +373,24 @@ function renderBinaryMethod(data) {
         </div>`;
     });
 
-    html += `
-      <div class="mt-4 p-3 bg-light rounded-3 d-flex justify-content-between align-items-center">
-        <div>
-            <button id="saveArchBtn" class="btn btn-primary rounded-pill px-4" onclick="saveSelectedArchitecture()">
-                <i class="bi bi-cloud-arrow-up-fill me-2"></i>Confirm & Save Choice
-            </button>
-        </div>
-        <div>
-            <button id="generateBtn" class="btn btn-success rounded-pill px-4 btn-disabled-locked" onclick="generateADL()" disabled>
-                <i class="bi bi-file-earmark-pdf-fill me-2"></i>Generate ADL Blueprint
-                </button>
-            <button id="viewBlueprintBtn" class="btn btn-sm rounded-pill px-3 d-none" onclick="openPreviewModal()">
-      <i class="bi bi-eye-fill me-1"></i> View Your ADL Blueprint
-    </button>
-            </button>
-        </div>
-      </div>`;
+    const adlAlreadyGenerated = !!currentPdfUrl;
+
+html += `
+  <div class="mt-4 p-3 bg-light rounded-3 d-flex justify-content-between align-items-center">
+    <div>
+        <button id="saveArchBtn" class="btn btn-primary rounded-pill px-4" onclick="saveSelectedArchitecture()">
+            <i class="bi bi-cloud-arrow-up-fill me-2"></i>Confirm & Save Choice
+        </button>
+    </div>
+    <div>
+        <button id="generateBtn" class="btn btn-success rounded-pill px-4 btn-disabled-locked ${adlAlreadyGenerated ? 'd-none' : ''}" onclick="generateADL()" disabled>
+            <i class="bi bi-file-earmark-pdf-fill me-2"></i>Generate ADL Blueprint
+        </button>
+        <button id="viewBlueprintBtn" class="btn btn-sm rounded-pill px-3 ${adlAlreadyGenerated ? '' : 'd-none'}" onclick="openPreviewModal()">
+            <i class="bi bi-eye-fill me-1"></i> View Your ADL Blueprint
+        </button>
+    </div>
+  </div>`;
 
     return html;
   }
@@ -397,15 +399,14 @@ function renderBinaryMethod(data) {
 let selectedArchitecture = null;
 
 function selectArchitecture(el, architecture) {
-  // remove selection from all
   document.querySelectorAll('.arch-item').forEach(item => {
     item.classList.remove('selected-arch');
   });
 
-  // mark selected
   el.classList.add('selected-arch');
 
   selectedArchitecture = architecture;
+  architectureConfirmed = false; // ✅ لازم يحفظ تاني لو غيّر الاختيار
   console.log("Selected Architecture:", selectedArchitecture);
 }
 
@@ -436,16 +437,17 @@ async function saveSelectedArchitecture() {
         if (!res.ok) throw new Error("Save failed");
 
         // --- SUCCESS STATE ---
+        architectureConfirmed = true; // ✅ هنا
         saveBtn.classList.replace('btn-primary', 'btn-success');
         saveBtn.innerHTML = `<i class="bi bi-check-lg me-2"></i>Choice Saved!`;
-        
-        // UNLOCK Generate Button
+
         genBtn.disabled = false;
         genBtn.classList.remove('btn-disabled-locked');
-        genBtn.classList.add('animate-bounce'); // Optional: add a little bounce to get attention
+        genBtn.classList.add('animate-bounce');
 
     } catch (err) {
         console.error(err);
+        architectureConfirmed = false; // ✅ وهنا لو فشل
         saveBtn.classList.replace('btn-primary', 'btn-danger');
         saveBtn.innerHTML = `<i class="bi bi-x-circle me-2"></i>Error. Try Again?`;
         saveBtn.disabled = false;
@@ -723,10 +725,9 @@ copyBtn.style.color = "white";
   ======================= */
   let currentPdfUrl = null;
 async function generateADL() {
-   console.log("Generate ADL clicked");
-console.log("Project ID:", extractedData?.project_id);
+    console.log("Generate ADL clicked");
+    console.log("Project ID:", extractedData?.project_id);
 
-    // 1. Show Loading Animation
     document.getElementById('resultContent').classList.add('hidden');
     const loading = document.getElementById('loadingMessage');
     loading.classList.remove('hidden');
@@ -739,52 +740,27 @@ console.log("Project ID:", extractedData?.project_id);
         }
 
         const response = await fetch(`/generate/${extractedData.project_id}`);
-        
-          if (!response.ok) throw new Error("Server response was not ok");
+        if (!response.ok) throw new Error("Server response was not ok");
 
-        // 3. Ne7awel el response le "Blob" (Binary Large Object)
         const blob = await response.blob();
-        
-        // 4. Ne3mel link "fake" 3ashan n-trigger el download
-           // 3. Create a clean URL for the PDF blob
+
         if (currentPdfUrl) {
-        URL.revokeObjectURL(currentPdfUrl);
-}
+            URL.revokeObjectURL(currentPdfUrl);
+        }
 
         currentPdfUrl = window.URL.createObjectURL(blob);
-        openPreviewModal();
 
-        // --- EL GDEED: Show "View" button w hide "Generate" aw khallihom ganb ba3d ---
+        const generateBtn = document.getElementById('generateBtn');
         const viewBtn = document.getElementById('viewBlueprintBtn');
-        if(viewBtn) viewBtn.classList.remove('d-none');
-   
-        // 4. Update el Iframe SRC
-        const frame = document.getElementById('reportFrame');
-        frame.src = currentPdfUrl;
+        if (generateBtn) generateBtn.classList.add('d-none');
+        if (viewBtn) viewBtn.classList.remove('d-none');
 
-        // 5. Open el Modal (Make sure Bootstrap is loaded)
-         const reportModal = new bootstrap.Modal(
-            document.getElementById('reportModal')
-        );
-        reportModal.show();
-        document.getElementById('reportModal').addEventListener('hidden.bs.modal', () => {
-        document.body.classList.remove('modal-open');
-
-        document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
-        });
-        // 6. Cleanup el memory lma el modal ye2fel
-         document
-          .getElementById('reportModal')
-          .addEventListener(
-              'hidden.bs.modal',
-              () => window.URL.revokeObjectURL(currentPdfUrl),
-              { once: true }
-          );
+        openPreviewModal();   // ← الوحيدة المسؤولة عن فتح المودال دلوقتي
 
     } catch (err) {
-         } finally {
-        // 7. Hide Loading
-        // 6. El Loading haye2f hna awel ma el sater bta3 el 'await' ykhallas
+        console.error(err);
+        alert("Error generating ADL. Please try again.");
+    } finally {
         stopLoadingAnimation();
         loading.classList.add('hidden');
         document.getElementById('resultContent').classList.remove('hidden');
@@ -798,19 +774,39 @@ frame.onload = function() {
         frame.style.opacity = '1';    // Fade in el PDF
     };
 }
+let reportModalInstance = null;
+function getReportModal() {
+  if (!reportModalInstance) {
+    const modalEl = document.getElementById('reportModal');
+    reportModalInstance = new bootstrap.Modal(modalEl);
+
+    modalEl.addEventListener('hidden.bs.modal', () => {
+      document.body.classList.remove('modal-open');
+      document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
+    });
+  }
+  return reportModalInstance;
+}
 
 function openPreviewModal() {
-    if (!currentPdfUrl) {
-        alert("No blueprint generated yet!");
-        return;
-    }
-    
-    const frame = document.getElementById('reportFrame');
-    frame.src = currentPdfUrl;
+  if (!currentPdfUrl) {
+    alert("No blueprint generated yet!");
+    return;
+  }
+
+  const frame = document.getElementById('reportFrame');
+  const loader = document.getElementById('modalIframeLoader');
+
+  loader.style.display = 'block';
+  frame.style.opacity = '0';
+  frame.src = currentPdfUrl;
+
+  frame.onload = function () {
+    loader.style.display = 'none';
     frame.style.opacity = '1';
-    
-    const reportModal = new bootstrap.Modal(document.getElementById('reportModal'));
-    
+  };
+
+  getReportModal().show();
 }
 
 
@@ -927,25 +923,32 @@ function loadVerificationReport1() {
     
     document.getElementById('tabContentBox').innerHTML = content;
   }
-
+function showWarningModal(message) {
+  const msgEl = document.getElementById("warningModalMessage");
+  if (msgEl) msgEl.innerText = message;
+  new bootstrap.Modal(document.getElementById("warningModal")).show();
+}
 function changePhase(dir) {
 
   if (pendingConfirmation) {
-    new bootstrap.Modal(
-      document.getElementById("warningModal")
-    ).show();
+    showWarningModal("Please complete the NFR confirmation before proceeding to the next phase.");
     return;
   }
-    
 
-    if (dir === 1 && currentPhase < 4) {
+  // ✅ منع الانتقال من Phase 3 من غير اختيار + حفظ الـ architecture
+  if (dir === 1 && currentPhase === 3 && !architectureConfirmed) {
+    new bootstrap.Modal(document.getElementById("architectureWarning")).show();
+    return;
+  }
+
+  if (dir === 1 && currentPhase < 4) {
     currentPhase++;
 
     if (currentPhase === 4) {
-       loadPhase4(); // 🔥 يستنى الداتا الأول
+       loadPhase4();
     }
 
-    renderPhase(); // بعد ما الداتا وصلت
+    renderPhase();
 
     syncProjectProgress();
     triggerLoading();
@@ -958,8 +961,6 @@ function changePhase(dir) {
     alert("Project Complete! Returning to dashboard.");
     location.reload();
   }
-  
-
 }
 
 
