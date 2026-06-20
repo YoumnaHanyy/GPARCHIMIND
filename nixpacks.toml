@@ -1,2 +1,4 @@
 [phases.setup]
 nixPkgs = ["python311", "openjdk17"]
+[phases.setup]
+nixPkgs = ["graphviz"]
