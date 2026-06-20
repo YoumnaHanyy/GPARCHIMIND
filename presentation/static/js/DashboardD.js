@@ -464,29 +464,80 @@ async function loadPhase4() {
 }
 
 function renderDesignPatterns(data) {
-  if (
-    !data ||
-    !data.phase4 ||
-    !Array.isArray(data.phase4.top_patterns) ||
-    data.phase4.top_patterns.length === 0
-  ) {
-     return "<p class='text-muted'>Loading design patterns...</p>";
-  }
-  let html = "<h5 class='section-header'>Recommended Design Patterns</h5>";
 
-  data.phase4.top_patterns.forEach((p, idx) => {
-    html += `
-    
-      <div class="mb-4">
-        <div class="req-title">${idx + 1}. ${p.pattern}</div>
-        <div class="req-desc">
-          ${Array.isArray(p.reasons) ? p.reasons.join(", ") : "No reasons available"}
-        </div>
-      </div>
-    `;
-  });
 
-  return html;
+
+
+
+
+
+
+
+
+if(
+ !data?.phase4?.top_patterns?.length
+){
+return "<p>Loading...</p>";
+}
+
+let html = `
+<h5 class="section-header">
+Recommended Design Patterns
+</h5>
+`;
+
+data.phase4.top_patterns.forEach((p,idx)=>{
+
+html +=`
+
+<div class="mb-4 p-3 rounded border">
+
+<div class="d-flex justify-content-between align-items-center">
+
+<div class="req-title">
+${idx+1}. ${p.pattern}
+</div>
+
+
+<span class="badge bg-success">
+
+${p.score ?? 0}
+
+</span>
+
+</div>
+
+
+<div class="small text-muted mb-2">
+
+${p.strength || ""}
+
+</div>
+
+
+<div class="req-desc">
+
+${
+Array.isArray(p.reasons)
+?
+p.reasons.join("<br>")
+:
+"No reasons available"
+}
+
+</div>
+
+
+</div>
+
+`;
+
+});
+
+
+return html;
+
+
 }
 
 function renderCodeSkeleton(data) {
