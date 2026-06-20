@@ -80,6 +80,7 @@ from presentation.routes.download_routes import router as download_router
 from presentation.routes.srs_validation_routes import router as validation_router
 from ai.validations.srs_validator import SRSValidator
 from dotenv import load_dotenv
+
 load_dotenv() 
 def make_json_safe(obj):
     """Recursively convert datetime/ObjectId to strings so Jinja's tojson won't crash."""
