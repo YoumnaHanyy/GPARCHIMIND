@@ -78,6 +78,7 @@ from service.retrain_service import run_retrain_async
 from presentation.routes.download_routes import router as download_router
 from presentation.routes.srs_validation_routes import router as validation_router
 from ai.validations.srs_validator import SRSValidator
+from infrastructure.repositories.validation_report_repository import save_validation_report_pdf
 from dotenv import load_dotenv
 load_dotenv() 
 def auto_retrain_loop():
@@ -999,19 +1000,36 @@ def generate_architecture(project_id: str):
 
 
 
-    # ==========================================================
-    # 5. VALIDATION GATE
-    # ==========================================================
-    # ==========================================================
-# 5. VALIDATION (SUCCESSFUL BUT NOT RETURNED)
-# ==========================================================
+     # ==========================================================
+     # 5. VALIDATION GATE
+     # ==========================================================
+
     validation_result = {}
 
     try:
-      validation_result = run_validation(arch)
-      generate_validation_pdf(validation_result)
+
+       validation_result = run_validation(arch)
+       print(validation_result)
+
+       validation_pdf_path = generate_validation_pdf(
+           validation_result
+       )
+       print(validation_pdf_path)
+
+       with open(validation_pdf_path, "rb") as f:
+            pdf_bytes = f.read()
+
+       print(len(pdf_bytes))
+
+       save_validation_report_pdf(project_id,pdf_bytes)
+       
+
+       print("[validation] saved successfully")
+
     except Exception as e:
-      print("Validation skipped:", e)
+
+      print("[validation] skipped:", e)
+      traceback.print_exc()
     # ==========================================================
     # 6. Persist architecture outputs
     # ==========================================================

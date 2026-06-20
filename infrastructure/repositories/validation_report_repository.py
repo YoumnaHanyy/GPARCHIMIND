@@ -17,3 +17,4 @@ def save_validation_report_pdf(
         "report_pdf": Binary(pdf_bytes),
         "created_at": datetime.utcnow()
     })
+    
